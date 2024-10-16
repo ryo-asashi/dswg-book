@@ -15,6 +15,7 @@ book:
     - qmds/ALEPlot.qmd
     - qmds/corrplot.qmd
     - qmds/DALEX.qmd
+    - qmds/distr.qmd
     - qmds/dplyr.qmd
     - qmds/e1071.qmd
     - qmds/forcats.qmd

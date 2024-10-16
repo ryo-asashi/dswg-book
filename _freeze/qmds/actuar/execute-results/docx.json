@@ -1,0 +1,21 @@
+{
+  "hash": "86eb61f3579bf32ac3aaa38e20ff93a7",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"actuar\"\nauthor: \"データサイエンス関連基礎調査WG\"\ndate: \"2024-10-17\"\nformat:\n  html:\n    fig-width: 6\n    fig-height: 5\n---\n\n\n\n\n\n\n\n\n\n\n## パッケージの概要\n\nactuar パッケージは、stats パッケージに収録されていない確率分布を扱うための関数を実装したパッケージです。特に、パレート分布、Burr分布、対数ガンマ分布、対数ロジスティック分布など、裾の厚い分布が数多く収録されています。\n\nなお、`d****(x, ...)` が密度関数、`p****(x, ...)` が累積分布関数、`r****(n, ...)` が乱数、`q(p, ...)` が分位点を表しているのは stats パッケージと同じです。\n\n## 確率密度関数をプロットする\n\n-   パレート分布 `pareto`\\\n    $$dpareto(x,{\\alpha},{\\theta})={{\\alpha}{\\theta}^{\\alpha}}/{(x+\\theta)^{\\alpha+1}}$$\n\n\n\n\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(actuar)\n\nxlim <- c(0, 3)\nylim <- c(0, 2)\nmain <- \"pareto distribution\"\n\ncurve(dpareto(x, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dpareto(x, 2, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dpareto(x, 1, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dpareto(x, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n```\n\n::: {.cell-output-display}\n![](actuar_files/figure-docx/pareto-1.png)\n:::\n:::\n\n\n\n\n\n\n\n\n-   Burr分布 `burr`\\\n    $$dburr(x,{\\alpha},{\\gamma},{\\theta})={{\\alpha}{\\gamma}(x/{\\theta})^{\\gamma}}/{x[1+(x/{\\theta)^{\\gamma}}]^{\\alpha + 1}}$$\n\n\n\n\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nxlim <- c(0, 3)\nylim <- c(0, 2)\nmain <- \"burr distribution\"\n\ncurve(dburr(x, 1, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dburr(x, 2, 1, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dburr(x, 1, 2, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dburr(x, 2, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n```\n\n::: {.cell-output-display}\n![](actuar_files/figure-docx/burr-1.png)\n:::\n:::\n\n\n\n\n\n\n\n\n-   対数ガンマ分布 `lgamma`\\\n    $$dlgamma(x,{\\alpha},{\\lambda})={{\\lambda}^{\\alpha}{\\Gamma}({\\alpha})}/{[(\\log{x})^{\\alpha-1}x^{\\lambda+1}]}$$\n\n\n\n\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nxlim <- c(1, 4)\nylim <- c(0, 2)\nmain <- \"log gamma distribution\"\n\ncurve(dlgamma(x, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dlgamma(x, 2, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dlgamma(x, 1, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dlgamma(x, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n```\n\n::: {.cell-output-display}\n![](actuar_files/figure-docx/loggamma-1.png)\n:::\n:::\n\n\n\n\n\n\n\n\n-   対数ロジスティック分布 `llogis`\\\n    $$dllogis(x,{\\gamma},{\\theta})={{\\gamma}(x/{\\theta})^{\\gamma}}/{x[1+(x/{\\theta)}]^2}$$\n\n\n\n\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nxlim <- c(0, 3)\nylim <- c(0, 2)\nmain <- \"log logistic distribution\"\n\ncurve(dllogis(x, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dllogis(x, 2, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dllogis(x, 1, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dllogis(x, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n```\n\n::: {.cell-output-display}\n![](actuar_files/figure-docx/logistic-1.png)\n:::\n:::\n\n\n\n\n\n\n\n\nactuar パッケージには、これらのほかにも以下のような確率分布が実装されています。\n\n-   逆ガンマ分布 `invgamma`\n\n-   逆パレート分布 `invpareto`\n\n-   逆バー分布 `invburr`\n\n-   逆ワイブル分布 `invweibull`\n\n-   逆指数分布 `invexp`\n\n-   一般化ベータ分布 `genbeta`\n\n-   一般化パレート分布 `genpareto`\\\n",
+    "supporting": [
+      "actuar_files\\figure-docx"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {
+      "knitr": [
+        "{\"type\":\"list\",\"attributes\":{},\"value\":[]}"
+      ]
+    },
+    "preserve": null,
+    "postProcess": false
+  }
+}
