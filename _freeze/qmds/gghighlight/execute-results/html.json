@@ -1,0 +1,17 @@
+{
+  "hash": "0efb9b879d60ac35324c3f638b41d247",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"gghighlight\"\nauthor: \"データサイエンス関連基礎調査WG\"\ndate: \"2024-10-16\"\nformat:\n  html:\n    fig-width: 6\n    fig-height: 3\n---\n\n\n\n\n\n\n\n\n## パッケージの概要\n\ngghighlight パッケージは、ggplot2 パッケージで作成されたプロットの特定の部分だけを強調する機能に特化したパッケージです。使い方はとても簡単で、ggplot オブジェクトの最終レイヤーとして gghighlight() 関数を追加し、強調したいデータの条件を指定するだけです。\n\n## プロットの一部を強調する\n\n\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(gghighlight)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n# 折れ線グラフの一部を強調する\nggplot(ChickWeight, aes(x = Time, y = weight, group = Chick)) +\n  geom_line(color='gray20') +\n  gghighlight(max(weight) > 330)\n```\n\n::: {.cell-output-display}\n![](gghighlight_files/figure-html/gghighlight--gghighlight, geom_line-1.png){width=576}\n:::\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n# 散布図の一部を強調する\nlibrary(tibble) # rownames_to_column() 関数を利用\nggplot(rownames_to_column(USArrests, 'State'), # 行の名前を列に変換\n       aes(x = Murder, y = Assault)) +\n  geom_point(col='darkcyan') + \n  gghighlight(grepl('New', State), label_key = State)\n```\n\n::: {.cell-output-display}\n![](gghighlight_files/figure-html/gghitglight--gghighlight, geom_point-1.png){width=576}\n:::\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n# 棒グラフ、ヒストグラムの一部を強調する\nggplot(iris, aes(x = Sepal.Width, fill = Species)) +\n  geom_histogram(bins = 10) +\n  gghighlight() +\n  facet_wrap(~Species)\n```\n\n::: {.cell-output-display}\n![](gghighlight_files/figure-html/gghitglight--gghighlight, geom_bar-1.png){width=576}\n:::\n:::\n\n\n\n\n\n\n## 参考資料\n\ngghighlight パッケージの便利な使い方について、作者である湯谷啓明氏が解説スライドを公開しています。\\\nhttps://yutani.quarto.pub/tokyor-109-gghighlight/#/title-slide\n",
+    "supporting": [
+      "gghighlight_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

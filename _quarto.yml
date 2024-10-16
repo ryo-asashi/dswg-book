@@ -18,6 +18,22 @@ book:
     - qmds/dplyr.qmd
     - qmds/e1071.qmd
     - qmds/forcats.qmd
+    - qmds/gghighlight.qmd
+    - qmds/igraph.qmd
+    - qmds/iml.qmd
+    - qmds/lifecontingencies.qmd
+    - qmds/palmerpenguins.qmd
+    - qmds/pdp.qmd
+    - qmds/pROC.qmd
+    - qmds/psych.qmd
+    - qmds/purrr.qmd
+    - qmds/recipes.qmd
+    - qmds/rsample.qmd
+    - qmds/shapviz.qmd
+    - qmds/skimr.qmd
+    - qmds/survival.qmd
+#    - qmds/YieldCurve.qmd
+#    - qmds/quantmod.qmd
 #    - qmds/fastshap.qmd
 #    - qmds/datatable.qmd
 
