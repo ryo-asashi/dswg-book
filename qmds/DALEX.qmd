@@ -2,8 +2,6 @@
 title: "DALEX"
 author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
-execute:
-  freeze: true
 format:
   html:
     fig-width: 6
