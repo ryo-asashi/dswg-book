@@ -4,139 +4,269 @@
     "href": "index.html",
     "title": "dswg-book",
     "section": "",
-    "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.\n\n1 + 1\n\n[1] 2",
+    "text": "Rパッケージ活用事例集\n本ウェブサイトは、日本アクチュアリー会の会員が、アクチュアリー業務にRを活用する際の参考になることを目的として、DS関連基礎調査WGの情報共有チームが作成したものです。\nなお、本リポジトリは情報共有チーム内での参照のために用意されたものであり、会員に直接参照されることを目的としたものではありません。\n本リポジトリは、以下のウェブサイトを参考にして作成されています。\n\nquarto : https://quarto.org/\nusethis : https://usethis.r-lib.org/",
     "crumbs": [
-      "Preface"
+      "Rパッケージ活用事例集"
     ]
   },
   {
-    "objectID": "intro.html",
-    "href": "intro.html",
-    "title": "1  Introduction",
+    "objectID": "qmds/actuar.html",
+    "href": "qmds/actuar.html",
+    "title": "1  actuar",
     "section": "",
-    "text": "This is a book created from markdown and executable code.\nSee Knuth (1984) for additional discussion of literate programming.\n\n1 + 1\n\n[1] 2\n\n\n\n\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput. J. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
+    "text": "1.1 パッケージの概要\nactuar パッケージは、stats パッケージに収録されていない確率分布を扱うための関数を実装したパッケージです。特に、パレート分布、Burr分布、対数ガンマ分布、対数ロジスティック分布など、裾の厚い分布が数多く収録されています。\nなお、d****(x, ...) が密度関数、p****(x, ...) が累積分布関数、r****(n, ...) が乱数、q(p, ...) が分位点を表しているのは stats パッケージと同じです。",
     "crumbs": [
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>actuar</span>"
     ]
   },
   {
-    "objectID": "summary.html",
-    "href": "summary.html",
-    "title": "2  Summary",
+    "objectID": "qmds/actuar.html#確率密度関数をプロットする",
+    "href": "qmds/actuar.html#確率密度関数をプロットする",
+    "title": "1  actuar",
+    "section": "1.2 確率密度関数をプロットする",
+    "text": "1.2 確率密度関数をプロットする\n\nパレート分布 pareto\n\\[dpareto(x,{\\alpha},{\\theta})={{\\alpha}{\\theta}^{\\alpha}}/{(x+\\theta)^{\\alpha+1}}\\]\n\n\nlibrary(actuar)\n\nxlim &lt;- c(0, 3)\nylim &lt;- c(0, 2)\nmain &lt;- \"pareto distribution\"\n\ncurve(dpareto(x, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dpareto(x, 2, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dpareto(x, 1, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dpareto(x, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n\n\n\n\n\n\n\n\n\nBurr分布 burr\n\\[dburr(x,{\\alpha},{\\gamma},{\\theta})={{\\alpha}{\\gamma}(x/{\\theta})^{\\gamma}}/{x[1+(x/{\\theta)^{\\gamma}}]^{\\alpha + 1}}\\]\n\n\nxlim &lt;- c(0, 3)\nylim &lt;- c(0, 2)\nmain &lt;- \"burr distribution\"\n\ncurve(dburr(x, 1, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dburr(x, 2, 1, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dburr(x, 1, 2, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dburr(x, 2, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n\n\n\n\n\n\n\n\n\n対数ガンマ分布 lgamma\n\\[dlgamma(x,{\\alpha},{\\lambda})={{\\lambda}^{\\alpha}{\\Gamma}({\\alpha})}/{[(\\log{x})^{\\alpha-1}x^{\\lambda+1}]}\\]\n\n\nxlim &lt;- c(1, 4)\nylim &lt;- c(0, 2)\nmain &lt;- \"log gamma distribution\"\n\ncurve(dlgamma(x, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dlgamma(x, 2, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dlgamma(x, 1, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dlgamma(x, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n\n\n\n\n\n\n\n\n\n対数ロジスティック分布 llogis\n\\[dllogis(x,{\\gamma},{\\theta})={{\\gamma}(x/{\\theta})^{\\gamma}}/{x[1+(x/{\\theta)}]^2}\\]\n\n\nxlim &lt;- c(0, 3)\nylim &lt;- c(0, 2)\nmain &lt;- \"log logistic distribution\"\n\ncurve(dllogis(x, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dllogis(x, 2, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dllogis(x, 1, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dllogis(x, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n\n\n\n\n\n\n\n\nactuar パッケージには、これらのほかにも以下のような確率分布が実装されています。\n\n逆ガンマ分布 invgamma\n逆パレート分布 invpareto\n逆バー分布 invburr\n逆ワイブル分布 invweibull\n逆指数分布 invexp\n一般化ベータ分布 genbeta\n一般化パレート分布 genpareto",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>actuar</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/aglm.html",
+    "href": "qmds/aglm.html",
+    "title": "2  aglm",
     "section": "",
-    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "text": "2.1 パッケージの概要\naglm パッケージは、Accurate Generalized Linear Model (AGLM) を実装したパッケージです。AGLM は、加法的モデルの枠組にとどまることで一定の解釈性を維持しながら、目的変数と予測変数の間の非線形な関係を表現することで予測精度の向上もねらうことのできる予測モデルです。\nlibrary(ggplot2)\nlibrary(MASS) # Bostonデータセットを利用します\n\nset.seed(42)\n# 学習用データと評価用データを分割します。\nsplit_data &lt;- rsample::initial_split(Boston)\n\n# 学習用データを説明変数（デザイン行列）と目的変数に分割します。\ntrain &lt;- rsample::training(split_data)\ntrain_X &lt;- dplyr::select(train, -medv)\ntrain_y &lt;- train$medv\n\n# 評価データを説明変数と目的変数に分割します。\ntest &lt;- rsample::testing(split_data)\ntest_X &lt;- dplyr::select(test, -medv)\ntest_y &lt;- test$medv",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Summary</span>"
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>aglm</span>"
     ]
   },
   {
-    "objectID": "references.html",
-    "href": "references.html",
-    "title": "References",
+    "objectID": "qmds/aglm.html#aglm-モデルを構築する",
+    "href": "qmds/aglm.html#aglm-モデルを構築する",
+    "title": "2  aglm",
+    "section": "2.2 AGLM モデルを構築する",
+    "text": "2.2 AGLM モデルを構築する\naglm関数の第1引数 x に説明変数（デザイン行列）を渡し、第2引数 y に目的変数を渡すことで、AGLMを学習させることができます。また、predict 関数の引数 newx に新たなデータを渡せば、そのデータに対する予測が出力されます。\n\nlibrary(aglm)\n\nmodel_aglm &lt;- aglm(\n  x = train_X,\n  y = train_y,\n  alpha = 1 # 正則化項のαパラメーターを指定（デフォルトは1）\n  )\n\npreds_aglm &lt;- predict(\n  object = model_aglm,\n  newx = test_X,\n  s = 0.1 # 正則化項のλパラメーターを数値またはベクトルで指定\n) |&gt; c() # 行列形式の出力をベクトルに変換\n\nrmse_ = yardstick::rmse_vec(test_y, preds_aglm)\nggplot(mapping = aes(x = test_y, y = preds_aglm)) +\n  geom_point() +\n  labs(title = paste(\"AGLM Model: RMSE =\", round(rmse_, 6)))\n\n\n\n\n\n\n\n\n\n2.2.1 参考情報\nAGLMの学習における正則化項は次の式で与えられます。\n\\[R(\\{\\beta_{jk}\\};\\lambda, \\alpha)=\\lambda\\{(1-\\alpha)\\sum_j\\sum_k|\\beta_{jk}|^2+\\alpha\\sum_j\\sum_k|\\beta_{jk}|\\}\\]\n\\(\\alpha\\) はL1正則化とL2正則化のバランスを決めるパラメーターです。この形式の正則化項について、\\(\\alpha=1\\) の場合をラッソ、\\(\\alpha=0\\) の場合をリッジ、\\(0&lt;\\alpha&lt;1\\) の場合をエラスティックネットと呼びます。また、λ は正則化項の影響度を決めるパラメーターで、この値が大きいほど、回帰係数の値が小さく抑えられるようになります。\nさて、AGLMでは、正則化項の λ パラメーターを指定しない場合、デフォルトの設定では100通りの λ の値に対して計算が行われます。\n\nlambdas = model_aglm@backend_models$glmnet$lambda\nlength(lambdas)\n\n[1] 100\n\nlambdas[1:5]\n\n[1] 6.636452 6.334815 6.046888 5.772047 5.509699\n\nlambdas[96:100]\n\n[1] 0.07993630 0.07630307 0.07283498 0.06952452 0.06636452\n\n\nAGLMに predict() 関数を適用した場合の出力は、引数 s に渡した λ パラメーターごとの予測値を 1 列として、行列形式で出力されます λ の値を指定しない場合は、すべての λ に対して予測が行われ、その結果が100列の行列として返されます。\n\npredict(model_aglm, newx = test_X) |&gt; ncol()\n\n[1] 100\n\n\nまた、λ パラメーターの値ごとに、学習の結果ゼロ以外の値になった回帰係数の数も記録されています。AGLM では、非線形性を表現するために取り入れた工夫の影響で、推定される回帰係数の数（最大116）が、学習データに含まれる説明変数の数（13）よりも多くなります。\n\ndfs = model_aglm@backend_models$glmnet$df\nlength(dfs)\n\n[1] 100\n\ndfs[1:5]\n\n[1] 0 1 1 2 2\n\ndfs[96:100]\n\n[1] 114 114 115 116 116\n\n\nなお、AGLM では、非線形性を表現するために取り入れた工夫の影響で、推定される回帰係数の数（最大116）が、学習データに含まれる説明変数の数（13）よりも多くなります。この工夫の詳細については、AGLM の紹介論文をご参照ください。\nまた、\\(\\alpha\\) パラメーターが0でない場合、\\(\\lambda\\) が一定値を超えるとすべての回帰係数がゼロになります。このとき、AGLM の予測関数は、説明変数の値によらずに目的変数の平均値を出力します。\n\nmean(train_y)\n\n[1] 22.44828\n\npredict(model_aglm, newx = test_X,\n        s = c(10, lambdas[1], lambdas[10])) |&gt; head(3)\n\n           s1       s2       s3\n[1,] 22.44828 22.44828 21.98585\n[2,] 22.44828 22.44828 20.34891\n[3,] 22.44828 22.44828 21.18687\n\n# 第1列（s1）はlambdas[1]以上の値を指定",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>aglm</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/aglm.html#特徴量ごとの効果を可視化する",
+    "href": "qmds/aglm.html#特徴量ごとの効果を可視化する",
+    "title": "2  aglm",
+    "section": "2.3 特徴量ごとの効果を可視化する",
+    "text": "2.3 特徴量ごとの効果を可視化する\n構築した AGLM モデルを plot() 関数に渡すことで、特徴量ごとの予測値への影響を可視化することができます。\n\nplot(model_aglm,\n     s = 0.1, # λ パラメータを指定\n     vars = c(\"lstat\", \"rm\"), # 可視化の対象とする特徴量を指定\n     ask = FALSE, verbose = FALSE, layout = c(1, 1) # 出力方法の設定\n)",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>aglm</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/aglm.html#最適な-λ-を探索しながら-aglm-モデルを構築する",
+    "href": "qmds/aglm.html#最適な-λ-を探索しながら-aglm-モデルを構築する",
+    "title": "2  aglm",
+    "section": "2.4 最適な λ を探索しながら AGLM モデルを構築する",
+    "text": "2.4 最適な λ を探索しながら AGLM モデルを構築する\nAGLM パッケージは、ベースになっている glmnet パッケージの機能を数多く継承しており、たとえば cv.aglm() 関数を用いることで、λ のチューニングを自動で行うことが可能です。\n\nlambda_candidates = seq(from = 30, to = 0, by = -0.2)\nmodel_cv.aglm &lt;- cv.aglm(\n  x = train_X,\n  y = train_y,\n  alpha = 0.1, # 正則化項のαパラメーターを指定（デフォルトは1）\n  lambda = lambda_candidates, # lambda の候補を指定\n  nfolds = 5 # クロスバリデーションの分割数を指定\n)\n\n\nmodel_cv.aglm@lambda.min # αを変えたことで最適なλの水準も変化\n\n[1] 1\n\npreds_cv.aglm &lt;- predict(model_cv.aglm,\n                         newx = test_X,\n                         s = model_cv.aglm@lambda.min)\nrmse_ = yardstick::rmse_vec(test_y, preds_cv.aglm[, 1])\nggplot(mapping = aes(x = test_y, y = preds_cv.aglm)) +\n  geom_point() +\n  labs(title = paste(\"AGLM Model: RMSE =\", round(rmse_, 6)))",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>aglm</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/aglm.html#最適な-λ-α-を探索しながら-aglm-モデルを構築する",
+    "href": "qmds/aglm.html#最適な-λ-α-を探索しながら-aglm-モデルを構築する",
+    "title": "2  aglm",
+    "section": "2.5 最適な λ, α を探索しながら AGLM モデルを構築する",
+    "text": "2.5 最適な λ, α を探索しながら AGLM モデルを構築する\nまた、同様に cva.aglm() 関数を用いることで、λ と α のチューニングを自動で行うこともできます。\n\nlambda_candidates = seq(from = 30, to = 0, by = -0.2)\nmodels_cva.aglm &lt;- cva.aglm(\n  x = train_X,\n  y = train_y,\n  lambda = lambda_candidates, # lambda の候補を指定\n  nfolds = 5 # クロスバリデーションの分割数を指定\n)\n\n\nmodels_cva.aglm@alpha.min # 最適なα\nidx &lt;- models_cva.aglm@alpha.min.index # 最適なαのインデックス番号\nmodel_cva.aglm &lt;- models_cva.aglm@models_list[[idx]] # 最適なαによるモデル\n\npreds_cva.aglm &lt;- predict(model_cva.aglm,\n                          newx = test_X,\n                          s = model_cva.aglm@lambda.min)\nrmse_ = yardstick::rmse_vec(test_y, preds_cva.aglm[, 1])\nggplot(mapping = aes(x = test_y, y = preds_cv.aglm)) +\n  geom_point() +\n  labs(title=paste(\"AGLM Model: RMSE =\", round(rmse_, 6)))",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>aglm</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/ALEPlot.html",
+    "href": "qmds/ALEPlot.html",
+    "title": "3  ALEPlot",
     "section": "",
-    "text": "Knuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
+    "text": "3.1 パッケージの概要\nALEPlot パッケージは、予測モデルとデータをもとに、ALE (Accumulated Local Effects、累積局所効果) を可視化する機能を実装したパッケージです。\nなお、ALE は、関心のある説明変数 \\(X\\) について、それが取りうる値の分割 \\([x_{[0]}, x_{[1]}), [x_{[1]}, x_{[2]}), ...\\) を考え、各区間について、そこに含まれるデータの \\(X\\) の値を区間の両端の値に置き換えたときの予測値の増分の平均値をその区間の局所効果とみなし、区間ごとの局所効果を累積させることで、変数 \\(X\\) の影響を \\(X\\) に関する1変数関数として表現する手法です。\n手法の詳細については、たとえば、「解釈可能な機械学習」に関するウェブ版書籍（Molnar著、株式会社HACARUS訳）の解説 https://hacarus.github.io/interpretable-ml-book-ja/ale.html などをご参照ください。\ndata(Boston, package = \"MASS\")\nlibrary(parsnip) # 予測モデルの構築\nlibrary(dplyr) # データフレームの操作\n\n# ランダムシードを固定する\nset.seed(42)\n\n# 予測モデルを構築する\nmodel &lt;- boost_tree() %&gt;%\n  set_mode('regression') %&gt;%\n  fit(medv~., data = Boston)\n\nsummary(model)\n\n             Length Class       Mode\nlvl          0      -none-      NULL\nspec         7      boost_tree  list\nfit          9      xgb.Booster list\npreproc      4      -none-      list\nelapsed      1      -none-      list\ncensor_probs 0      -none-      list",
     "crumbs": [
-      "References"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>ALEPlot</span>"
     ]
   },
   {
-    "objectID": "actuar.html",
-    "href": "actuar.html",
-    "title": "3  actuar",
+    "objectID": "qmds/ALEPlot.html#aleプロットを作成するaleplot",
+    "href": "qmds/ALEPlot.html#aleプロットを作成するaleplot",
+    "title": "3  ALEPlot",
+    "section": "3.2 ALEプロットを作成する（ALEPlot）",
+    "text": "3.2 ALEプロットを作成する（ALEPlot）\nALEPlot() 関数を使えば、ALE プロットを描画することができます。\nここで、pred.fun に渡す予測用の関数は、X.model と newdata を入力すると予測値を数値ベクトルとして出力するようなものであることが必要です。lm を含む多くのモデルでは、モデルに対応する predict 関数のメソッドが数値ベクトルを出力するため、pred.fun = predict としておけば動作します。predict の返り値がベクトルでないようなクラスのモデルでは、以下のように適切に定義することが必要です。\n\nlibrary(ALEPlot)\n\n# ALEPlot関数の `X` に渡す説明変数Xを用意する\nX &lt;- select(Boston, -medv)\n\n# ALEPlot関数の `pred.fun` に渡す予測のための関数を定義する\npred_parsnip = function(X.model, newdata){\n  predict(X.model, new_data = newdata)$.pred\n  # 予測値をベクトルとして抽出\n}\n\n# ALEPlotを描画する\nale &lt;- ALEPlot(X, model, pred_parsnip, J = \"rm\", K = 50)\n\n\n\n\n\n\n\n\nDALEXパッケージがインストール済みの場合は、DALEX::yhat() 関数を利用することもできます。この関数は、ALEPlot() 関数が要求するのと同じ引数名で定義されており、しかも、かなり広範な種類の予測モデルに対応しています。\n\n# 2次元ALEPlotを描画する\nale.2d &lt;- ALEPlot(X, model, DALEX::yhat, c(\"rm\", \"dis\"))\n\n\n\n\n\n\n\n\n標準のプロットは R のグラフィックス関数で作成されますが、返り値をデータフレーム化することで、ggplot2 パッケージで ALE を可視化することもできます。\n\nlibrary(ggplot2)\n\nggplot(data = as.data.frame(ale[2:3]),\n       aes(x = x.values, y = f.values)) +\n  geom_line() + geom_point()",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>ALEPlot</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/ALEPlot.html#pdプロットを作成するpdplot",
+    "href": "qmds/ALEPlot.html#pdプロットを作成するpdplot",
+    "title": "3  ALEPlot",
+    "section": "3.3 PDプロットを作成する（PDPlot）",
+    "text": "3.3 PDプロットを作成する（PDPlot）\nPD プロットを作成するための関数 PDPlot() を用いれば、PD を描画することもできます。基本的な使い方は ALEPlot() 関数と同じです。\nなお、PD は、ALE と同様に、予測モデルにおける特定の特徴量の効果を解釈するための手法です。詳細については、前掲のウェブ書籍の解説 https://hacarus.github.io/interpretable-ml-book-ja/pdp.html などをご参照ください。\n\n# PDPlotを描画する\npdp &lt;- PDPlot(X, model, pred_parsnip, \"rm\", 20)",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>ALEPlot</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/corrplot.html",
+    "href": "qmds/corrplot.html",
+    "title": "4  corrplot",
     "section": "",
-    "text": "3.1 パッケージの概要\nactuar パッケージは、stats パッケージに収録されていない確率分布を扱うための関数を実装したパッケージです。特に、パレート分布、Burr分布、対数ガンマ分布、対数ロジスティック分布など、裾の厚い分布が数多く収録されています。\nなお、d****(x, ...) が密度関数、p****(x, ...) が累積分布関数、r****(n, ...) が乱数、q(p, ...) が分位点を表しているのは stats パッケージと同じです。",
+    "text": "4.1 パッケージの概要\ncorrplotは、相関行列の可視化に特化したパッケージです。 デフォルトの設定でも相関行列を見やすい形で表示できるほか、 50を超えるパラメータにより見た目を自由にカスタマイズできます。\nlibrary(corrplot) \nlibrary(Lahman) #今回使用するデータセット \nlibrary(data.table) #データの成形に使用\nlibrary(lsr) #相関行列以外の例に使用",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>actuar</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>corrplot</span>"
     ]
   },
   {
-    "objectID": "actuar.html#確率密度関数をプロットする",
-    "href": "actuar.html#確率密度関数をプロットする",
-    "title": "3  actuar",
-    "section": "3.2 確率密度関数をプロットする",
-    "text": "3.2 確率密度関数をプロットする\n\nパレート分布 pareto\n\\[dpareto(x,{\\alpha},{\\theta})={{\\alpha}{\\theta}^{\\alpha}}/{(x+\\theta)^{\\alpha+1}}\\]\n\n\nlibrary(actuar)\n\nxlim &lt;- c(0, 3)\nylim &lt;- c(0, 2)\nmain &lt;- \"pareto distribution\"\n\ncurve(dpareto(x, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dpareto(x, 2, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dpareto(x, 1, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dpareto(x, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n\n\n\n\n\n\n\n\n\nBurr分布 burr\n\\[dburr(x,{\\alpha},{\\gamma},{\\theta})={{\\alpha}{\\gamma}(x/{\\theta})^{\\gamma}}/{x[1+(x/{\\theta)^{\\gamma}}]^{\\alpha + 1}}\\]\n\n\nxlim &lt;- c(0, 3)\nylim &lt;- c(0, 2)\nmain &lt;- \"burr distribution\"\n\ncurve(dburr(x, 1, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dburr(x, 2, 1, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dburr(x, 1, 2, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dburr(x, 2, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n\n\n\n\n\n\n\n\n\n対数ガンマ分布 lgamma\n\\[dlgamma(x,{\\alpha},{\\lambda})={{\\lambda}^{\\alpha}{\\Gamma}({\\alpha})}/{[(\\log{x})^{\\alpha-1}x^{\\lambda+1}]}\\]\n\n\nxlim &lt;- c(1, 4)\nylim &lt;- c(0, 2)\nmain &lt;- \"log gamma distribution\"\n\ncurve(dlgamma(x, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dlgamma(x, 2, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dlgamma(x, 1, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dlgamma(x, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n\n\n\n\n\n\n\n\n\n対数ロジスティック分布 llogis\n\\[dllogis(x,{\\gamma},{\\theta})={{\\gamma}(x/{\\theta})^{\\gamma}}/{x[1+(x/{\\theta)}]^2}\\]\n\n\nxlim &lt;- c(0, 3)\nylim &lt;- c(0, 2)\nmain &lt;- \"log logistic distribution\"\n\ncurve(dllogis(x, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dllogis(x, 2, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dllogis(x, 1, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dllogis(x, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n\n\n\n\n\n\n\n\nactuar パッケージには、これらのほかにも以下のような確率分布が実装されています。\n\n逆ガンマ分布 invgamma\n逆パレート分布 invpareto\n逆バー分布 invburr\n逆ワイブル分布 invweibull\n逆指数分布 invexp\n一般化ベータ分布 genbeta\n一般化パレート分布 genpareto",
+    "objectID": "qmds/corrplot.html#データセットの準備",
+    "href": "qmds/corrplot.html#データセットの準備",
+    "title": "4  corrplot",
+    "section": "4.2 データセットの準備",
+    "text": "4.2 データセットの準備\n今回は公開されているデータセットでもカラム数の多い、’Sean Lahman’s Baseball Database’というデータセットを使用します。\nこれはMLBの選手別・チーム別の成績等を蓄積したデータベースで、 今回は選手情報が格納されたPeople、各年度の打撃成績が格納されたBatting、 年俸が格納されたSalariesの3つのテーブルを結合して使用します。\nデータセットの詳細についてはパッケージ付属のDocumentationを参照してください。\nまず、上記テーブルの読み込み・結合と、最低限の前処理を行います。\n\n#大規模データの処理に向くdata.tableとしてデータを保持\ndt_mlb_people &lt;- as.data.table(People)\ndt_mlb_batting &lt;- as.data.table(Batting)\ndt_mlb_salaries &lt;- as.data.table(Salaries)\n#People(選手情報)からは一部の列のみを取得\ndt_mlb_people &lt;- dt_mlb_people[,.(playerID, birthCountry, birthState, weight, height, bats, throws, birthDate)]\n#Salaries(年俸)テーブルとBatting(打撃成績)をLeft join\ndt_mlb &lt;- dt_mlb_batting[dt_mlb_salaries, on = .(yearID, teamID, lgID, playerID)]\n#上記テーブルとPeopleをLeft join\ndt_mlb &lt;- dt_mlb_people[dt_mlb, on = .(playerID)]\n#文字列型となっている列などをfactor型に変換\ndt_mlb$playerID &lt;- as.factor(dt_mlb$playerID)\ndt_mlb$birthCountry &lt;- as.factor(dt_mlb$birthCountry)\ndt_mlb$birthState &lt;- as.factor(dt_mlb$birthState)\ndt_mlb$stint &lt;- as.factor(dt_mlb$stint)\n#日付型となっている列を数値型に変換\ndt_mlb$birthDate &lt;- as.numeric(dt_mlb$birthDate)\n\n出来上がったテーブルの概要は以下のとおり。\n\n#レコード数\nnrow(dt_mlb)\n## [1] 26437\n#列名リスト\nnames(dt_mlb)\n##  [1] \"playerID\"     \"birthCountry\" \"birthState\"   \"weight\"       \"height\"      \n##  [6] \"bats\"         \"throws\"       \"birthDate\"    \"yearID\"       \"stint\"       \n## [11] \"teamID\"       \"lgID\"         \"G\"            \"AB\"           \"R\"           \n## [16] \"H\"            \"X2B\"          \"X3B\"          \"HR\"           \"RBI\"         \n## [21] \"SB\"           \"CS\"           \"BB\"           \"SO\"           \"IBB\"         \n## [26] \"HBP\"          \"SH\"           \"SF\"           \"GIDP\"         \"salary\"\n#テーブル表示\ndt_mlb\n##         playerID birthCountry birthState weight height   bats throws birthDate\n##           &lt;fctr&gt;       &lt;fctr&gt;     &lt;fctr&gt;  &lt;int&gt;  &lt;int&gt; &lt;fctr&gt; &lt;fctr&gt;     &lt;num&gt;\n##     1: barkele01          USA         KY    225     77      R      R     -5292\n##     2: bedrost01          USA         MA    200     75      R      R     -4409\n##     3: benedbr01          USA         AL    175     73      R      R     -5250\n##     4:  campri01          USA         GA    195     73      R      R     -6049\n##     5: ceronri01          USA         NJ    192     71      R      R     -5706\n##    ---                                                                        \n## 26433: strasst01          USA         CA    239     77      R      R      6775\n## 26434: taylomi02          USA         FL    215     76      R      R      7754\n## 26435: treinbl01          USA         KS    225     77      R      R      6755\n## 26436: werthja01          USA         IL    235     77      R      R      3426\n## 26437: zimmery01          USA         NC    215     75      R      R      5384\n##        yearID  stint teamID   lgID     G    AB     R     H   X2B   X3B    HR\n##         &lt;int&gt; &lt;fctr&gt; &lt;fctr&gt; &lt;fctr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;\n##     1:   1985      1    ATL     NL    20    17     0     0     0     0     0\n##     2:   1985      1    ATL     NL    37    64     3     5     0     0     0\n##     3:   1985      1    ATL     NL    70   208    12    42     6     0     0\n##     4:   1985      1    ATL     NL    66    13     1     3     0     0     1\n##     5:   1985      1    ATL     NL    96   282    15    61     9     0     3\n##    ---                                                                      \n## 26433:   2016      1    WAS     NL    24    48     3    10     1     0     0\n## 26434:   2016      1    WAS     NL    76   221    28    51    11     0     7\n## 26435:   2016      1    WAS     NL    73     0     0     0     0     0     0\n## 26436:   2016      1    WAS     NL   143   525    84   128    28     0    21\n## 26437:   2016      1    WAS     NL   115   427    60    93    18     1    15\n##          RBI    SB    CS    BB    SO   IBB   HBP    SH    SF  GIDP   salary\n##        &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;\n##     1:     0     0     1     0     7     0     0     0     0     0   870000\n##     2:     1     0     0     1    22     0     0     6     0     0   550000\n##     3:    20     0     1    22    12     1     1     4     2     8   545000\n##     4:     2     0     0     1     5     0     0     1     0     0   633333\n##     5:    25     0     3    29    25     1     1     0     4    15   625000\n##    ---                                                                     \n## 26433:     2     0     0     2    11     0     0     7     0     2 10400000\n## 26434:    16    14     3    14    77     0     1     0     1     2   524000\n## 26435:     0     0     0     0     0     0     0     0     0     0   524900\n## 26436:    69     5     1    71   139     0     4     0     6    17 21733615\n## 26437:    46     4     1    29   104     1     5     0     6    12 14000000\n#サマリを表示\nsummary(dt_mlb)\n##       playerID        birthCountry     birthState        weight     \n##  moyerja01:   25   USA      :20505   CA     : 4872   Min.   :140.0  \n##  vizquom01:   24   D.R.     : 2140   TX     : 1551   1st Qu.:185.0  \n##  glavito02:   23   Venezuela: 1107   FL     : 1490   Median :195.0  \n##  bondsba01:   22   P.R.     :  892   NY     :  984   Mean   :199.2  \n##  griffke02:   22   Mexico   :  333   IL     :  963   3rd Qu.:215.0  \n##  rodrial01:   22   CAN      :  304   (Other):15522   Max.   :315.0  \n##  (Other)  :26299   (Other)  : 1156   NA's   : 1055                  \n##      height     bats      throws      birthDate            yearID    \n##  Min.   :66.0   B: 2579   L: 5660   Min.   :-16407.0   Min.   :1985  \n##  1st Qu.:72.0   L: 7488   R:20777   1st Qu.: -1918.0   1st Qu.:1994  \n##  Median :74.0   R:16370   S:    0   Median :   575.0   Median :2001  \n##  Mean   :73.5                       Mean   :   693.7   Mean   :2001  \n##  3rd Qu.:75.0                       3rd Qu.:  3426.0   3rd Qu.:2009  \n##  Max.   :83.0                       Max.   :  9168.0   Max.   :2016  \n##                                                                      \n##   stint           teamID      lgID             G                AB       \n##  1   :25263   LAN    :  958   AL:12962   Min.   :  1.00   Min.   :  0.0  \n##  2   :  163   CLE    :  950   NL:13475   1st Qu.: 29.00   1st Qu.:  1.0  \n##  3   :   14   PHI    :  949              Median : 56.00   Median : 63.0  \n##  4   :    1   BOS    :  945              Mean   : 67.84   Mean   :173.1  \n##  NA's:  996   SLN    :  943              3rd Qu.:107.00   3rd Qu.:331.0  \n##               BAL    :  940              Max.   :163.00   Max.   :716.0  \n##               (Other):20752              NA's   :996      NA's   :996    \n##        R                H               X2B              X3B         \n##  Min.   :  0.00   Min.   :  0.00   Min.   : 0.000   Min.   : 0.0000  \n##  1st Qu.:  0.00   1st Qu.:  0.00   1st Qu.: 0.000   1st Qu.: 0.0000  \n##  Median :  5.00   Median : 11.00   Median : 2.000   Median : 0.0000  \n##  Mean   : 23.35   Mean   : 45.64   Mean   : 8.816   Mean   : 0.9713  \n##  3rd Qu.: 41.00   3rd Qu.: 85.00   3rd Qu.:16.000   3rd Qu.: 1.0000  \n##  Max.   :152.00   Max.   :262.00   Max.   :59.000   Max.   :23.0000  \n##  NA's   :996      NA's   :996      NA's   :996      NA's   :996      \n##        HR              RBI               SB                CS        \n##  Min.   : 0.000   Min.   :  0.00   Min.   :  0.000   Min.   : 0.000  \n##  1st Qu.: 0.000   1st Qu.:  0.00   1st Qu.:  0.000   1st Qu.: 0.000  \n##  Median : 0.000   Median :  5.00   Median :  0.000   Median : 0.000  \n##  Mean   : 5.133   Mean   : 22.28   Mean   :  3.323   Mean   : 1.419  \n##  3rd Qu.: 7.000   3rd Qu.: 38.00   3rd Qu.:  3.000   3rd Qu.: 2.000  \n##  Max.   :73.000   Max.   :165.00   Max.   :110.000   Max.   :29.000  \n##  NA's   :996      NA's   :996      NA's   :996       NA's   :996     \n##        BB               SO             IBB               HBP        \n##  Min.   :  0.00   Min.   :  0.0   Min.   :  0.000   Min.   : 0.000  \n##  1st Qu.:  0.00   1st Qu.:  0.0   1st Qu.:  0.000   1st Qu.: 0.000  \n##  Median :  4.00   Median : 17.0   Median :  0.000   Median : 0.000  \n##  Mean   : 16.93   Mean   : 32.4   Mean   :  1.434   Mean   : 1.554  \n##  3rd Qu.: 28.00   3rd Qu.: 55.0   3rd Qu.:  1.000   3rd Qu.: 2.000  \n##  Max.   :232.00   Max.   :223.0   Max.   :120.000   Max.   :35.000  \n##  NA's   :996      NA's   :996     NA's   :996       NA's   :996     \n##        SH               SF              GIDP            salary        \n##  Min.   : 0.000   Min.   : 0.000   Min.   : 0.000   Min.   :       0  \n##  1st Qu.: 0.000   1st Qu.: 0.000   1st Qu.: 0.000   1st Qu.:  293750  \n##  Median : 0.000   Median : 0.000   Median : 1.000   Median :  550000  \n##  Mean   : 1.637   Mean   : 1.463   Mean   : 3.915   Mean   : 2085160  \n##  3rd Qu.: 2.000   3rd Qu.: 2.000   3rd Qu.: 7.000   3rd Qu.: 2350000  \n##  Max.   :39.000   Max.   :17.000   Max.   :35.000   Max.   :33000000  \n##  NA's   :996      NA's   :996      NA's   :996",
     "crumbs": [
-      "<span class='chapter-number'>3</span>  <span class='chapter-title'>actuar</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>corrplot</span>"
     ]
   },
   {
-    "objectID": "aglm.html",
-    "href": "aglm.html",
-    "title": "4  aglm",
+    "objectID": "qmds/corrplot.html#使用例",
+    "href": "qmds/corrplot.html#使用例",
+    "title": "4  corrplot",
+    "section": "4.3 使用例",
+    "text": "4.3 使用例\n相関行列を計算するには数値型である必要があるため、factor型となっている特徴量は除いておきます。\n\ncols_factor &lt;- names(dt_mlb)[sapply(dt_mlb, is.factor)]\ncols_nonfactor &lt;- setdiff(names(dt_mlb), cols_factor)\ndt &lt;- dt_mlb[,.SD,.SDcol = c(cols_nonfactor)]\n\ncor関数で相関行列を計算し、corrplot関数を用いて相関行列を可視化します。\nsalaryとの相関を確認してみると、打撃成績の中ではHR(ホームラン)との相関が相対的に強いように見えます。\n\nmat_cor &lt;- cor(dt, \n               method = 'pearson', #ピアソンの積率相関係数。順位相関係数(ケンドール、スピアマン)も使用できる。\n               use = 'pairwise.complete.obs')\n#NAとなっているデータの取り扱い。\n#デフォルトはNAが混ざっている列の相関係数をNAとするものであったので、\n#NAとなっているデータを無視して計算するように設定。\ncorrplot(mat_cor)\n\n\n\n\n\n\n\n\n以下、いくつか見た目のカスタマイズ例を紹介します。\n\ncorrplot(mat_cor[c(1:12,22), c(1:12,22)],\n         method = 'color', #単純な色分けのみにする\n         tl.cex = 0.75, #特徴量名のフォント大きさ調節(小さめ)\n         addCoef.col = 'black', #相関係数を指定した色で表示\n         number.cex = 0.65, #相関係数のフォント大きさ調節(小さめ)\n         order = 'AOE', #相関の高いもの同士が近くになるように表示順序を変更\n         col = adjustcolor(COL2('BrBG', 200),#色合いを変更 200は色の段階数\n                           offset = c(1/5, 1/5, 1/5, 0), #相関係数が見えやすいよう少し薄く色を調節\n                           transform = diag(c(4/5, 4/5, 4/5, 1))) \n         )\n\n\n\n\n\n\n\n\n\nmat_p &lt;- cor.mtest(dt, conf.level = 0.95)$p #p値の計算\ncorrplot(mat_cor[c(1:12,22), c(1:12,22)],\n         method = 'square', #正方形で表示\n         diag = FALSE, #対角線は表示しない\n         tl.pos = 'd', #特徴量名を対角線に表示\n         tl.cex = 0.6, #特徴量名のフォント大きさ調節(小さめ)\n         order = 'hclust', #相関の高いもの同士が近くになるように表示順序を変更\n         addrect = 3, #hclustを選択した時のみ指定可能、近いもの同士を3つに分類して正方形の枠で囲む\n         rect.col = 'gray40', #前述の枠の色\n         p.mat = mat_p[c(1:12,22), c(1:12,22)], #p値行列を与える\n         sig.level = 0.10, #p値が0.1以上であれば×を表示\n         )\n\n\n\n\n\n\n\n\n\nmat_p = cor.mtest(dt, conf.level = 0.95)$p #p値の計算\ncorrplot(mat_cor[c(1:12,22), c(1:12,22)],\n         type = 'lower', #下半分のみ表示\n         method = 'shade', #単純な色分けだが、指定した条件を満たすの場合は斜め線を入れる\n         addshade = 'negative', #斜め線を入れる条件\n         tl.cex = 0.6, #特徴量名のフォント大きさ調節(小さめ)\n         order = 'alphabet', #名前順\n         p.mat = mat_p[c(1:12,22), c(1:12,22)], #p値行列を与える\n         insig ='label_sig', #p値に応じて*を入れる\n         sig.level = c(0.001, 0.01, 0.05), #*の数のしきい値\n         pch.cex = 0.9, #*の大きさ\n         )\n\n\n\n\n\n\n\n\n\ncorrplot.mixed(mat_cor[c(1:12,22), c(1:12,22)], #corrplot.mixedとすると二つの表示形式をミックスできる\n         lower = 'number', #下半分は相関係数を表示する\n         upper = 'ellipse', #上半分は楕円で表示する\n         tl.cex = 0.6, #特徴量名のフォント大きさ調節(小さめ)\n         number.cex = 0.55, #相関係数のフォント大きさ調節(小さめ)\n         order = 'AOE', #相関の高いもの同士が近くになるように表示順序を変更\n         )\n\n\n\n\n\n\n\n\n相関行列ではないものを表示することも可能です。\n例えば、質的変数と量的変数の組に対して分散分析のイプシロンを表示してみます。\n\nmat_nf &lt;- matrix(nrow = length(cols_nonfactor), ncol = length(cols_factor))\nrownames(mat_nf) &lt;- cols_nonfactor\ncolnames(mat_nf) &lt;- cols_factor\n\ndt &lt;- dt_mlb\nfor(c_r in cols_nonfactor){\n  for(c_c in cols_factor){\n    dt_tmp &lt;- dt[!is.na(dt[[c_r]]) & !is.na(dt[[c_c]]),.SD, .SDcols = c(c_r, c_c)]\n    mu &lt;- mean(dt_tmp[[c_r]])\n    ss_t &lt;- sum((dt_tmp[[c_r]]-mu)^2)\n    ss_m &lt;- sum(dt_tmp[, .(ss = .N * (mean(.SD[[1]]) - ..mu)^2), by = c_c, .SDcols = c_r]$ss)\n    ss_e &lt;- ss_t - ss_m\n    dig_free &lt;- length(unique(dt_tmp[[c_c]]))-1\n    ms_e &lt;- ss_e/(nrow(dt_tmp)-dig_free-1)\n    mat_nf[c_r, c_c] &lt;- sqrt(max((ss_m - dig_free*ms_e)/ss_t, 0))\n  }\n}\ncorrplot(mat_nf[,setdiff(cols_factor, c('playerID'))],\n         is.corr = FALSE, #相関行列ではない場合 (数値の範囲が[-1, 1]固定ではなくなる)\n         col.lim = c(0, 1), #数値の範囲指定 \n         method = 'color', tl.cex = 0.8,\n         col = COL1('YlGn'),\n         cl.ratio = 0.4 #凡例の幅調節　そのままだと細すぎたので太目に変更\n         )\n\nWarning in corrplot(mat_nf[, setdiff(cols_factor, c(\"playerID\"))], is.corr =\nFALSE, : col.lim interval too wide, please set a suitable value\n\n\n\n\n\n\n\n\n\nまた別の例として、質的変数同士の組に対してはクラメールの連関係数を表示してみます。\n\nmat_ff &lt;- matrix(nrow = length(cols_factor), ncol = length(cols_factor))\nrownames(mat_ff) &lt;- cols_factor\ncolnames(mat_ff) &lt;- cols_factor\n\ndt &lt;- dt_mlb\nfor(c_r in cols_factor){\n  for(c_c in cols_factor){\n    #非常に小さいカテゴリがある場合は検定の仮定となる近似が満たされなくなるため、警告が表示される\n    suppressWarnings(mat_ff[c_r, c_c] &lt;- lsr::cramersV(dt[[c_r]], dt[[c_c]]))\n  }\n}\ncorrplot(mat_ff[setdiff(cols_factor, c('playerID')), setdiff(cols_factor, c('playerID'))],\n         is.corr = FALSE, #相関行列ではない場合 (数値の範囲が[-1, 1]固定ではなくなる)\n         col.lim = c(0, 1), #数値の範囲指定 \n         method = 'color',\n         addgrid.col = 'white', #罫線を白色で表示する\n         tl.cex = 0.8, addCoef.col = 'black', number.cex = 0.65, \n         col = COL1('Blues'),\n         )",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>corrplot</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/corrplot.html#参考",
+    "href": "qmds/corrplot.html#参考",
+    "title": "4  corrplot",
+    "section": "4.4 参考",
+    "text": "4.4 参考\n\nAn Introduction to corrplot Package",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>corrplot</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/DALEX.html",
+    "href": "qmds/DALEX.html",
+    "title": "5  DALEX",
     "section": "",
-    "text": "4.1 パッケージの概要\naglm パッケージは、Accurate Generalized Linear Model (AGLM) を実装したパッケージです。AGLM は、加法的モデルの枠組にとどまることで一定の解釈性を維持しながら、目的変数と予測変数の間の非線形な関係を表現することで予測精度の向上もねらうことのできる予測モデルです。\nlibrary(ggplot2)\nlibrary(MASS) # Bostonデータセットを利用します\n\nset.seed(42)\n# 学習用データと評価用データを分割します。\nsplit_data &lt;- rsample::initial_split(Boston)\n\n# 学習用データを説明変数（デザイン行列）と目的変数に分割します。\ntrain &lt;- rsample::training(split_data)\ntrain_X &lt;- dplyr::select(train, -medv)\ntrain_y &lt;- train$medv\n\n# 評価データを説明変数と目的変数に分割します。\ntest &lt;- rsample::testing(split_data)\ntest_X &lt;- dplyr::select(test, -medv)\ntest_y &lt;- test$medv",
+    "text": "5.1 パッケージの概要\nDALEX パッケージは、予測モデルを解釈するために開発された可視化手法を統一的な記法で実行するためのパッケージです。DALEX パッケージでは、予測モデルに explain() 関数を適用することで、explainer オブジェクトが作成されます。この explainer オブジェクトに対して、DALEX パッケージのさまざまな関数を適用することで、PDP、ICE、SHAP などのプロットを簡単に作成することができます。\nそれぞれの手法の詳細については、たとえば、解釈可能な機械学習に関するウェブ書籍 Interpretable Machine Learning（邦訳）などをご参照ください。\nここでは、例として、trees データセットの Volume を Girth と Height から予測するモデルを作成し、そのモデルに対して解釈手法を適用してみましょう。\n# treesデータセットを読み込み、ランダムフォレストモデルを作成する。\nlibrary(ranger)\ndata(trees, package = \"datasets\")\nmodel_rf &lt;- ranger(Volume~., trees)",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>aglm</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>DALEX</span>"
     ]
   },
   {
-    "objectID": "aglm.html#aglm-モデルを構築する",
-    "href": "aglm.html#aglm-モデルを構築する",
-    "title": "4  aglm",
-    "section": "4.2 AGLM モデルを構築する",
-    "text": "4.2 AGLM モデルを構築する\naglm関数の第1引数 x に説明変数（デザイン行列）を渡し、第2引数 y に目的変数を渡すことで、AGLMを学習させることができます。また、predict 関数の引数 newx に新たなデータを渡せば、そのデータに対する予測が出力されます。\n\nlibrary(aglm)\n\nmodel_aglm &lt;- aglm(\n  x = train_X,\n  y = train_y,\n  alpha = 1 # 正則化項のαパラメーターを指定（デフォルトは1）\n  )\n\npreds_aglm &lt;- predict(\n  object = model_aglm,\n  newx = test_X,\n  s = 0.1 # 正則化項のλパラメーターを数値またはベクトルで指定\n) |&gt; c() # 行列形式の出力をベクトルに変換\n\nrmse_ = yardstick::rmse_vec(test_y, preds_aglm)\nggplot(mapping = aes(x = test_y, y = preds_aglm)) +\n  geom_point() +\n  labs(title = paste(\"AGLM Model: RMSE =\", round(rmse_, 6)))\n\n\n\n\n\n\n\n\n\n4.2.1 参考情報\nAGLMの学習における正則化項は次の式で与えられます。\n\\[R(\\{\\beta_{jk}\\};\\lambda, \\alpha)=\\lambda\\{(1-\\alpha)\\sum_j\\sum_k|\\beta_{jk}|^2+\\alpha\\sum_j\\sum_k|\\beta_{jk}|\\}\\]\n\\(\\alpha\\) はL1正則化とL2正則化のバランスを決めるパラメーターです。この形式の正則化項について、\\(\\alpha=1\\) の場合をラッソ、\\(\\alpha=0\\) の場合をリッジ、\\(0&lt;\\alpha&lt;1\\) の場合をエラスティックネットと呼びます。また、λ は正則化項の影響度を決めるパラメーターで、この値が大きいほど、回帰係数の値が小さく抑えられるようになります。\nさて、AGLMでは、正則化項の λ パラメーターを指定しない場合、デフォルトの設定では100通りの λ の値に対して計算が行われます。\n\nlambdas = model_aglm@backend_models$glmnet$lambda\nlength(lambdas)\n\n[1] 100\n\nlambdas[1:5]\n\n[1] 6.636452 6.334815 6.046888 5.772047 5.509699\n\nlambdas[96:100]\n\n[1] 0.07993630 0.07630307 0.07283498 0.06952452 0.06636452\n\n\nAGLMに predict() 関数を適用した場合の出力は、引数 s に渡した λ パラメーターごとの予測値を 1 列として、行列形式で出力されます λ の値を指定しない場合は、すべての λ に対して予測が行われ、その結果が100列の行列として返されます。\n\npredict(model_aglm, newx = test_X) |&gt; ncol()\n\n[1] 100\n\n\nまた、λ パラメーターの値ごとに、学習の結果ゼロ以外の値になった回帰係数の数も記録されています。AGLM では、非線形性を表現するために取り入れた工夫の影響で、推定される回帰係数の数（最大116）が、学習データに含まれる説明変数の数（13）よりも多くなります。\n\ndfs = model_aglm@backend_models$glmnet$df\nlength(dfs)\n\n[1] 100\n\ndfs[1:5]\n\n[1] 0 1 1 2 2\n\ndfs[96:100]\n\n[1] 114 114 115 116 116\n\n\nなお、AGLM では、非線形性を表現するために取り入れた工夫の影響で、推定される回帰係数の数（最大116）が、学習データに含まれる説明変数の数（13）よりも多くなります。この工夫の詳細については、AGLM の紹介論文をご参照ください。\nまた、\\(\\alpha\\) パラメーターが0でない場合、\\(\\lambda\\) が一定値を超えるとすべての回帰係数がゼロになります。このとき、AGLM の予測関数は、説明変数の値によらずに目的変数の平均値を出力します。\n\nmean(train_y)\n\n[1] 22.44828\n\npredict(model_aglm, newx = test_X,\n        s = c(10, lambdas[1], lambdas[10])) |&gt; head(3)\n\n           s1       s2       s3\n[1,] 22.44828 22.44828 21.98585\n[2,] 22.44828 22.44828 20.34891\n[3,] 22.44828 22.44828 21.18687\n\n# 第1列（s1）はlambdas[1]以上の値を指定",
+    "objectID": "qmds/DALEX.html#モデル解釈のためのオブジェクトを作成する",
+    "href": "qmds/DALEX.html#モデル解釈のためのオブジェクトを作成する",
+    "title": "5  DALEX",
+    "section": "5.2 モデル解釈のためのオブジェクトを作成する",
+    "text": "5.2 モデル解釈のためのオブジェクトを作成する\nexplain() 関数は、さまざまなパッケージのもとで作成された予測モデルを、DALEX パッケージの他の関数に対応するように加工するための関数です。加工後の予測モデルは explainer オブジェクトと呼ばれます。\n\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(DALEX)\nexplainer &lt;- explain(model_rf,\n                     data = select(trees, -Volume),\n                     y = trees$Volume,\n                     quietly = TRUE,\n                     verbose = FALSE)",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>aglm</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>DALEX</span>"
     ]
   },
   {
-    "objectID": "aglm.html#特徴量ごとの効果を可視化する",
-    "href": "aglm.html#特徴量ごとの効果を可視化する",
-    "title": "4  aglm",
-    "section": "4.3 特徴量ごとの効果を可視化する",
-    "text": "4.3 特徴量ごとの効果を可視化する\n構築した AGLM モデルを plot() 関数に渡すことで、特徴量ごとの予測値への影響を可視化することができます。\n\nplot(model_aglm,\n     s = 0.1, # λ パラメータを指定\n     vars = c(\"lstat\", \"rm\"), # 可視化の対象とする特徴量を指定\n     ask = FALSE, verbose = FALSE, layout = c(1, 1) # 出力方法の設定\n)",
+    "objectID": "qmds/DALEX.html#個別の予測における特徴量と予測値の関係を解釈する",
+    "href": "qmds/DALEX.html#個別の予測における特徴量と予測値の関係を解釈する",
+    "title": "5  DALEX",
+    "section": "5.3 個別の予測における特徴量と予測値の関係を解釈する",
+    "text": "5.3 個別の予測における特徴量と予測値の関係を解釈する\nexplainer オブジェクトに predict_profile() 関数を適用すると、ICE（Individual Conditional Expectation）プロットを作図することができます。ICE プロットは、注目している特徴量の値だけが違っていた場合に予測値がどのように変化するかを、個々の予測ごとに可視化するものです。\n\nice &lt;- explainer %&gt;% predict_profile(new_observation = trees)\nplot(ice)",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>aglm</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>DALEX</span>"
     ]
   },
   {
-    "objectID": "aglm.html#最適な-λ-を探索しながら-aglm-モデルを構築する",
-    "href": "aglm.html#最適な-λ-を探索しながら-aglm-モデルを構築する",
-    "title": "4  aglm",
-    "section": "4.4 最適な λ を探索しながら AGLM モデルを構築する",
-    "text": "4.4 最適な λ を探索しながら AGLM モデルを構築する\nAGLM パッケージは、ベースになっている glmnet パッケージの機能を数多く継承しており、たとえば cv.aglm() 関数を用いることで、λ のチューニングを自動で行うことが可能です。\n\nlambda_candidates = seq(from = 30, to = 0, by = -0.2)\nmodel_cv.aglm &lt;- cv.aglm(\n  x = train_X,\n  y = train_y,\n  alpha = 0.1, # 正則化項のαパラメーターを指定（デフォルトは1）\n  lambda = lambda_candidates, # lambda の候補を指定\n  nfolds = 5 # クロスバリデーションの分割数を指定\n)\n\n\nmodel_cv.aglm@lambda.min # αを変えたことで最適なλの水準も変化\n\n[1] 1\n\npreds_cv.aglm &lt;- predict(model_cv.aglm,\n                         newx = test_X,\n                         s = model_cv.aglm@lambda.min)\nrmse_ = yardstick::rmse_vec(test_y, preds_cv.aglm[, 1])\nggplot(mapping = aes(x = test_y, y = preds_cv.aglm)) +\n  geom_point() +\n  labs(title = paste(\"AGLM Model: RMSE =\", round(rmse_, 6)))",
+    "objectID": "qmds/DALEX.html#モデルにおける特徴量と予測値の関係を解釈する",
+    "href": "qmds/DALEX.html#モデルにおける特徴量と予測値の関係を解釈する",
+    "title": "5  DALEX",
+    "section": "5.4 モデルにおける特徴量と予測値の関係を解釈する",
+    "text": "5.4 モデルにおける特徴量と予測値の関係を解釈する\nexplainer オブジェクトにmodel_profile() 関数を適用すると、PD（Partial Dependence）プロットを作図することができます。PD プロットは、データ全体の ICE プロットを平均したものにほかならず、注目している特徴量の値が変化したときに予測値が平均的にどのように変化するかを表していると解釈できます。\n\npdp &lt;- explainer %&gt;% model_profile()\nplot(pdp, geom = 'profiles') + theme_gray()\n\n\n\n\n\n\n\n\nまた、model_profile() 関数や plot() 関数用のメソッドの引数 geom を調整することで、ALE（Accumulated Local Effects）プロットを作成したり、実際のデータ点を表示したりするほか、さまざまな変更を加えることが可能です。\n\nale &lt;- explainer %&gt;% model_profile(type = \"accumulated\")\nplot(ale, geom = 'points') + theme_bw()",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>aglm</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>DALEX</span>"
     ]
   },
   {
-    "objectID": "aglm.html#最適な-λ-α-を探索しながら-aglm-モデルを構築する",
-    "href": "aglm.html#最適な-λ-α-を探索しながら-aglm-モデルを構築する",
-    "title": "4  aglm",
-    "section": "4.5 最適な λ, α を探索しながら AGLM モデルを構築する",
-    "text": "4.5 最適な λ, α を探索しながら AGLM モデルを構築する\nまた、同様に cva.aglm() 関数を用いることで、λ と α のチューニングを自動で行うこともできます。\n\nlambda_candidates = seq(from = 30, to = 0, by = -0.2)\nmodels_cva.aglm &lt;- cva.aglm(\n  x = train_X,\n  y = train_y,\n  lambda = lambda_candidates, # lambda の候補を指定\n  nfolds = 5 # クロスバリデーションの分割数を指定\n)\n\n\nmodels_cva.aglm@alpha.min # 最適なα\nidx &lt;- models_cva.aglm@alpha.min.index # 最適なαのインデックス番号\nmodel_cva.aglm &lt;- models_cva.aglm@models_list[[idx]] # 最適なαによるモデル\n\npreds_cva.aglm &lt;- predict(model_cva.aglm,\n                          newx = test_X,\n                          s = model_cva.aglm@lambda.min)\nrmse_ = yardstick::rmse_vec(test_y, preds_cva.aglm[, 1])\nggplot(mapping = aes(x = test_y, y = preds_cv.aglm)) +\n  geom_point() +\n  labs(title=paste(\"AGLM Model: RMSE =\", round(rmse_, 6)))",
+    "objectID": "qmds/DALEX.html#個別の予測における特徴量の寄与を解釈する",
+    "href": "qmds/DALEX.html#個別の予測における特徴量の寄与を解釈する",
+    "title": "5  DALEX",
+    "section": "5.5 個別の予測における特徴量の寄与を解釈する",
+    "text": "5.5 個別の予測における特徴量の寄与を解釈する\nexplainer オブジェクトに predict_parts() 関数を適用すると、SHAP（SHapley Additive exPlanation）プロットを作図することができます。SHAP は、個別の予測値と平均的な予測値との差を、ゲーム理論的手法によって特徴量ごとの寄与に分解したものです。ここでは、5 番目のインスタンスに対する予測への特徴量ごとの寄与を表示してみます。\n\nshap &lt;- explainer %&gt;% predict_parts(trees[5,], type = 'shap')\nplot(shap) + theme_light() + theme(legend.position = 'null')",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>aglm</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>DALEX</span>"
     ]
   },
   {
-    "objectID": "ALEPlot.html",
-    "href": "ALEPlot.html",
-    "title": "5  ALEPlot",
+    "objectID": "qmds/DALEX.html#shapをウォーターフォール図として描く",
+    "href": "qmds/DALEX.html#shapをウォーターフォール図として描く",
+    "title": "5  DALEX",
+    "section": "5.6 SHAPをウォーターフォール図として描く",
+    "text": "5.6 SHAPをウォーターフォール図として描く\npredict_parts() 関数が出力したオブジェクト（predict_parts オブジェクト）を shapviz パ ッケージの shapviz() 関数で shapviz オブジェクトに変換することで、ウォーターフォール図を描くことも可能です。\n\nlibrary(shapviz)\nsv_waterfall(shapviz(shap)) + theme_light()",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>DALEX</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/DALEX.html#モデルにおける特徴量の重要度を解釈する",
+    "href": "qmds/DALEX.html#モデルにおける特徴量の重要度を解釈する",
+    "title": "5  DALEX",
+    "section": "5.7 モデルにおける特徴量の重要度を解釈する",
+    "text": "5.7 モデルにおける特徴量の重要度を解釈する\nexplainer オブジェクトに model_parts() 関数を適用すると、PFI（Permutation Feature Importance）プロットを作図することができます。PFI は、「データの中で特定の特徴量だけをランダムに並び替えたときに、予測精度がどの程度低下するか」をその特徴量の重要度として解釈するものです。\n\npfi &lt;- explainer %&gt;% model_parts()\nplot(pfi) + theme_bw() + theme(legend.position = 'none')",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>DALEX</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/DALEX.html#参考資料",
+    "href": "qmds/DALEX.html#参考資料",
+    "title": "5  DALEX",
+    "section": "5.8 参考資料",
+    "text": "5.8 参考資料\nDALEX パッケージには、ここで紹介した手法以外にもさまざまな便利な関数が用意されています。以下のウェブ書籍には、それらの手法の説明だけでなく、R と Python の具体的なコード例も紹介されており、大変有用です。\nPrzemyslaw Biecek and Tomasz Burzykowski, Explanatory Model Analysis Explore, Explain, and Examine Predictive Models. With examples in R and Python. https://ema.drwhy.ai/",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>DALEX</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/dplyr.html",
+    "href": "qmds/dplyr.html",
+    "title": "6  dplyr",
     "section": "",
-    "text": "5.1 パッケージの概要\nALEPlot パッケージは、予測モデルとデータをもとに、ALE (Accumulated Local Effects、累積局所効果) を可視化する機能を実装したパッケージです。\nなお、ALE は、関心のある説明変数 \\(X\\) について、それが取りうる値の分割 \\([x_{[0]}, x_{[1]}), [x_{[1]}, x_{[2]}), ...\\) を考え、各区間について、そこに含まれるデータの \\(X\\) の値を区間の両端の値に置き換えたときの予測値の増分の平均値をその区間の局所効果とみなし、区間ごとの局所効果を累積させることで、変数 \\(X\\) の影響を \\(X\\) に関する1変数関数として表現する手法です。\n手法の詳細については、たとえば、「解釈可能な機械学習」に関するウェブ版書籍（Molnar著、株式会社HACARUS訳）の解説 https://hacarus.github.io/interpretable-ml-book-ja/ale.html などをご参照ください。\ndata(Boston, package = \"MASS\")\nlibrary(parsnip) # 予測モデルの構築\nlibrary(dplyr) # データフレームの操作\n\n# ランダムシードを固定する\nset.seed(42)\n\n# 予測モデルを構築する\nmodel &lt;- boost_tree() %&gt;%\n  set_mode('regression') %&gt;%\n  fit(medv~., data = Boston)\n\nsummary(model)\n\n             Length Class       Mode\nlvl          0      -none-      NULL\nspec         7      boost_tree  list\nfit          9      xgb.Booster list\npreproc      4      -none-      list\nelapsed      1      -none-      list\ncensor_probs 0      -none-      list",
+    "text": "6.0.1 パッケージの概要\ndplyrパッケージは、データフレームに対する「特定の行・列の抽出」や「ソート」などの重要な操作を、とてもシンプルなコードで実現するための関数を備えています。規模の大きなデータを扱うことの多いアクチュアリーにとって、必要不可欠なパッケージの一つです。\n\nlibrary(dplyr)\n\n\n\n6.0.2 パイプ演算子でコードを簡略化する\ndplyrパッケージを呼び出すと、magrittrパッケージが提供するパイプ演算子（%&gt;%）も使えるようになります。この演算子は、左側にあるオブジェクトを、右側の関数の未指定の引数のうち一番最初のものに代入した結果を返します。\n\n# irisデータの先頭3行を表示\niris  %&gt;% slice_head(n = 3)\n\n  Sepal.Length Sepal.Width Petal.Length Petal.Width Species\n1          5.1         3.5          1.4         0.2  setosa\n2          4.9         3.0          1.4         0.2  setosa\n3          4.7         3.2          1.3         0.2  setosa\n\n\nなお、バージョン 4.1.0 以降の R には、標準演算子の一つとしてパイプ演算子 “|&gt;” が追加されています。\n\n# バージョン 4.1.0 以降でのみ利用可能\niris |&gt; slice_tail(n = 3)\n\n  Sepal.Length Sepal.Width Petal.Length Petal.Width   Species\n1          6.5         3.0          5.2         2.0 virginica\n2          6.2         3.4          5.4         2.3 virginica\n3          5.9         3.0          5.1         1.8 virginica\n\n\nデータフレームに対して多くの操作を重ねたいとき、パイプ演算子を活用すれば、多重括弧による入れ子構造を避けて可読性の高いコードを書くことができます。\n\niris %&gt;%\n  select(Species, Sepal.Length, Sepal.Width) %&gt;%\n  mutate(Sepal.Ratio　=　round(Sepal.Length / Sepal.Width, 3)) %&gt;%\n  group_by(Species) %&gt;%\n  arrange(Sepal.Ratio) %&gt;%\n  slice_head()\n\n# A tibble: 3 × 4\n# Groups:   Species [3]\n  Species    Sepal.Length Sepal.Width Sepal.Ratio\n  &lt;fct&gt;             &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;\n1 setosa              5.2         4.1        1.27\n2 versicolor          6           3.4        1.76\n3 virginica           6.2         3.4        1.82\n\n\n\n\n6.0.3 データフレームから指定した列を抽出する\n\niris %&gt;%\n  select(Species, Sepal.Width, Petal.Width) %&gt;%\n  slice_tail(n=3)\n\n    Species Sepal.Width Petal.Width\n1 virginica         3.0         2.0\n2 virginica         3.4         2.3\n3 virginica         3.0         1.8\n\n\n\n\n6.0.4 データフレームから条件を満たす行を抽出する\n\niris %&gt;%\n  filter(Sepal.Width == 2.8, Petal.Width == 1.3)\n\n  Sepal.Length Sepal.Width Petal.Length Petal.Width    Species\n1          5.7         2.8          4.5         1.3 versicolor\n2          6.1         2.8          4.0         1.3 versicolor\n3          5.7         2.8          4.1         1.3 versicolor\n\n\n\n\n6.0.5 データフレームの行をソートする\n\niris %&gt;%\n  arrange(Sepal.Length, Sepal.Width) %&gt;% slice_head(n=3)\n\n  Sepal.Length Sepal.Width Petal.Length Petal.Width Species\n1          4.3         3.0          1.1         0.1  setosa\n2          4.4         2.9          1.4         0.2  setosa\n3          4.4         3.0          1.3         0.2  setosa\n\n\n\n\n6.0.6 データフレームの列を作成する\n\niris %&gt;%\n  mutate(Sepal.Ratio=round(Sepal.Length / Sepal.Width, 3)) %&gt;%\n  slice_head(n=3)\n\n  Sepal.Length Sepal.Width Petal.Length Petal.Width Species Sepal.Ratio\n1          5.1         3.5          1.4         0.2  setosa       1.457\n2          4.9         3.0          1.4         0.2  setosa       1.633\n3          4.7         3.2          1.3         0.2  setosa       1.469\n\n\n\n\n6.0.7 データを要約する\n\niris %&gt;% summarize(n_distinct(Sepal.Length),\n                   mean(Sepal.Length),\n                   max(Sepal.Length),\n                   sum(log(Sepal.Width)))\n\n  n_distinct(Sepal.Length) mean(Sepal.Length) max(Sepal.Length)\n1                       35           5.843333               7.9\n  sum(log(Sepal.Width))\n1              166.1159\n\n\n\n\n6.0.8 データフレームをグループ化して集計する\n\niris %&gt;%\n  group_by(Species) %&gt;%\n  summarize(n(), mean(Sepal.Length), sd(Sepal.Length))\n\n# A tibble: 3 × 4\n  Species    `n()` `mean(Sepal.Length)` `sd(Sepal.Length)`\n  &lt;fct&gt;      &lt;int&gt;                &lt;dbl&gt;              &lt;dbl&gt;\n1 setosa        50                 5.01              0.352\n2 versicolor    50                 5.94              0.516\n3 virginica     50                 6.59              0.636",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>ALEPlot</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>dplyr</span>"
     ]
   },
   {
-    "objectID": "ALEPlot.html#aleプロットを作成するaleplot",
-    "href": "ALEPlot.html#aleプロットを作成するaleplot",
-    "title": "5  ALEPlot",
-    "section": "5.2 ALEプロットを作成する（ALEPlot）",
-    "text": "5.2 ALEプロットを作成する（ALEPlot）\nALEPlot() 関数を使えば、ALE プロットを描画することができます。\nここで、pred.fun に渡す予測用の関数は、X.model と newdata を入力すると予測値を数値ベクトルとして出力するようなものであることが必要です。lm を含む多くのモデルでは、モデルに対応する predict 関数のメソッドが数値ベクトルを出力するため、pred.fun = predict としておけば動作します。predict の返り値がベクトルでないようなクラスのモデルでは、以下のように適切に定義することが必要です。\n\nlibrary(ALEPlot)\n\n# ALEPlot関数の `X` に渡す説明変数Xを用意する\nX &lt;- select(Boston, -medv)\n\n# ALEPlot関数の `pred.fun` に渡す予測のための関数を定義する\npred_parsnip = function(X.model, newdata){\n  predict(X.model, new_data = newdata)$.pred\n  # 予測値をベクトルとして抽出\n}\n\n# ALEPlotを描画する\nale &lt;- ALEPlot(X, model, pred_parsnip, J = \"rm\", K = 50)\n\n\n\n\n\n\n\n\nDALEXパッケージがインストール済みの場合は、DALEX::yhat() 関数を利用することもできます。この関数は、ALEPlot() 関数が要求するのと同じ引数名で定義されており、しかも、かなり広範な種類の予測モデルに対応しています。\n\n# 2次元ALEPlotを描画する\nale.2d &lt;- ALEPlot(X, model, DALEX::yhat, c(\"rm\", \"dis\"))\n\n\n\n\n\n\n\n\n標準のプロットは R のグラフィックス関数で作成されますが、返り値をデータフレーム化することで、ggplot2 パッケージで ALE を可視化することもできます。\n\nlibrary(ggplot2)\n\nggplot(data = as.data.frame(ale[2:3]),\n       aes(x = x.values, y = f.values)) +\n  geom_line() + geom_point()",
+    "objectID": "qmds/e1071.html",
+    "href": "qmds/e1071.html",
+    "title": "7  e1071",
+    "section": "",
+    "text": "7.1 パッケージの概要\nRのパッケージe1071は、サポートベクトルマシン（Support Vector Machines）やカーネル法に関連する機械学習アルゴリズムやツールを提供するパッケージです。サポートベクトルマシンを実装するためのsvm()関数は、サポートベクトルマシンに特化したC++ライブラリであるlibsvmの機能を利用しています。\n本コード活用例では、iris（アイリスの花の種類ごとに測定された花弁などの長さ・幅のデータ）を用いて、サポートベクトルマシンを実装します。\nlibrary(e1071)\ndata(iris)\nattach(iris)",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>ALEPlot</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>e1071</span>"
     ]
   },
   {
-    "objectID": "ALEPlot.html#pdプロットを作成するpdplot",
-    "href": "ALEPlot.html#pdプロットを作成するpdplot",
-    "title": "5  ALEPlot",
-    "section": "5.3 PDプロットを作成する（PDPlot）",
-    "text": "5.3 PDプロットを作成する（PDPlot）\nPD プロットを作成するための関数 PDPlot() を用いれば、PD を描画することもできます。基本的な使い方は ALEPlot() 関数と同じです。\nなお、PD は、ALE と同様に、予測モデルにおける特定の特徴量の効果を解釈するための手法です。詳細については、前掲のウェブ書籍の解説 https://hacarus.github.io/interpretable-ml-book-ja/pdp.html などをご参照ください。\n\n# PDPlotを描画する\npdp &lt;- PDPlot(X, model, pred_parsnip, \"rm\", 20)",
+    "objectID": "qmds/e1071.html#サポートベクトルマシンの実装例",
+    "href": "qmds/e1071.html#サポートベクトルマシンの実装例",
+    "title": "7  e1071",
+    "section": "7.2 サポートベクトルマシンの実装例",
+    "text": "7.2 サポートベクトルマシンの実装例\ne1071パッケージでサポートベクトルマシンを実装する際は、svm関数を利用します。\n以下のコードで、iris（アヤメの花ごとの種類、花弁などの長さ・幅のデータ）のSpecies（種類）を目的変数、Species以外を説明変数として、サポートベクトルマシンを作成し、print(model)で、モデルのParametersなどを出力します。\n\nx &lt;- subset(iris, select = -Species)\ny &lt;- Species\nmodel &lt;- svm(x, y)\nprint(model)\n\n\nCall:\nsvm.default(x = x, y = y)\n\n\nParameters:\n   SVM-Type:  C-classification \n SVM-Kernel:  radial \n       cost:  1 \n\nNumber of Support Vectors:  51\n\n\nprint(model)の出力結果のうち、Parametersに記載されている「SVM-Type」は、サポートベクトルマシンの種類を示しており、「SVM-Kernel」はカーネル関数の種類を示しています。\nsvm関数で利用可能なサポートベクトルマシンの種類およびカーネル関数の種類は以下の通りです。詳細については、リンク先を参照してください。\nなお、e1071パッケージで利用可能なカーネル関数は下表の4種類のみです。kernlabパッケージでは、カーネル関数を自作するなど、e1071パッケージよりも柔軟にカーネル関数を設定可能です。\nhttps://cran.r-project.org/web/packages/e1071/vignettes/svmdoc.pdf\n＜サポートベクトルマシンの種類＞\n\n\n\n区分\n種類\nパラメータ\n\n\n\n\n分類\nC-classification\ncost\n\n\n分類\nnu-classification\nnu\n\n\n分類\none-classification\nnu\n\n\n回帰\neps-regression\ncost, epsilon\n\n\n回帰\nnu-regression\ncost, nu\n\n\n\n＜カーネル関数の種類＞\n\n\n\n種類\nパラメータ\n\n\n\n\nlinear\nなし\n\n\npolynomial\ngamma, degree, coef0\n\n\nradial\ngamma\n\n\nsigmoid\ncoef0\n\n\n\n\n7.2.1 テストデータと訓練データの分割\n本項では、irisをテストデータと訓練データに分割し、訓練データを用いて、先ほどと同じようにサポートベクトルマシンを作成します。\nprint(model)の出力結果の通り、サポートベクトルマシンの種類は”C-classification”,カーネル関数は”radial”です。\n\nindex&lt;-1:nrow(iris)\nN&lt;-trunc(length(index)/3)\ntestindex&lt;-sample(index, N)\ntestset&lt;-iris[testindex,]\ntrainset&lt;-iris[-testindex,]\nx &lt;- subset(trainset, select = -Species)\ny &lt;- trainset$Species\nmodel &lt;- svm(x, y)\nprint(model)\n\n\nCall:\nsvm.default(x = x, y = y)\n\n\nParameters:\n   SVM-Type:  C-classification \n SVM-Kernel:  radial \n       cost:  1 \n\nNumber of Support Vectors:  35\n\n\n\n7.2.1.1 結果の確認\nテストデータを対象に、モデルによって予測した結果と正解データを比較すると、ほとんどのデータで品種を正しく予測していることが確認できます。\n\nsvm.pred &lt;- predict(model, testset[, -5])\ntable(pred = svm.pred, true = testset[, 5] )\n\n            true\npred         setosa versicolor virginica\n  setosa         15          0         0\n  versicolor      0         17         4\n  virginica       0          1        13\n\n\n\n\n7.2.1.2 パラメータのチューニング\n最後に、パラメータのチューニングに利用するtune関数を紹介します。先ほど作成したmodelでチューニング可能なパラメータは”cost”(サポートベクトルマシン”C-classification”のパラメータ)と”gamma”（カーネル関数”radial”のパラメータ）の2つです。\n以下のコードでは、rangesで指定したパラメータの組み合わせを対象にモデルのチューニングを行います。\n\nsvm.tune &lt;- tune(svm, Species~., data = iris,\n            ranges = list(gamma = 2^(-6:2), cost = 2^(2:10)),\n            tunecontrol = tune.control(sampling = \"fix\")\n)\n\nsummary関数を利用することで、最も良いパフォーマンスとなったパラメータの組み合わせや、パラメータの各組み合わせのパフォーマンスを確認することができます。\n\nsummary(svm.tune)\n\n\nParameter tuning of 'svm':\n\n- sampling method: fixed training/validation set \n\n- best parameters:\n   gamma cost\n 0.03125    4\n\n- best performance: 0.02 \n\n- Detailed performance results:\n      gamma cost error dispersion\n1  0.015625    4  0.04         NA\n2  0.031250    4  0.02         NA\n3  0.062500    4  0.02         NA\n4  0.125000    4  0.02         NA\n5  0.250000    4  0.02         NA\n6  0.500000    4  0.06         NA\n7  1.000000    4  0.06         NA\n8  2.000000    4  0.12         NA\n9  4.000000    4  0.12         NA\n10 0.015625    8  0.02         NA\n11 0.031250    8  0.02         NA\n12 0.062500    8  0.02         NA\n13 0.125000    8  0.02         NA\n14 0.250000    8  0.02         NA\n15 0.500000    8  0.06         NA\n16 1.000000    8  0.06         NA\n17 2.000000    8  0.08         NA\n18 4.000000    8  0.14         NA\n19 0.015625   16  0.02         NA\n20 0.031250   16  0.02         NA\n21 0.062500   16  0.02         NA\n22 0.125000   16  0.02         NA\n23 0.250000   16  0.02         NA\n24 0.500000   16  0.06         NA\n25 1.000000   16  0.08         NA\n26 2.000000   16  0.10         NA\n27 4.000000   16  0.14         NA\n28 0.015625   32  0.02         NA\n29 0.031250   32  0.02         NA\n30 0.062500   32  0.02         NA\n31 0.125000   32  0.02         NA\n32 0.250000   32  0.02         NA\n33 0.500000   32  0.08         NA\n34 1.000000   32  0.06         NA\n35 2.000000   32  0.10         NA\n36 4.000000   32  0.14         NA\n37 0.015625   64  0.02         NA\n38 0.031250   64  0.02         NA\n39 0.062500   64  0.02         NA\n40 0.125000   64  0.06         NA\n41 0.250000   64  0.08         NA\n42 0.500000   64  0.06         NA\n43 1.000000   64  0.06         NA\n44 2.000000   64  0.10         NA\n45 4.000000   64  0.14         NA\n46 0.015625  128  0.02         NA\n47 0.031250  128  0.06         NA\n48 0.062500  128  0.06         NA\n49 0.125000  128  0.06         NA\n50 0.250000  128  0.06         NA\n51 0.500000  128  0.06         NA\n52 1.000000  128  0.06         NA\n53 2.000000  128  0.10         NA\n54 4.000000  128  0.14         NA\n55 0.015625  256  0.06         NA\n56 0.031250  256  0.06         NA\n57 0.062500  256  0.06         NA\n58 0.125000  256  0.06         NA\n59 0.250000  256  0.06         NA\n60 0.500000  256  0.06         NA\n61 1.000000  256  0.06         NA\n62 2.000000  256  0.10         NA\n63 4.000000  256  0.14         NA\n64 0.015625  512  0.06         NA\n65 0.031250  512  0.06         NA\n66 0.062500  512  0.08         NA\n67 0.125000  512  0.06         NA\n68 0.250000  512  0.06         NA\n69 0.500000  512  0.06         NA\n70 1.000000  512  0.06         NA\n71 2.000000  512  0.10         NA\n72 4.000000  512  0.14         NA\n73 0.015625 1024  0.06         NA\n74 0.031250 1024  0.06         NA\n75 0.062500 1024  0.06         NA\n76 0.125000 1024  0.10         NA\n77 0.250000 1024  0.04         NA\n78 0.500000 1024  0.06         NA\n79 1.000000 1024  0.06         NA\n80 2.000000 1024  0.10         NA\n81 4.000000 1024  0.14         NA",
     "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>ALEPlot</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>e1071</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/forcats.html",
+    "href": "qmds/forcats.html",
+    "title": "8  forcats",
+    "section": "",
+    "text": "8.0.1 パッケージの概要\nforcatsは、factor型のデータを取り扱うための様々な関数を提供しているパッケージです。\n\nsuppressMessages(require(tidyverse))\nrequire(forcats)\n\n\n\n8.0.2 factor型について\nfactor型のベクトルは、ベクトルの要素に加えて、levelsという情報を持っています。例えば、a,b,cの要素を持つcharacter型のベクトルに対して、factor関数を適用するとfactor型のベクトルが得られます。\nなお、ベクトル内の要素が重複している場合、Levelsではまとめて表示されます。以下の例では、「c」が重複していますが、Levelsで表示されるcは１つだけになっています。\n\nx &lt;- c(\"a\", \"c\", \"b\", \"c\")\nfactor(x)\n\n[1] a c b c\nLevels: a b c\n\n\n\n\n8.0.3 factor型の活用方法\nfactor型のlevelsは、例えば、データを可視化する際に活用できます。\n具体例を確認するために、まず、Rのiris（あやめのがく片、花弁の幅・長さに関するデータセット）を用いて、あやめの種類（Species）別のがく片の幅の平均値をmean_Sepal_Widthに格納し、その結果を棒グラフで表示します。この際、iris_mean_by_speciesのSpeciesカラムはfactor型になっていることに注意してください。\n\niris_mean_by_species &lt;- iris %&gt;%\n  group_by(Species) %&gt;%\n  summarise(across(everything(), mean))\niris_mean_by_species\n\n# A tibble: 3 × 5\n  Species    Sepal.Length Sepal.Width Petal.Length Petal.Width\n  &lt;fct&gt;             &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;\n1 setosa             5.01        3.43         1.46       0.246\n2 versicolor         5.94        2.77         4.26       1.33 \n3 virginica          6.59        2.97         5.55       2.03 \n\niris_mean_by_species |&gt;\n  ggplot(aes(x = Species, y = Sepal.Width, fill = Species)) +\n  geom_bar(stat = \"identity\") +\n  labs(title = \"Mean Values by Species\", x = \"Species\", y = \"Mean Sepal.Width\")\n\n\n\n\n\n\n\n\nデータを可視化した際、結果をSepal.Widthが大きい順（つまり、setosa、versicolor、virginicaの順）に並べたいとします。\nまず、可視化するデータセットをSpela.Widthが大きい順に並べ替えた結果を表示してみます。結果は以下の通り、元の結果と変わりません。\n\niris_mean_by_species$Species\n\n[1] setosa     versicolor virginica \nLevels: setosa versicolor virginica\n\ndesc_iris_mean_by_species &lt;- iris_mean_by_species |&gt;\n  arrange(desc(Sepal.Width))\ndesc_iris_mean_by_species\n\n# A tibble: 3 × 5\n  Species    Sepal.Length Sepal.Width Petal.Length Petal.Width\n  &lt;fct&gt;             &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;\n1 setosa             5.01        3.43         1.46       0.246\n2 virginica          6.59        2.97         5.55       2.03 \n3 versicolor         5.94        2.77         4.26       1.33 \n\ndesc_iris_mean_by_species |&gt;\n  ggplot(aes(x = Species, y = Sepal.Width, fill = Species)) +\n  geom_bar(stat = \"identity\") +\n  labs(title = \"Mean Values by Species\", x = \"Species\", y = \"Mean Sepal.Width\")\n\n\n\n\n\n\n\n\n次に、iris_mean_by_speciesのSpeciesのlevelsをsetosa、virginica、verscolorの順番に変更します。その後、これまでと同様に棒グラフを作成すると、結果がSepal.Widthが大きい順番に表示されます。\nlevelsの変更に利用したfct_relevel関数は、forcatsパッケージの関数で指定した順番でlevelsを設定できます。なお、全ての要素を指定する必要はありません。（指定しなかった要素は後ろに回されます）\n\ndesc_iris_mean_by_species_2 &lt;- iris_mean_by_species\ndesc_iris_mean_by_species_2$Species &lt;- desc_iris_mean_by_species_2$Species |&gt;\n  fct_relevel(\"setosa\", \"virginica\")\ndesc_iris_mean_by_species_2\n\n# A tibble: 3 × 5\n  Species    Sepal.Length Sepal.Width Petal.Length Petal.Width\n  &lt;fct&gt;             &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;\n1 setosa             5.01        3.43         1.46       0.246\n2 versicolor         5.94        2.77         4.26       1.33 \n3 virginica          6.59        2.97         5.55       2.03 \n\ndesc_iris_mean_by_species_2 |&gt;\n  ggplot(aes(x = Species, y = Sepal.Width, fill = Species)) +\n  geom_bar(stat = \"identity\") +\n  labs(title = \"Mean Values by Species\", x = \"Species\", y = \"Mean Sepal.Width\")\n\n\n\n\n\n\n\n\n\n\n8.0.4 factor型のlevelsの順序を変更する関数\nforcatsパッケージには、factor型のlevelsの順序を変更する関数が提供されています。以下で、いくつか利用例を示します。\nfct_infreq関数は、登場頻度が多い要素の順番にlevelsを整理します。\n\nf &lt;- factor(c(\"c\", \"c\", \"a\"))\nf\n\n[1] c c a\nLevels: a c\n\nfct_infreq(f)\n\n[1] c c a\nLevels: c a\n\n\nfct_inorder関数は、要素の登場した順番でlevelsを整理します。\n\nf &lt;- factor(c(\"b\", \"a\"))\nf\n\n[1] b a\nLevels: a b\n\nfct_inorder(f)\n\n[1] b a\nLevels: b a\n\n\nfct_rev関数は、levelsを反転させます。\n\nf &lt;- factor(c(\"a\", \"b\", \"c\"))\nf\n\n[1] a b c\nLevels: a b c\n\nfct_rev(f)\n\n[1] a b c\nLevels: c b a\n\n\nfct_shift関数は、levelsをずらします。デフォルトでは、levelsが１つ左にずれます（最初のlevelsは最後に回ります）が、引数で指定することで、ずれる大きさを変更可能です。また、引数に負の値を指定した場合は右にずれます。\n\nf &lt;- factor(c(\"a\", \"b\", \"c\", \"d\"))\nf\n\n[1] a b c d\nLevels: a b c d\n\nfct_shift(f)\n\n[1] a b c d\nLevels: b c d a\n\nfct_shift(f, 2)\n\n[1] a b c d\nLevels: c d a b\n\nfct_shift(f, -1)\n\n[1] a b c d\nLevels: d a b c\n\n\nfct_reorder関数は、他の変数を使って、levelsを並べ替えることが可能です。\nfactor型の活用方法で実施した「Sepal.Widthの平均値が大きい順に並べ替える」対応をfct_reorder関数で実施するには、以下のように記載します。\nfct_reorder(Species, Sepal.Width, .fun = mean, .desc = TRUE)は、SpeciesのlevelsをSepal.Widthの平均値で変更しています。デフォルトは昇順ですが、「.desc = TRUE」と指定すると降順となります。\n\niris_mean_by_species |&gt;\n  ggplot(aes(x = Species, y = Sepal.Width, fill = Species)) +\n  geom_bar(stat = \"identity\") +\n  labs(title = \"Mean Values by Species\", x = \"Species\", y = \"Mean Sepal.Width\")\n\n\n\n\n\n\n\niris_mean_by_species |&gt;\n  ggplot(aes(x = fct_reorder(Species, Sepal.Width, .fun = mean, .desc = TRUE), y = Sepal.Width, fill = Species)) +\n  geom_bar(stat = \"identity\") +\n  labs(title = \"Mean Values by Species\", x = \"Species\", y = \"Mean Sepal.Width\")",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>forcats</span>"
     ]
   }
 ]

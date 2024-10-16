@@ -1,0 +1,149 @@
+---
+title: "forcats"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+output:
+  word_document:
+    toc: yes
+    toc_depth: '3'
+    fig_width: 6
+    fig_height: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(forcats)) install.packages('forcats')
+if (!require(purrr)) install.packages('purrr')
+if (!require(dplyr)) install.packages('dplyr')
+if (!require(ggplot2)) install.packages('ggplot2')
+```
+
+### パッケージの概要
+
+forcatsは、factor型のデータを取り扱うための様々な関数を提供しているパッケージです。
+
+```{r forcats}
+suppressMessages(require(tidyverse))
+require(forcats)
+```
+
+### factor型について
+
+factor型のベクトルは、ベクトルの要素に加えて、levelsという情報を持っています。例えば、a,b,cの要素を持つcharacter型のベクトルに対して、factor関数を適用するとfactor型のベクトルが得られます。
+
+なお、ベクトル内の要素が重複している場合、Levelsではまとめて表示されます。以下の例では、「c」が重複していますが、Levelsで表示されるcは１つだけになっています。
+
+```{r forcats::factor}
+x <- c("a", "c", "b", "c")
+factor(x)
+```
+### factor型の活用方法
+
+factor型のlevelsは、例えば、データを可視化する際に活用できます。
+
+具体例を確認するために、まず、Rのiris（あやめのがく片、花弁の幅・長さに関するデータセット）を用いて、あやめの種類（Species）別のがく片の幅の平均値をmean_Sepal_Widthに格納し、その結果を棒グラフで表示します。この際、iris_mean_by_speciesのSpeciesカラムはfactor型になっていることに注意してください。
+
+```{r forcats::factor2}
+iris_mean_by_species <- iris %>%
+  group_by(Species) %>%
+  summarise(across(everything(), mean))
+iris_mean_by_species
+
+iris_mean_by_species |>
+  ggplot(aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Mean Values by Species", x = "Species", y = "Mean Sepal.Width")
+```
+
+データを可視化した際、結果をSepal.Widthが大きい順（つまり、setosa、versicolor、virginicaの順）に並べたいとします。
+
+まず、可視化するデータセットをSpela.Widthが大きい順に並べ替えた結果を表示してみます。結果は以下の通り、元の結果と変わりません。
+
+```{r forcats::factor3}
+iris_mean_by_species$Species
+
+desc_iris_mean_by_species <- iris_mean_by_species |>
+  arrange(desc(Sepal.Width))
+desc_iris_mean_by_species
+
+desc_iris_mean_by_species |>
+  ggplot(aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Mean Values by Species", x = "Species", y = "Mean Sepal.Width")
+```
+
+次に、iris_mean_by_speciesのSpeciesのlevelsをsetosa、virginica、verscolorの順番に変更します。その後、これまでと同様に棒グラフを作成すると、結果がSepal.Widthが大きい順番に表示されます。
+
+levelsの変更に利用したfct_relevel関数は、forcatsパッケージの関数で指定した順番でlevelsを設定できます。なお、全ての要素を指定する必要はありません。（指定しなかった要素は後ろに回されます）
+
+```{r forcats::factor4}
+desc_iris_mean_by_species_2 <- iris_mean_by_species
+desc_iris_mean_by_species_2$Species <- desc_iris_mean_by_species_2$Species |>
+  fct_relevel("setosa", "virginica")
+desc_iris_mean_by_species_2
+
+desc_iris_mean_by_species_2 |>
+  ggplot(aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Mean Values by Species", x = "Species", y = "Mean Sepal.Width")
+```
+
+### factor型のlevelsの順序を変更する関数
+
+forcatsパッケージには、factor型のlevelsの順序を変更する関数が提供されています。以下で、いくつか利用例を示します。
+
+fct_infreq関数は、登場頻度が多い要素の順番にlevelsを整理します。
+
+```{r forcats::fct_infreq}
+f <- factor(c("c", "c", "a"))
+f
+
+fct_infreq(f)
+```
+
+fct_inorder関数は、要素の登場した順番でlevelsを整理します。
+
+```{r forcats::fct_inorder}
+f <- factor(c("b", "a"))
+f
+
+fct_inorder(f)
+```
+
+fct_rev関数は、levelsを反転させます。
+
+```{r forcats::fct_rev}
+f <- factor(c("a", "b", "c"))
+f
+
+fct_rev(f)
+```
+
+fct_shift関数は、levelsをずらします。デフォルトでは、levelsが１つ左にずれます（最初のlevelsは最後に回ります）が、引数で指定することで、ずれる大きさを変更可能です。また、引数に負の値を指定した場合は右にずれます。
+
+```{r forcats::fct_shift}
+f <- factor(c("a", "b", "c", "d"))
+f
+
+fct_shift(f)
+fct_shift(f, 2)
+fct_shift(f, -1)
+```
+
+fct_reorder関数は、他の変数を使って、levelsを並べ替えることが可能です。
+
+factor型の活用方法で実施した「Sepal.Widthの平均値が大きい順に並べ替える」対応をfct_reorder関数で実施するには、以下のように記載します。
+
+fct_reorder(Species, Sepal.Width, .fun = mean, .desc = TRUE)は、SpeciesのlevelsをSepal.Widthの平均値で変更しています。デフォルトは昇順ですが、「.desc = TRUE」と指定すると降順となります。
+
+```{r forcats::fct_reorder}
+iris_mean_by_species |>
+  ggplot(aes(x = Species, y = Sepal.Width, fill = Species)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Mean Values by Species", x = "Species", y = "Mean Sepal.Width")
+
+iris_mean_by_species |>
+  ggplot(aes(x = fct_reorder(Species, Sepal.Width, .fun = mean, .desc = TRUE), y = Sepal.Width, fill = Species)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Mean Values by Species", x = "Species", y = "Mean Sepal.Width")
+```

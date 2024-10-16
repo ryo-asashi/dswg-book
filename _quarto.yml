@@ -8,12 +8,16 @@ book:
   date: "2024/10/16"
   chapters:
     - index.qmd
-    - intro.qmd
-    - summary.qmd
-    - references.qmd
-    - actuar.qmd
-    - aglm.qmd
-    - ALEPlot.qmd
+    - qmds/actuar.qmd
+    - qmds/aglm.qmd
+    - qmds/ALEPlot.qmd
+    - qmds/corrplot.qmd
+    - qmds/DALEX.qmd
+    - qmds/dplyr.qmd
+    - qmds/e1071.qmd
+    - qmds/forcats.qmd
+#    - qmds/fastshap.qmd
+#    - qmds/datatable.qmd
 
 bibliography: references.bib
 

@@ -1,0 +1,241 @@
+---
+title: "corrplot"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    fig-width: 6
+    fig-height: 5
+---
+
+```{r comment, include=FALSE, eval=FALSE}
+2024/6/25 kozuma v2での更新箇所
+※今のところきちんと履歴管理する方法が用意されていないので、ソース内に直接書き込むこととする。
+- 冒頭のパッケージインストール方法を浅芝さん式に変更
+- drop_nonnumeric の sapply関数内 sapply(dt_mlb, function(x) is.factor(x)) → sapply(dt_mlb, is.factor)
+- 分散分析のイプシロンと、クラメールの連関係数を表示するブロックの分離
+```
+
+```{r setup_qmd, include=FALSE, output=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# install packages
+pkgs <- c("corrplot", "Lahman", "data.table", "lsr")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+# detach packages
+default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
+             "package:stats", "package:graphics",
+             "package:grDevices", "package:utils",
+             "package:datasets", "package:methods",
+             "Autoloads", "package:base")
+for (pkg in setdiff(search(), default)) {
+  detach(pkg, character.only = TRUE)
+  }
+
+# clear objects
+remove(list=objects())
+
+```
+
+## パッケージの概要
+
+`corrplot`は、相関行列の可視化に特化したパッケージです。
+デフォルトの設定でも相関行列を見やすい形で表示できるほか、
+50を超えるパラメータにより見た目を自由にカスタマイズできます。
+
+```{r setup_package, output=FALSE}
+library(corrplot) 
+library(Lahman) #今回使用するデータセット 
+library(data.table) #データの成形に使用
+library(lsr) #相関行列以外の例に使用
+```
+
+## データセットの準備
+
+今回は公開されているデータセットでもカラム数の多い、'Sean Lahman's Baseball Database'というデータセットを使用します。
+
+これはMLBの選手別・チーム別の成績等を蓄積したデータベースで、
+今回は選手情報が格納された`People`、各年度の打撃成績が格納された`Batting`、
+年俸が格納された`Salaries`の3つのテーブルを結合して使用します。
+
+データセットの詳細については[パッケージ付属のDocumentation](https://search.r-project.org/CRAN/refmans/Lahman/html/Lahman-package.html)を参照してください。
+
+まず、上記テーブルの読み込み・結合と、最低限の前処理を行います。
+
+```{r preprocessing}
+#大規模データの処理に向くdata.tableとしてデータを保持
+dt_mlb_people <- as.data.table(People)
+dt_mlb_batting <- as.data.table(Batting)
+dt_mlb_salaries <- as.data.table(Salaries)
+#People(選手情報)からは一部の列のみを取得
+dt_mlb_people <- dt_mlb_people[,.(playerID, birthCountry, birthState, weight, height, bats, throws, birthDate)]
+#Salaries(年俸)テーブルとBatting(打撃成績)をLeft join
+dt_mlb <- dt_mlb_batting[dt_mlb_salaries, on = .(yearID, teamID, lgID, playerID)]
+#上記テーブルとPeopleをLeft join
+dt_mlb <- dt_mlb_people[dt_mlb, on = .(playerID)]
+#文字列型となっている列などをfactor型に変換
+dt_mlb$playerID <- as.factor(dt_mlb$playerID)
+dt_mlb$birthCountry <- as.factor(dt_mlb$birthCountry)
+dt_mlb$birthState <- as.factor(dt_mlb$birthState)
+dt_mlb$stint <- as.factor(dt_mlb$stint)
+#日付型となっている列を数値型に変換
+dt_mlb$birthDate <- as.numeric(dt_mlb$birthDate)
+```
+
+出来上がったテーブルの概要は以下のとおり。
+
+```{r summary, collapse=TRUE}
+#レコード数
+nrow(dt_mlb)
+#列名リスト
+names(dt_mlb)
+#テーブル表示
+dt_mlb
+#サマリを表示
+summary(dt_mlb)
+```
+
+## 使用例
+
+相関行列を計算するには数値型である必要があるため、factor型となっている特徴量は除いておきます。
+
+```{r drop_nonnumeric}
+cols_factor <- names(dt_mlb)[sapply(dt_mlb, is.factor)]
+cols_nonfactor <- setdiff(names(dt_mlb), cols_factor)
+dt <- dt_mlb[,.SD,.SDcol = c(cols_nonfactor)]
+```
+
+`cor`関数で相関行列を計算し、`corrplot`関数を用いて相関行列を可視化します。
+
+`salary`との相関を確認してみると、打撃成績の中では`HR`(ホームラン)との相関が相対的に強いように見えます。
+
+```{r corrplot1}
+mat_cor <- cor(dt, 
+               method = 'pearson', #ピアソンの積率相関係数。順位相関係数(ケンドール、スピアマン)も使用できる。
+               use = 'pairwise.complete.obs')
+#NAとなっているデータの取り扱い。
+#デフォルトはNAが混ざっている列の相関係数をNAとするものであったので、
+#NAとなっているデータを無視して計算するように設定。
+corrplot(mat_cor)
+```
+
+以下、いくつか見た目のカスタマイズ例を紹介します。
+
+```{r corrplot2}
+corrplot(mat_cor[c(1:12,22), c(1:12,22)],
+         method = 'color', #単純な色分けのみにする
+         tl.cex = 0.75, #特徴量名のフォント大きさ調節(小さめ)
+         addCoef.col = 'black', #相関係数を指定した色で表示
+         number.cex = 0.65, #相関係数のフォント大きさ調節(小さめ)
+         order = 'AOE', #相関の高いもの同士が近くになるように表示順序を変更
+         col = adjustcolor(COL2('BrBG', 200),#色合いを変更 200は色の段階数
+                           offset = c(1/5, 1/5, 1/5, 0), #相関係数が見えやすいよう少し薄く色を調節
+                           transform = diag(c(4/5, 4/5, 4/5, 1))) 
+         )
+```
+```{r corrplot3}
+mat_p <- cor.mtest(dt, conf.level = 0.95)$p #p値の計算
+corrplot(mat_cor[c(1:12,22), c(1:12,22)],
+         method = 'square', #正方形で表示
+         diag = FALSE, #対角線は表示しない
+         tl.pos = 'd', #特徴量名を対角線に表示
+         tl.cex = 0.6, #特徴量名のフォント大きさ調節(小さめ)
+         order = 'hclust', #相関の高いもの同士が近くになるように表示順序を変更
+         addrect = 3, #hclustを選択した時のみ指定可能、近いもの同士を3つに分類して正方形の枠で囲む
+         rect.col = 'gray40', #前述の枠の色
+         p.mat = mat_p[c(1:12,22), c(1:12,22)], #p値行列を与える
+         sig.level = 0.10, #p値が0.1以上であれば×を表示
+         )
+```
+
+```{r corrplot4}
+mat_p = cor.mtest(dt, conf.level = 0.95)$p #p値の計算
+corrplot(mat_cor[c(1:12,22), c(1:12,22)],
+         type = 'lower', #下半分のみ表示
+         method = 'shade', #単純な色分けだが、指定した条件を満たすの場合は斜め線を入れる
+         addshade = 'negative', #斜め線を入れる条件
+         tl.cex = 0.6, #特徴量名のフォント大きさ調節(小さめ)
+         order = 'alphabet', #名前順
+         p.mat = mat_p[c(1:12,22), c(1:12,22)], #p値行列を与える
+         insig ='label_sig', #p値に応じて*を入れる
+         sig.level = c(0.001, 0.01, 0.05), #*の数のしきい値
+         pch.cex = 0.9, #*の大きさ
+         )
+```
+
+```{r corrplot5}
+corrplot.mixed(mat_cor[c(1:12,22), c(1:12,22)], #corrplot.mixedとすると二つの表示形式をミックスできる
+         lower = 'number', #下半分は相関係数を表示する
+         upper = 'ellipse', #上半分は楕円で表示する
+         tl.cex = 0.6, #特徴量名のフォント大きさ調節(小さめ)
+         number.cex = 0.55, #相関係数のフォント大きさ調節(小さめ)
+         order = 'AOE', #相関の高いもの同士が近くになるように表示順序を変更
+         )
+```
+
+相関行列ではないものを表示することも可能です。
+
+例えば、質的変数と量的変数の組に対して分散分析のイプシロンを表示してみます。
+
+```{r corrplot6}
+mat_nf <- matrix(nrow = length(cols_nonfactor), ncol = length(cols_factor))
+rownames(mat_nf) <- cols_nonfactor
+colnames(mat_nf) <- cols_factor
+
+dt <- dt_mlb
+for(c_r in cols_nonfactor){
+  for(c_c in cols_factor){
+    dt_tmp <- dt[!is.na(dt[[c_r]]) & !is.na(dt[[c_c]]),.SD, .SDcols = c(c_r, c_c)]
+    mu <- mean(dt_tmp[[c_r]])
+    ss_t <- sum((dt_tmp[[c_r]]-mu)^2)
+    ss_m <- sum(dt_tmp[, .(ss = .N * (mean(.SD[[1]]) - ..mu)^2), by = c_c, .SDcols = c_r]$ss)
+    ss_e <- ss_t - ss_m
+    dig_free <- length(unique(dt_tmp[[c_c]]))-1
+    ms_e <- ss_e/(nrow(dt_tmp)-dig_free-1)
+    mat_nf[c_r, c_c] <- sqrt(max((ss_m - dig_free*ms_e)/ss_t, 0))
+  }
+}
+corrplot(mat_nf[,setdiff(cols_factor, c('playerID'))],
+         is.corr = FALSE, #相関行列ではない場合 (数値の範囲が[-1, 1]固定ではなくなる)
+         col.lim = c(0, 1), #数値の範囲指定 
+         method = 'color', tl.cex = 0.8,
+         col = COL1('YlGn'),
+         cl.ratio = 0.4 #凡例の幅調節　そのままだと細すぎたので太目に変更
+         )
+```
+
+また別の例として、質的変数同士の組に対してはクラメールの連関係数を表示してみます。
+
+```{r corrplot7}
+mat_ff <- matrix(nrow = length(cols_factor), ncol = length(cols_factor))
+rownames(mat_ff) <- cols_factor
+colnames(mat_ff) <- cols_factor
+
+dt <- dt_mlb
+for(c_r in cols_factor){
+  for(c_c in cols_factor){
+    #非常に小さいカテゴリがある場合は検定の仮定となる近似が満たされなくなるため、警告が表示される
+    suppressWarnings(mat_ff[c_r, c_c] <- lsr::cramersV(dt[[c_r]], dt[[c_c]]))
+  }
+}
+corrplot(mat_ff[setdiff(cols_factor, c('playerID')), setdiff(cols_factor, c('playerID'))],
+         is.corr = FALSE, #相関行列ではない場合 (数値の範囲が[-1, 1]固定ではなくなる)
+         col.lim = c(0, 1), #数値の範囲指定 
+         method = 'color',
+         addgrid.col = 'white', #罫線を白色で表示する
+         tl.cex = 0.8, addCoef.col = 'black', number.cex = 0.65, 
+         col = COL1('Blues'),
+         )
+```
+
+
+## 参考
+
+- [An Introduction to corrplot Package](https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html)

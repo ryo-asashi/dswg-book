@@ -1,0 +1,117 @@
+---
+title: "purrr"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+output:
+  word_document:
+    toc: yes
+    toc_depth: '3'
+    fig_width: 6
+    fig_height: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(tibble)) install.packages('purrr')
+```
+
+### パッケージの概要
+
+purrrは、ベクトルやリストに対して関数を適用し、データの加工や操作を効果的に行うためのユーティリティ関数や操作を提供します。
+
+```{r purrr}
+suppressMessages(require(tidyverse))
+require(purrr)
+```
+
+### map関数
+
+map関数はリストの各要素に対して、関数を適用した結果をリストに格納します 以下の例では、リストの各要素であるベクトルに対して、それぞれのベクトルの平均値を計算（meanを適用）します
+
+```{r purrr::map}
+x <- list(1:2,1:3,1:4)
+map(x,mean)
+```
+
+map関数はベクトルに対しても適用することが可能です。 その場合、関数の各要素に対して、単独で適用され、結果はリストに格納されます。 mean関数に適用した場合は、単純に各ベクトルの要素がリストの各要素に格納されるだけとなりますが、例えば、rnorm関数に適用すれば、ベクトルの要素の数だけ、rnorm関数を適用した結果をリストに格納することができます。
+
+```{r purrr::map_2}
+y <- 1:3
+map(y, mean)
+map(y, rnorm, n=5)
+```
+
+### map_dbl関数
+
+map_dbl関数は、結果をリストではなく、数値ベクトルに格納します。 類似の関数として、map_int関数や、map_chr関数なども存在します。
+
+```{r purrr::map_dbl}
+z <- 1:5
+map_dbl(z, mean)
+zclass <- map_dbl(z, mean)
+typeof(zclass)
+```
+
+map_dbl関数を利用する場合、関数を適用した結果は、それぞれの結果は1つの数値である必要があります。 例えば、map関数をrnorm関数に適用し、nを5とした場合、各リストに格納される結果は要素数が5のベクトルになるため、map_dbl関数ではエラーになります。
+
+```{r purrr::map_dbl2, error=TRUE}
+z <- 1:3
+map(z, rnorm, n=5)
+map_dbl(z, rnorm, n=5)
+```
+
+なお、map関数とmap_dbl関数を組み合わせることで、rnorm関数で生成した結果の平均値を1つの数値ベクトルに格納することができます
+
+```{r purrr::map_dbl3}
+z |>
+  map(rnorm, n=5) |>
+  map_dbl(mean)
+```
+
+### 線形回帰モデルを実装する活用例
+
+Rのデフォルトのデータセットであるmtcars（自動車の燃費などに関するデータセット）を用いた例について記載します。
+車の燃費（mpg）と車の重量（wt）の関係について異なるシリンダー数（cyl）ごとに線形回帰モデルを適用し、各モデルの決定係数（R-squared）を取得する処理は、map関数、map_dbl関数を用いれば、以下のコードで実現可能です。
+
+```{r purrr::map_dbl4}
+mtcars |>
+  split(mtcars$cyl) |>
+  map(function(df) lm(mpg ~ wt, data = df)) |>
+  map(summary) |>
+  map_dbl("r.squared")
+```
+
+複数のパイプ処理が連なっているため、各コードの実装結果を順番に確認します。
+まず、以下のコードでは、mtcarsをシリンダー数（cyl）別に分解して、それぞれの結果をリストに格納しています。
+
+```{r purrr::map_dbl5}
+mtcars |>
+  split(mtcars$cyl)
+```
+
+次に、以下のコードではmap関数を用いて、シリンダー数（cyl）別に分解したそれぞれのデータセットに対して、線形回帰モデルを作成し、結果をリストに格納しています。
+
+```{r purrr::map_dbl6}
+mtcars |>
+  split(mtcars$cyl)|>
+  map(function(df) lm(mpg ~ wt, data = df)) 
+```
+
+以下のコードでは、シリンダー数（cyl）別に作成した線形回帰モデルのサマリーをリストに格納しています。
+
+```{r purrr::map_dbl7}
+mtcars |>
+  split(mtcars$cyl)|>
+  map(function(df) lm(mpg ~ wt, data = df))  |>
+  map(summary)
+```
+
+最後に、以下のコードでシリンダー数（cyl）別に作成した線形回帰モデルのサマリーのうち、決定係数のみを取得し、結果を数値ベクトルに格納しています。
+
+```{r purrr::map_dbl8}
+mtcars |>
+  split(mtcars$cyl) |>
+  map(function(df) lm(mpg ~ wt, data = df)) |>
+  map(summary) |>
+  map_dbl("r.squared")
+```

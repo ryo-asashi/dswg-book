@@ -1,0 +1,61 @@
+---
+  title: "quantmod"
+  author: "DSWG"
+---
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo=T,     # chunk表示の有無
+  warning=F, # 警告表示の有無
+  message=F,  # メッセージ表示の有無
+  highlight=T,
+  tidy=T,
+  cache = T
+  )
+```
+
+## packageのインストール
+
+quantmodパッケージをインストールする。
+
+```{r}
+# install.packages("quantmod")
+library(quantmod)
+```
+
+## 株価の取得
+
+getSymbols関数で米国のYahooFinanceから株価データを取得することができる。以下の例では、日経225とソニーの株価を取得。
+
+```{r}
+N225 <- getSymbols("^N225", src = "yahoo", from = "2002-06-10", auto.assign = FALSE)
+SONY <- getSymbols("6758.T", src = "yahoo", from = "2007-06-10", auto.assign = FALSE)
+head(N225)
+```
+
+## Plot
+
+Plot関数で取得したデータのグラフを作成することが可能
+
+```{r}
+plot(SONY$'6758.T.Adjusted')
+```
+
+また、専用のchartSeries関数やaddMACD関数でグラフを表示することも可能
+
+```{r}
+chartSeries(SONY)
+chartSeries(N225, theme = "white", subset='last 4 months')
+addMACD()
+```
+
+## 経済統計の取得（米国のFREDから取得. 例：日本実質GDP）
+
+FRED（セントルイス連邦準備銀行の研究部門によって維持されているデータベース）から各種統計データや経済指標を取得することも可能\
+[公式HP https://fred.stlouisfed.org/](https://fred.stlouisfed.org/)
+
+```{r}
+JRGDP <- getSymbols("JPNRGDPEXP", src = "FRED", auto.assign = FALSE)
+plot(JRGDP)
+chartSeries(JRGDP)
+```

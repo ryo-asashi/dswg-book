@@ -1,0 +1,84 @@
+---
+title: "ranger"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+output:   
+  word_document:
+    toc: yes
+    toc_depth: '3'
+    fig_width: 6
+    fig_height: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(ranger)) install.packages('ranger')
+```
+
+## パッケージの概要
+
+機械学習のRandomForestモデルを構築できます。高速実装であり、特に高次元データに適しています。 分類木、回帰木、生存木、確率予測木のアンサンブルをサポートしています。
+
+## 使用例：irisデータの分類
+
+irisデータを用いて、がく弁・花弁の長さ・幅の情報からアヤメの種類を特定する分類木モデルをrangerパッケージを用いて構築します。
+
+### irisデータセットを読み込む
+irisデータを読み込み、データの先頭を表示します。
+
+-   Sepal.Length：がく弁の長さ
+-   Sepal.Width：がく弁の幅
+-   Petal.Length：花弁の長さ
+-   Petal.Width：花弁の幅
+
+アヤメの種類はsetosa(1)、versicolor(2)、virginica(3)の3種類です。
+
+```{r}
+data(iris)
+head(iris)
+```
+
+### irisデータの構造
+
+irisデータの各種構造を確認します。
+
+```{r}
+str(iris)
+```
+
+### データセットの準備
+
+irisデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします。確認のため、データサイズを出力します。
+
+```{r}
+# 再現性のためにシードを設定
+set.seed(123)  
+
+# データの分割
+sample_indices <- sample(1:nrow(iris), 0.7 * nrow(iris))  
+train_data <- iris[sample_indices, ]
+test_data <- iris[-sample_indices, ]
+
+# データサイズの確認
+c(nrow(iris), nrow(train_data), nrow(test_data))
+```
+
+### モデルの生成・予測の実行
+
+訓練データを用いて分類木のモデルを生成します。モデルの生成結果は以下の通りです。
+
+```{r}
+(model <- ranger(Species ~ ., data = train_data))
+```
+
+テストデータを用いてモデルの評価をします。まずは、テストデータを先ほど構築した分類木モデルに適用させ、その予測結果をpredictionsに格納します。
+
+```{r}
+predictions <- predict(model, data = test_data)$predictions
+```
+
+予測結果とテストデータのもともとのアヤメの分類とを比較します。おおむね正しく分類できていることが分かります。
+
+```{r}
+(confusion_matrix <- table(predictions, test_data$Species))
+```

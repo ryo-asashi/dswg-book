@@ -1,9 +1,11 @@
-# Preface {.unnumbered}
+# Rパッケージ活用事例集 {.unnumbered}
 
-This is a Quarto book.
+本ウェブサイトは、日本アクチュアリー会の会員が、アクチュアリー業務にRを活用する際の参考になることを目的として、DS関連基礎調査WGの情報共有チームが作成したものです。
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+なお、本リポジトリは情報共有チーム内での参照のために用意されたものであり、会員に直接参照されることを目的としたものではありません。
 
-```{r}
-1 + 1
-```
+本リポジトリは、以下のウェブサイトを参考にして作成されています。
+
+1.  quarto : <https://quarto.org/>
+
+2.  usethis : <https://usethis.r-lib.org/>

@@ -1,0 +1,112 @@
+---
+title: "e1071"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+output:
+  word_document:
+    toc: yes
+    toc_depth: '3'
+    fig_width: 6
+    fig_height: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(e1071)) install.packages('e1071')
+```
+
+## パッケージの概要
+
+Rのパッケージe1071は、サポートベクトルマシン（Support Vector Machines）やカーネル法に関連する機械学習アルゴリズムやツールを提供するパッケージです。サポートベクトルマシンを実装するためのsvm()関数は、サポートベクトルマシンに特化したC++ライブラリであるlibsvmの機能を利用しています。
+
+本コード活用例では、iris（アイリスの花の種類ごとに測定された花弁などの長さ・幅のデータ）を用いて、サポートベクトルマシンを実装します。
+
+```{r e1071}
+library(e1071)
+data(iris)
+attach(iris)
+```
+
+## サポートベクトルマシンの実装例
+
+e1071パッケージでサポートベクトルマシンを実装する際は、svm関数を利用します。
+
+以下のコードで、iris（アヤメの花ごとの種類、花弁などの長さ・幅のデータ）のSpecies（種類）を目的変数、Species以外を説明変数として、サポートベクトルマシンを作成し、print(model)で、モデルのParametersなどを出力します。
+
+```{r e1071_2}
+x <- subset(iris, select = -Species)
+y <- Species
+model <- svm(x, y)
+print(model)
+```
+
+print(model)の出力結果のうち、Parametersに記載されている「SVM-Type」は、サポートベクトルマシンの種類を示しており、「SVM-Kernel」はカーネル関数の種類を示しています。
+
+svm関数で利用可能なサポートベクトルマシンの種類およびカーネル関数の種類は以下の通りです。詳細については、リンク先を参照してください。
+
+なお、e1071パッケージで利用可能なカーネル関数は下表の4種類のみです。kernlabパッケージでは、カーネル関数を自作するなど、e1071パッケージよりも柔軟にカーネル関数を設定可能です。
+
+<https://cran.r-project.org/web/packages/e1071/vignettes/svmdoc.pdf>
+
+＜サポートベクトルマシンの種類＞
+
+| 区分 | 種類               | パラメータ    |
+|------|--------------------|---------------|
+| 分類 | C-classification   | cost          |
+| 分類 | nu-classification  | nu            |
+| 分類 | one-classification | nu            |
+| 回帰 | eps-regression     | cost, epsilon |
+| 回帰 | nu-regression      | cost, nu      |
+
+＜カーネル関数の種類＞
+
+| 種類         | パラメータ           |
+|--------------|----------------------|
+| linear       | なし                 |
+| polynomial   | gamma, degree, coef0 |
+| radial       | gamma                |
+| sigmoid      | coef0                |
+
+### テストデータと訓練データの分割
+
+本項では、irisをテストデータと訓練データに分割し、訓練データを用いて、先ほどと同じようにサポートベクトルマシンを作成します。
+
+print(model)の出力結果の通り、サポートベクトルマシンの種類は"C-classification",カーネル関数は"radial"です。
+
+```{r e1071::svm}
+index<-1:nrow(iris)
+N<-trunc(length(index)/3)
+testindex<-sample(index, N)
+testset<-iris[testindex,]
+trainset<-iris[-testindex,]
+x <- subset(trainset, select = -Species)
+y <- trainset$Species
+model <- svm(x, y)
+print(model)
+```
+
+#### 結果の確認
+テストデータを対象に、モデルによって予測した結果と正解データを比較すると、ほとんどのデータで品種を正しく予測していることが確認できます。
+
+```{r e1071::svm6}
+svm.pred <- predict(model, testset[, -5])
+table(pred = svm.pred, true = testset[, 5] )
+```
+
+#### パラメータのチューニング
+最後に、パラメータのチューニングに利用するtune関数を紹介します。先ほど作成したmodelでチューニング可能なパラメータは"cost"(サポートベクトルマシン"C-classification"のパラメータ)と"gamma"（カーネル関数"radial"のパラメータ）の2つです。
+
+以下のコードでは、rangesで指定したパラメータの組み合わせを対象にモデルのチューニングを行います。
+
+```{r e1071::svm7}
+svm.tune <- tune(svm, Species~., data = iris,
+            ranges = list(gamma = 2^(-6:2), cost = 2^(2:10)),
+            tunecontrol = tune.control(sampling = "fix")
+)
+```
+
+summary関数を利用することで、最も良いパフォーマンスとなったパラメータの組み合わせや、パラメータの各組み合わせのパフォーマンスを確認することができます。
+
+```{r e1071::svm8}
+summary(svm.tune)
+```

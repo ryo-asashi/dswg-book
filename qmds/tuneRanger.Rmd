@@ -1,0 +1,104 @@
+---
+title: "tuneRanger"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+output:   
+  word_document:
+    toc: yes
+    toc_depth: '3'
+    fig_width: 6
+    fig_height: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(tuneRanger)) install.packages('tuneRanger')
+if (!require(mlr)) install.packages('mlr')
+```
+
+## パッケージの概要
+
+機械学習におけるRandomForestモデルの構築を行えます。また、tuneRangerではハイパーパラメータのチューニングを行う機能も提供されます。
+
+## 参考URL
+
+公式ドキュメント <https://cran.r-project.org/web/packages/tuneRanger/tuneRanger.pdf>
+
+Rの機械学習パッケージmlrのチュートリアル（タスクの作成から予測まで） <https://qiita.com/nozma/items/bedcb35cba925764247a>
+
+## 使用例：irisデータの分類
+
+irisデータを用いて、がく弁・花弁の長さ・幅の情報からアヤメの種類を特定するRandomForestモデルをtuneRangerパッケージを用いて構築します。
+
+### irisデータセットを読み込む
+irisデータを読み込み、データの先頭を表示します。
+
+-   Sepal.Length：がく弁の長さ
+-   Sepal.Width：がく弁の幅
+-   Petal.Length：花弁の長さ
+-   Petal.Width：花弁の幅
+
+アヤメの種類はsetosa(1)、versicolor(2)、virginica(3)の3種類です
+```{r}
+data(iris)
+head(iris)
+```
+### irisデータの構造
+
+irisデータの各種構造を確認します。
+```{r}
+str(iris)
+```
+
+また、データを散布図にプロットして確認します。
+
+```{r}
+plot(iris, col=c(2, 3, 4)[iris$Species])
+```
+
+### データセットの準備
+
+irisデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします
+```{r}
+# 再現性のためにシードを設定
+set.seed(100)
+
+# データの分割
+n <- nrow(iris)
+train.rate <- 0.7
+
+# データそのものではなく、データ番号を吐き出している
+(train.set <- sample(n, n * train.rate))
+(test.set <- setdiff(1:n, train.set))
+```
+
+### モデル生成
+makeClassifTaskにてタスクの定義を行い、makeLeanerにて適用するアルゴリズムの選択を行います。
+```{r}
+(task <- makeClassifTask(data = iris, target = "Species"))
+lrn <- makeLearner("classif.lda")
+```
+分割したデータセットを基にモデルの訓練を行います。また、訓練時の誤分類率(mmce)や精度(ace)を把握することが出来ます。
+```{r}
+(model <- train(lrn, task, subset = train.set))
+```
+
+### パラメータチューニング
+
+パラメータチューニングのための実行時間を事前に知ることが出来ます。
+```{r}
+estimateTimeTuneRanger(task, num.trees = 500, num.threads = 3, iters = 30)
+```
+
+tuneRangerを使用して、実際にパラメータチューニングをやってみます。
+```{r, echo=FALSE}
+res <- tuneRanger(task, measure = list(multiclass.brier), num.trees = 500, 
+                 num.threads = 3, iters = 30, save.file.path = NULL, show.info = FALSE)
+```
+
+チューニング後のモデルの精度を確認してみます。精度が向上していることが分かります。
+
+```{r}
+pred.res <- predict(res$model, task = task, subset = test.set)
+performance(pred.res, measures = list(mmce, acc))
+```

@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Norah Jones">
+<meta name="author" content="データサイエンス関連基礎調査WG">
 <meta name="dcterms.date" content="2024-10-16">
 
-<title>dswg-book</title>
+<title>5&nbsp; DALEX – dswg-book</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,26 +22,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./qmds/actuar.html" rel="next">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../qmds/dplyr.html" rel="next">
+<link href="../qmds/corrplot.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -82,7 +117,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Rパッケージ活用事例集</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmds/DALEX.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">DALEX</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -97,7 +132,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">dswg-book</a> 
+      <a href="../">dswg-book</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -109,55 +144,55 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Rパッケージ活用事例集</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/actuar.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/actuar.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">actuar</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/aglm.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/aglm.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">aglm</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/ALEPlot.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/ALEPlot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ALEPlot</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/corrplot.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/corrplot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">corrplot</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/DALEX.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/DALEX.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">DALEX</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/dplyr.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/dplyr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">dplyr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/e1071.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/e1071.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">e1071</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/forcats.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/forcats.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">forcats</span></span></a>
   </div>
 </li>
@@ -171,7 +206,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#rパッケージ活用事例集" id="toc-rパッケージ活用事例集" class="nav-link active" data-scroll-target="#rパッケージ活用事例集">Rパッケージ活用事例集</a></li>
+  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">5.1</span> パッケージの概要</a></li>
+  <li><a href="#モデル解釈のためのオブジェクトを作成する" id="toc-モデル解釈のためのオブジェクトを作成する" class="nav-link" data-scroll-target="#モデル解釈のためのオブジェクトを作成する"><span class="header-section-number">5.2</span> モデル解釈のためのオブジェクトを作成する</a></li>
+  <li><a href="#個別の予測における特徴量と予測値の関係を解釈する" id="toc-個別の予測における特徴量と予測値の関係を解釈する" class="nav-link" data-scroll-target="#個別の予測における特徴量と予測値の関係を解釈する"><span class="header-section-number">5.3</span> 個別の予測における特徴量と予測値の関係を解釈する</a></li>
+  <li><a href="#モデルにおける特徴量と予測値の関係を解釈する" id="toc-モデルにおける特徴量と予測値の関係を解釈する" class="nav-link" data-scroll-target="#モデルにおける特徴量と予測値の関係を解釈する"><span class="header-section-number">5.4</span> モデルにおける特徴量と予測値の関係を解釈する</a></li>
+  <li><a href="#個別の予測における特徴量の寄与を解釈する" id="toc-個別の予測における特徴量の寄与を解釈する" class="nav-link" data-scroll-target="#個別の予測における特徴量の寄与を解釈する"><span class="header-section-number">5.5</span> 個別の予測における特徴量の寄与を解釈する</a></li>
+  <li><a href="#shapをウォーターフォール図として描く" id="toc-shapをウォーターフォール図として描く" class="nav-link" data-scroll-target="#shapをウォーターフォール図として描く"><span class="header-section-number">5.6</span> SHAPをウォーターフォール図として描く</a></li>
+  <li><a href="#モデルにおける特徴量の重要度を解釈する" id="toc-モデルにおける特徴量の重要度を解釈する" class="nav-link" data-scroll-target="#モデルにおける特徴量の重要度を解釈する"><span class="header-section-number">5.7</span> モデルにおける特徴量の重要度を解釈する</a></li>
+  <li><a href="#参考資料" id="toc-参考資料" class="nav-link" data-scroll-target="#参考資料"><span class="header-section-number">5.8</span> 参考資料</a></li>
   </ul>
 </nav>
     </div>
@@ -180,7 +222,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">dswg-book</h1>
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">DALEX</span></h1>
 </div>
 
 
@@ -190,7 +232,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Norah Jones </p>
+             <p>データサイエンス関連基礎調査WG </p>
           </div>
   </div>
     
@@ -209,15 +251,123 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="rパッケージ活用事例集" class="level1 unnumbered">
-<h1 class="unnumbered">Rパッケージ活用事例集</h1>
-<p>本ウェブサイトは、日本アクチュアリー会の会員が、アクチュアリー業務にRを活用する際の参考になることを目的として、DS関連基礎調査WGの情報共有チームが作成したものです。</p>
-<p>なお、本リポジトリは情報共有チーム内での参照のために用意されたものであり、会員に直接参照されることを目的としたものではありません。</p>
-<p>本リポジトリは、以下のウェブサイトを参考にして作成されています。</p>
-<ol type="1">
-<li><p>quarto : <a href="https://quarto.org/" class="uri">https://quarto.org/</a></p></li>
-<li><p>usethis : <a href="https://usethis.r-lib.org/" class="uri">https://usethis.r-lib.org/</a></p></li>
-</ol>
+<section id="パッケージの概要" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">5.1</span> パッケージの概要</h2>
+<p>DALEX パッケージは、予測モデルを解釈するために開発された可視化手法を統一的な記法で実行するためのパッケージです。DALEX パッケージでは、予測モデルに explain() 関数を適用することで、explainer オブジェクトが作成されます。この explainer オブジェクトに対して、DALEX パッケージのさまざまな関数を適用することで、PDP、ICE、SHAP などのプロットを簡単に作成することができます。</p>
+<p>それぞれの手法の詳細については、たとえば、解釈可能な機械学習に関するウェブ書籍 <a href="https://christophm.github.io/interpretable-ml-book/"><em>Interpretable Machine Learning</em></a>（<a href="https://hacarus.github.io/interpretable-ml-book-ja/index.html">邦訳</a>）などをご参照ください。</p>
+<p>ここでは、例として、trees データセットの Volume を Girth と Height から予測するモデルを作成し、そのモデルに対して解釈手法を適用してみましょう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># treesデータセットを読み込み、ランダムフォレストモデルを作成する。</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ranger)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(trees, <span class="at">package =</span> <span class="st">"datasets"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>model_rf <span class="ot">&lt;-</span> <span class="fu">ranger</span>(Volume<span class="sc">~</span>., trees)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="モデル解釈のためのオブジェクトを作成する" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="モデル解釈のためのオブジェクトを作成する"><span class="header-section-number">5.2</span> モデル解釈のためのオブジェクトを作成する</h2>
+<p>explain() 関数は、さまざまなパッケージのもとで作成された予測モデルを、DALEX パッケージの他の関数に対応するように加工するための関数です。加工後の予測モデルは explainer オブジェクトと呼ばれます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DALEX)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>explainer <span class="ot">&lt;-</span> <span class="fu">explain</span>(model_rf,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> <span class="fu">select</span>(trees, <span class="sc">-</span>Volume),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> trees<span class="sc">$</span>Volume,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">quietly =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="個別の予測における特徴量と予測値の関係を解釈する" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="個別の予測における特徴量と予測値の関係を解釈する"><span class="header-section-number">5.3</span> 個別の予測における特徴量と予測値の関係を解釈する</h2>
+<p>explainer オブジェクトに predict_profile() 関数を適用すると、ICE（Individual Conditional Expectation）プロットを作図することができます。ICE プロットは、注目している特徴量の値だけが違っていた場合に予測値がどのように変化するかを、個々の予測ごとに可視化するものです。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ice <span class="ot">&lt;-</span> explainer <span class="sc">%&gt;%</span> <span class="fu">predict_profile</span>(<span class="at">new_observation =</span> trees)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="DALEX_files/figure-html/DALEX--predict_profile-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="モデルにおける特徴量と予測値の関係を解釈する" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="モデルにおける特徴量と予測値の関係を解釈する"><span class="header-section-number">5.4</span> モデルにおける特徴量と予測値の関係を解釈する</h2>
+<p>explainer オブジェクトにmodel_profile() 関数を適用すると、PD（Partial Dependence）プロットを作図することができます。PD プロットは、データ全体の ICE プロットを平均したものにほかならず、注目している特徴量の値が変化したときに予測値が平均的にどのように変化するかを表していると解釈できます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pdp <span class="ot">&lt;-</span> explainer <span class="sc">%&gt;%</span> <span class="fu">model_profile</span>()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pdp, <span class="at">geom =</span> <span class="st">'profiles'</span>) <span class="sc">+</span> <span class="fu">theme_gray</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="DALEX_files/figure-html/DALEX--model_profile-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>また、model_profile() 関数や plot() 関数用のメソッドの引数 geom を調整することで、ALE（Accumulated Local Effects）プロットを作成したり、実際のデータ点を表示したりするほか、さまざまな変更を加えることが可能です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ale <span class="ot">&lt;-</span> explainer <span class="sc">%&gt;%</span> <span class="fu">model_profile</span>(<span class="at">type =</span> <span class="st">"accumulated"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ale, <span class="at">geom =</span> <span class="st">'points'</span>) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="DALEX_files/figure-html/DALEX--model_profile for ale-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="個別の予測における特徴量の寄与を解釈する" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="個別の予測における特徴量の寄与を解釈する"><span class="header-section-number">5.5</span> 個別の予測における特徴量の寄与を解釈する</h2>
+<p>explainer オブジェクトに predict_parts() 関数を適用すると、SHAP（SHapley Additive exPlanation）プロットを作図することができます。SHAP は、個別の予測値と平均的な予測値との差を、ゲーム理論的手法によって特徴量ごとの寄与に分解したものです。ここでは、5 番目のインスタンスに対する予測への特徴量ごとの寄与を表示してみます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>shap <span class="ot">&lt;-</span> explainer <span class="sc">%&gt;%</span> <span class="fu">predict_parts</span>(trees[<span class="dv">5</span>,], <span class="at">type =</span> <span class="st">'shap'</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(shap) <span class="sc">+</span> <span class="fu">theme_light</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'null'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="DALEX_files/figure-html/DALEX--predict_parts-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="shapをウォーターフォール図として描く" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="shapをウォーターフォール図として描く"><span class="header-section-number">5.6</span> SHAPをウォーターフォール図として描く</h2>
+<p>predict_parts() 関数が出力したオブジェクト（predict_parts オブジェクト）を shapviz パ ッケージの shapviz() 関数で shapviz オブジェクトに変換することで、ウォーターフォール図を描くことも可能です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shapviz)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sv_waterfall</span>(<span class="fu">shapviz</span>(shap)) <span class="sc">+</span> <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="DALEX_files/figure-html/shapviz--sv_waterfall-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="モデルにおける特徴量の重要度を解釈する" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="モデルにおける特徴量の重要度を解釈する"><span class="header-section-number">5.7</span> モデルにおける特徴量の重要度を解釈する</h2>
+<p>explainer オブジェクトに model_parts() 関数を適用すると、PFI（Permutation Feature Importance）プロットを作図することができます。PFI は、「データの中で特定の特徴量だけをランダムに並び替えたときに、予測精度がどの程度低下するか」をその特徴量の重要度として解釈するものです。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pfi <span class="ot">&lt;-</span> explainer <span class="sc">%&gt;%</span> <span class="fu">model_parts</span>()</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pfi) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'none'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="DALEX_files/figure-html/DALEX--model_parts-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="参考資料" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="参考資料"><span class="header-section-number">5.8</span> 参考資料</h2>
+<p>DALEX パッケージには、ここで紹介した手法以外にもさまざまな便利な関数が用意されています。以下のウェブ書籍には、それらの手法の説明だけでなく、R と Python の具体的なコード例も紹介されており、大変有用です。</p>
+<p>Przemyslaw Biecek and Tomasz Burzykowski, <em>Explanatory Model Analysis Explore, Explain, and Examine Predictive Models. With examples in R and Python</em>. <a href="https://ema.drwhy.ai/" class="uri">https://ema.drwhy.ai/</a></p>
 
 
 </section>
@@ -645,10 +795,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="../qmds/corrplot.html" class="pagination-link" aria-label="corrplot">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">corrplot</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./qmds/actuar.html" class="pagination-link" aria-label="actuar">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">actuar</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../qmds/dplyr.html" class="pagination-link" aria-label="dplyr">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">dplyr</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

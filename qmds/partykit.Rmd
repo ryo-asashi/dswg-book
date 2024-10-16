@@ -1,0 +1,54 @@
+---
+title: "partykit"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+output:   
+  word_document:
+    toc: yes
+    toc_depth: '3'
+    fig_width: 6
+    fig_height: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(rpart)) install.packages('rpart')
+if (!require(partykit)) install.packages('partykit')
+```
+
+## パッケージの概要
+
+木構造の回帰・分類モデルを表現・要約し可視化するためのパッケージです。
+
+## 使用例
+
+rpartパッケージにて決定木モデルを構築し、その可視化を行います。データはKyphosisデータ（脊椎矯正手術を受けた子供のデータ）を使用します。
+
+まずはKyphosisデータの各種構造を確認します。
+
+-   Kyphosis：absent(1)...手術後症状が消えた、present(2)...手術後症状が残った
+-   Age：手術をした子供の月齢
+-   Number:手術に関与する脊椎の数
+-   Start：手術を受けた最上部の頸椎の番号
+
+```{r}
+str(kyphosis)
+```
+
+rpartで決定木のモデルを生成します。
+
+```{r}
+(rp <- rpart(Kyphosis ~ Age + Number + Start, data = kyphosis))
+```
+
+partykitを使用して、rpartの決定木のモデルをより見やすくすることが出来ます。
+
+```{r}
+plot(as.party(rp))
+```
+
+引数にてtype='simple'と入力すると、より簡便的なモデル表示となります。
+
+```{r}
+plot(as.party(rp), type = 'simple')
+```

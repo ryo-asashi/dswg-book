@@ -6,10 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Norah Jones">
+<meta name="author" content="データサイエンス関連基礎調査WG">
 <meta name="dcterms.date" content="2024-10-16">
 
-<title>dswg-book</title>
+<title>6&nbsp; dplyr – dswg-book</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,26 +22,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./qmds/actuar.html" rel="next">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../qmds/e1071.html" rel="next">
+<link href="../qmds/DALEX.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -82,7 +117,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Rパッケージ活用事例集</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmds/dplyr.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">dplyr</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -97,7 +132,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">dswg-book</a> 
+      <a href="../">dswg-book</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -109,55 +144,55 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Rパッケージ活用事例集</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/actuar.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/actuar.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">actuar</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/aglm.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/aglm.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">aglm</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/ALEPlot.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/ALEPlot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ALEPlot</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/corrplot.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/corrplot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">corrplot</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/DALEX.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/DALEX.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">DALEX</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/dplyr.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/dplyr.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">dplyr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/e1071.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/e1071.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">e1071</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./qmds/forcats.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmds/forcats.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">forcats</span></span></a>
   </div>
 </li>
@@ -171,7 +206,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#rパッケージ活用事例集" id="toc-rパッケージ活用事例集" class="nav-link active" data-scroll-target="#rパッケージ活用事例集">Rパッケージ活用事例集</a></li>
+  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">6.0.1</span> パッケージの概要</a></li>
+  <li><a href="#パイプ演算子でコードを簡略化する" id="toc-パイプ演算子でコードを簡略化する" class="nav-link" data-scroll-target="#パイプ演算子でコードを簡略化する"><span class="header-section-number">6.0.2</span> パイプ演算子でコードを簡略化する</a></li>
+  <li><a href="#データフレームから指定した列を抽出する" id="toc-データフレームから指定した列を抽出する" class="nav-link" data-scroll-target="#データフレームから指定した列を抽出する"><span class="header-section-number">6.0.3</span> データフレームから指定した列を抽出する</a></li>
+  <li><a href="#データフレームから条件を満たす行を抽出する" id="toc-データフレームから条件を満たす行を抽出する" class="nav-link" data-scroll-target="#データフレームから条件を満たす行を抽出する"><span class="header-section-number">6.0.4</span> データフレームから条件を満たす行を抽出する</a></li>
+  <li><a href="#データフレームの行をソートする" id="toc-データフレームの行をソートする" class="nav-link" data-scroll-target="#データフレームの行をソートする"><span class="header-section-number">6.0.5</span> データフレームの行をソートする</a></li>
+  <li><a href="#データフレームの列を作成する" id="toc-データフレームの列を作成する" class="nav-link" data-scroll-target="#データフレームの列を作成する"><span class="header-section-number">6.0.6</span> データフレームの列を作成する</a></li>
+  <li><a href="#データを要約する" id="toc-データを要約する" class="nav-link" data-scroll-target="#データを要約する"><span class="header-section-number">6.0.7</span> データを要約する</a></li>
+  <li><a href="#データフレームをグループ化して集計する" id="toc-データフレームをグループ化して集計する" class="nav-link" data-scroll-target="#データフレームをグループ化して集計する"><span class="header-section-number">6.0.8</span> データフレームをグループ化して集計する</a></li>
   </ul>
 </nav>
     </div>
@@ -180,7 +222,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">dswg-book</h1>
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">dplyr</span></h1>
 </div>
 
 
@@ -190,7 +232,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Norah Jones </p>
+             <p>データサイエンス関連基礎調査WG </p>
           </div>
   </div>
     
@@ -209,15 +251,140 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="rパッケージ活用事例集" class="level1 unnumbered">
-<h1 class="unnumbered">Rパッケージ活用事例集</h1>
-<p>本ウェブサイトは、日本アクチュアリー会の会員が、アクチュアリー業務にRを活用する際の参考になることを目的として、DS関連基礎調査WGの情報共有チームが作成したものです。</p>
-<p>なお、本リポジトリは情報共有チーム内での参照のために用意されたものであり、会員に直接参照されることを目的としたものではありません。</p>
-<p>本リポジトリは、以下のウェブサイトを参考にして作成されています。</p>
-<ol type="1">
-<li><p>quarto : <a href="https://quarto.org/" class="uri">https://quarto.org/</a></p></li>
-<li><p>usethis : <a href="https://usethis.r-lib.org/" class="uri">https://usethis.r-lib.org/</a></p></li>
-</ol>
+<section id="パッケージの概要" class="level3" data-number="6.0.1">
+<h3 data-number="6.0.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">6.0.1</span> パッケージの概要</h3>
+<p>dplyrパッケージは、データフレームに対する「特定の行・列の抽出」や「ソート」などの重要な操作を、とてもシンプルなコードで実現するための関数を備えています。規模の大きなデータを扱うことの多いアクチュアリーにとって、必要不可欠なパッケージの一つです。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="パイプ演算子でコードを簡略化する" class="level3" data-number="6.0.2">
+<h3 data-number="6.0.2" class="anchored" data-anchor-id="パイプ演算子でコードを簡略化する"><span class="header-section-number">6.0.2</span> パイプ演算子でコードを簡略化する</h3>
+<p>dplyrパッケージを呼び出すと、magrittrパッケージが提供するパイプ演算子（%&gt;%）も使えるようになります。この演算子は、左側にあるオブジェクトを、右側の関数の未指定の引数のうち一番最初のものに代入した結果を返します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># irisデータの先頭3行を表示</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>iris  <span class="sc">%&gt;%</span> <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          5.1         3.5          1.4         0.2  setosa
+2          4.9         3.0          1.4         0.2  setosa
+3          4.7         3.2          1.3         0.2  setosa</code></pre>
+</div>
+</div>
+<p>なお、バージョン 4.1.0 以降の R には、標準演算子の一つとしてパイプ演算子 “|&gt;” が追加されています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># バージョン 4.1.0 以降でのみ利用可能</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">|&gt;</span> <span class="fu">slice_tail</span>(<span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+1          6.5         3.0          5.2         2.0 virginica
+2          6.2         3.4          5.4         2.3 virginica
+3          5.9         3.0          5.1         1.8 virginica</code></pre>
+</div>
+</div>
+<p>データフレームに対して多くの操作を重ねたいとき、パイプ演算子を活用すれば、多重括弧による入れ子構造を避けて可読性の高いコードを書くことができます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Species, Sepal.Length, Sepal.Width) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sepal.Ratio　=</span>　<span class="fu">round</span>(Sepal.Length <span class="sc">/</span> Sepal.Width, <span class="dv">3</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Sepal.Ratio) <span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+# Groups:   Species [3]
+  Species    Sepal.Length Sepal.Width Sepal.Ratio
+  &lt;fct&gt;             &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+1 setosa              5.2         4.1        1.27
+2 versicolor          6           3.4        1.76
+3 virginica           6.2         3.4        1.82</code></pre>
+</div>
+</div>
+</section>
+<section id="データフレームから指定した列を抽出する" class="level3" data-number="6.0.3">
+<h3 data-number="6.0.3" class="anchored" data-anchor-id="データフレームから指定した列を抽出する"><span class="header-section-number">6.0.3</span> データフレームから指定した列を抽出する</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Species, Sepal.Width, Petal.Width) <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_tail</span>(<span class="at">n=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Species Sepal.Width Petal.Width
+1 virginica         3.0         2.0
+2 virginica         3.4         2.3
+3 virginica         3.0         1.8</code></pre>
+</div>
+</div>
+</section>
+<section id="データフレームから条件を満たす行を抽出する" class="level3" data-number="6.0.4">
+<h3 data-number="6.0.4" class="anchored" data-anchor-id="データフレームから条件を満たす行を抽出する"><span class="header-section-number">6.0.4</span> データフレームから条件を満たす行を抽出する</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Sepal.Width <span class="sc">==</span> <span class="fl">2.8</span>, Petal.Width <span class="sc">==</span> <span class="fl">1.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+1          5.7         2.8          4.5         1.3 versicolor
+2          6.1         2.8          4.0         1.3 versicolor
+3          5.7         2.8          4.1         1.3 versicolor</code></pre>
+</div>
+</div>
+</section>
+<section id="データフレームの行をソートする" class="level3" data-number="6.0.5">
+<h3 data-number="6.0.5" class="anchored" data-anchor-id="データフレームの行をソートする"><span class="header-section-number">6.0.5</span> データフレームの行をソートする</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Sepal.Length, Sepal.Width) <span class="sc">%&gt;%</span> <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          4.3         3.0          1.1         0.1  setosa
+2          4.4         2.9          1.4         0.2  setosa
+3          4.4         3.0          1.3         0.2  setosa</code></pre>
+</div>
+</div>
+</section>
+<section id="データフレームの列を作成する" class="level3" data-number="6.0.6">
+<h3 data-number="6.0.6" class="anchored" data-anchor-id="データフレームの列を作成する"><span class="header-section-number">6.0.6</span> データフレームの列を作成する</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sepal.Ratio=</span><span class="fu">round</span>(Sepal.Length <span class="sc">/</span> Sepal.Width, <span class="dv">3</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species Sepal.Ratio
+1          5.1         3.5          1.4         0.2  setosa       1.457
+2          4.9         3.0          1.4         0.2  setosa       1.633
+3          4.7         3.2          1.3         0.2  setosa       1.469</code></pre>
+</div>
+</div>
+</section>
+<section id="データを要約する" class="level3" data-number="6.0.7">
+<h3 data-number="6.0.7" class="anchored" data-anchor-id="データを要約する"><span class="header-section-number">6.0.7</span> データを要約する</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="fu">n_distinct</span>(Sepal.Length),</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">mean</span>(Sepal.Length),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">max</span>(Sepal.Length),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">sum</span>(<span class="fu">log</span>(Sepal.Width)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  n_distinct(Sepal.Length) mean(Sepal.Length) max(Sepal.Length)
+1                       35           5.843333               7.9
+  sum(log(Sepal.Width))
+1              166.1159</code></pre>
+</div>
+</div>
+</section>
+<section id="データフレームをグループ化して集計する" class="level3" data-number="6.0.8">
+<h3 data-number="6.0.8" class="anchored" data-anchor-id="データフレームをグループ化して集計する"><span class="header-section-number">6.0.8</span> データフレームをグループ化して集計する</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">n</span>(), <span class="fu">mean</span>(Sepal.Length), <span class="fu">sd</span>(Sepal.Length))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 4
+  Species    `n()` `mean(Sepal.Length)` `sd(Sepal.Length)`
+  &lt;fct&gt;      &lt;int&gt;                &lt;dbl&gt;              &lt;dbl&gt;
+1 setosa        50                 5.01              0.352
+2 versicolor    50                 5.94              0.516
+3 virginica     50                 6.59              0.636</code></pre>
+</div>
+</div>
 
 
 </section>
@@ -645,10 +812,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="../qmds/DALEX.html" class="pagination-link" aria-label="DALEX">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">DALEX</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./qmds/actuar.html" class="pagination-link" aria-label="actuar">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">actuar</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../qmds/e1071.html" class="pagination-link" aria-label="e1071">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">e1071</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

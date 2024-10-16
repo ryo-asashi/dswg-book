@@ -1,0 +1,119 @@
+---
+title: "palmerpenguins"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  html:
+    fig-width: 6
+    fig-height: 3
+---
+
+```{r, include=FALSE}
+
+# install packages
+pkgs <- c("ggplot2", "palmerpenguins", "DT", "webshot2")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+# detach packages
+default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
+             "package:stats", "package:graphics",
+             "package:grDevices", "package:utils",
+             "package:datasets", "package:methods",
+             "Autoloads", "package:base")
+for (pkg in setdiff(search(), default)) {
+  detach(pkg, character.only = TRUE)
+  }
+
+# clear objects
+remove(list=objects())
+```
+
+## パッケージの概要
+
+[palmerpenguins](https://allisonhorst.github.io/palmerpenguins/index.html) パッケージは、南極大陸のパルマ―群島に生息する三種類のペンギン（Gentoo：ジェンツーペンギン、Adelie：アデリーペンギン、Chinstrap：ヒゲペンギン）の体長や体重などに関する penguins データセットなどを収録したパッケージです。特に、penguins データセットは、探索的データ分析や可視化の練習で定番となっている iris データセットに代わる選択肢となることを目指して作成されています。
+
+## penguins データセット
+
+| 変数名            | データ型 | 概要                          |
+|:------------------|:---------|:------------------------------|
+| species           | factor   | ペンギンの種類                |
+| island            | factor   | 生息している島の名前          |
+| bill_length_mm    | double   | くちばしの長さ \[mm\]         |
+| bill_depth_mm     | double   | くちばしの太さ \[mm\]         |
+| flipper_length_mm | integer  | フリッパー（翼）の長さ \[mm\] |
+| body_mass_g       | integer  | 体重 \[g\]                    |
+| sex               | factor   | 性別                          |
+| year              | integer  | 測定年                        |
+
+```{r}
+library(palmerpenguins)
+library(ggplot2)
+
+DT::datatable(penguins)
+```
+
+## ggplot2 パッケージによる可視化の例
+
+```{r, results=FALSE}
+# カラーパレットの定義
+colors <- c("darkorange","darkred","darkcyan")
+
+# 可視化の例
+ggplot(na.omit(penguins),
+       aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point(aes(color = species, shape = species),
+             size = 2.5, alpha = 0.7) +
+  scale_color_manual(values = colors) +
+  geom_smooth(method = "lm") +
+  labs(x = "フリッパー（翼）の長さ [mm]",
+       y = "体重 [g]",
+       color = "種類",
+       shape = "種類")
+```
+
+-   **種類と生息地の関係**
+
+```{r}
+ggplot(penguins, aes(x = island, fill = species)) +
+  geom_bar(alpha = 0.8) + # 棒グラフを指定
+  scale_fill_manual(values = colors, guide = "none") + # 塗り分け方を指定
+  facet_wrap(~species, ncol = 1) + # 種類ごとにグラフを分ける
+  coord_flip() + # x軸とy軸を入れ替えて水平にする
+  labs(y="データに含まれる個体数")
+```
+
+アデリーペンギンはすべての島で見つかっていますが、ヒゲペンギンは Dream 島、ジェンツーペンギンは Biscoe 島だけで生活しているようです。
+
+-   **くちばしの長さと太さの関係**
+
+```{r, results = FALSE}
+ggplot(na.omit(penguins),
+       aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(shape = species),
+             color = "grey", size = 2.5, alpha = 0.7) +
+  geom_smooth(method = "lm") +
+  scale_color_manual(values = colors) +
+  labs(x = "くちばちの長さ [mm]", y = "くちばしの太さ [mm]")
+```
+
+ペンギンたちのくちばしの長さと太さについて散布図を描いてみると、「くちばしは長いほど細い」という相関関係があることがわかります。
+
+```{r, results = FALSE}
+ggplot(na.omit(penguins),
+       aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species, shape = species),
+             size = 2.5, alpha = 0.7) +
+  geom_smooth(method = "lm",
+              aes(color = species, group = species)) +
+  scale_color_manual(values = colors) +
+  labs(x = "くちばちの長さ [mm]", y = "くちばしの太さ [mm]",
+       color = "種類", shape = "種類")
+```
+
+しかし、散布図をペンギンの種類ごとに色分けして観察すると、それぞれの種類の中では「くちばしは長いほど太い」という相関関係があることがわかります。
+
+[palmerpenguins の公式ページ](https://allisonhorst.github.io/palmerpenguins/index.html)には、これらのほかにggplot2 パッケージを用いた可視化の例が豊富に示されています。

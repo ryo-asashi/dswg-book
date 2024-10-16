@@ -1,0 +1,153 @@
+---
+title: "igraph"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  html:
+    fig-width: 4
+    fig-height: 4
+---
+
+```{r, include=FALSE}
+
+# install packages
+pkgs <- c("dplyr", "igraph")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+# detach packages
+default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
+             "package:stats", "package:graphics",
+             "package:grDevices", "package:utils",
+             "package:datasets", "package:methods",
+             "Autoloads", "package:base")
+for (pkg in setdiff(search(), default)) {
+  detach(pkg, character.only = TRUE)
+  }
+
+# clear objects
+remove(list=objects())
+```
+
+## パッケージの概要
+
+`igraph` は、グラフ（ネットワークグラフ）を扱うためのパッケージで、グラフ（`igraph` オブジェクト）の作成や基本的な分析を簡単なコードで実行することができます。
+
+```{r, message=FALSE}
+library(dplyr)
+library(igraph)
+```
+
+## グラフを作成する
+
+`make_graph` 関数の引数 `edges` に、グラフの頂点の名前を要素とするベクトルを渡すことで、`igraph` オブジェクトを作成することができます。`edges` に渡されたベクトルは c(1番目の辺の始点、1番目の辺の終点、2番目の辺の始点、2番目の辺の終点...) と解釈されます。
+
+```{r make_graph directed}
+g1 <- make_graph(edges = c(1,2, 1,3, 2,3, 3,4))
+plot(g1)
+```
+
+引数 `directed` を `FALSE` にすることで、無向グラフを作成することができます。また、`plot` 関数の引数を指定することで、プロットの見た目を柔軟に変更することができます。
+
+```{r make_graph undirected}
+g2 <- make_graph(edges = c(1,2, 1,3, 2,3, 3,4),
+                directed = FALSE)
+plot(g2, vertex.color = NA, vertex.size = 30,
+     vertex.label.cex = 1.5, vertex.label.color = "#202020")
+```
+
+`graph_from_literal` 関数では、`X---Y`, `X--+Y` などの直感的な記法によって、グラフの辺を指定することができます。ここで、`---` は無向辺を表します。`-` の数に制限はなく、`--` や `----` としても同じ結果を得られます。
+
+```{r graph_from_literal undirected}
+g3 <- graph_from_literal(W---X:Y, X---Y, Y---Z)
+plot(g3)
+```
+
+また、`--+` は有向辺を表します。`-` の数に制限はなく、`-+` や `---+` としても同じ結果を得られます。
+
+```{r graph_from_literal directed}
+g4 <- graph_from_literal(W--+X:Y, X--+Y, Y--+Z)
+plot(g4, vertex.shape = "none", vertex.size = 30,
+     vertex.label.cex = 1.5, vertex.label.color = "#202020")
+```
+
+## データフレームからグラフを作成する
+
+`graph.data.frame` では、辺の情報を記録したデータフレームからグラフを作成することができます。第1引数 `x` に渡されたデータフレームの第1列と第2列が、辺の始点と終点として解釈されます。また、第3列目以降は、各辺の属性として用いられます。
+
+```{r graph_from_data_frame}
+df <- tibble(
+  tails = c(1, 1, 2, 3),
+  heads = c(2, 3, 3, 4),
+  label = c('w', 'x', 'y', 'z'),
+  label.color = rep("#151515", 4),
+  )
+g5 <- graph_from_data_frame(df, directed = FALSE)
+plot(g5)
+```
+
+## 頂点や辺を追加する
+
+`add_vertices` 関数によって `igraph` オブジェクトに頂点を追加することができます。
+
+```{r}
+g <- make_empty_graph(directed=FALSE)
+g <- add_vertices(g, nv = 2, color = "#303030",
+                  label.color = "white")
+g <- add_vertices(g, nv = 2, color = "#E03030",
+                  label.color = "white")
+plot(g, vertex.size = 25)
+```
+
+同様に、`add_edges` 関数によって `igraph` オブジェクトに辺を追加することができます。2つの頂点の間に2本以上の辺を張ることもできます。
+
+```{r}
+g <- add_edges(g, c(1,2, 2,3, 1,4), color = "#303030")
+g <- add_edges(g, c(3,4, 4,1, 3,2), color = "#E03030")
+plot(g, vertex.size = 25)
+```
+
+##  頂点や辺を削除する
+
+`delete_vertices` 関数によって、頂点を削除することができます。なお、グラフに残される頂点の番号が連続になるように、削除された頂点より後ろの番号を持っていた頂点の番号が修正されます。
+
+```{r}
+g <- delete_vertices(g, 3)
+plot(g, vertex.size = 25)
+```
+
+同様に、`delete_edges` 関数によって、辺を削除することができます。
+
+```{r}
+g <- delete_edges(g, "1|2")
+plot(g, vertex.size = 25)
+```
+
+## 木や格子などの特別なグラフを作成する
+
+`make_tree` 関数によって、頂点数 `n`、各頂点の子の数が `children` であるような木を作成することができます。
+
+```{r tree}
+g_tree <- make_tree(n = 15, children = 2, mode = 'undirected')
+plot(g_tree,
+     layout = layout_as_tree(g_tree),
+     vertex.size = 25)
+```
+
+`make_lattice` 関数によって、格子グラフを作成することができます。
+
+```{r lattice}
+g_lat <- make_lattice(c(3, 3))
+plot(g_lat, vertex.size = 25)
+```
+
+## プロットのレイアウトを調整する
+
+`plot.igraph`（`igraph` オブジェクトに `plot` を適用したときに呼び出される関数）では、`layout` を指定することで、グラフのレイアウトを指定することができます。レイアウトを作成するアルゴリズムは複数あり、`igraph` パッケージには `layout_with_kk` 関数や `layout_with_fr` 関数などが実装されています。`layout_nicely` 関数を用いると、グラフの特性に適したアルゴリズムによるレイアウトを出力することができます。
+
+```{r}
+plot(g_tree, layout = layout_nicely(g_tree), vertex.size = 25)
+```

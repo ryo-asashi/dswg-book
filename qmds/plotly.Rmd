@@ -1,0 +1,80 @@
+---
+title: "plotly"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+    toc_depth: '3'
+    fig_width: 6
+    fig_height: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(plotly)) install.packages('plotly')
+```
+
+### パッケージの概要
+
+plotlyは、インタラクティブなグラフを作成することのできるパッケージです。 baseのplotや、ggplot2では出力したグラフは固定されますが、plotlyでは、 出力したグラフを動かすことができます。
+
+```{r plotly}
+suppressMessages(require(tidyverse))
+require(plotly)
+```
+
+### plotの作成方法
+
+plot_ly関数を利用することで、グラフを作成できます。 以下では、Rのデータセットquakes（Fijiにおけるマグニチュード4以上の地震に関するデータセット）を用いたグラフを作成しています。
+
+引数の意味は以下の通りです。
+
+data：利用するデータセットとして、quakesを指定 x：x軸にmag（マグニチュード）を指定 y：y軸にstations（地震を観測した観測所数）を指定 type：グラフの種類として、散布図を指定 mode：データセットの各要素のプロット方法として、マーカーを指定
+
+```{r plotly::plot_ly}
+plot_quakes <- plot_ly(data = quakes,
+                        x = ~mag,
+                        y = ~stations,
+                        type = "scatter",
+                        mode = "markers")
+plot_quakes
+```
+
+出力されているグラフにカーソルを合わせると、グラフの左上にカメラのマークなど、複数のマークが表示されます。また、各マークにカーソルを合わせると説明文が表示されます。 例えば、「Zoom in」という説明文が表示される＋のマークをクリックすると、グラフを拡大することができます。他にも表示されている部分を画像として保存したり、ドラッグ＆ドロップでグラフを動かすことなども可能です。 上記のように、出力した後のグラフを動的に操作できることが、本パッケージの特徴です。
+
+### タイトルなどのつけ方
+
+タイトルなどをつける場合はlayout関数を利用します。
+
+```{r plotly::plot_ly_2}
+plot_quakes_2 <- plot_ly(data = quakes,
+                       x = ~mag,
+                       y = ~stations,
+                       type = "scatter",
+                       mode = "markers") %>% 
+  layout(title = "マグニチュード別の観測所数",
+         xaxis = list(title = "マグニチュード"),
+         yaxis = list(
+           rangemode = "tozero",
+           title = "観測所数"
+           )
+         )
+
+plot_quakes_2
+
+```
+
+### 公式サイトについて
+
+これまで紹介してきたplot_ly関数や、layout関数の詳細は公式サイトのドキュメントで確認可能です。 例えば、上記で利用した散布図（typeの引数を"scatter"と指定）を表示する場合の詳細を確認する場合は、以下のアドレスにアクセスしてください。
+
+<https://plotly.com/javascript/reference/scatter/>
+
+#### 公式サイトなどのアドレス
+
+公式サイト（pythonなど、R以外も含めた）のTOP画面 <https://plotly.com/graphing-libraries/>
+
+公式サイト（R）のTOP画面 <https://plotly.com/r/>
+
+レファレンス用のアドレスがまとまっているページ <https://plotly.com/r/reference/index/>
