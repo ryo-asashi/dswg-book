@@ -10,6 +10,9 @@ book:
     - intro.qmd
     - summary.qmd
     - references.qmd
+    - actuar.qmd
+    - aglm.qmd
+    - ALEPlot.qmd
 
 bibliography: references.bib
 
