@@ -5,9 +5,8 @@ execute:
   freeze: auto
 
 book:
-  title: "R packages for actuaries"
-  author: "DS関連基礎調査WG情報共有チーム"
-  date: "2024/10/16"
+  title: "Rパッケージ活用事例集"
+  author: "データサイエンス関連基礎調査WG"
   chapters:
     - index.qmd
     - qmds/actuar.qmd

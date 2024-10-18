@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2024-10-16">
+<meta name="dcterms.date" content="2024-10-18">
 
-<title>2&nbsp; aglm – R packages for actuaries</title>
+<title>2&nbsp; aglm – Rパッケージ活用事例集</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -161,7 +161,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">R packages for actuaries</a> 
+      <a href="../">Rパッケージ活用事例集</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -174,7 +174,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Rパッケージ活用事例集</span></a>
+ <span class="menu-text">はじめに</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -326,13 +326,11 @@ window.Quarto = {
    
   <ul>
   <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">2.1</span> パッケージの概要</a></li>
-  <li><a href="#aglm-モデルを構築する" id="toc-aglm-モデルを構築する" class="nav-link" data-scroll-target="#aglm-モデルを構築する"><span class="header-section-number">2.2</span> AGLM モデルを構築する</a>
-  <ul class="collapse">
-  <li><a href="#参考情報" id="toc-参考情報" class="nav-link" data-scroll-target="#参考情報"><span class="header-section-number">2.2.1</span> 参考情報</a></li>
-  </ul></li>
+  <li><a href="#aglm-モデルを構築する" id="toc-aglm-モデルを構築する" class="nav-link" data-scroll-target="#aglm-モデルを構築する"><span class="header-section-number">2.2</span> AGLM モデルを構築する</a></li>
   <li><a href="#特徴量ごとの効果を可視化する" id="toc-特徴量ごとの効果を可視化する" class="nav-link" data-scroll-target="#特徴量ごとの効果を可視化する"><span class="header-section-number">2.3</span> 特徴量ごとの効果を可視化する</a></li>
   <li><a href="#最適な-λ-を探索しながら-aglm-モデルを構築する" id="toc-最適な-λ-を探索しながら-aglm-モデルを構築する" class="nav-link" data-scroll-target="#最適な-λ-を探索しながら-aglm-モデルを構築する"><span class="header-section-number">2.4</span> 最適な λ を探索しながら AGLM モデルを構築する</a></li>
   <li><a href="#最適な-λ-α-を探索しながら-aglm-モデルを構築する" id="toc-最適な-λ-α-を探索しながら-aglm-モデルを構築する" class="nav-link" data-scroll-target="#最適な-λ-α-を探索しながら-aglm-モデルを構築する"><span class="header-section-number">2.5</span> 最適な λ, α を探索しながら AGLM モデルを構築する</a></li>
+  <li><a href="#参考資料" id="toc-参考資料" class="nav-link" data-scroll-target="#参考資料"><span class="header-section-number">2.6</span> 参考資料</a></li>
   </ul>
 </nav>
     </div>
@@ -358,7 +356,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 16, 2024</p>
+      <p class="date">October 18, 2024</p>
     </div>
   </div>
   
@@ -422,11 +420,21 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<section id="参考情報" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="参考情報"><span class="header-section-number">2.2.1</span> 参考情報</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>AGLMの学習における正則化項は次の式で与えられます。</p>
 <p><span class="math display">\[R(\{\beta_{jk}\};\lambda, \alpha)=\lambda\{(1-\alpha)\sum_j\sum_k|\beta_{jk}|^2+\alpha\sum_j\sum_k|\beta_{jk}|\}\]</span></p>
 <p><span class="math inline">\(\alpha\)</span> はL1正則化とL2正則化のバランスを決めるパラメーターです。この形式の正則化項について、<span class="math inline">\(\alpha=1\)</span> の場合をラッソ、<span class="math inline">\(\alpha=0\)</span> の場合をリッジ、<span class="math inline">\(0&lt;\alpha&lt;1\)</span> の場合をエラスティックネットと呼びます。また、λ は正則化項の影響度を決めるパラメーターで、この値が大きいほど、回帰係数の値が小さく抑えられるようになります。</p>
+</div>
+</div>
 <p>さて、AGLMでは、正則化項の λ パラメーターを指定しない場合、デフォルトの設定では100通りの λ の値に対して計算が行われます。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>lambdas <span class="ot">=</span> model_aglm<span class="sc">@</span>backend_models<span class="sc">$</span>glmnet<span class="sc">$</span>lambda</span>
@@ -450,7 +458,7 @@ window.Quarto = {
 <pre><code>[1] 100</code></pre>
 </div>
 </div>
-<p>また、λ パラメーターの値ごとに、学習の結果ゼロ以外の値になった回帰係数の数も記録されています。AGLM では、非線形性を表現するために取り入れた工夫の影響で、推定される回帰係数の数（最大116）が、学習データに含まれる説明変数の数（13）よりも多くなります。</p>
+<p>また、λ パラメーターの値ごとに、学習の結果ゼロ以外の値になった回帰係数の数も記録されています。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>dfs <span class="ot">=</span> model_aglm<span class="sc">@</span>backend_models<span class="sc">$</span>glmnet<span class="sc">$</span>df</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(dfs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -483,7 +491,6 @@ window.Quarto = {
 </div>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 第1列（s1）はlambdas[1]以上の値を指定</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
 </section>
 <section id="特徴量ごとの効果を可視化する" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="特徴量ごとの効果を可視化する"><span class="header-section-number">2.3</span> 特徴量ごとの効果を可視化する</h2>
@@ -576,6 +583,10 @@ window.Quarto = {
 </div>
 </div>
 </div>
+</section>
+<section id="参考資料" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="参考資料"><span class="header-section-number">2.6</span> 参考資料</h2>
+<p>[1] 藤田・田中・岩沢. (2019). <a href="https://www.jarip.org/publication/risk_and_insurance/pdf/RI_v15_045.pdf">“AGLM: アクチュアリー実務のためのデータサイエンスの技術を用いたGLMの拡張”</a></p>
 
 
 </section>

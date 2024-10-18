@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2024-10-16">
+<meta name="dcterms.date" content="2024-10-18">
 
-<title>1&nbsp; actuar – R packages for actuaries</title>
+<title>1&nbsp; actuar – Rパッケージ活用事例集</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -161,7 +161,7 @@ window.Quarto = {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">R packages for actuaries</a> 
+      <a href="../">Rパッケージ活用事例集</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -174,7 +174,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Rパッケージ活用事例集</span></a>
+ <span class="menu-text">はじめに</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -327,6 +327,7 @@ window.Quarto = {
   <ul>
   <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">1.1</span> パッケージの概要</a></li>
   <li><a href="#確率密度関数をプロットする" id="toc-確率密度関数をプロットする" class="nav-link" data-scroll-target="#確率密度関数をプロットする"><span class="header-section-number">1.2</span> 確率密度関数をプロットする</a></li>
+  <li><a href="#参考資料" id="toc-参考資料" class="nav-link" data-scroll-target="#参考資料"><span class="header-section-number">1.3</span> 参考資料</a></li>
   </ul>
 </nav>
     </div>
@@ -352,7 +353,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 16, 2024</p>
+      <p class="date">October 18, 2024</p>
     </div>
   </div>
   
@@ -366,8 +367,8 @@ window.Quarto = {
 
 <section id="パッケージの概要" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">1.1</span> パッケージの概要</h2>
-<p>actuar パッケージは、stats パッケージに収録されていない確率分布を扱うための関数を実装したパッケージです。特に、パレート分布、Burr分布、対数ガンマ分布、対数ロジスティック分布など、裾の厚い分布が数多く収録されています。</p>
-<p>なお、<code>d****(x, ...)</code> が密度関数、<code>p****(x, ...)</code> が累積分布関数、<code>r****(n, ...)</code> が乱数、<code>q(p, ...)</code> が分位点を表しているのは stats パッケージと同じです。</p>
+<p>actuar パッケージは、（主に損害保険分野の）保険数理に関する機能を実装したパッケージです。actuar パッケージの特徴の一つは様々な確率分布を扱うための関数を実装していることで、パレート分布、Burr分布、対数ガンマ分布、対数ロジスティック分布など、裾の厚い分布が数多く収録されています。</p>
+<p>stats パッケージと同様、actuar パッケージにおいても、それぞれの分布に対して、その名称に <code>d</code>、<code>p</code>、<code>r</code>、<code>q</code> という接頭辞を付けた関数が用意されています。接頭辞ごとに関数の機能が異なり、<code>d****(x, ...)</code> が密度関数、<code>p****(x, ...)</code> が累積分布関数、<code>r****(n, ...)</code> が乱数を生成する関数、<code>q(p, ...)</code> が分位点を返す関数です。</p>
 </section>
 <section id="確率密度関数をプロットする" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="確率密度関数をプロットする"><span class="header-section-number">1.2</span> 確率密度関数をプロットする</h2>
@@ -461,17 +462,43 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>actuar パッケージには、これらのほかにも以下のような確率分布が実装されています。</p>
-<ul>
-<li><p>逆ガンマ分布 <code>invgamma</code></p></li>
-<li><p>逆パレート分布 <code>invpareto</code></p></li>
-<li><p>逆バー分布 <code>invburr</code></p></li>
-<li><p>逆ワイブル分布 <code>invweibull</code></p></li>
-<li><p>逆指数分布 <code>invexp</code></p></li>
-<li><p>一般化ベータ分布 <code>genbeta</code></p></li>
-<li><p>一般化パレート分布 <code>genpareto</code><br>
-</p></li>
-</ul>
+<p>actuar パッケージには、上記のほかにも以下のような確率分布が実装されています。</p>
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td>逆ガンマ分布</td>
+<td><code>invgamma</code></td>
+</tr>
+<tr class="even">
+<td>逆パレート分布</td>
+<td><code>invpareto</code></td>
+</tr>
+<tr class="odd">
+<td>逆バー分布</td>
+<td><code>invburr</code></td>
+</tr>
+<tr class="even">
+<td>逆ワイブル分布</td>
+<td><code>invweibull</code></td>
+</tr>
+<tr class="odd">
+<td>逆指数分布</td>
+<td><code>invexp</code></td>
+</tr>
+<tr class="even">
+<td>一般化ベータ分布</td>
+<td><code>genbeta</code></td>
+</tr>
+<tr class="odd">
+<td>一般化パレート分布</td>
+<td><code>genpareto</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="参考資料" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="参考資料"><span class="header-section-number">1.3</span> 参考資料</h2>
+<p>[1] Dutang, C., Goulet, V. and Pigeon, M. (2008). <a href="#0" style="font-size: 13pt;">actuar: An R Package for Actuarial Science</a></p>
 
 
 </section>
@@ -899,8 +926,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../index.html" class="pagination-link" aria-label="Rパッケージ活用事例集">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Rパッケージ活用事例集</span>
+      <a href="../index.html" class="pagination-link" aria-label="はじめに">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">はじめに</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
