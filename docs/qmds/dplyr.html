@@ -9,7 +9,7 @@
 <meta name="author" content="データサイエンス関連基礎調査WG">
 <meta name="dcterms.date" content="2024-10-16">
 
-<title>7&nbsp; dplyr – Rパッケージ活用事例集</title>
+<title>8&nbsp; dplyr – Rパッケージ活用事例集</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -67,7 +67,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../qmds/e1071.html" rel="next">
-<link href="../qmds/distr.html" rel="prev">
+<link href="../qmds/distrEX.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -117,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmds/dplyr.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">dplyr</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmds/dplyr.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">dplyr</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -186,104 +186,116 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../qmds/distrEX.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">distrEx</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../qmds/dplyr.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">dplyr</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">dplyr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/e1071.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">e1071</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">e1071</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/forcats.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">forcats</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">forcats</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/gghighlight.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">gghighlight</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">gghighlight</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/igraph.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">igraph</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">igraph</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/iml.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">iml</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">iml</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/lifecontingencies.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">lifecontingencies</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">lifecontingencies</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/mlbench.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">mlbench</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/palmerpenguins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">palmerpenguins</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">palmerpenguins</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/pdp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">pdp</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">pdp</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/pROC.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">pROC</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">pROC</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/psych.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">psych</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">psych</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/purrr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">purrr</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">purrr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/recipes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">recipes</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">recipes</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/rsample.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">rsample</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">rsample</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/shapviz.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">shapviz</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">shapviz</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/skimr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">skimr</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">skimr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/survival.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">survival</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">survival</span></span></a>
   </div>
 </li>
     </ul>
@@ -296,14 +308,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">7.0.1</span> パッケージの概要</a></li>
-  <li><a href="#パイプ演算子でコードを簡略化する" id="toc-パイプ演算子でコードを簡略化する" class="nav-link" data-scroll-target="#パイプ演算子でコードを簡略化する"><span class="header-section-number">7.0.2</span> パイプ演算子でコードを簡略化する</a></li>
-  <li><a href="#データフレームから指定した列を抽出する" id="toc-データフレームから指定した列を抽出する" class="nav-link" data-scroll-target="#データフレームから指定した列を抽出する"><span class="header-section-number">7.0.3</span> データフレームから指定した列を抽出する</a></li>
-  <li><a href="#データフレームから条件を満たす行を抽出する" id="toc-データフレームから条件を満たす行を抽出する" class="nav-link" data-scroll-target="#データフレームから条件を満たす行を抽出する"><span class="header-section-number">7.0.4</span> データフレームから条件を満たす行を抽出する</a></li>
-  <li><a href="#データフレームの行をソートする" id="toc-データフレームの行をソートする" class="nav-link" data-scroll-target="#データフレームの行をソートする"><span class="header-section-number">7.0.5</span> データフレームの行をソートする</a></li>
-  <li><a href="#データフレームの列を作成する" id="toc-データフレームの列を作成する" class="nav-link" data-scroll-target="#データフレームの列を作成する"><span class="header-section-number">7.0.6</span> データフレームの列を作成する</a></li>
-  <li><a href="#データを要約する" id="toc-データを要約する" class="nav-link" data-scroll-target="#データを要約する"><span class="header-section-number">7.0.7</span> データを要約する</a></li>
-  <li><a href="#データフレームをグループ化して集計する" id="toc-データフレームをグループ化して集計する" class="nav-link" data-scroll-target="#データフレームをグループ化して集計する"><span class="header-section-number">7.0.8</span> データフレームをグループ化して集計する</a></li>
+  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">8.0.1</span> パッケージの概要</a></li>
+  <li><a href="#パイプ演算子でコードを簡略化する" id="toc-パイプ演算子でコードを簡略化する" class="nav-link" data-scroll-target="#パイプ演算子でコードを簡略化する"><span class="header-section-number">8.0.2</span> パイプ演算子でコードを簡略化する</a></li>
+  <li><a href="#データフレームから指定した列を抽出する" id="toc-データフレームから指定した列を抽出する" class="nav-link" data-scroll-target="#データフレームから指定した列を抽出する"><span class="header-section-number">8.0.3</span> データフレームから指定した列を抽出する</a></li>
+  <li><a href="#データフレームから条件を満たす行を抽出する" id="toc-データフレームから条件を満たす行を抽出する" class="nav-link" data-scroll-target="#データフレームから条件を満たす行を抽出する"><span class="header-section-number">8.0.4</span> データフレームから条件を満たす行を抽出する</a></li>
+  <li><a href="#データフレームの行をソートする" id="toc-データフレームの行をソートする" class="nav-link" data-scroll-target="#データフレームの行をソートする"><span class="header-section-number">8.0.5</span> データフレームの行をソートする</a></li>
+  <li><a href="#データフレームの列を作成する" id="toc-データフレームの列を作成する" class="nav-link" data-scroll-target="#データフレームの列を作成する"><span class="header-section-number">8.0.6</span> データフレームの列を作成する</a></li>
+  <li><a href="#データを要約する" id="toc-データを要約する" class="nav-link" data-scroll-target="#データを要約する"><span class="header-section-number">8.0.7</span> データを要約する</a></li>
+  <li><a href="#データフレームをグループ化して集計する" id="toc-データフレームをグループ化して集計する" class="nav-link" data-scroll-target="#データフレームをグループ化して集計する"><span class="header-section-number">8.0.8</span> データフレームをグループ化して集計する</a></li>
   </ul>
 </nav>
     </div>
@@ -312,7 +324,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">dplyr</span></h1>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">dplyr</span></h1>
 </div>
 
 
@@ -341,15 +353,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="パッケージの概要" class="level3" data-number="7.0.1">
-<h3 data-number="7.0.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">7.0.1</span> パッケージの概要</h3>
+<section id="パッケージの概要" class="level3" data-number="8.0.1">
+<h3 data-number="8.0.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">8.0.1</span> パッケージの概要</h3>
 <p>dplyrパッケージは、データフレームに対する「特定の行・列の抽出」や「ソート」などの重要な操作を、とてもシンプルなコードで実現するための関数を備えています。規模の大きなデータを扱うことの多いアクチュアリーにとって、必要不可欠なパッケージの一つです。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="パイプ演算子でコードを簡略化する" class="level3" data-number="7.0.2">
-<h3 data-number="7.0.2" class="anchored" data-anchor-id="パイプ演算子でコードを簡略化する"><span class="header-section-number">7.0.2</span> パイプ演算子でコードを簡略化する</h3>
+<section id="パイプ演算子でコードを簡略化する" class="level3" data-number="8.0.2">
+<h3 data-number="8.0.2" class="anchored" data-anchor-id="パイプ演算子でコードを簡略化する"><span class="header-section-number">8.0.2</span> パイプ演算子でコードを簡略化する</h3>
 <p>dplyrパッケージを呼び出すと、magrittrパッケージが提供するパイプ演算子（%&gt;%）も使えるようになります。この演算子は、左側にあるオブジェクトを、右側の関数の未指定の引数のうち一番最初のものに代入した結果を返します。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># irisデータの先頭3行を表示</span></span>
@@ -391,8 +403,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="データフレームから指定した列を抽出する" class="level3" data-number="7.0.3">
-<h3 data-number="7.0.3" class="anchored" data-anchor-id="データフレームから指定した列を抽出する"><span class="header-section-number">7.0.3</span> データフレームから指定した列を抽出する</h3>
+<section id="データフレームから指定した列を抽出する" class="level3" data-number="8.0.3">
+<h3 data-number="8.0.3" class="anchored" data-anchor-id="データフレームから指定した列を抽出する"><span class="header-section-number">8.0.3</span> データフレームから指定した列を抽出する</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Species, Sepal.Width, Petal.Width) <span class="sc">%&gt;%</span></span>
@@ -405,8 +417,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="データフレームから条件を満たす行を抽出する" class="level3" data-number="7.0.4">
-<h3 data-number="7.0.4" class="anchored" data-anchor-id="データフレームから条件を満たす行を抽出する"><span class="header-section-number">7.0.4</span> データフレームから条件を満たす行を抽出する</h3>
+<section id="データフレームから条件を満たす行を抽出する" class="level3" data-number="8.0.4">
+<h3 data-number="8.0.4" class="anchored" data-anchor-id="データフレームから条件を満たす行を抽出する"><span class="header-section-number">8.0.4</span> データフレームから条件を満たす行を抽出する</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Sepal.Width <span class="sc">==</span> <span class="fl">2.8</span>, Petal.Width <span class="sc">==</span> <span class="fl">1.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -418,8 +430,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="データフレームの行をソートする" class="level3" data-number="7.0.5">
-<h3 data-number="7.0.5" class="anchored" data-anchor-id="データフレームの行をソートする"><span class="header-section-number">7.0.5</span> データフレームの行をソートする</h3>
+<section id="データフレームの行をソートする" class="level3" data-number="8.0.5">
+<h3 data-number="8.0.5" class="anchored" data-anchor-id="データフレームの行をソートする"><span class="header-section-number">8.0.5</span> データフレームの行をソートする</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Sepal.Length, Sepal.Width) <span class="sc">%&gt;%</span> <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -431,8 +443,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="データフレームの列を作成する" class="level3" data-number="7.0.6">
-<h3 data-number="7.0.6" class="anchored" data-anchor-id="データフレームの列を作成する"><span class="header-section-number">7.0.6</span> データフレームの列を作成する</h3>
+<section id="データフレームの列を作成する" class="level3" data-number="8.0.6">
+<h3 data-number="8.0.6" class="anchored" data-anchor-id="データフレームの列を作成する"><span class="header-section-number">8.0.6</span> データフレームの列を作成する</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sepal.Ratio=</span><span class="fu">round</span>(Sepal.Length <span class="sc">/</span> Sepal.Width, <span class="dv">3</span>)) <span class="sc">%&gt;%</span></span>
@@ -445,8 +457,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="データを要約する" class="level3" data-number="7.0.7">
-<h3 data-number="7.0.7" class="anchored" data-anchor-id="データを要約する"><span class="header-section-number">7.0.7</span> データを要約する</h3>
+<section id="データを要約する" class="level3" data-number="8.0.7">
+<h3 data-number="8.0.7" class="anchored" data-anchor-id="データを要約する"><span class="header-section-number">8.0.7</span> データを要約する</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="fu">n_distinct</span>(Sepal.Length),</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">mean</span>(Sepal.Length),</span>
@@ -460,8 +472,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="データフレームをグループ化して集計する" class="level3" data-number="7.0.8">
-<h3 data-number="7.0.8" class="anchored" data-anchor-id="データフレームをグループ化して集計する"><span class="header-section-number">7.0.8</span> データフレームをグループ化して集計する</h3>
+<section id="データフレームをグループ化して集計する" class="level3" data-number="8.0.8">
+<h3 data-number="8.0.8" class="anchored" data-anchor-id="データフレームをグループ化して集計する"><span class="header-section-number">8.0.8</span> データフレームをグループ化して集計する</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
@@ -902,13 +914,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../qmds/distr.html" class="pagination-link" aria-label="distr">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">distr</span></span>
+      <a href="../qmds/distrEX.html" class="pagination-link" aria-label="distrEx">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">distrEx</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../qmds/e1071.html" class="pagination-link" aria-label="e1071">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">e1071</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">e1071</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

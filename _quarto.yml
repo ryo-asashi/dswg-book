@@ -15,6 +15,7 @@ book:
     - qmds/corrplot.qmd
     - qmds/DALEX.qmd
     - qmds/distr.qmd
+    - qmds/distrEX.qmd
     - qmds/dplyr.qmd
     - qmds/e1071.qmd
     - qmds/forcats.qmd
@@ -22,6 +23,7 @@ book:
     - qmds/igraph.qmd
     - qmds/iml.qmd
     - qmds/lifecontingencies.qmd
+    - qmds/mlbench.qmd
     - qmds/palmerpenguins.qmd
     - qmds/pdp.qmd
     - qmds/pROC.qmd
