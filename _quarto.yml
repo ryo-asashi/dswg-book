@@ -12,7 +12,10 @@ book:
     - qmds/actuar.qmd
     - qmds/aglm.qmd
     - qmds/ALEPlot.qmd
+    - qmds/C50.Rmd
+    - qmds/class.Rmd
     - qmds/corrplot.qmd
+    - qmds/crosstable.qmd
     - qmds/DALEX.qmd
     - qmds/distr.qmd
     - qmds/distrEX.qmd
@@ -23,20 +26,24 @@ book:
     - qmds/igraph.qmd
     - qmds/iml.qmd
     - qmds/lifecontingencies.qmd
+    - qmds/makedummies.qmd
     - qmds/mlbench.qmd
     - qmds/palmerpenguins.qmd
+    - qmds/partykit.Rmd
     - qmds/pdp.qmd
     - qmds/pROC.qmd
     - qmds/psych.qmd
     - qmds/purrr.qmd
+    - qmds/randomForest.Rmd
+    - qmds/ranger.Rmd
     - qmds/recipes.qmd
     - qmds/rsample.qmd
     - qmds/shapviz.qmd
     - qmds/skimr.qmd
     - qmds/survival.qmd
+    - qmds/tuneRanger.Rmd
 #    - qmds/YieldCurve.qmd
 #    - qmds/quantmod.qmd
-#    - qmds/fastshap.qmd
 #    - qmds/datatable.qmd
 
 bibliography: references.bib
