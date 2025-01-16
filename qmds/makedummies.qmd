@@ -1,0 +1,460 @@
+---
+title: "makedummies"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    fig-width: 6
+    fig-height: 5
+    df-print: "paged"
+    embed-resources: true
+references:
+- id: BIB_BOOK_CAR
+  type: book
+  publisher: Springer
+  title: An R Companion to Applied Regression, Third Edition
+  author:
+    - John Fox
+    - Sanford Weisberg
+  issued:
+    date-parts:
+    - - 2018
+      - 10
+nocite: |
+  @*
+---
+
+```{r comment, include=FALSE, eval=FALSE}
+## 2024/10/18 上妻
+# 本パッケージの機能は非常にシンプルで、またどちらかといえばR初心者に向けて作られたものと思われる。
+# これを踏まえて、本稿は比較的Rや予測モデリングに関する知識の浅い者を読者として想定し、
+# 補足の節ではrelevelによる基準の変更等、ダミー変数化の際に留意すべきfactor型変数の基本的事項についても記述している。
+```
+
+```{r setup_qmd, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# install packages
+pkgs <- c("makedummies","carData","tibble","recipes","fastDummies","onehot")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+# detach packages
+default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
+             "package:stats", "package:graphics",
+             "package:grDevices", "package:utils",
+             "package:datasets", "package:methods",
+             "Autoloads", "package:base")
+for (pkg in setdiff(search(), default)) {
+  detach(pkg, character.only = TRUE)
+  }
+
+# clear objects
+remove(list=objects())
+
+```
+
+```{css, echo=FALSE}
+.output-jp > code {
+/*一部日本語出力があるチャンクで日本語と英字の幅が揃わずに表示がずれるため、CSSでフォントを変更することで表示を揃える*/
+  font-family: "ＭＳ ゴシック";
+}
+```
+
+## パッケージの概要
+
+makedummiesパッケージは、データフレームのfactor型変数(カテゴリ変数)をダミー変数化する関数を提供します。
+簡単な指定で一度に複数の列を加工することが出来る点が特徴です。
+
+
+## 準備
+
+### パッケージの読み込み
+
+```{r setup_package, message=FALSE, warning=FALSE}
+library(makedummies)
+library(carData) #データセット
+```
+
+
+### データセットの読み込み
+
+@BIB_BOOK_CAR で使用されたデータセット等をまとめたパッケージcarDataに含まれる、
+WVSというデータセットを使用します。
+
+
+1995～1997年にオーストラリア、ノルウェー、スウェーデン、アメリカにて実施されたアンケート調査で、
+貧困層への政策に対する評価と、年齢、性別などの回答者の属性からなる6つの列で構成されたデータセットです。
+サンプル数は5,381件です。
+
+```{r dataset}
+data("WVS")
+df_all <- WVS
+str(df_all)
+```
+各列の内容は次のとおりで、`age`以外はfactor型変数(カテゴリ変数)であることがわかります。
+
+| 列名 | 型 | 説明 |
+|------|------|----------------------|
+| poverty | 順序付きfactor型 | この国の政府が貧困層に対して行っていることは、適切だと思うか、多すぎるか、少なすぎるか？という問いへの答え : Too Little < About Right < Too Much の3通り |
+| religion | factor型 | 宗教の信者かどうか : no または yes |
+| degree | factor型 | 大学の学位を取得しているかどうか : no または yes |
+| country | factor型 | 国 : Austraila, Norway, Sweden, USA の4通り |
+| age | 整数型 | 年齢(歳) |
+| gender | factor型 | 性別 : male または female |
+
+冒頭6行のレコード、およびサマリーを確認すると次のとおり。
+
+```{r dataset_summary}
+head(df_all)
+summary(df_all)
+```
+
+
+データセットのさらなる詳細については `?WVS` を実行することで確認できます。
+
+## 使用方法
+
+### 基本的な使用方法
+
+`makedummies`関数により、すべてのfactor型変数(順序付きを含む)をダミー変数に変換することが出来ます。
+
+```{r basic_sample}
+df_all_dummy <- makedummies(df_all)
+head(df_all_dummy)
+```
+
+factor型変数だった列が、(カテゴリの数 - 1)個の列に変換されています。
+
+基準となるカテゴリ(例えば、`poverty`列なら`"Too Little"`、`religion`列なら`"no"`)に対応する列は作られず、
+それ以外のカテゴリに対して、「対応するカテゴリに所属しているなら1」というダミー変数が生成されています。
+
+カテゴリが3個以上ある場合、列名が「元の列名_カテゴリ名」のように加工されます。
+一方、カテゴリが2個しかない場合は、元の列名のままとなっています。
+
+factor型ではない列(`age`)はそのまま残されていることがわかります。
+
+### 引数 basal_level: 基準カテゴリに対応する列を作る
+
+引数 `basal_level` に `TRUE` を与えることで、基準となるカテゴリに対応する列も作られるようになります。
+なお、このような変換をワンホットエンコーディングといいます。
+
+```{r basic_basal_level}
+df_all_dummy <- makedummies(df_all, basal_level = TRUE)
+head(df_all_dummy)
+```
+
+### 引数 col: 特定の列のみ出力する
+
+引数 `col` に列名を与えることで、その列の処理結果だけが出力されるようになります。
+
+```{r basic_col_1}
+df_all_dummy <- makedummies(df_all, col = "poverty")
+head(df_all_dummy)
+```
+
+次のように、複数の列を出力対象にすることもできます。また、数値型のような処理されない列を含めることも可能です。
+
+```{r basic_col_2}
+df_all_dummy <- makedummies(df_all, col = c("poverty", "age", "gender"))
+head(df_all_dummy)
+```
+
+
+### 引数 numerical: ダミー変数化ではなく単純に整数に変換する列を指定
+
+引数 `numerical` に列名を与えることで、その列は単純に1, 2, 3, …とカテゴリ別の整数に変換するように変更できます。
+
+```{r basic_numerical}
+df_all_dummy <- makedummies(df_all, numerical =  c("poverty", "gender"))
+head(df_all_dummy)
+```
+
+### 引数 as.is: 変換しない列を指定
+
+引数 `as.is` に列名を与えることで、その列は処理の対象から除外されます。
+
+```{r basic_asis}
+df_all_dummy <- makedummies(df_all, as.is =  c("poverty", "country"))
+head(df_all_dummy)
+```
+
+## 補足
+
+### 存在しないカテゴリに対する動作
+
+factor型の定義にはあるものの、実際には存在しないカテゴリについては、ダミー変数化の対象から除かれます。
+
+たとえば上から3行のみを抽出したとします。
+
+```{r emptylevel_1}
+df_minimum <- df_all[1:3,c("poverty", "gender")]
+df_minimum
+```
+
+`poverty`列には`"Too Much"`のカテゴリとなるデータがありません。
+
+```{r emptylevel_2}
+summary(df_minimum)
+```
+
+この場合、`makedummies`関数による処理では`"Too Much"`に対応するダミー変数は作られません。
+
+```{r emptylevel_3}
+makedummies(df_minimum)
+```
+
+なお、単一のカテゴリしかない列が存在するとエラーとなります。
+このような列はモデル構築においても悪影響を及ぼしうるため、前処理の中で別途取り除いておくことが考えられます。
+
+```{r emptylevel_4, error=TRUE}
+df_minimum <- df_all[1:3,c("country", "gender")]
+summary(df_minimum) #countryはUSAのみ
+makedummies(df_minimum) #res[cbind(seq.int(m), dat)] <- 1L でエラー: 添え字が許される範囲外です
+```
+
+
+### NA値に対する動作
+
+NA値(欠損値)が含まれている場合、ダミー変数化後もNA値のままとなります。
+
+```{r handling_na_1}
+#NAの混ざったデータを生成
+N <- 6
+df_NA <- df_all[1:N, c("poverty","gender")]
+set.seed(2024)
+df_NA <- data.frame(lapply(df_NA, function(x) {
+    x[[floor(runif(1, min=1, max=N+1))]] <- NA
+    x
+  }))
+df_NA
+```
+
+
+```{r handling_na_2}
+makedummies(df_NA)
+```
+
+
+
+### factor型以外の取り扱い
+
+本パッケージはfactor型以外の列の加工には対応していません。
+
+実質的にはカテゴリ変数であるものの、数値や文字列として格納されている場合には、factor型に変換してから`makedummies`関数を使用します。
+
+例えば性別が文字列で、学歴が数値で格納されているとしましょう。当然これらはfactor型ではないので、`makedummies`関数では加工できません。
+
+```{r nonfactor_1, paged.print = FALSE, class.output="output-jp"}
+df_tmp <- data.frame("性別" = c("女", "男", "女", "男"), "学歴" = c(1, 1, 3, 2))
+df_tmp
+makedummies(df_tmp)
+```
+
+以下のように、`factor`関数等を用いてfactor型に変換する必要があります。
+
+```{r nonfactor_2, class.output="output-jp"}
+df_tmp$性別 <- factor(df_tmp$性別, levels = c("男", "女"))
+df_tmp$学歴 <- factor(df_tmp$学歴, levels = c(1, 2, 3), labels = c("高卒", "大卒", "大学院卒"), ordered = TRUE)
+str(df_tmp)
+makedummies(df_tmp)
+```
+
+
+### 基準カテゴリの変更
+
+本パッケージでは基準カテゴリを指定する機能は無いため、事前に`relevel`関数などで変更しておく必要があります。
+
+```{r relevel_1}
+df_tmp <- df_all
+df_tmp$country <- relevel(df_tmp$country, "USA")#アメリカを基準カテゴリに変更
+head(makedummies(df_tmp))
+```
+
+`reorder`関数で数が多いカテゴリを基準カテゴリにするなど、機械的に基準カテゴリを変更しておくことも考えられます。
+
+```{r relevel_2}
+df_tmp <- df_all
+table(df_tmp$country) #カテゴリごとの件数を表示
+df_tmp$country <- reorder(df_tmp$country, df_tmp$country, length, decreasing = TRUE) #件数が多い順にカテゴリを並べ替える
+head(makedummies(df_tmp)) #最も件数が多かったAustraliaが基準カテゴリになっている
+```
+
+### 順序付きfactor型
+
+順序付きfactor型とはカテゴリ変数を取り扱うfactor型の中でも特殊なもので、
+カテゴリ間に大小関係のような順序関係があること(質的変数のなかでも順序尺度であること)を表しています。
+
+`class`関数で型を確認してみると`ordered`という型が付与されており、順序付きでないfactor型とは区別されていることがわかります。
+
+```{r ordered_factor_1}
+lapply(df_all, class)
+```
+
+順序付きfactor型変数は、`factor`関数で引数`ordered`に`TRUE`を与える(または`ordered`関数を使用する)ことで生成することができます。
+
+```{r ordered_factor_2, class.output="output-jp"}
+df_tmp <- factor(c(4,2,4,2,3,2,3), levels = c(1,2,3,4), 
+          labels = c("まったくそう思わない", "あまりそう思わない", "ややそう思う", "とてもそう思う"),
+          ordered = TRUE)
+df_tmp
+class(df_tmp)
+```
+
+### tibbleに対する動作
+
+data.frame型を拡張したものにtibbleがありますが、`makedummies`関数がtibbleを加工した場合はtibbleのまま返します。
+
+data.frame型を加工すると当然data.frame型のままです[^class]が…
+
+[^class]:意図された動作かは不明なものの、すべての列が変換対象となったときは行列(matrix型)になります。
+
+```{r tibble_1}
+class(df_all)
+class(makedummies(df_all))
+```
+
+tibbleを加工したものはtibbleになります。
+
+```{r tibble_2}
+library(tibble)
+df_all_tb <- as_tibble(df_all)
+class(df_all_tb)
+class(makedummies(df_all_tb))
+```
+
+なお、tibbleはtidyverseに含まれるもののうちの一つで、
+例えば以下のような記法で列を選択した時にベクトルにならない(データフレームのままである)等の点で
+R標準のdata.frameとは違いがあります。
+
+tibbleを用いている場合、加工後にtibbleとしての機能が失われないことは利便性の観点で重要です。
+
+```{r tibble_3}
+head(df_all[,"poverty"])
+head(df_all_tb[,"poverty"])
+```
+
+### 他の関数・パッケージとの比較
+
+#### model.matrix関数
+
+数値型への変換にあたってはR標準の`model.matrix`関数が使われることがあります。
+
+こちらは予測モデルに入力する計画行列を生成するための関数で、交互作用項の追加等、ダミー変数化以外の機能もあります。
+
+出力は行列(matrix型)となるため注意してください。
+
+```{r modelmatrix}
+head(model.matrix(~ . , data = df_all)) #切片項が生成される　順序付きfactor型に対しては多項式対比を使用
+head(model.matrix(~ . +0, data = df_all)) #切片項が生成されない
+```
+
+#### fastDummiesパッケージ
+
+本パッケージと非常に類似するパッケージとしてfastDummiesパッケージがあります。
+名前のとおり、`model.matrix`関数よりも処理が高速だとされています。
+
+`dummy_cols`関数によりダミー変数化が可能です。
+ただし、`makedummies`関数とはデフォルトの処理が若干異なっています。
+たとえば順序付きfactor型は処理対象としないほか、ダミー変数化前の変数が残る、
+基準カテゴリに対応するダミー変数も作成する、といった点が異なります。
+
+```{r fastDummies_1}
+library(fastDummies)
+head(dummy_cols(df_all))
+```
+
+
+
+
+引数により処理をカスタマイズすることができます。
+
+例えば引数`select_columns`により処理対象の列を指定することが出来ます。
+ここでは順序付きfactor型だけでなく、数値型をも処理の対象とすることが出来ます。
+
+```{r fastDummies_2}
+head(dummy_cols(df_all,
+                #処理対象列の指定
+                select_columns = c("poverty","religion","degree","county"),
+                #元の列を残さない
+                remove_selected_columns = TRUE,
+                #基準カテゴリに対応するダミー変数を作らない
+                remove_first_dummy = TRUE 
+                ))
+
+```
+
+
+
+なお、NA値に対してはデフォルトで個別のダミー変数を作成する挙動となっていますが、
+引数`ignore_na`でこれを制御することが出来ます。
+
+```{r fastDummies_3}
+head(dummy_cols(df_NA, remove_selected_columns = TRUE, ignore_na = FALSE))
+head(dummy_cols(df_NA, remove_selected_columns = TRUE, ignore_na = TRUE))
+```
+
+
+その他、最も大きなカテゴリを基準カテゴリとする引数`remove_most_frequent_dummy`、
+複数のカテゴリ名が単一の文字列に含まれる際の処理を行う引数`split`、
+元の列名をダミー変数に引き継がない引数`omit_colname_prefix`といった機能があります。
+
+また、factor型の列に関してすべてのカテゴリ（の組み合わせ）が現れるように行を補完する`dummy_rows`関数も提供されます。
+
+#### onehotパッケージ
+
+onehotパッケージはシンプルにワンホットエンコーディングを行う機能だけを提供するものです。
+
+まず`onehot`関数によりエンコーダーを生成し、`predict`関数により実際にデータを変換します。
+
+出力は行列(matrix型)となるため注意してください。
+
+
+```{r onehot}
+library(onehot)
+df_tmp <- df_all
+#順序付きfactor型があるとエラーとなるため普通のfactor型に変換
+df_tmp$poverty <- factor(df_tmp$poverty, ordered = FALSE)
+#ここでのdf_tmpはデータの形式を指定するためのもので、実際に変換したいデータと同一データである必要はない
+encoder <- onehot(df_tmp) 
+head(predict(encoder, df_tmp))
+```
+
+
+#### recipesパッケージ
+
+recipesパッケージはtidymodelsに含まれ、ダミー変数化を含む様々な前処理機能を提供するパッケージです。
+
+前処理手順のオブジェクト化などtidyな(整然とした)コーディングが可能になるほか、
+他のtidymodelsのパッケージとの連携も特徴です。
+本パッケージはダミー変数化のためだけに導入するようなものではありませんが、
+そのようなコーディングを指向する場合にはこちらを用いるべきかもしれません。
+
+ダミー変数化を行う機能を提供するのは`step_dummy`関数で、例えば次のように使用します。
+なお、順序付きfactor型変数に対しては多項式対比を用いた変換が行われます。
+
+```{r recipes, message=FALSE, warning=FALSE}
+library(recipes)
+rec <- recipe(df_all, formula = ) %>%
+  step_dummy(all_factor(), all_ordered())
+rec %>% prep() %>% bake(new_data = NULL) %>% head()
+```
+
+
+
+
+#### その他のパッケージ
+
+caretパッケージの`dummyVars`関数、mltoolsパッケージの`one_hot`関数でも同様の処理は可能です。
+これらのパッケージを利用している場合は、それらの関数を用いてもよいでしょう。
+ただし、これらはより広範な機能を提供するパッケージのため、ダミー変数化のためだけに導入するようなものではありません。
+
+## 参考文献
+
+::: {#refs}
+:::

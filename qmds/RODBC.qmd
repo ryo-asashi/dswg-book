@@ -1,0 +1,621 @@
+---
+title: "RODBC"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    fig-width: 6
+    fig-height: 5
+    df-print: "paged"
+    embed-resources: true
+references:
+- id: BIB_RODBC_VIGNETTE
+  type: article
+  title: "ODBC Connectivity"
+  URL: https://cran.r-project.org/web/packages/RODBC/vignettes/RODBC.pdf
+  author:
+    - Brian Ripley 
+  issued:
+    - year: 2023
+  accessed:
+    - year: 2024
+      month: 10
+      day: 18
+nocite: |
+  @*
+---
+
+```{r setup_qmd, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# install packages
+pkgs <- c("RODBC")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+# detach packages
+default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
+             "package:stats", "package:graphics",
+             "package:grDevices", "package:utils",
+             "package:datasets", "package:methods",
+             "Autoloads", "package:base")
+for (pkg in setdiff(search(), default)) {
+  detach(pkg, character.only = TRUE)
+  }
+
+# clear objects
+remove(list=objects())
+
+```
+
+```{r comment, include=FALSE, eval=FALSE}
+## 2024/10/18 上妻
+# - 本稿の読者であればSQLの基本的な取り扱いは理解していると思われるので、
+#   SQLそのものについては特に掘り下げないこととする。
+# - どのようなODBCドライバ・DBMSを用いることが出来るかは環境によって千差万別である。
+#   - ODBC接続に関する情報や特定のDBMSを前提とした内容は書き出すときりが無く、
+#     また筆者の環境で検証できるようなものでも無いため、原則として言及しないこととする。
+#   - どの環境でも同じ結果になるようなコードにはすることができない。
+#     (極論、1つもドライバがない端末だと何もできない)
+#     筆者の環境で空のAccessDBに対して簡単な処理を行い、
+#     その結果をqmd内に直書きすることで記事の体裁を成すようにしている。
+#   
+```
+
+```{r steup_exec, include=FALSE}
+FLAG_EXEC_SQL <- FALSE #これがTRUEのとき、include=FALSEなチャンク内にあるスクリプトを実行する
+#レンダリングの際はFALSEとしておく。
+```
+
+
+```{r steup_errorcheck, include=FALSE}
+if(FLAG_EXEC_SQL){
+  stop("FLAG_EXEC_SQLがTRUEになっています")
+}
+```
+
+## パッケージの概要
+
+RODBCパッケージはODBC接続を実装したもので、これを用いることでSQLベースのデータベース管理システム(DBMS)をRで取り扱えるようになります。
+
+ODBCとはSQLベースのDBMSにアクセスするための共通APIで、MySQL、PostgreSQL、Microsoft Access、SQL Server、Oracle等への接続に利用できますが、利用のためには対応するODBCドライバがインストールされている必要があります。
+
+なお、本稿ではSQLの文法、ODBC接続の詳細、特定のDBMSに固有の情報などは取り扱いません。[@BIB_RODBC_VIGNETTE]にはDBMSごとの差異などに関するより詳しい解説があるため、適宜参照してください。
+
+## 使い方
+
+### 準備
+
+まずはRODBCパッケージを読み込みます。
+
+```{r setup_package, message=FALSE, warning=FALSE}
+library(RODBC)
+```
+
+
+ODBC接続を行う方法には大きく2種類があり、
+データソース名(DSN)を指定する方法と、接続文字列を直接指定する方法があります。
+
+前者の場合はその環境で用いることが出来るDSNの一覧を次のように取得することが出来るため、
+データソースを用意している場合は確認しておきましょう。
+
+
+```{r odbcDataSources, eval=FALSE}
+odbcDataSources(type = c("all", "user", "system"))
+```
+
+```{r odbcDataSources_dput, include=FALSE}
+#偽装実行結果を作成
+if (FLAG_EXEC_SQL){
+  res <- odbcDataSources(type = c("all", "user", "system"))
+  dput(res)
+}
+```
+
+```{r odbcDataSources_output, echo=FALSE}
+#偽装実行結果を表示
+c(`MS Access Database` = "Microsoft Access Driver (*.mdb, *.accdb)", 
+`Excel Files` = "Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)", 
+`dBASE Files` = "Microsoft Access dBASE Driver (*.dbf, *.ndx, *.mdx)"
+)
+```
+
+要素の名前にDSNが、要素にその説明(通常は`Microsoft Access Driver (*.mdb, *.accdb)`などのようなドライバ名)が格納されます。
+
+なお、ODBCドライバやデータソースには32ビットのものと64ビットのものがあり、
+またRにも32ビット版と64ビット版が存在していますが、
+例えば64ビット版のRだと64ビットのドライバ等しか使用できません。
+
+Rのバージョン4.2以降は32ビット版が廃止されて64ビット版のみとなっているため、
+64ビットのドライバを用意するようにしましょう。
+
+
+### 基本的な使い方
+
+まず、`odbcConnect`関数か`odbcDriverConnect`関数でODBC接続を開始します。
+前者はDSNを指定する場合、後者はODBC接続文字列を直接指定する場合に使用します。
+
+これらの関数の戻り値は「チャンネル」と呼ばれ、以降の処理で使用しますので、変数に格納しておきましょう。
+
+```{r odbcConnect, eval=FALSE}
+odbc_ch <- odbcConnect("Your DSN")
+#または
+odbc_ch <- odbcDriverConnect(connection = "Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=C:\\test\\test.accdb")
+#など
+```
+```{r odbcConnect_dput, include=FALSE}
+if (FLAG_EXEC_SQL){
+  #test.accdbは空のAccessデータベースを別途作成しておく。
+  dir <- getwd()
+  path <- paste0(dir, "/", "test.accdb")
+  odbc_ch <- odbcDriverConnect(connection = paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", path))
+}
+```
+
+次に、前述の手順で得たチャンネルに対して、`sqlQuery`関数などのデータベースを操作する関数を実行します。
+
+```{r basic_dput, include=FALSE}
+#偽装実行結果を作成
+if (FLAG_EXEC_SQL){
+  sqlSave(odbc_ch, iris, tablename = "iris", safer = FALSE) #safer= FA+SEは強制的に上書きする設定
+  df1 <- sqlQuery(odbc_ch, "SELECT * FROM iris WHERE Species = 'setosa' AND SepalLength < 4.5")
+  df2 <- sqlQuery(odbc_ch, "SELECT avg(SepalLength) as avg_SepalLength FROM iris GROUP BY Species")
+  dput(df1)
+  dput(df2)
+}
+```
+
+```{r basic_1, eval=FALSE}
+sqlSave(odbc_ch, iris, tablename = "iris") #irisデータセットをテーブルに保存する
+sqlQuery(odbc_ch, 
+         "SELECT * FROM iris 
+         WHERE Species = 'setosa' AND SepalLength < 4.5") #SELECT文の結果はdata.frameになる
+```
+
+```{r basic_1_output, echo=FALSE}
+#偽装実行結果を表示
+structure(list(rownames = c(9L, 14L, 39L, 43L), SepalLength = c(4.4, 
+4.3, 4.4, 4.4), SepalWidth = c(2.9, 3, 3, 3.2), PetalLength = c(1.4, 
+1.1, 1.3, 1.3), PetalWidth = c(0.2, 0.1, 0.2, 0.2), Species = c("setosa", 
+"setosa", "setosa", "setosa")), row.names = c(NA, 4L), class = "data.frame")
+```
+
+```{r basic_2, eval=FALSE}
+sqlQuery(odbc_ch, 
+         "SELECT avg(SepalLength) as avg_SepalLength FROM iris 
+         GROUP BY Species")
+```
+
+```{r basic_2_output, echo=FALSE}
+#偽装実行結果を表示
+structure(list(avg_SepalLength = c(5.006, 5.936, 6.588)), class = "data.frame", row.names = c(NA, 
+3L))
+```
+
+
+ODBC接続を終了する場合は、`odbcClose`関数を使用します。
+
+```{r odbcClose, eval=FALSE}
+odbcClose(odbc_ch)
+```
+
+
+## 関数の紹介
+
+基本的には`sqlQuary`関数でSQLクエリを実行することで大抵のことはこなせますが、
+RODBCパッケージにはほかにもいくつか便利な関数が備わっています。
+
+### クエリ実行と結果の読み取り
+
+`sqlQuary`関数はSQLクエリを実行し、その結果を取得する関数です。
+
+`SELECT`文だけでなく、`UPDATE`文や`CREATE TABLE`文のようなものも含めてあらゆるSQLを実行可能です。
+
+```{r sqlQuery, eval=FALSE}
+head(sqlQuery(odbc_ch, "SELECT * FROM iris"))
+```
+
+```{r sqlQuery_dput, include=FALSE}
+#偽装実行結果を作成
+if (FLAG_EXEC_SQL){
+  df11 <- head(sqlQuery(odbc_ch, "SELECT * FROM iris"))
+  dput(df11)
+}
+```
+
+```{r sqlQuery_output, echo=FALSE}
+#偽装実行結果を表示
+structure(list(rownames = 1:6, SepalLength = c(5.1, 4.9, 4.7, 
+4.6, 5, 5.4), SepalWidth = c(3.5, 3, 3.2, 3.1, 3.6, 3.9), PetalLength = c(1.4, 
+1.4, 1.3, 1.5, 1.4, 1.7), PetalWidth = c(0.2, 0.2, 0.2, 0.2, 
+0.2, 0.4), Species = c("setosa", "setosa", "setosa", "setosa", 
+"setosa", "setosa")), row.names = c(NA, 6L), class = "data.frame")
+```
+
+
+
+クエリの実行と結果の読み取りを分けて行うこともできます。
+
+`odbcQuery`関数でクエリを実行し、`sqlGetResults`関数で実行結果を読み取ります。
+ここで、`sqlGetResults`関数に引数`max`を与えることで読み取る最大行数を指定することができ、
+これを活用することで実行結果が巨大な場合でも、分割してデータを取得・処理を行うことができます。
+
+```{r odbcQuery, eval=FALSE}
+tmp <- odbcQuery(odbc_ch, "SELECT * FROM iris")
+for(i in 1:3){ #結果を2行ずつ3回に分けて取得
+  print(sqlGetResults(odbc_ch, max = 2))
+}
+```
+
+```{r odbcQuery_dput, include=FALSE}
+#偽装実行結果を作成
+if (FLAG_EXEC_SQL){
+  tmp <- odbcQuery(odbc_ch, "SELECT * FROM iris")
+  for(i in 1:3){ #結果を2行ずつ3回に分けて取得
+    dftmp <- sqlGetResults(odbc_ch, max = 2)
+    dput(dftmp)
+  }
+}
+```
+
+```{r odbcQuery_output, echo=FALSE}
+#偽装実行結果を表示
+structure(list(rownames = 1:2, SepalLength = c(5.1, 4.9), SepalWidth = c(3.5, 
+3), PetalLength = c(1.4, 1.4), PetalWidth = c(0.2, 0.2), Species = c("setosa", 
+"setosa")), row.names = 1:2, class = "data.frame")
+structure(list(rownames = 3:4, SepalLength = c(4.7, 4.6), SepalWidth = c(3.2, 
+3.1), PetalLength = c(1.3, 1.5), PetalWidth = c(0.2, 0.2), Species = c("setosa", 
+"setosa")), row.names = 1:2, class = "data.frame")
+structure(list(rownames = 5:6, SepalLength = c(5, 5.4), SepalWidth = c(3.6, 
+3.9), PetalLength = c(1.4, 1.7), PetalWidth = c(0.2, 0.4), Species = c("setosa", 
+"setosa")), row.names = 1:2, class = "data.frame")
+```
+
+なお、`odbcQuery`関数はSQLの実行でエラーとなっても特にエラーメッセージは表示されません。
+その戻り値が`-1`の場合はエラーとなっていますが、この場合のエラーメッセージは`odbcGetErrMsg`関数で取得します。
+
+また、全てのデータを読み取っているかどうかは、`sqlGetResults`関数の戻り値が負の数値であるかどうかで判定できますが、
+残る結果がゼロ行である場合は数値にはならず常に空のデータフレームとなるため、別途判定が必要です。
+
+以上をコードに反映すると次のようになります。
+
+```{r odbcQuery_handling_error, eval=FALSE}
+tmp <- odbcQuery(odbc_ch, "SELECT * FROM iris")
+if (tmp < 0){ #エラーの場合
+  tmp <- odbcGetErrMsg(odbc_ch)
+  print(tmp)
+}else{ #正常に実行できた場合
+  while(is.data.frame(tmp <- sqlGetResults(odbc_ch, max = 40)) && nrow(tmp) > 0){
+    print(paste0("データ行数:", nrow(tmp))) #逐次読み取ったデータへの処理を書く
+  }
+  print(paste0("最後の戻り値:", tmp))
+}
+```
+```
+[1] "データ行数:40"
+[1] "データ行数:40"
+[1] "データ行数:40"
+[1] "データ行数:30"
+[1] "最後の戻り値:-1"
+```
+
+### テーブル全体の読み取り
+
+`sqlFetch`関数を用いることで、指定したテーブル全体をデータフレームの形で取得することができます・
+
+
+```{r sqlFetch_dput, include=FALSE}
+#偽装実行結果を作成
+if (FLAG_EXEC_SQL){
+  df_tmp1 <- sqlFetch(odbc_ch, "iris")
+  df_tmp2 <- sqlFetch(odbc_ch, "iris", max = 3) #3行だけ読み込み
+  print(str(df_tmp1))
+  dput(df_tmp2)
+}
+```
+
+```{r sqlFetch_1, eval=FALSE}
+df_tmp1 <- sqlFetch(odbc_ch, "iris")
+df_tmp2 <- sqlFetch(odbc_ch, "iris", max = 3) #3行だけ読み込み
+str(df_tmp1)
+```
+
+```
+'data.frame':	150 obs. of  5 variables:
+ $ SepalLength: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
+ $ SepalWidth : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
+ $ PetalLength: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
+ $ PetalWidth : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
+ $ Species    : chr  "setosa" "setosa" "setosa" "setosa" ...
+```
+
+```{r sqlFetch_2, eval=FALSE}
+df_tmp2
+```
+```{r sqlFetch_2_output, echo=FALSE}
+#偽装実行結果を表示
+structure(list(SepalLength = c(5.1, 4.9, 4.7), SepalWidth = c(3.5, 
+3, 3.2), PetalLength = c(1.4, 1.4, 1.3), PetalWidth = c(0.2, 
+0.2, 0.2), Species = c("setosa", "setosa", "setosa")), class = "data.frame", row.names = c("1", 
+"2", "3"))
+```
+
+### データの書き込み
+
+本パッケージにはR側のデータをテーブルに書き込むための専用関数が用意されています。
+
+`sqlSave`関数はDBMS上に新たなテーブルを作成し、指定したデータフレームのデータを書き込みます。
+
+```{r sqlSave_df}
+df_inforce <- data.frame(
+  配当方式 = c("有配","有配","準有配"),
+  商品種類コード = 1:3,
+  件数 = c(10, 16, 48),
+  保険金額 = c(100, 60, 240)
+)
+```
+
+```{r sqlSave, eval=FALSE}
+sqlSave(odbc_ch, df_inforce, tablename = "inforce", rownames = FALSE)
+#rownames = FALSE: 行の名前を保存しない
+sqlFetch(odbc_ch, "inforce")
+```
+
+```{r sqlSave_dput, include=FALSE}
+#偽装実行結果を作成
+if (FLAG_EXEC_SQL){
+  sqlSave(odbc_ch, df_inforce, tablename = "inforce", rownames = FALSE, safer = FALSE)
+  df3 <- sqlFetch(odbc_ch, "inforce")
+  dput(df3)
+}
+```
+
+```{r sqlSave_output, echo=FALSE}
+#偽装実行結果を表示
+structure(list(配当方式 = c("有配", "有配", "準有配"
+), 商品種類コード = 1:3, 件数 = c(10, 16, 48), 保険金額 = c(100, 
+60, 240)), row.names = c(NA, 3L), class = "data.frame")
+```
+
+
+引数`append`を`TRUE`とすることで、データを既存のテーブルに追加することができます。
+
+```{r sqlSave_append_df}
+df_inforce_add <- data.frame(
+  配当方式 = c("無配","無配"),
+  商品種類コード = 4:5,
+  件数 = c(176, 190),
+  保険金額 = c(69, 1931)
+)
+```
+
+```{r sqlSave_append, eval=FALSE}
+sqlSave(odbc_ch, df_inforce_add, tablename = "inforce", rownames = FALSE, append = TRUE)
+sqlFetch(odbc_ch, "inforce")
+```
+
+```{r sqlSave_append_dput, include=FALSE}
+#偽装実行結果を作成
+if (FLAG_EXEC_SQL){
+  sqlSave(odbc_ch, df_inforce_add, tablename = "inforce", rownames = FALSE, append = TRUE)
+  df4 <- sqlFetch(odbc_ch, "inforce")
+  dput(df4)
+}
+```
+
+```{r sqlSave_append_output, echo=FALSE}
+#偽装実行結果を表示
+structure(list(配当方式 = c("有配", "有配", "準有配", 
+"無配", "無配"), 商品種類コード = 1:5, 件数 = c(10, 
+16, 48, 176, 190), 保険金額 = c(100, 60, 240, 69, 1931)), row.names = c(NA, 
+5L), class = "data.frame")
+```
+
+`sqlUpdate`関数で既存データを変更することもできます。引数`index`で、データを更新する行を特定するための列名を指定します。
+
+```{r sqlUpdate_df}
+df_inforce_update <- data.frame(
+  配当方式 = c("準有配", "無配"),
+  商品種類コード = c(3, 5),
+  件数 = c(9999, 99999)
+)
+```
+
+```{r sqlUpdate, eval=FALSE}
+sqlUpdate(odbc_ch, df_inforce_update, tablename = "inforce", index = c("配当方式", "商品種類コード"))
+sqlFetch(odbc_ch, "inforce")
+```
+
+```{r sqlUpdate_dput, include=FALSE}
+#偽装実行結果を作成
+if (FLAG_EXEC_SQL){
+  sqlUpdate(odbc_ch, df_inforce_update, tablename = "inforce", index = c("配当方式", "商品種類コード"))
+  df5 <- sqlFetch(odbc_ch, "inforce")
+  dput(df5)
+}
+```
+
+```{r sqlUpdate_output, echo=FALSE}
+#偽装実行結果を表示
+structure(list(配当方式 = c("有配", "有配", "準有配", 
+"無配", "無配"), 商品種類コード = 1:5, 件数 = c(10, 
+16, 9999, 176, 99999), 保険金額 = c(100, 60, 240, 69, 1931
+)), row.names = c(NA, 5L), class = "data.frame")
+```
+
+### クエリ実行結果の書き込み
+
+`sqlCopy`関数を用いることで、クエリの実行結果を別のテーブルに書き込むことができます。
+
+```{r sqlCopy, eval=FALSE}
+sqlCopy(odbc_ch, "SELECT * FROM inforce WHERE 配当方式 = '有配' ", "inforce_yuhai")
+sqlFetch(odbc_ch, "inforce_yuhai")
+```
+
+```{r sqlCopy_dput, include=FALSE}
+#偽装実行結果を作成
+if (FLAG_EXEC_SQL){
+  sqlDrop(odbc_ch, "inforce_yuhai", errors = FALSE)
+  sqlCopy(odbc_ch, "SELECT * FROM inforce WHERE 配当方式 = '有配' ", "inforce_yuhai")
+  df6 <- sqlFetch(odbc_ch, "inforce_yuhai")
+  dput(df6)
+}
+```
+
+```{r sqlCopy_output, echo=FALSE}
+#偽装実行結果を表示
+structure(list(配当方式 = c("有配", "有配"), 商品種類コード = 1:2, 
+    件数 = c(10, 16), 保険金額 = c(100, 60)), class = "data.frame", row.names = c("1", 
+"2"))
+```
+
+`SELECT ... INTO [table名]`の構文でも同じことはできるため実用性が無いように思えますが、
+引数`destchannel`を使用することで他のDBMSにデータを転送できることが強みです。
+
+### テーブル一覧の取得
+
+`sqlTables`関数でテーブルの一覧の取得ができます。
+
+```{r sqlTables_dput, include=FALSE}
+#偽装実行結果を作成
+if (FLAG_EXEC_SQL){
+  df7 <- sqlTables(odbc_ch)
+  df8 <- sqlTables(odbc_ch, tableType = "TABLE")
+  sqlDrop(odbc_ch, "inforce_yuhai", errors = FALSE) 
+  sqlDrop(odbc_ch, "inforce_muhai", errors = FALSE)
+  df9 <- sqlTables(odbc_ch, tableType = "TABLE")
+  df7$TABLE_CAT <- "C:/test.accdb" #実行環境におけるフルパスが入ってしまうので隠ぺい
+  df8$TABLE_CAT <- "C:/test.accdb"
+  df9$TABLE_CAT <- "C:/test.accdb"
+  dput(df7)
+  dput(df8)
+  dput(df9)
+}
+```
+
+
+```{r sqlTables_1, eval=FALSE}
+sqlTables(odbc_ch)
+```
+
+
+```{r sqlTables_1_output, echo=FALSE}
+#偽装実行結果を表示
+structure(list(TABLE_CAT = c("C:/test.accdb", "C:/test.accdb", 
+"C:/test.accdb", "C:/test.accdb", "C:/test.accdb", "C:/test.accdb", 
+"C:/test.accdb", "C:/test.accdb", "C:/test.accdb", "C:/test.accdb", 
+"C:/test.accdb", "C:/test.accdb", "C:/test.accdb", "C:/test.accdb"
+), TABLE_SCHEM = c(NA_character_, NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, 
+NA_character_), TABLE_NAME = c("MSysAccessStorage", "MSysACEs", 
+"MSysComplexColumns", "MSysNavPaneGroupCategories", "MSysNavPaneGroups", 
+"MSysNavPaneGroupToObjects", "MSysNavPaneObjectIDs", "MSysObjects", 
+"MSysQueries", "MSysRelationships", "MSysResources", "inforce", 
+"inforce_yuhai", "iris"), TABLE_TYPE = c("SYSTEM TABLE", "SYSTEM TABLE", 
+"SYSTEM TABLE", "SYSTEM TABLE", "SYSTEM TABLE", "SYSTEM TABLE", 
+"SYSTEM TABLE", "SYSTEM TABLE", "SYSTEM TABLE", "SYSTEM TABLE", 
+"SYSTEM TABLE", "TABLE", "TABLE", "TABLE"), REMARKS = c(NA_character_, 
+NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_)), row.names = c(NA, 
+14L), class = "data.frame")
+```
+
+```{r sqlTables_2, eval=FALSE}
+#Accessの場合、引数tableType = "TABLE"を指定することで通常のテーブルだけを表示することが可能
+sqlTables(odbc_ch, tableType = "TABLE")
+```
+
+
+```{r sqlTables_2_output, echo=FALSE}
+#偽装実行結果を表示
+structure(list(TABLE_CAT = c("C:/test.accdb", "C:/test.accdb", 
+"C:/test.accdb"), TABLE_SCHEM = c(NA_character_, NA_character_, 
+NA_character_), TABLE_NAME = c("inforce", "inforce_yuhai", "iris"
+), TABLE_TYPE = c("TABLE", "TABLE", "TABLE"), REMARKS = c(NA_character_, 
+NA_character_, NA_character_)), row.names = c(NA, 3L), class = "data.frame")
+```
+
+
+### テーブルの削除
+
+`sqlDrop`関数でテーブルの削除ができます。
+
+引数`errors`に`FALSE`を与えた場合、削除対象のテーブルが無い場合でもエラーにならず、
+「存在する場合は削除」という処理を行う場合に便利です。
+
+```{r sqlDrop, eval=FALSE}
+sqlDrop(odbc_ch, "inforce_yuhai", errors = FALSE) 
+sqlDrop(odbc_ch, "inforce_muhai", errors = FALSE)
+sqlTables(odbc_ch, tableType = "TABLE")
+```
+
+
+```{r sqlDrop_output, echo=FALSE}
+#偽装実行結果を表示
+structure(list(TABLE_CAT = c("C:/test.accdb", "C:/test.accdb"
+), TABLE_SCHEM = c(NA_character_, NA_character_), TABLE_NAME = c("inforce", 
+"iris"), TABLE_TYPE = c("TABLE", "TABLE"), REMARKS = c(NA_character_, 
+NA_character_)), row.names = 1:2, class = "data.frame")
+```
+
+
+### 列一覧の取得
+
+`sqlColumns`関数で、テーブルにある列の一覧を取得することが出来ます。
+
+```{r sqlColumns, eval=FALSE}
+sqlColumns(odbc_ch, "iris")
+```
+
+```{r sqlColumns_dput, include=FALSE}
+#偽装実行結果を作成
+if (FLAG_EXEC_SQL){
+  df10 <- sqlColumns(odbc_ch, "iris")
+  df10$TABLE_CAT <- "C:/test.accdb" #実行環境におけるフルパスが入ってしまうので隠ぺい
+  dput(df10)
+}
+```
+
+```{r sqlColumns_output, echo=FALSE}
+#偽装実行結果を表示
+structure(list(TABLE_CAT = c("C:/test.accdb", "C:/test.accdb", 
+"C:/test.accdb", "C:/test.accdb", "C:/test.accdb", "C:/test.accdb"
+), TABLE_SCHEM = c(NA_character_, NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_), TABLE_NAME = c("iris", 
+"iris", "iris", "iris", "iris", "iris"), COLUMN_NAME = c("rownames", 
+"SepalLength", "SepalWidth", "PetalLength", "PetalWidth", "Species"
+), DATA_TYPE = c(12L, 8L, 8L, 8L, 8L, 12L), TYPE_NAME = c("VARCHAR", 
+"DOUBLE", "DOUBLE", "DOUBLE", "DOUBLE", "VARCHAR"), COLUMN_SIZE = c(255L, 
+53L, 53L, 53L, 53L, 255L), BUFFER_LENGTH = c(510L, 8L, 8L, 8L, 
+8L, 510L), DECIMAL_DIGITS = c(NA_integer_, NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_), NUM_PREC_RADIX = c(NA, 
+2L, 2L, 2L, 2L, NA), NULLABLE = c(1L, 1L, 1L, 1L, 1L, 1L), REMARKS = c(NA_character_, 
+NA_character_, NA_character_, NA_character_, NA_character_, NA_character_
+), COLUMN_DEF = c(NA_character_, NA_character_, NA_character_, 
+NA_character_, NA_character_, NA_character_), SQL_DATA_TYPE = c(12L, 
+8L, 8L, 8L, 8L, 12L), SQL_DATETIME_SUB = c(NA_integer_, NA_integer_, 
+NA_integer_, NA_integer_, NA_integer_, NA_integer_), CHAR_OCTET_LENGTH = c(510L, 
+NA, NA, NA, NA, 510L), ORDINAL_POSITION = 1:6, IS_NULLABLE = c("YES", 
+"YES", "YES", "YES", "YES", "YES"), ORDINAL = 1:6), row.names = c(NA, 
+6L), class = "data.frame")
+```
+
+
+
+```{r odbcClose_hidden, include=FALSE}
+if (FLAG_EXEC_SQL){
+  odbcClose(odbc_ch)
+}
+```
+
+## 参考文献
+
+::: {#refs}
+:::

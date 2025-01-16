@@ -1,0 +1,130 @@
+---
+title: "NipponMap"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  #html:
+  docx:
+    toc: true
+    toc-depth: 3
+    fig-width: 6
+    fig-height: 5
+---
+
+```{r setup, include=FALSE, output=FALSE}
+
+# コード例に使用するデフォルト以外のパッケージを列挙する
+pkgs <- c('NipponMap', 'RColorBrewer', 'foreign')
+
+# install packages
+for (pkg in pkgs){
+  if (!(pkg %in% installed.packages())){
+    install.packages(pkg)
+  }
+}
+
+```
+
+## パッケージの概要
+
+NipponMapは、サークルカルトグラムを含むコロプレス地図作成のための日本のデジタル地図データです。コロプレス地図とは、地図上で統計による階級区分を表現する方法の一つで、統計値を複数の階級に区分し、都道府県等の区域別に、各区域の階級を色分けによって表す地図のことです。カルトグラムとは統計データの大小を地図上の面積や距離の伸縮により表現したものであり、サークルカルトグラムは区域を円で示し、円の大小で統計データの大小を表現したものです。
+
+```{r NipponMap, include=FALSE, output=FALSE}
+require(NipponMap)
+require(RColorBrewer) #地図やグラフ等の配色を提供するパッケージ
+require(foreign) #他ソフトからのデータを読み書きするためのツールを提供するパッケージ
+```
+## 日本地図の描画
+
+関数JapanPrefMapは、都道府県で区分された単純な日本地図を描画できます。
+
+```{r JapanPrefMap_1, warning=FALSE}
+
+ JapanPrefMap()
+
+```
+
+当関数は都道府県のJISコード順に色ベクトルを受け取ります。都道府県別の公式統計はJISコード順が多いので、order関数やmerge関数を適用する手間がなく、簡単にコロプレス地図の色列を作ることができます。
+
+次のコードでは、RColorBrewerパッケージの「Set1」というパレットを使って都道府県をJISコード順に赤、青、緑、紫の４色に色分けしています。例えば、JISコードが1の北海道は赤、2の青森県は青、3の岩手県は緑、4の宮城県は紫・・・となります。
+
+```{r JapanPrefMap_2, warning=FALSE}
+
+cols <- RColorBrewer::brewer.pal(4,"Set1")　#４色の「Set1」パレットを取得
+print(cols)
+JapanPrefMap(col = cols, border = gray(0.8), axes = TRUE)　#border = gray(0.8)：都道府県の境界線を明度0.8のグレーにする、axes = TRUE：地図の軸を表示する
+
+```
+
+## コロプレス地図の作成
+
+foreignパッケージを使って、NipponMap内のshapes/jpn.dbfファイルから日本の地図データのDBFファイルを読み込み、当データに含まれる2010年国勢調査による人口のデータセットからコロプレス地図を作成します。
+
+```{r JapanPrefMap_3, warning=FALSE}
+ 
+#foreignパッケージを使ってDBFファイルを読み込み
+dat <- foreign::read.dbf(system.file("shapes/jpn.dbf", package="NipponMap"))
+head(dat, 15)
+
+op <- par(bg = "lightblue") #プロットの背景色を水色（skyblue）に設定
+p <- JapanPrefMap(col = "ivory") #日本地図をアイボリー（ivory）で描画
+col <- c("blue", "skyblue") #円の枠の色と背景色を設定
+
+pop <- dat$population / 1e+7 #読み込んだデータから人口を取得し、千万で割る
+head(pop, 15)
+
+symbols(p, circles = sqrt(pop / (2 * pi)), 
+        inches = FALSE,
+        fg = col[1], 
+        bg = col[2], 
+        add = TRUE
+        ) #各都道府県に対応する円を描画。円の大きさは人口に基づき、色は枠col[1]、背景col[2]で設定。
+
+idx <- c(1e+6, 5e+6, 1e+7)
+pos <- legend("bottomright", 
+              legend = format(idx, scientific = 10, big.mark = ","),
+              title = "Population (2010)", 
+              bg = "white", 
+              x.intersp = 2, 
+              y.intersp =　1.5
+              ) #凡例をプロットの右下に追加
+
+symbols(pos$text$x- 1, 
+        pos$text$y, 
+        circles = sqrt(idx / 1e+7 / (2 * pi)),
+        inches = FALSE, 
+        fg = col[1], 
+        bg = col[2], 
+        add = TRUE
+        ) #凡例の近くに円を描画
+
+par(op) #元のプロットパラメータに戻す
+
+```
+
+
+## カルトグラムの作成
+
+JapanPrefCartogram関数は、日本の都道府県で区分された単純なサークルカルトグラムを描画します。円の大きさは平成27年国勢調査より取得した各都道府県の2015年の人口を表しており、現在のところ大きさは固定です。自由に変更できるのは、色とその他のグラフィック・パラメータのみです。なお、色の順序は都道府県のJISコード順に合わせる必要があります。
+
+
+引数を設定しない場合は、シンプルなサークルカルトグラムが出力されます。
+
+```{r JapanPrefCartogram_1, warning=FALSE}
+
+JapanPrefCartogram()
+
+```
+
+引数を設定することで色やラベルを設定できます。ここでは、都道府県を虹色のグラデーションとなるように色分けし、都道府県名がラベリングされるようにしています。
+
+```{r JapanPrefCartogram_2, warning=FALSE}
+
+op <- palette(rainbow(47, end = 0.9)) #47色の虹の色を生成し、パレットとして設定
+xy <- JapanPrefCartogram(col = 1:47, fg = gray(0.6)) #カルトグラムの作成
+lb <- as.character(dat$name) #先ほど読み込んだDBFファイルから都道府県名を取得
+text(xy, lb, cex = 0.6)
+
+palette(op) #元のカラーパレットに戻す
+
+```
