@@ -16,16 +16,19 @@ if (!require(C50)) install.packages('C50')
 ```
 
 ## パッケージの概要
+
 C50パッケージではC5.0アルゴリズムを用いた決定木モデルを使用できます。
 
 ## 参考URL
-公式ドキュメント
-https://cran.r-project.org/web/packages/C50/C50.pdf
+
+公式ドキュメント <https://cran.r-project.org/web/packages/C50/C50.pdf>
 
 ## 使用例：irisデータの分類
+
 irisデータを用いて、がく弁・花弁の長さ・幅の情報からアヤメを分類するモデルをC50パッケージを用いて構築します。
 
 ### irisデータセットを読み込む
+
 irisデータを読み込み、データの先頭を表示します。
 
 -   Sepal.Length：がく弁の長さ
@@ -34,13 +37,16 @@ irisデータを読み込み、データの先頭を表示します。
 -   Petal.Width：花弁の幅
 
 アヤメの種類はsetosa(1)、versicolor(2)、virginica(3)の3種類です。
+
 ```{r}
 data(iris)
 head(iris)
 ```
 
 ### irisデータの構造
+
 irisデータの各種構造を確認します。
+
 ```{r}
 str(iris)
 ```
@@ -52,7 +58,9 @@ plot(iris, col=c(2, 3, 4)[iris$Species])
 ```
 
 ### モデル構築
+
 irisデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします。確認のため、データサイズを出力します。
+
 ```{r}
 # 再現性のためにシードを設定
 set.seed(123)
@@ -67,6 +75,7 @@ c(nrow(iris), nrow(train_data), nrow(test_data))
 ```
 
 モデルを生成します。
+
 ```{r}
 model <- C5.0(
   x = train_data[-5], 
@@ -75,22 +84,25 @@ model <- C5.0(
 ```
 
 モデルのサマリを表示します。
+
 ```{r}
 summary(model)
 ```
 
 plot関数を用いると、決定木の様子が可視化されます。
+
 ```{r}
 plot(model)
 ```
 
 構築したモデルを使用して予測を行います。
+
 ```{r}
 res <- predict(model, test_data[-5])
 ```
 
 結果を確認します。予測が概ねあっていることが分かります。
+
 ```{r}
 (table(res, test_data$Species))
 ```
-

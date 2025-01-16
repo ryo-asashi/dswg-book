@@ -3,7 +3,8 @@ title: "YieldCurve"
 author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
 format:
-  html:
+  #html:
+  docx:
     toc: true
     toc-depth: 3
     fig-width: 6
@@ -18,7 +19,7 @@ if (!require(xts)) install.packages('xts')
 
 ## パッケージの概要
 
-YieldCurveはパラメトリックなイールドカーブを生成することができるパッケージです。Nelson-Siegel、またはSvenssonのモデルによりイールドカーブを生成します。また、このパッケージには、連邦準備銀行（FRB）と欧州中央銀行（ECB）の金利のデータセットも含まれています。
+YieldCurveはパラメトリックなイールドカーブを生成することができるパッケージです。金利データをインプットすると、Nelson-Siegel、またはSvenssonのモデルに基づくパラメータを推定し、イールドカーブを生成します。また、このパッケージには、連邦準備銀行（FRB）と欧州中央銀行（ECB）の金利のデータセットも含まれています。
 
 ```{r YieldCurve}
 require(YieldCurve)
@@ -50,14 +51,16 @@ for( i in c(1, 2, 3, 370, 371, 372) ){
 }
 
 ```
-ECBのデータセットも同様に取得可能です。こちらは満期が3ヶ月と6ヶ月、および1年から30年の日時データで、範囲は2006/12/28から2009/7/23です。
+ECBのデータセットも同様に取得可能です。こちらは満期が3ヶ月と6ヶ月、および1年から30年の日次データで、範囲は2006/12/28から2009/7/23です。
 
 ```{r ECBYieldCurve, warning=FALSE}
 
 # データをロード
 data(ECBYieldCurve)
+
 # 最初の3営業日分のデータを出力
 first(ECBYieldCurve,'3 day')
+
 # 最後の3営業日分のデータを出力
 last(ECBYieldCurve,'3 day')
 
@@ -66,13 +69,13 @@ last(ECBYieldCurve,'3 day')
 
 ## Nelson-Siegelモデルによるパラメータの推定
 
-Nelson.Siegel関数では、Nelson-Siegelモデルによるパラメータを推定できます。具体的には、金利データをインプットすると、以下の算式で表されるNelson-Siegelモデルのイールドカーブについて、パラメータ$\beta_{0t}$（水準）、$\beta_{1t}$（傾き）、$\beta_{2t}$（曲率）、$\lambda$（こぶの位置）を推定します。次のコードでは先ほど取得したFRBのデータから最初の3ヶ月分と最後の3ヶ月分のパラメータを推定しています。
+Nelson.Siegel関数では、Nelson-Siegelモデルによるパラメータを推定できます。具体的には、金利データをインプットすると、以下の算式で表されるNelson-Siegelモデルのイールドカーブについて、各基準日のパラメータ$\beta_0$（水準）、$\beta_1$（傾き）、$\beta_2$（曲率）、$\lambda$（こぶの位置）を推定します。次のコードでは先ほど取得したFRBのデータから最初の3ヶ月分と最後の3ヶ月分のパラメータを推定しています。
 
 $$
-y_t(\tau) = \beta_{0t} 
-          + \beta_{1t}\frac{1-\exp(-\lambda_\tau)}{\lambda_\tau} 
-          + \beta_{2t}\left( \frac{1-\exp(-\lambda_\tau)}{\lambda_\tau} 
-          - \exp(-\lambda_\tau) \right)
+y(m) = \beta_{0} 
+          + \beta_{1}\frac{1-\exp(-\lambda m)}{\lambda m} 
+          + \beta_{2}\left( \frac{1-\exp(-\lambda m)}{\lambda m} 
+          - \exp(-\lambda m) \right)
 $$
 
 ```{r Nelson.Siegel, warning=FALSE}
@@ -119,27 +122,27 @@ YieldCurve_NS(date="2012-11-30")
 
 Svensson関数ではSvenssonモデルによるパラメータを推定できます。Svenssonモデルは、フォワードレートを次の算式で記述します。
 $$
-y_t(\tau) = \beta_{0} 
-          + \beta_{1}\exp\left(-\frac{\tau}{\lambda_1}\right) 
-          + \beta_{2}\frac{\tau}{\lambda_1} \exp\left(-\frac{\tau}{\lambda_1}\right) 
-          + \beta_{3}\frac{\tau}{\lambda_2} \exp\left(-\frac{\tau}{\lambda_2}\right) 
+y(m) = \beta_{0} 
+          + \beta_{1}\exp\left(-\frac{m}{\tau_1}\right) 
+          + \beta_{2}\frac{m}{\tau_1} \exp\left(-\frac{m}{\tau_1}\right) 
+          + \beta_{3}\frac{m}{\tau_2} \exp\left(-\frac{m}{\tau_2}\right) 
 $$
 また、スポットレートはフォワードレートから導き出すことができ、次式で与えられます。
 
 $$
 \begin{equation}
   \begin{split} 
-  y_t(\tau) &= \beta_{0} 
-            + \beta_{1}\frac{1-\exp\left(-\frac{\tau}{\lambda_1}\right)}{\frac{\tau}{\lambda_1}} \\
-            &+ \beta_{2}\left[ \frac{1-\exp\left(-\frac{\tau}{\lambda_1}\right)}{\frac{\tau}{\lambda_1}}
-                              -\exp\left( -\frac{\tau}{\lambda_1} \right) \right] \\
-            &+ \beta_{3}\left[ \frac{1-\exp\left(-\frac{\tau}{\lambda_2}\right)}{\frac{\tau}{\lambda_2}}
-                                -\exp\left( -\frac{\tau}{\lambda_2} \right) \right]
+  y(m) &= \beta_{0} 
+            + \beta_{1}\frac{1-\exp\left(-\frac{m}{\tau_1}\right)}{\frac{m}{\tau_1}} \\
+            &+ \beta_{2}\left[ \frac{1-\exp\left(-\frac{m}{\tau_1}\right)}{\frac{m}{\tau_1}}
+                              -\exp\left( -\frac{m}{\tau_1} \right) \right] \\
+            &+ \beta_{3}\left[ \frac{1-\exp\left(-\frac{m}{\tau_2}\right)}{\frac{m}{\tau_2}}
+                                -\exp\left( -\frac{m}{\tau_2} \right) \right]
   \end{split}
 \end{equation}
 $$
 
-金利データをインプットすると、Svenssonモデルのイールドカーブについて、パラメータ$\beta_{0}$、$\beta_{1}$、$\beta_{2}$、$\beta_{3}$、$\lambda_1$、$\lambda_2$を推定します。次のコードでは、Nelson-Siegel関数と同様に、FRBのデータから最初の3ヶ月分と最後の3ヶ月分のパラメータを推定しています。
+金利データをインプットすると、Svenssonモデルのイールドカーブについて、各基準日のパラメータ$\beta_{0}$、$\beta_{1}$、$\beta_{2}$、$\beta_{3}$、$\tau_1$、$\tau_2$を推定します。次のコードでは、Nelson-Siegel関数と同様に、FRBのデータから最初の3ヶ月分と最後の3ヶ月分のパラメータを推定しています。
 
 ```{r Svensson, warning=FALSE}
 
@@ -184,6 +187,8 @@ YieldCurve_S(date="2012-11-30")
 ## 外部データを用いた場合
 
 パッケージに含まれたデータセットだけでなく、外部データを用いることも可能です。財務省のホームページより当月の日本国債の流通利回りを取得し、Nelson-Siegelモデルで直近営業日の金利のイールドカーブをフィッティングしてみましょう。今回は70年満期までの補外も行っています。
+
+なお、コード中に記載のURLより取得できるCSVファイルは日々更新されるため、コードを実行する日が異なれば異なる金利が出力される（再現性がない）ことに留意ください。
 
 ```{r jgb, warning=FALSE}
 

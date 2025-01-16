@@ -9,7 +9,7 @@
 <meta name="author" content="データサイエンス関連基礎調査WG">
 <meta name="dcterms.date" content="2024-10-16">
 
-<title>14&nbsp; lifecontingencies – Rパッケージ活用事例集</title>
+<title>17&nbsp; lifecontingencies – Rパッケージ活用事例集</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -66,7 +66,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../qmds/mlbench.html" rel="next">
+<link href="../qmds/makedummies.html" rel="next">
 <link href="../qmds/iml.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -146,7 +146,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmds/lifecontingencies.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">lifecontingencies</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmds/lifecontingencies.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">lifecontingencies</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -197,134 +197,182 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../qmds/C50.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">C50</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">class</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../qmds/corrplot.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">corrplot</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">corrplot</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/crosstable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">crosstable</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/DALEX.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">DALEX</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">DALEX</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/distr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">distr</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">distr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/distrEX.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">distrEx</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">distrEx</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">dplyr</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">dplyr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/e1071.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">e1071</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">e1071</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/forcats.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">forcats</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">forcats</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/gghighlight.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">gghighlight</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">gghighlight</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/igraph.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">igraph</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">igraph</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/iml.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">iml</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">iml</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/lifecontingencies.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">lifecontingencies</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">lifecontingencies</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/makedummies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">makedummies</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/mlbench.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">mlbench</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">mlbench</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/palmerpenguins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">palmerpenguins</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">palmerpenguins</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/partykit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">partykit</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/pdp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">pdp</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">pdp</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/pROC.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">pROC</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">pROC</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/psych.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">psych</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">psych</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/purrr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">purrr</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">purrr</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/randomForest.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">randomForest</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/ranger.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">ranger</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/recipes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">recipes</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">recipes</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/rsample.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">rsample</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">rsample</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/shapviz.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">shapviz</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">shapviz</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/skimr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">skimr</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">skimr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/survival.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">survival</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">survival</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/tuneRanger.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">tuneRanger</span></span></a>
   </div>
 </li>
     </ul>
@@ -337,13 +385,13 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">14.1</span> パッケージの概要</a></li>
-  <li><a href="#データの取得" id="toc-データの取得" class="nav-link" data-scroll-target="#データの取得"><span class="header-section-number">14.2</span> データの取得</a></li>
-  <li><a href="#lifetable-class" id="toc-lifetable-class" class="nav-link" data-scroll-target="#lifetable-class"><span class="header-section-number">14.3</span> lifetable-class</a></li>
-  <li><a href="#actuarialtable-class" id="toc-actuarialtable-class" class="nav-link" data-scroll-target="#actuarialtable-class"><span class="header-section-number">14.4</span> actuarialtable-class</a></li>
-  <li><a href="#生命年金の年金現価" id="toc-生命年金の年金現価" class="nav-link" data-scroll-target="#生命年金の年金現価"><span class="header-section-number">14.5</span> 生命年金の年金現価</a></li>
-  <li><a href="#生命保険の一時払保険料" id="toc-生命保険の一時払保険料" class="nav-link" data-scroll-target="#生命保険の一時払保険料"><span class="header-section-number">14.6</span> 生命保険の一時払保険料</a></li>
-  <li><a href="#生命保険の責任準備金" id="toc-生命保険の責任準備金" class="nav-link" data-scroll-target="#生命保険の責任準備金"><span class="header-section-number">14.7</span> 生命保険の責任準備金</a></li>
+  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">17.1</span> パッケージの概要</a></li>
+  <li><a href="#データの取得" id="toc-データの取得" class="nav-link" data-scroll-target="#データの取得"><span class="header-section-number">17.2</span> データの取得</a></li>
+  <li><a href="#lifetable-class" id="toc-lifetable-class" class="nav-link" data-scroll-target="#lifetable-class"><span class="header-section-number">17.3</span> lifetable-class</a></li>
+  <li><a href="#actuarialtable-class" id="toc-actuarialtable-class" class="nav-link" data-scroll-target="#actuarialtable-class"><span class="header-section-number">17.4</span> actuarialtable-class</a></li>
+  <li><a href="#生命年金の年金現価" id="toc-生命年金の年金現価" class="nav-link" data-scroll-target="#生命年金の年金現価"><span class="header-section-number">17.5</span> 生命年金の年金現価</a></li>
+  <li><a href="#生命保険の一時払保険料" id="toc-生命保険の一時払保険料" class="nav-link" data-scroll-target="#生命保険の一時払保険料"><span class="header-section-number">17.6</span> 生命保険の一時払保険料</a></li>
+  <li><a href="#生命保険の責任準備金" id="toc-生命保険の責任準備金" class="nav-link" data-scroll-target="#生命保険の責任準備金"><span class="header-section-number">17.7</span> 生命保険の責任準備金</a></li>
   </ul>
 </nav>
     </div>
@@ -352,7 +400,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">lifecontingencies</span></h1>
+<h1 class="title"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">lifecontingencies</span></h1>
 </div>
 
 
@@ -381,15 +429,15 @@ window.Quarto = {
 </header>
 
 
-<section id="パッケージの概要" class="level2" data-number="14.1">
-<h2 data-number="14.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">14.1</span> パッケージの概要</h2>
+<section id="パッケージの概要" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">17.1</span> パッケージの概要</h2>
 <p>lifecontingenciesは、ファイナンスや人口統計、保険数理の標準的な計算を実行することができるパッケージです。生命保険のリスク評価を実行するための包括的なツールセットとなっています。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lifecontingencies)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="データの取得" class="level2" data-number="14.2">
-<h2 data-number="14.2" class="anchored" data-anchor-id="データの取得"><span class="header-section-number">14.2</span> データの取得</h2>
+<section id="データの取得" class="level2" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="データの取得"><span class="header-section-number">17.2</span> データの取得</h2>
 <p>lifecontingenciesにはたくさんのデータセットが含まれています。以下にパッケージに含まれるデータセットの一覧を出力します。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># データセット一覧を取得</span></span>
@@ -440,8 +488,8 @@ soaLt : Society of Actuaries life table : data.frame</code></pre>
 </div>
 </div>
 </section>
-<section id="lifetable-class" class="level2" data-number="14.3">
-<h2 data-number="14.3" class="anchored" data-anchor-id="lifetable-class"><span class="header-section-number">14.3</span> lifetable-class</h2>
+<section id="lifetable-class" class="level2" data-number="17.3">
+<h2 data-number="17.3" class="anchored" data-anchor-id="lifetable-class"><span class="header-section-number">17.3</span> lifetable-class</h2>
 <p>lifetable型のオブジェクトは、年齢と各年齢に対応する生存数があれば作成でき、生存確率<span class="math inline">\(p_x\)</span>と平均余命<span class="math inline">\(e_x\)</span>を保持しています。</p>
 <p>data.frame型であるsoaLtのデータセットから、with関数およびnew関数を利用してlifetable型のオブジェクトを作成し、このオブジェクトをもう一度data.frame型に変換し直すと、生存確率<span class="math inline">\(p_x\)</span>と平均余命<span class="math inline">\(e_x\)</span>の情報が追加されていることがわかります。</p>
 <p>なお、lifecontingenciesにはsoa08というlifetable型のデータセットが含まれていますが、こちらは『Actuarial Mathematics (Second Edition)』のAppendix 2Aに掲載されているIllustrative life tableより作成されたもので、soaLtとは数値が異なります。</p>
@@ -482,8 +530,8 @@ soaLt : Society of Actuaries life table : data.frame</code></pre>
 </div>
 </div>
 </section>
-<section id="actuarialtable-class" class="level2" data-number="14.4">
-<h2 data-number="14.4" class="anchored" data-anchor-id="actuarialtable-class"><span class="header-section-number">14.4</span> actuarialtable-class</h2>
+<section id="actuarialtable-class" class="level2" data-number="17.4">
+<h2 data-number="17.4" class="anchored" data-anchor-id="actuarialtable-class"><span class="header-section-number">17.4</span> actuarialtable-class</h2>
 <p>actuarialtable型のオブジェクトは、年齢と各年齢に対応する生存数に加えて予定利率を設定すれば作成でき、計算基数を保持しています。</p>
 <p>上述のlifetable型と同様の方法で、soaLtのデータセットからactuarialtable型のオブジェクトを作成し、計算基数の情報が追加されることを確認します。なお、ここでは予定利率を2.0%とします。</p>
 <div class="cell">
@@ -525,8 +573,8 @@ soaLt : Society of Actuaries life table : data.frame</code></pre>
 </div>
 </div>
 </section>
-<section id="生命年金の年金現価" class="level2" data-number="14.5">
-<h2 data-number="14.5" class="anchored" data-anchor-id="生命年金の年金現価"><span class="header-section-number">14.5</span> 生命年金の年金現価</h2>
+<section id="生命年金の年金現価" class="level2" data-number="17.5">
+<h2 data-number="17.5" class="anchored" data-anchor-id="生命年金の年金現価"><span class="header-section-number">17.5</span> 生命年金の年金現価</h2>
 <p>lifecontingenciesに含まれているactuarialtable型のデータセットであるsoa08Actを用いて、様々な生命年金の年金現価を計算してみます。このデータセットはsoaLtと同じ生存数によるものですが、予定利率は6.0%です。なお、予定利率はaxn関数の引数にて新たに設定することも可能ですが、ここでは6.0%のままとします（以下に紹介する関数も同様）。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 70歳開始の期始払終身年金の年金現価</span></span>
@@ -560,8 +608,8 @@ soaLt : Society of Actuaries life table : data.frame</code></pre>
 </div>
 </div>
 </section>
-<section id="生命保険の一時払保険料" class="level2" data-number="14.6">
-<h2 data-number="14.6" class="anchored" data-anchor-id="生命保険の一時払保険料"><span class="header-section-number">14.6</span> 生命保険の一時払保険料</h2>
+<section id="生命保険の一時払保険料" class="level2" data-number="17.6">
+<h2 data-number="17.6" class="anchored" data-anchor-id="生命保険の一時払保険料"><span class="header-section-number">17.6</span> 生命保険の一時払保険料</h2>
 <p>同様に、soa08Actを用いて、様々な生命保険の一時払保険料を計算してみます。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 30歳加入、保険期間10年の定期保険の一時払保険料</span></span>
@@ -585,8 +633,8 @@ soaLt : Society of Actuaries life table : data.frame</code></pre>
 </div>
 </div>
 </section>
-<section id="生命保険の責任準備金" class="level2" data-number="14.7">
-<h2 data-number="14.7" class="anchored" data-anchor-id="生命保険の責任準備金"><span class="header-section-number">14.7</span> 生命保険の責任準備金</h2>
+<section id="生命保険の責任準備金" class="level2" data-number="17.7">
+<h2 data-number="17.7" class="anchored" data-anchor-id="生命保険の責任準備金"><span class="header-section-number">17.7</span> 生命保険の責任準備金</h2>
 <p>上記で紹介した関数を利用して、定期保険の純保険料式責任準備金を経過別に算出してみましょう。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 40歳加入、保険期間20年の定期保険の年払純保険料</span></span>
@@ -1068,12 +1116,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../qmds/iml.html" class="pagination-link" aria-label="iml">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">iml</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">iml</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../qmds/mlbench.html" class="pagination-link" aria-label="mlbench">
-        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">mlbench</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../qmds/makedummies.html" class="pagination-link" aria-label="makedummies">
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">makedummies</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

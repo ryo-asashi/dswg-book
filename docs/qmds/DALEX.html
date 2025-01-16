@@ -9,7 +9,7 @@
 <meta name="author" content="データサイエンス関連基礎調査WG">
 <meta name="dcterms.date" content="2024-10-16">
 
-<title>5&nbsp; DALEX – Rパッケージ活用事例集</title>
+<title>8&nbsp; DALEX – Rパッケージ活用事例集</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -67,7 +67,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../qmds/distr.html" rel="next">
-<link href="../qmds/corrplot.html" rel="prev">
+<link href="../qmds/crosstable.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -117,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmds/DALEX.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">DALEX</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmds/DALEX.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">DALEX</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -168,134 +168,182 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../qmds/C50.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">C50</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">class</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../qmds/corrplot.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">corrplot</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">corrplot</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/crosstable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">crosstable</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/DALEX.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">DALEX</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">DALEX</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/distr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">distr</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">distr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/distrEX.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">distrEx</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">distrEx</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">dplyr</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">dplyr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/e1071.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">e1071</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">e1071</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/forcats.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">forcats</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">forcats</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/gghighlight.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">gghighlight</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">gghighlight</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/igraph.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">igraph</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">igraph</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/iml.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">iml</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">iml</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/lifecontingencies.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">lifecontingencies</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">lifecontingencies</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/makedummies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">makedummies</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/mlbench.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">mlbench</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">mlbench</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/palmerpenguins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">palmerpenguins</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">palmerpenguins</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/partykit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">partykit</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/pdp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">pdp</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">pdp</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/pROC.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">pROC</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">pROC</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/psych.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">psych</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">psych</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/purrr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">purrr</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">purrr</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/randomForest.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">randomForest</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/ranger.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">ranger</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/recipes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">recipes</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">recipes</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/rsample.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">rsample</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">rsample</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/shapviz.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">shapviz</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">shapviz</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/skimr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">skimr</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">skimr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmds/survival.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">survival</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">survival</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../qmds/tuneRanger.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">tuneRanger</span></span></a>
   </div>
 </li>
     </ul>
@@ -308,14 +356,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">5.1</span> パッケージの概要</a></li>
-  <li><a href="#モデル解釈のためのオブジェクトを作成する" id="toc-モデル解釈のためのオブジェクトを作成する" class="nav-link" data-scroll-target="#モデル解釈のためのオブジェクトを作成する"><span class="header-section-number">5.2</span> モデル解釈のためのオブジェクトを作成する</a></li>
-  <li><a href="#個別の予測における特徴量と予測値の関係を解釈する" id="toc-個別の予測における特徴量と予測値の関係を解釈する" class="nav-link" data-scroll-target="#個別の予測における特徴量と予測値の関係を解釈する"><span class="header-section-number">5.3</span> 個別の予測における特徴量と予測値の関係を解釈する</a></li>
-  <li><a href="#モデルにおける特徴量と予測値の関係を解釈する" id="toc-モデルにおける特徴量と予測値の関係を解釈する" class="nav-link" data-scroll-target="#モデルにおける特徴量と予測値の関係を解釈する"><span class="header-section-number">5.4</span> モデルにおける特徴量と予測値の関係を解釈する</a></li>
-  <li><a href="#個別の予測における特徴量の寄与を解釈する" id="toc-個別の予測における特徴量の寄与を解釈する" class="nav-link" data-scroll-target="#個別の予測における特徴量の寄与を解釈する"><span class="header-section-number">5.5</span> 個別の予測における特徴量の寄与を解釈する</a></li>
-  <li><a href="#shapをウォーターフォール図として描く" id="toc-shapをウォーターフォール図として描く" class="nav-link" data-scroll-target="#shapをウォーターフォール図として描く"><span class="header-section-number">5.6</span> SHAPをウォーターフォール図として描く</a></li>
-  <li><a href="#モデルにおける特徴量の重要度を解釈する" id="toc-モデルにおける特徴量の重要度を解釈する" class="nav-link" data-scroll-target="#モデルにおける特徴量の重要度を解釈する"><span class="header-section-number">5.7</span> モデルにおける特徴量の重要度を解釈する</a></li>
-  <li><a href="#参考資料" id="toc-参考資料" class="nav-link" data-scroll-target="#参考資料"><span class="header-section-number">5.8</span> 参考資料</a></li>
+  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">8.1</span> パッケージの概要</a></li>
+  <li><a href="#モデル解釈のためのオブジェクトを作成する" id="toc-モデル解釈のためのオブジェクトを作成する" class="nav-link" data-scroll-target="#モデル解釈のためのオブジェクトを作成する"><span class="header-section-number">8.2</span> モデル解釈のためのオブジェクトを作成する</a></li>
+  <li><a href="#個別の予測における特徴量と予測値の関係を解釈する" id="toc-個別の予測における特徴量と予測値の関係を解釈する" class="nav-link" data-scroll-target="#個別の予測における特徴量と予測値の関係を解釈する"><span class="header-section-number">8.3</span> 個別の予測における特徴量と予測値の関係を解釈する</a></li>
+  <li><a href="#モデルにおける特徴量と予測値の関係を解釈する" id="toc-モデルにおける特徴量と予測値の関係を解釈する" class="nav-link" data-scroll-target="#モデルにおける特徴量と予測値の関係を解釈する"><span class="header-section-number">8.4</span> モデルにおける特徴量と予測値の関係を解釈する</a></li>
+  <li><a href="#個別の予測における特徴量の寄与を解釈する" id="toc-個別の予測における特徴量の寄与を解釈する" class="nav-link" data-scroll-target="#個別の予測における特徴量の寄与を解釈する"><span class="header-section-number">8.5</span> 個別の予測における特徴量の寄与を解釈する</a></li>
+  <li><a href="#shapをウォーターフォール図として描く" id="toc-shapをウォーターフォール図として描く" class="nav-link" data-scroll-target="#shapをウォーターフォール図として描く"><span class="header-section-number">8.6</span> SHAPをウォーターフォール図として描く</a></li>
+  <li><a href="#モデルにおける特徴量の重要度を解釈する" id="toc-モデルにおける特徴量の重要度を解釈する" class="nav-link" data-scroll-target="#モデルにおける特徴量の重要度を解釈する"><span class="header-section-number">8.7</span> モデルにおける特徴量の重要度を解釈する</a></li>
+  <li><a href="#参考資料" id="toc-参考資料" class="nav-link" data-scroll-target="#参考資料"><span class="header-section-number">8.8</span> 参考資料</a></li>
   </ul>
 </nav>
     </div>
@@ -324,7 +372,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">DALEX</span></h1>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">DALEX</span></h1>
 </div>
 
 
@@ -353,8 +401,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="パッケージの概要" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">5.1</span> パッケージの概要</h2>
+<section id="パッケージの概要" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">8.1</span> パッケージの概要</h2>
 <p>DALEX パッケージは、予測モデルを解釈するために開発された可視化手法を統一的な記法で実行するためのパッケージです。DALEX パッケージでは、予測モデルに explain() 関数を適用することで、explainer オブジェクトが作成されます。この explainer オブジェクトに対して、DALEX パッケージのさまざまな関数を適用することで、PDP、ICE、SHAP などのプロットを簡単に作成することができます。</p>
 <p>それぞれの手法の詳細については、たとえば、解釈可能な機械学習に関するウェブ書籍 <a href="https://christophm.github.io/interpretable-ml-book/"><em>Interpretable Machine Learning</em></a>（<a href="https://hacarus.github.io/interpretable-ml-book-ja/index.html">邦訳</a>）などをご参照ください。</p>
 <p>ここでは、例として、trees データセットの Volume を Girth と Height から予測するモデルを作成し、そのモデルに対して解釈手法を適用してみましょう。</p>
@@ -365,8 +413,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>model_rf <span class="ot">&lt;-</span> <span class="fu">ranger</span>(Volume<span class="sc">~</span>., trees)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="モデル解釈のためのオブジェクトを作成する" class="level2" data-number="5.2">
-<h2 data-number="5.2" class="anchored" data-anchor-id="モデル解釈のためのオブジェクトを作成する"><span class="header-section-number">5.2</span> モデル解釈のためのオブジェクトを作成する</h2>
+<section id="モデル解釈のためのオブジェクトを作成する" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="モデル解釈のためのオブジェクトを作成する"><span class="header-section-number">8.2</span> モデル解釈のためのオブジェクトを作成する</h2>
 <p>explain() 関数は、さまざまなパッケージのもとで作成された予測モデルを、DALEX パッケージの他の関数に対応するように加工するための関数です。加工後の予測モデルは explainer オブジェクトと呼ばれます。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
@@ -379,8 +427,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="個別の予測における特徴量と予測値の関係を解釈する" class="level2" data-number="5.3">
-<h2 data-number="5.3" class="anchored" data-anchor-id="個別の予測における特徴量と予測値の関係を解釈する"><span class="header-section-number">5.3</span> 個別の予測における特徴量と予測値の関係を解釈する</h2>
+<section id="個別の予測における特徴量と予測値の関係を解釈する" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="個別の予測における特徴量と予測値の関係を解釈する"><span class="header-section-number">8.3</span> 個別の予測における特徴量と予測値の関係を解釈する</h2>
 <p>explainer オブジェクトに predict_profile() 関数を適用すると、ICE（Individual Conditional Expectation）プロットを作図することができます。ICE プロットは、注目している特徴量の値だけが違っていた場合に予測値がどのように変化するかを、個々の予測ごとに可視化するものです。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ice <span class="ot">&lt;-</span> explainer <span class="sc">%&gt;%</span> <span class="fu">predict_profile</span>(<span class="at">new_observation =</span> trees)</span>
@@ -394,8 +442,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="モデルにおける特徴量と予測値の関係を解釈する" class="level2" data-number="5.4">
-<h2 data-number="5.4" class="anchored" data-anchor-id="モデルにおける特徴量と予測値の関係を解釈する"><span class="header-section-number">5.4</span> モデルにおける特徴量と予測値の関係を解釈する</h2>
+<section id="モデルにおける特徴量と予測値の関係を解釈する" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="モデルにおける特徴量と予測値の関係を解釈する"><span class="header-section-number">8.4</span> モデルにおける特徴量と予測値の関係を解釈する</h2>
 <p>explainer オブジェクトにmodel_profile() 関数を適用すると、PD（Partial Dependence）プロットを作図することができます。PD プロットは、データ全体の ICE プロットを平均したものにほかならず、注目している特徴量の値が変化したときに予測値が平均的にどのように変化するかを表していると解釈できます。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pdp <span class="ot">&lt;-</span> explainer <span class="sc">%&gt;%</span> <span class="fu">model_profile</span>()</span>
@@ -421,8 +469,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="個別の予測における特徴量の寄与を解釈する" class="level2" data-number="5.5">
-<h2 data-number="5.5" class="anchored" data-anchor-id="個別の予測における特徴量の寄与を解釈する"><span class="header-section-number">5.5</span> 個別の予測における特徴量の寄与を解釈する</h2>
+<section id="個別の予測における特徴量の寄与を解釈する" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="個別の予測における特徴量の寄与を解釈する"><span class="header-section-number">8.5</span> 個別の予測における特徴量の寄与を解釈する</h2>
 <p>explainer オブジェクトに predict_parts() 関数を適用すると、SHAP（SHapley Additive exPlanation）プロットを作図することができます。SHAP は、個別の予測値と平均的な予測値との差を、ゲーム理論的手法によって特徴量ごとの寄与に分解したものです。ここでは、5 番目のインスタンスに対する予測への特徴量ごとの寄与を表示してみます。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>shap <span class="ot">&lt;-</span> explainer <span class="sc">%&gt;%</span> <span class="fu">predict_parts</span>(trees[<span class="dv">5</span>,], <span class="at">type =</span> <span class="st">'shap'</span>)</span>
@@ -436,8 +484,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="shapをウォーターフォール図として描く" class="level2" data-number="5.6">
-<h2 data-number="5.6" class="anchored" data-anchor-id="shapをウォーターフォール図として描く"><span class="header-section-number">5.6</span> SHAPをウォーターフォール図として描く</h2>
+<section id="shapをウォーターフォール図として描く" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="shapをウォーターフォール図として描く"><span class="header-section-number">8.6</span> SHAPをウォーターフォール図として描く</h2>
 <p>predict_parts() 関数が出力したオブジェクト（predict_parts オブジェクト）を shapviz パ ッケージの shapviz() 関数で shapviz オブジェクトに変換することで、ウォーターフォール図を描くことも可能です。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shapviz)</span>
@@ -451,8 +499,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="モデルにおける特徴量の重要度を解釈する" class="level2" data-number="5.7">
-<h2 data-number="5.7" class="anchored" data-anchor-id="モデルにおける特徴量の重要度を解釈する"><span class="header-section-number">5.7</span> モデルにおける特徴量の重要度を解釈する</h2>
+<section id="モデルにおける特徴量の重要度を解釈する" class="level2" data-number="8.7">
+<h2 data-number="8.7" class="anchored" data-anchor-id="モデルにおける特徴量の重要度を解釈する"><span class="header-section-number">8.7</span> モデルにおける特徴量の重要度を解釈する</h2>
 <p>explainer オブジェクトに model_parts() 関数を適用すると、PFI（Permutation Feature Importance）プロットを作図することができます。PFI は、「データの中で特定の特徴量だけをランダムに並び替えたときに、予測精度がどの程度低下するか」をその特徴量の重要度として解釈するものです。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pfi <span class="ot">&lt;-</span> explainer <span class="sc">%&gt;%</span> <span class="fu">model_parts</span>()</span>
@@ -466,8 +514,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="参考資料" class="level2" data-number="5.8">
-<h2 data-number="5.8" class="anchored" data-anchor-id="参考資料"><span class="header-section-number">5.8</span> 参考資料</h2>
+<section id="参考資料" class="level2" data-number="8.8">
+<h2 data-number="8.8" class="anchored" data-anchor-id="参考資料"><span class="header-section-number">8.8</span> 参考資料</h2>
 <p>DALEX パッケージには、ここで紹介した手法以外にもさまざまな便利な関数が用意されています。以下のウェブ書籍には、それらの手法の説明だけでなく、R と Python の具体的なコード例も紹介されており、大変有用です。</p>
 <p>Przemyslaw Biecek and Tomasz Burzykowski, <em>Explanatory Model Analysis Explore, Explain, and Examine Predictive Models. With examples in R and Python</em>. <a href="https://ema.drwhy.ai/" class="uri">https://ema.drwhy.ai/</a></p>
 
@@ -897,13 +945,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../qmds/corrplot.html" class="pagination-link" aria-label="corrplot">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">corrplot</span></span>
+      <a href="../qmds/crosstable.html" class="pagination-link" aria-label="crosstable">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">crosstable</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../qmds/distr.html" class="pagination-link" aria-label="distr">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">distr</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">distr</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

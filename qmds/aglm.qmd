@@ -80,7 +80,6 @@ preds <- predict(
   newx = test_X,
   s = 0.062 # 正則化項のλパラメーターを数値またはベクトルで指定
 ) |> c() # 行列形式の出力をベクトルに変換
-
 .rmse = round(yardstick::rmse_vec(test_y, preds), 3)
 p <- ggplot(mapping = aes(x = test_y, y = preds)) +
   geom_point() +
@@ -88,7 +87,6 @@ p <- ggplot(mapping = aes(x = test_y, y = preds)) +
 
 preds <- predict(model_lasso, test_X, s = 0.62) |> c()
 .rmse = round(yardstick::rmse_vec(test_y, preds), 3)
-rmse_ = yardstick::rmse_vec(test_y, preds)
 q <- ggplot(mapping = aes(x = test_y, y = preds)) +
   geom_point() +
   ggtitle(paste("Lasso@0.62 | RMSE:", .rmse))
@@ -127,7 +125,6 @@ p <- ggplot(mapping = aes(x = test_y, y = preds)) +
 
 preds <- predict(model_ridge, test_X, s = 100) |> c()
 .rmse = round(yardstick::rmse_vec(test_y, preds), 3)
-rmse_ = yardstick::rmse_vec(test_y, preds)
 q <- ggplot(mapping = aes(x = test_y, y = preds)) +
   geom_point() +
   ggtitle(paste("Ridge@100 | RMSE =", .rmse))
@@ -165,7 +162,6 @@ p <- ggplot(mapping = aes(x = test_y, y = preds)) +
 
 preds <- predict(model_EN, test_X, s = 1) |> c()
 .rmse = round(yardstick::rmse_vec(test_y, preds), 3)
-rmse_ = yardstick::rmse_vec(test_y, preds)
 q <- ggplot(mapping = aes(x = test_y, y = preds)) +
   geom_point() +
   ggtitle(paste("Elastic-Net@1 | RMSE =", .rmse))
