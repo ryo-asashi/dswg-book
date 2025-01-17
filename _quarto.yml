@@ -46,11 +46,12 @@ book:
 #    - qmds/quantmod.qmd
 #    - qmds/datatable.qmd
 
-bibliography: references.bib
-
 format:
   html:
-    theme: cosmo
+    theme:
+      light: flatly
+      dark: darkly
+    html-math-method: katex
   pdf:
     documentclass: scrreprt
 

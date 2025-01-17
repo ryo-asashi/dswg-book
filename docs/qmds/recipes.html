@@ -93,10 +93,12 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -129,8 +131,22 @@ div.csl-indent {
 <script src="../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -186,6 +202,9 @@ window.Quarto = {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Rパッケージ活用事例集</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -1296,14 +1315,14 @@ window.Quarto = {
 </section>
 <section id="box-cox変換step_boxcox" class="level4" data-number="28.5.4.4">
 <h4 data-number="28.5.4.4" class="anchored" data-anchor-id="box-cox変換step_boxcox"><span class="header-section-number">28.5.4.4</span> Box-Cox変換（<code>step_BoxCox</code>）</h4>
-<p>Box-Cox変換は対数変換を一般化したもので、 定数<span class="math inline">\(\lambda\)</span>を用いて以下のような式で記述されます。 主に分布を正規分布に近づけるために用いられます。</p>
-<p><span class="math display">\[
+<p>Box-Cox変換は対数変換を一般化したもので、 定数<span class="math inline">\lambda</span>を用いて以下のような式で記述されます。 主に分布を正規分布に近づけるために用いられます。</p>
+<p><span class="math display">
 f(x) =
 \begin{cases}
 \frac{x^\lambda-1}{\lambda} &amp; \text{if  } \lambda \neq 0 \\
 \ln{x} &amp; \text{if  } \lambda = 0
 \end{cases}
-\]</span></p>
+</span></p>
 <p><code>step_BoxCox</code>関数により、このBox-Cox変換を行うことができます。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>recp_tmp <span class="ot">&lt;-</span> rec_tmp <span class="sc">%&gt;%</span> <span class="fu">step_impute_mean</span>(air_time) <span class="sc">%&gt;%</span> <span class="fu">step_BoxCox</span>(air_time) <span class="sc">%&gt;%</span> <span class="fu">prep</span>()</span>
@@ -1321,7 +1340,7 @@ f(x) =
 </div>
 </div>
 </div>
-<p>この<code>step_BoxCox</code>関数の優れているところは、正規分布に近づくような定数<span class="math inline">\(\lambda\)</span>を自動的に設定してくれる点です。</p>
+<p>この<code>step_BoxCox</code>関数の優れているところは、正規分布に近づくような定数<span class="math inline">\lambda</span>を自動的に設定してくれる点です。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Box-Cox変換のλ:"</span>, recp_tmp<span class="sc">$</span>steps[[<span class="dv">2</span>]]<span class="sc">$</span>lambdas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1350,19 +1369,19 @@ f(x) =
 </tr>
 <tr class="odd">
 <td><code>step_inverse</code></td>
-<td>逆数（<span class="math inline">\(\frac1{x+c}\)</span>）</td>
+<td>逆数（<span class="math inline">\frac1{x+c}</span>）</td>
 </tr>
 <tr class="even">
 <td><code>step_logit</code></td>
-<td>logit変換（<span class="math inline">\(\log (x) - \log (1-x)\)</span>）</td>
+<td>logit変換（<span class="math inline">\log (x) - \log (1-x)</span>）</td>
 </tr>
 <tr class="odd">
 <td><code>step_invlogit</code></td>
-<td>逆logit変換（<span class="math inline">\(\frac1{1+\exp(-x)}\)</span>）</td>
+<td>逆logit変換（<span class="math inline">\frac1{1+\exp(-x)}</span>）</td>
 </tr>
 <tr class="even">
 <td><code>step_relu</code></td>
-<td>ReLU関数（<span class="math inline">\(\max (0,x-c)\)</span>）等</td>
+<td>ReLU関数（<span class="math inline">\max (0,x-c)</span>）等</td>
 </tr>
 <tr class="odd">
 <td><code>step_YeoJohnson</code></td>
@@ -1998,7 +2017,7 @@ hour     -0.006616012  0.999977293  0.001281719</code></pre>
 <span id="cb120-17"><a href="#cb120-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rec_init <span class="sc">%&gt;%</span> <span class="fu">apply_poststeps</span>()) <span class="sc">%&gt;%</span></span>
 <span id="cb120-18"><a href="#cb120-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(model_engine_xgboost)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>今回は貪欲にも、6つの前処理を適用するかどうかの組み合わせすべて（<span class="math inline">\(2^6 = 64\)</span>通り）<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>を試すことにします。</p>
+<p>今回は貪欲にも、6つの前処理を適用するかどうかの組み合わせすべて（<span class="math inline">2^6 = 64</span>通り）<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>を試すことにします。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>cases <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(<span class="dv">0</span><span class="sc">:</span><span class="fu">length</span>(steps), <span class="cf">function</span>(k) <span class="fu">combn</span>(steps, k, <span class="at">simplify =</span> <span class="cn">FALSE</span>)), <span class="at">recursive =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -2090,9 +2109,6 @@ hour     -0.006616012  0.999977293  0.001281719</code></pre>
 <div id="ref-BIB_NYCFLIGHTS13" class="csl-entry" role="listitem">
 Hadley Wickham. 2021. <span>“Nycflights13: Flights That Departed NYC in 2013 / Flights Data.”</span> <a href="https://nycflights13.tidyverse.org/reference/flights.html">https://nycflights13.tidyverse.org/reference/flights.html</a>.
 </div>
-<div id="ref-knuth84" class="csl-entry" role="listitem">
-Knuth, Donald E. 1984. <span>“Literate Programming.”</span> <em>Comput. J.</em> 27 (2): 97–111. <a href="https://doi.org/10.1093/comjnl/27.2.97">https://doi.org/10.1093/comjnl/27.2.97</a>.
-</div>
 <div id="ref-BIB_RECIPES_FUNCTION_REFERENCE" class="csl-entry" role="listitem">
 Max Kuhn, Hadley Wickham, and Emil Hvitfeldt. 2024a. <span>“Function Reference • Recipes.”</span> <a href="https://recipes.tidymodels.org/reference/index.html">https://recipes.tidymodels.org/reference/index.html</a>.
 </div>
@@ -2141,6 +2157,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {

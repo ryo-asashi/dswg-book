@@ -73,10 +73,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -105,8 +107,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -162,6 +178,9 @@ window.Quarto = {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Rパッケージ活用事例集</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -434,7 +453,7 @@ window.Quarto = {
 <section id="生存時間解析用データの作成" class="level2" data-number="32.2">
 <h2 data-number="32.2" class="anchored" data-anchor-id="生存時間解析用データの作成"><span class="header-section-number">32.2</span> 生存時間解析用データの作成</h2>
 <p>survivalパッケージでは、<code>Surv()</code> 関数を用いて生存時間解析用のデータセット（Survオブジェクト）を作成することができます。Survオブジェクトは、生存時間（観察時間）と打ち切り指標を表すベクトルの組をもとにして作成されます。</p>
-<p>個人 <span class="math inline">\(i=1,2,...\)</span> について、死亡や要介護状態への移行などの注目するイベント（死亡等）による集団からの脱退と、注目しないイベントによる脱退や観察の終了（打ち切り）が発生するとします。死亡等の発生時間を <span class="math inline">\(X_i\)</span> 、打ち切りの発生時間を <span class="math inline">\(C_i\)</span> とすると、いずれか早い方の発生時間 <span class="math inline">\(T_i = min(X_i, C_i)\)</span> だけが観測されます。生存時間解析においては、死亡等が観察されたか打ち切られたかを表す変数を <span class="math inline">\(D_i\)</span> として、<span class="math inline">\(\{(T_i, D_i)\}_{i=1,2,...}\)</span> を収集したデータセットが分析対象とされます。</p>
+<p>個人 <span class="math inline">i=1,2,...</span> について、死亡や要介護状態への移行などの注目するイベント（死亡等）による集団からの脱退と、注目しないイベントによる脱退や観察の終了（打ち切り）が発生するとします。死亡等の発生時間を <span class="math inline">X_i</span> 、打ち切りの発生時間を <span class="math inline">C_i</span> とすると、いずれか早い方の発生時間 <span class="math inline">T_i = min(X_i, C_i)</span> だけが観測されます。生存時間解析においては、死亡等が観察されたか打ち切られたかを表す変数を <span class="math inline">D_i</span> として、<span class="math inline">\{(T_i, D_i)\}_{i=1,2,...}</span> を収集したデータセットが分析対象とされます。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">5</span>)</span>
@@ -450,8 +469,8 @@ window.Quarto = {
 </section>
 <section id="ノンパラメトリック推定" class="level2" data-number="32.3">
 <h2 data-number="32.3" class="anchored" data-anchor-id="ノンパラメトリック推定"><span class="header-section-number">32.3</span> ノンパラメトリック推定</h2>
-<p><code>survfit()</code> 関数を用いると、<code>Surv</code> オブジェクトに基づいて生存関数 <span class="math inline">\(S(t)\)</span> に関するKaplan-Meier推定を行うことができます。Kaplan-Meier推定法では、<span class="math inline">\(S(t)\)</span> を下式で推定します。</p>
-<p><span class="math display">\[\hat{S}(t)=\Pi_{i:\ t_i{\lt}t}(1-n.event_i/n.risk_i)\]</span></p>
+<p><code>survfit()</code> 関数を用いると、<code>Surv</code> オブジェクトに基づいて生存関数 <span class="math inline">S(t)</span> に関するKaplan-Meier推定を行うことができます。Kaplan-Meier推定法では、<span class="math inline">S(t)</span> を下式で推定します。</p>
+<p><span class="math display">\hat{S}(t)=\Pi_{i:\ t_i{\lt}t}(1-n.event_i/n.risk_i)</span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sample.sf <span class="ot">&lt;-</span> <span class="fu">survfit</span>(<span class="fu">Surv</span>(t, d) <span class="sc">~</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -522,7 +541,7 @@ treat=control 21       21     10.7      9.77      16.8
 </section>
 <section id="パラメトリック推定" class="level2" data-number="32.4">
 <h2 data-number="32.4" class="anchored" data-anchor-id="パラメトリック推定"><span class="header-section-number">32.4</span> パラメトリック推定</h2>
-<p><code>survreg()</code> 関数を用いることで、生存関数 <span class="math inline">\(S(x)\)</span> の形状として指数分布、ワイブル分布、対数ロジスティック分布などを仮定したパラメトリック推定を行うことができます。</p>
+<p><code>survreg()</code> 関数を用いることで、生存関数 <span class="math inline">S(x)</span> の形状として指数分布、ワイブル分布、対数ロジスティック分布などを仮定したパラメトリック推定を行うことができます。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(kidney)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -570,9 +589,9 @@ treat=control 21       21     10.7      9.77      16.8
 <section id="セミパラメトリック推定" class="level2" data-number="32.5">
 <h2 data-number="32.5" class="anchored" data-anchor-id="セミパラメトリック推定"><span class="header-section-number">32.5</span> セミパラメトリック推定</h2>
 <p><code>coxph()</code> 関数を用いることで、Cox比例ハザード回帰モデル（Cox proportional hazards regression model）を構築することができます。</p>
-<p>Kaplan-Meier推定では集団ごとにデータを分けることで生存関数を推定しましたが、Cox比例ハザードモデルでは、個人ごとのハザード関数を説明変数（共変量）<span class="math inline">\(Z\)</span> に基づく線形予測子を用いて以下の式のようにモデル化し、回帰係数を一種の最尤法で推定します。</p>
-<p><span class="math display">\[\lambda_i(t; Z)=\lambda_0(t)\ exp({\beta}^{T}Z)\]</span></p>
-<p>比例ハザードモデルは、ベースラインハザード関数（潜在基礎ハザード関数） <span class="math inline">\(\lambda_0(t)\)</span> の部分にノンパラメトリックな仮定を残しつつ、相対ハザード <span class="math inline">\(exp(\beta^TZ)\)</span> の部分をパラメトリックにモデル化し、推定することから、セミパラメトリックモデルに分類されます。</p>
+<p>Kaplan-Meier推定では集団ごとにデータを分けることで生存関数を推定しましたが、Cox比例ハザードモデルでは、個人ごとのハザード関数を説明変数（共変量）<span class="math inline">Z</span> に基づく線形予測子を用いて以下の式のようにモデル化し、回帰係数を一種の最尤法で推定します。</p>
+<p><span class="math display">\lambda_i(t; Z)=\lambda_0(t)\ exp({\beta}^{T}Z)</span></p>
+<p>比例ハザードモデルは、ベースラインハザード関数（潜在基礎ハザード関数） <span class="math inline">\lambda_0(t)</span> の部分にノンパラメトリックな仮定を残しつつ、相対ハザード <span class="math inline">exp(\beta^TZ)</span> の部分をパラメトリックにモデル化し、推定することから、セミパラメトリックモデルに分類されます。</p>
 <ul>
 <li>gehan データセットでの実行例</li>
 </ul>
@@ -689,6 +708,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {
