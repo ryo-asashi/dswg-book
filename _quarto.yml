@@ -17,7 +17,7 @@ book:
     - qmds/crosstable.qmd
     - qmds/DALEX.qmd
     - qmds/distr.qmd
-    - qmds/distrEX.qmd
+    - qmds/distrEx.qmd
     - qmds/dplyr.qmd
     - qmds/e1071.qmd
     - qmds/forcats.qmd
