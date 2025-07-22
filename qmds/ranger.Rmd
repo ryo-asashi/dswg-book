@@ -1,0 +1,150 @@
+---
+title: "ranger"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+output:   
+  html:
+    toc: yes
+    toc_depth: '3'
+    fig_width: 6
+    fig_height: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(ranger)) install.packages('ranger')
+```
+
+## パッケージの概要
+
+機械学習におけるRandomForestモデルを構築できます。高速実装であり、特に高次元データに適しています。 分類木、回帰木、生存木、確率予測木のアンサンブルをサポートしています。
+
+## 使用例：irisデータの分類
+
+irisデータを用いて、がく弁・花弁の長さ・幅の情報からアヤメの種類を特定するRandomForestモデルをrangerパッケージを用いて構築します。
+
+### irisデータセットを読み込む
+
+irisデータを読み込み、データの先頭を表示します。
+
+-   Sepal.Length：がく弁の長さ
+-   Sepal.Width：がく弁の幅
+-   Petal.Length：花弁の長さ
+-   Petal.Width：花弁の幅
+
+アヤメの種類はsetosa(1)、versicolor(2)、virginica(3)の3種類です。
+
+```{r}
+data(iris)
+head(iris)
+```
+
+### irisデータの構造
+
+irisデータの各種構造を確認します。
+
+```{r}
+str(iris)
+```
+
+また、データを散布図にプロットして確認します。
+
+```{r}
+plot(iris, col=c(2, 3, 4)[iris$Species])
+```
+
+## モデル構築１（全体データ）
+
+まずは全てのデータを使ってRandomForestモデルを構築してみます。
+
+```{r}
+library(ranger)
+
+# シードを設定
+set.seed(123)
+(model.all <- ranger(Species ~ ., data = iris, importance = "impurity"))
+
+```
+
+分類木の構築においては、importance = "impurity"と設定することにより、結果にvariable.importanceを保持してくれます。この中身を確認することにより各変数の重要度を確認することが出来ます。irisデータの分類には花弁の長さ（Petal.Length）・花弁の幅（Petal.Width）の情報が重要であることが分かります。
+
+```{r}
+model.all$variable.importance
+```
+
+### データセットの準備
+
+irisデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします。確認のため、データサイズを出力します。
+
+```{r}
+# 再現性のためにシードを設定
+set.seed(123)  
+
+# データの分割
+sample_indices <- sample(1:nrow(iris), 0.7 * nrow(iris))  
+train_data <- iris[sample_indices, ]
+test_data <- iris[-sample_indices, ]
+
+# データサイズの確認
+c(nrow(iris), nrow(train_data), nrow(test_data))
+```
+
+### モデルの生成・予測の実行
+
+訓練データを用いて分類木のモデルを生成します。モデルの生成結果は以下の通りです。
+
+```{r}
+set.seed(123)  
+(model <- ranger(Species ~ ., data = train_data))
+```
+
+テストデータを用いてモデルの評価をします。まずは、テストデータを先ほど構築した分類木モデルに適用させ、その予測結果をpredictionsに格納します。
+
+```{r}
+predictions <- predict(model, data = test_data)$predictions
+```
+
+予測結果とテストデータのもともとのアヤメの分類とを比較します。おおむね正しく分類できていることが分かります。
+
+```{r}
+(confusion_matrix <- table(predictions, test_data$Species))
+```
+
+## ハイパーパラメーターのチューニング
+
+rangerのRandomForestモデルにおける主なハイパーパラメーターは以下の通りです。
+
+-   決定木を生成する際に使用するパラメータの数(mtry)
+-   生成する決定木の数(num.trees)
+
+これらのハイパーパラメーターの最適な設定を探す作業がハイパーパラメーターのチューニングとなります。rangerのハイパーパラメーターのチューニング用にはtuneRanger等のパッケージがありますが、ここではnum.treesについて直接パラメータ設定を変更して精度比較を実施します。
+
+なお、rangerのRandomForestモデルではOOBError(Out-Of-bag Error)が算出されます。これはモデル構築時に一部データを学習に使用しない代わりにモデル検証に使用して誤差率を求めています。そのため、クロスバリデーションをしなくても、ある程度の汎化性能を測ることができます。
+
+num.trees = 300としてモデル構築します。OOBErrorは5.71%です。
+
+```{r}
+set.seed(123)  
+(model.num.trees.300 <- ranger(Species ~ ., data = train_data, num.trees = 300))
+```
+
+num.trees = 500としてモデル構築します。OOBErrorは5.71%です。
+
+```{r}
+set.seed(123)  
+(model.num.trees.500 <- ranger(Species ~ ., data = train_data, num.trees = 500))
+```
+
+num.trees = 700としてモデル構築します。OOBErrorは4.76%です。
+
+```{r}
+set.seed(123)  
+(model.num.trees.700 <- ranger(Species ~ ., data = train_data, num.trees = 700))
+```
+
+num.trees = 700のときにOOBErrorが最も小さくなったので、そのモデルにてテストデータで精度を測ってみます。もともと精度が高いため、結果は変わりませんでした。
+
+```{r}
+predictions.num.trees <- predict(model.num.trees.700, data = test_data)$predictions
+(confusion_matrix <- table(predictions.num.trees, test_data$Species))
+```

@@ -1,0 +1,177 @@
+---
+title: "lifecontingencies"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    fig-width: 6
+    fig-height: 5
+---
+
+```{r setup, include=FALSE}
+
+# コード例に使用するデフォルト以外のパッケージを列挙する
+pkgs <- c('lifecontingencies', 'ggplot2')
+
+# install packages
+for (pkg in pkgs){
+  if (!(pkg %in% installed.packages())){
+    install.packages(pkg)
+  }
+}
+
+```
+
+## パッケージの概要
+
+lifecontingenciesは、ファイナンスや人口統計、保険数理の標準的な計算を実行することができるパッケージです。生命保険のリスク評価を実行するための包括的なツールセットとなっています。
+
+```{r lifecontingencies, output=FALSE}
+library(lifecontingencies)
+```
+
+## データの取得
+
+lifecontingenciesにはたくさんのデータセットが含まれています。以下にパッケージに含まれるデータセットの一覧を出力します。
+
+```{r data, warning=FALSE}
+# データセット一覧を取得
+datasets_info <- as.data.frame(data(package="lifecontingencies")$results[,c("Item","Title")])
+# 各データセットの型を取得し、一覧に追加
+datasets_info$Class <- sapply(datasets_info$Item, function(x) class(get(x)))
+# データセット一覧を出力
+cat(apply(datasets_info, 1, function(x) paste(x, collapse = " : ")), sep = "\n")
+
+```
+例えば、soaLtは古典的書籍『Actuarial Mathematics (Second Edition)』から参照された、年齢$x$と生存数$I_x$の2列から成るデータフレームです。
+
+```{r, soaLt}
+head(soaLt)
+tail(soaLt)
+
+```
+
+##  lifetable-class
+
+lifetable型のオブジェクトは、年齢と各年齢に対応する生存数があれば作成でき、生存確率$p_x$と平均余命$e_x$を保持しています。
+
+data.frame型であるsoaLtのデータセットから、with関数およびnew関数を利用してlifetable型のオブジェクトを作成し、このオブジェクトをもう一度data.frame型に変換し直すと、生存確率$p_x$と平均余命$e_x$の情報が追加されていることがわかります。  
+
+なお、lifecontingenciesにはsoa08というlifetable型のデータセットが含まれていますが、こちらは『Actuarial Mathematics (Second Edition)』のAppendix 2Aに掲載されているIllustrative life tableより作成されたもので、soaLtとは数値が異なります。
+
+```{r, lifetable}
+# soaLtの先頭行を出力。年齢xと生存数Ixの情報のみ。
+head(soaLt)
+
+# soaLtからlifetable型のオブジェクトsoaLt_lifetableを作成。
+soaLt_lifetable <- with(soaLt, new("lifetable",x=x,lx=Ix,name="lifetable"))
+str(soaLt_lifetable)
+
+# soaLt_lifetableをdata.frame型に変換（head関数を使用できるようにするため）。
+soaLt_df <- as(soaLt_lifetable, "data.frame")
+
+# 再び先頭行を出力。lifetable型のオブジェクトを作成したことで生存確率pxと平均余命exが取得できた。
+head(soaLt_df)
+
+```
+##  actuarialtable-class
+
+actuarialtable型のオブジェクトは、年齢と各年齢に対応する生存数に加えて予定利率を設定すれば作成でき、計算基数を保持しています。
+
+上述のlifetable型と同様の方法で、soaLtのデータセットからactuarialtable型のオブジェクトを作成し、計算基数の情報が追加されることを確認します。なお、ここでは予定利率を2.0%とします。
+
+```{r, actuarialtable}
+# soaLtの先頭行を出力。年齢xと生存数Ixの情報のみ。
+head(soaLt)
+
+# soaLtからactuarialtable型のオブジェクトsoaLt_actuarialtableを作成。
+soaLt_actuarialtable <- with(soaLt, new("actuarialtable",interest=0.02,
+                                        x=x,lx=Ix,name="actuarialtable"))
+str(soaLt_actuarialtable)
+
+# soaLt_actuarialtableをdata.frame型に変換（head関数を使用できるようにするため）。
+soaLt_df2 <- as(soaLt_actuarialtable, "data.frame")
+
+# 再び先頭行を出力。actuarialtable型のオブジェクトを作成したことで計算基数が取得できた。
+head(soaLt_df2)
+
+
+```
+
+## 生命年金の年金現価
+
+lifecontingenciesに含まれているactuarialtable型のデータセットであるsoa08Actを用いて、様々な生命年金の年金現価を計算してみます。このデータセットはsoaLtと同じ生存数によるものですが、予定利率は6.0%です。なお、予定利率はaxn関数の引数にて新たに設定することも可能ですが、ここでは6.0%のままとします（以下に紹介する関数も同様）。
+
+```{r, Annuity_1}
+
+# 70歳開始の期始払終身年金の年金現価
+axn(soa08Act, x=70, payment="advance")
+
+# 60歳開始の期末払有期年金（10年）の年金現価
+axn(soa08Act, x=60, n=10, payment="arrears")
+
+# 65歳開始（5年据置して70歳に初回支払）の期始払有期年金（15年）の年金現価
+axn(soa08Act, x=65, n=15, m=5, payment="advance")
+
+```
+また、x、n、mの引数はベクトルで設定することも可能です。
+```{r, Annuity_2}
+
+# 60～70歳開始の期始払終身年金の年金現価
+axn(soa08Act, x=c(60:70), payment="advance")
+
+# 60歳開始の期末払有期年金（5,10,15,20年）の年金現価
+axn(soa08Act, x=60, n=c(5,10,15,20), payment="arrears")
+
+
+```
+## 生命保険の一時払保険料
+
+同様に、soa08Actを用いて、様々な生命保険の一時払保険料を計算してみます。
+
+```{r, Axn_1}
+
+# 30歳加入、保険期間10年の定期保険の一時払保険料
+Axn(soa08Act, x=30, n=10)
+
+# 60歳開始、保険期間5年の養老保険の一時払保険料
+AExn(soa08Act, x=60, n=5)
+
+```
+生命年金と同様に、引数はベクトルで設定することも可能です。
+
+```{r, Axn_2}
+
+# 30歳加入、保険期間1～10年の定期保険の一時払保険料
+Axn(soa08Act, x=30, n=c(1:10))
+
+```
+## 生命保険の責任準備金
+
+上記で紹介した関数を利用して、定期保険の純保険料式責任準備金を経過別に算出してみましょう。
+
+```{r, reserve}
+
+# 40歳加入、保険期間20年の定期保険の年払純保険料
+P <- Axn(soa08Act, x=40, n=20) / axn(soa08Act, x=40, n=20, payment="advance")
+print(P)
+
+# 40歳加入、保険期間20年の定期保険の純保険料式責任準備金
+V <- data.frame(t = numeric(21), Reserve = numeric(21))
+for (t in 0:20){
+  V[t+1, 1] <- t
+  V[t+1, 2] <- Axn(soa08Act, x=40+t, n=20-t) - P * axn(soa08Act, x=40+t, n=20-t, payment="advance")
+}
+print(V)
+
+# ggplotを使って責任準備金をプロット
+library(ggplot2)
+
+ggplot(V, aes(x = t, y = Reserve)) +
+  geom_line() +
+  labs(x = "t", y = "Reserve") 
+
+```
+

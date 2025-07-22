@@ -1,0 +1,237 @@
+---
+title: "YieldCurve"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  #html:
+  docx:
+    toc: true
+    toc-depth: 3
+    fig-width: 6
+    fig-height: 5
+---
+
+```{r setup, include=TRUE, output=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(YieldCurve)) install.packages('YieldCurve')
+if (!require(xts)) install.packages('xts')
+```
+
+## パッケージの概要
+
+YieldCurveはパラメトリックなイールドカーブを生成することができるパッケージです。金利データをインプットすると、Nelson-Siegel、またはSvenssonのモデルに基づくパラメータを推定し、イールドカーブを生成します。また、このパッケージには、連邦準備銀行（FRB）と欧州中央銀行（ECB）の金利のデータセットも含まれています。
+
+```{r YieldCurve}
+require(YieldCurve)
+require(xts)  # ※日本国債金利データを時系列データに変換するのに使用
+Sys.setenv(TZ = "UTC") #タイムゾーンをUTCに設定（データセット使用時に環境によってはエラーとなるため）
+```
+
+## データの取得
+
+YieldCurveには、連邦準備銀行（FRB）と欧州中央銀行（ECB）の金利の期間構造のデータセットが含まれています。以下ではFRBのデータを取得してイールドカーブをプロットします。このデータセットは、1981年12月末から2012年11月末までの範囲の様々な満期（3ヶ月、6ヶ月、1年、2年、3年、5年、7年、10年）による米国財務省証券定常満期（CMT）の月次の市場利回りです。プロットしてみると、1982年と2012年ではイールドカーブの形状が大きく異なっているのがわかります。
+
+```{r FedYieldCurve, warning=FALSE}
+# データをロード
+data(FedYieldCurve)
+# 最初の3ヶ月分のデータを出力
+first(FedYieldCurve,'3 month')
+# 最後の3ヶ月分のデータを出力 
+last(FedYieldCurve,'3 month')
+
+# 最初の3ヶ月および最後の3ヶ月のデータのイールドカーブをプロット
+maturity <- c(3/12, 6/12, 1, 2, 3, 5, 7, 10)
+par(mfrow=c(2,3))　# 2行3列で表示
+for( i in c(1, 2, 3, 370, 371, 372) ){
+  plot(x = maturity, y = FedYieldCurve[i,], type="o", 
+       xlab="Maturity in years", ylab="IR values")
+  title(main=paste("FedYieldCurve obeserved at",
+                   time(FedYieldCurve[i], sep=" ")))
+  grid()
+}
+
+```
+ECBのデータセットも同様に取得可能です。こちらは満期が3ヶ月と6ヶ月、および1年から30年の日次データで、範囲は2006/12/28から2009/7/23です。
+
+```{r ECBYieldCurve, warning=FALSE}
+
+# データをロード
+data(ECBYieldCurve)
+
+# 最初の3営業日分のデータを出力
+first(ECBYieldCurve,'3 day')
+
+# 最後の3営業日分のデータを出力
+last(ECBYieldCurve,'3 day')
+
+```
+
+
+## Nelson-Siegelモデルによるパラメータの推定
+
+Nelson.Siegel関数では、Nelson-Siegelモデルによるパラメータを推定できます。具体的には、金利データをインプットすると、以下の算式で表されるNelson-Siegelモデルのイールドカーブについて、各基準日のパラメータ$\beta_0$（水準）、$\beta_1$（傾き）、$\beta_2$（曲率）、$\lambda$（こぶの位置）を推定します。次のコードでは先ほど取得したFRBのデータから最初の3ヶ月分と最後の3ヶ月分のパラメータを推定しています。
+
+$$
+y(m) = \beta_{0} 
+          + \beta_{1}\frac{1-\exp(-\lambda m)}{\lambda m} 
+          + \beta_{2}\left( \frac{1-\exp(-\lambda m)}{\lambda m} 
+          - \exp(-\lambda m) \right)
+$$
+
+```{r Nelson.Siegel, warning=FALSE}
+
+# Nelson-Siegel関数でパラメータを推定
+NSParameters <- Nelson.Siegel(rate=c(first(FedYieldCurve,'3 month'), 
+                                     last(FedYieldCurve,'3 month')), maturity=maturity)
+print(NSParameters)
+
+```
+
+## Nelson-Siegelモデルにより推定したイールドカーブと観測値との比較
+
+NSrates関数ではNelson-Siegelモデルによって生成した金利を出力することができます。先ほど推定したパラメータに基づいて1982年2月28日時点および2012年11月30日時点のイールドカーブを生成し、実際の観測値と比較してみます。
+
+```{r NSrates, warning=FALSE}
+
+# 生成したイールドカーブと実際の観測値をプロットする関数を定義
+YieldCurve_NS <- function(date){
+  row_index <- which(as.Date(time(FedYieldCurve)) == date)
+  
+  # NSrates関数でイールドカーブを生成
+  y <- NSrates(Coeff=NSParameters[date,], maturity=maturity)
+  
+  plot(maturity, FedYieldCurve[row_index,], 
+       main="Fitting Nelson-Siegel yield curve",
+       sub=paste("at", date),
+       xlab="Maturity in years",  ylab="Interest rate",
+       type="o")
+  lines(maturity, y, col=2)
+  legend("bottomright", legend=c("observed yield curve", "fitted yield curve"),
+         col=c(1, 2), lty=1)
+  
+  grid()
+}
+
+# 上記で定義した関数を2種類の日付で実行
+YieldCurve_NS(date="1982-02-28")
+YieldCurve_NS(date="2012-11-30")
+
+```
+
+## Svenssonモデルによるパラメータの推定
+
+Svensson関数ではSvenssonモデルによるパラメータを推定できます。Svenssonモデルは、フォワードレートを次の算式で記述します。
+$$
+y(m) = \beta_{0} 
+          + \beta_{1}\exp\left(-\frac{m}{\tau_1}\right) 
+          + \beta_{2}\frac{m}{\tau_1} \exp\left(-\frac{m}{\tau_1}\right) 
+          + \beta_{3}\frac{m}{\tau_2} \exp\left(-\frac{m}{\tau_2}\right) 
+$$
+また、スポットレートはフォワードレートから導き出すことができ、次式で与えられます。
+
+$$
+\begin{equation}
+  \begin{split} 
+  y(m) &= \beta_{0} 
+            + \beta_{1}\frac{1-\exp\left(-\frac{m}{\tau_1}\right)}{\frac{m}{\tau_1}} \\
+            &+ \beta_{2}\left[ \frac{1-\exp\left(-\frac{m}{\tau_1}\right)}{\frac{m}{\tau_1}}
+                              -\exp\left( -\frac{m}{\tau_1} \right) \right] \\
+            &+ \beta_{3}\left[ \frac{1-\exp\left(-\frac{m}{\tau_2}\right)}{\frac{m}{\tau_2}}
+                                -\exp\left( -\frac{m}{\tau_2} \right) \right]
+  \end{split}
+\end{equation}
+$$
+
+金利データをインプットすると、Svenssonモデルのイールドカーブについて、各基準日のパラメータ$\beta_{0}$、$\beta_{1}$、$\beta_{2}$、$\beta_{3}$、$\tau_1$、$\tau_2$を推定します。次のコードでは、Nelson-Siegel関数と同様に、FRBのデータから最初の3ヶ月分と最後の3ヶ月分のパラメータを推定しています。
+
+```{r Svensson, warning=FALSE}
+
+# Svensson関数でパラメータを推定
+SParameters <- Svensson(rate=c(first(FedYieldCurve,'3 month'), 
+                               last(FedYieldCurve,'3 month')), maturity=maturity)
+print(SParameters)
+
+```
+
+## Svenssonモデルにより推定したイールドカーブと観測値との比較
+
+Srates関数は、Svenssonモデルによって生成した金利を出力することができます。NSrates関数のときと同様に、Svensson関数で推定したパラメータに基づいて1982年2月28日時点および2012年11月30日時点のイールドカーブを作成し、実際の観測値と比較します。なお、Srates関数はNSrates関数と異なり、スポットレートとフォワードレート両方の出力が可能です。引数の"whichRate"にて"Spot"または"Forward"を指定します。
+
+```{r Srates, warning=FALSE}
+
+# 生成したイールドカーブと実際の観測値をプロットする関数を定義
+YieldCurve_S <- function(date){
+  row_index <- which(as.Date(time(FedYieldCurve)) == date)
+  
+  # Srates関数でイールドカーブを生成（"whichRate"にて"Spot"または"Forward"を指定）
+  y <- Srates(Coeff=SParameters[date,], maturity=maturity, whichRate = "Spot")
+  
+  plot(maturity, FedYieldCurve[row_index,], 
+       main="Fitting Svensson yield curve",
+       sub=paste("at", date),
+       xlab="Maturity in years",  ylab="Interest rate",
+       type="o")
+  lines(maturity, y, col=2)
+  legend("bottomright", legend=c("observed yield curve", "fitted yield curve"),
+         col=c(1, 2), lty=1)
+  
+  grid()
+}
+
+# 上記で定義した関数を2種類の日付で実行
+YieldCurve_S(date="1982-02-28")
+YieldCurve_S(date="2012-11-30")
+
+```
+
+## 外部データを用いた場合
+
+パッケージに含まれたデータセットだけでなく、外部データを用いることも可能です。財務省のホームページより当月の日本国債の流通利回りを取得し、Nelson-Siegelモデルで直近営業日の金利のイールドカーブをフィッティングしてみましょう。今回は70年満期までの補外も行っています。
+
+なお、コード中に記載のURLより取得できるCSVファイルは日々更新されるため、コードを実行する日が異なれば異なる金利が出力される（再現性がない）ことに留意ください。
+
+```{r jgb, warning=FALSE}
+
+# 日本国債金利の取得
+# 以下のURLにて当月の金利情報が取得可能
+jgb <- read.csv("https://www.mof.go.jp/jgbs/reference/interest_rate/jgbcm.csv",
+                header=FALSE, skip=2)
+rownames(jgb) <- jgb[, 1]
+jgb <- jgb[, -1]
+maturity.jgb <- c(1:10, 15, 20, 25, 30, 40)
+colnames(jgb) <- maturity.jgb
+
+# 和暦のままだと下記のxts関数がエラーとなる
+# 令和6年以外の金利を取得する場合は適宜コードを変更する
+rownames(jgb) <- gsub("R6", "2024", rownames(jgb))
+rownames(jgb) <- gsub("\\.", "-", rownames(jgb))
+
+# xtsパッケージにより時系列データに変換
+jgb <- xts(jgb, order.by = as.Date(rownames(jgb)))
+jgb
+
+# パラメータの推定
+NSParameters.jgb <- Nelson.Siegel(rate=jgb, maturity=maturity.jgb)
+print(NSParameters.jgb)
+
+# Nelson-Siegelモデルにより推定したイールドカーブと観測値との比較
+date <- index(jgb)[nrow(jgb)]　# 最終行=直近営業日をdateとする
+
+y <- NSrates(Coeff=NSParameters.jgb[date,], 
+             maturity=c(maturity.jgb,50,60,70)) # 50,60,70年を補外
+
+plot(maturity.jgb, jgb[date,], 
+     main="JGB yield curve",
+     sub=paste("at", date),
+     xlab="Maturity in years",  ylab="Interest rate",
+     xlim=c(0, 70), ylim=c(0.0, 2.5),
+     type="o")
+lines(c(maturity.jgb,50,60,70), y, col=2)
+legend("bottomright", legend=c("observed yield curve", "fitted yield curve"),
+       col=c(1, 2), lty=1)
+
+grid()
+
+```
+
+

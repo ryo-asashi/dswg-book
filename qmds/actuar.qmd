@@ -1,0 +1,119 @@
+---
+title: "actuar"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  html:
+    fig-width: 6
+    fig-height: 5
+---
+
+```{r, setup, include=FALSE}
+
+# install packages
+pkgs <- c("ggplot2", "actuar")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+# detach packages
+default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
+             "package:stats", "package:graphics",
+             "package:grDevices", "package:utils",
+             "package:datasets", "package:methods",
+             "Autoloads", "package:base")
+for (pkg in setdiff(search(), default)) {
+  detach(pkg, character.only = TRUE)
+  }
+
+# clear objects
+remove(list=objects())
+```
+
+## パッケージの概要
+
+actuar パッケージは、（主に損害保険分野の）保険数理に関する機能を実装したパッケージです。actuar パッケージの特徴の一つは様々な確率分布を扱うための関数を実装していることで、パレート分布、Burr分布、対数ガンマ分布、対数ロジスティック分布など、裾の厚い分布が数多く収録されています。
+
+stats パッケージと同様、actuar パッケージにおいても、それぞれの分布に対して、その名称に `d`、`p`、`r`、`q` という接頭辞を付けた関数が用意されています。接頭辞ごとに関数の機能が異なり、`d****(x, ...)` が密度関数、`p****(x, ...)` が累積分布関数、`r****(n, ...)` が乱数を生成する関数、`q(p, ...)` が分位点を返す関数です。
+
+## 確率密度関数をプロットする
+
+-   パレート分布 `pareto`\
+    $$dpareto(x,{\alpha},{\theta})={{\alpha}{\theta}^{\alpha}}/{(x+\theta)^{\alpha+1}}$$
+
+```{r pareto, message = FALSE}
+library(actuar)
+
+xlim <- c(0, 3)
+ylim <- c(0, 2)
+main <- "pareto distribution"
+
+curve(dpareto(x, 1, 1), type = "l", lty = 1, col = "darkgray",
+      xlim = xlim, ylim = ylim, ylab = "", main = main)
+curve(dpareto(x, 2, 1), type = "l", lty = 2, col = "darkcyan", add = TRUE)
+curve(dpareto(x, 1, 2), type = "l", lty = 3, col = "darkred", add = TRUE)
+curve(dpareto(x, 2, 2), type = "l", lty = 4, col = "darkblue", add = TRUE)
+```
+
+-   Burr分布 `burr`\
+    $$dburr(x,{\alpha},{\gamma},{\theta})={{\alpha}{\gamma}(x/{\theta})^{\gamma}}/{x[1+(x/{\theta)^{\gamma}}]^{\alpha + 1}}$$
+
+```{r burr}
+xlim <- c(0, 3)
+ylim <- c(0, 2)
+main <- "burr distribution"
+
+curve(dburr(x, 1, 1, 1), type = "l", lty = 1, col = "darkgray",
+      xlim = xlim, ylim = ylim, ylab = "", main = main)
+curve(dburr(x, 2, 1, 1), type = "l", lty = 2, col = "darkcyan", add = TRUE)
+curve(dburr(x, 1, 2, 2), type = "l", lty = 3, col = "darkred", add = TRUE)
+curve(dburr(x, 2, 2, 2), type = "l", lty = 4, col = "darkblue", add = TRUE)
+```
+
+-   対数ガンマ分布 `lgamma`\
+    $$dlgamma(x,{\alpha},{\lambda})={{\lambda}^{\alpha}{\Gamma}({\alpha})}/{[(\log{x})^{\alpha-1}x^{\lambda+1}]}$$
+
+```{r loggamma}
+xlim <- c(1, 4)
+ylim <- c(0, 2)
+main <- "log gamma distribution"
+
+curve(dlgamma(x, 1, 1), type = "l", lty = 1, col = "darkgray",
+      xlim = xlim, ylim = ylim, ylab = "", main = main)
+curve(dlgamma(x, 2, 1), type = "l", lty = 2, col = "darkcyan", add = TRUE)
+curve(dlgamma(x, 1, 2), type = "l", lty = 3, col = "darkred", add = TRUE)
+curve(dlgamma(x, 2, 2), type = "l", lty = 4, col = "darkblue", add = TRUE)
+```
+
+-   対数ロジスティック分布 `llogis`\
+    $$dllogis(x,{\gamma},{\theta})={{\gamma}(x/{\theta})^{\gamma}}/{x[1+(x/{\theta)}]^2}$$
+
+```{r logistic}
+xlim <- c(0, 3)
+ylim <- c(0, 2)
+main <- "log logistic distribution"
+
+curve(dllogis(x, 1, 1), type = "l", lty = 1, col = "darkgray",
+      xlim = xlim, ylim = ylim, ylab = "", main = main)
+curve(dllogis(x, 2, 1), type = "l", lty = 2, col = "darkcyan", add = TRUE)
+curve(dllogis(x, 1, 2), type = "l", lty = 3, col = "darkred", add = TRUE)
+curve(dllogis(x, 2, 2), type = "l", lty = 4, col = "darkblue", add = TRUE)
+```
+
+actuar パッケージには、上記のほかにも以下のような確率分布が実装されています。
+
+|                    |              |
+|--------------------|--------------|
+| 逆ガンマ分布       | `invgamma`   |
+| 逆パレート分布     | `invpareto`  |
+| 逆バー分布         | `invburr`    |
+| 逆ワイブル分布     | `invweibull` |
+| 逆指数分布         | `invexp`     |
+| 一般化ベータ分布   | `genbeta`    |
+| 一般化パレート分布 | `genpareto`  |
+
+## 参考資料
+
+\[1\] Dutang, C., Goulet, V. and Pigeon, M. (2008). [actuar: An R Package for Actuarial Science](#0){style="font-size: 13pt;"}

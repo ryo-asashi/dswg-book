@@ -1,0 +1,84 @@
+---
+title: "ggplot2"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+output:
+  word_document:
+    toc: yes
+    toc_depth: '3'
+    fig_width: 6
+    fig_height: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(ggplot2)) install.packages('ggplot2')
+if (!require(dplyr)) install.packages('dplyr')
+```
+
+### パッケージの概要
+
+ggplot2は、一貫性のある文法を用いてグラフを作成することのできるパッケージであり、Rでモダンな分析環境を構築するためのパッケージ群である「tidyberse」に含まれます。 なお、ggplot2については、アクチュアリージャーナル第１１２号内の「Rを用いたデータの可視化技術解説書」の付録２でも紹介されています。
+
+```{r plotly}
+suppressMessages(require(tidyverse))
+require(ggplot2)
+```
+
+### グラフの作成方法
+
+ggplot2では、+演算子を利用してggplot関数に様々な関数を接続することでグラフを作成します。 以下では、geom_point関数を用いて、Rのデータセットiris（アヤメの花びらやがく片の長さなどに関するデータセット）を用いた散布図を作成しています。
+
+```{r ggplot2::ggplot}
+# 利用するdataと、グラフに表示する特徴量を指定（あとで指定する場合は省略可能）
+# これだけでは何も表示されない
+P1 <- ggplot(data = iris, mapping = aes(x=Sepal.Length, y=Sepal.Width))
+P1
+
+# geom_pointで散布図を表示。aes関数でcolourを指定すると色分けできる
+P2 <- P1 + geom_point(aes(colour = Species))
+P2
+```
+
++演算子で接続できる関数は１つだけではなく、作成したグラフに対して、様々な要素を付加できます。
+
+```{r ggplot2::ggplot_2}
+# facet_gridでcolsを指定すると、グラフを分解可能
+P3 <- P1 + geom_point() + facet_grid(cols = vars(Species))
+P3
+
+# グラフのタイトルをつけられる
+P4 <- P3 +labs(title="title")
+P4
+```
+
+### グラフの重ね合わせ
+
+ggplot2では、グラフの重ね合わせも+演算子で実施することができ、先ほど作成した散布図に対して、再度geom_point関数を接続すれば重ね合わせたグラフが作成可能です。
+
+以下では、アヤメの種類別のがく片の長さと幅を計算したiris_meanを用いて、散布図を重ね合わせています（表示されたグラフの赤い点が平均値です）
+
+```{r plotly::ggplot_3}
+iris_mean <- iris %>%
+  group_by(Species) %>%
+  summarise(across(c(Sepal.Length,Sepal.Width), ~mean(.x, na.rm = TRUE)))
+iris_mean
+
+P5 <- P4 + geom_point(
+  data = iris_mean,
+  colour = 'red',
+  size = 3
+)
+P5
+
+```
+
+### 公式サイトについて
+
+どのようなグラフが作成することができるかについては、公式サイトから確認可能です。特に、レファレンスからは関数の一覧が確認でき、それぞれの関数の詳細にもアクセス可能です。
+
+#### 公式サイトなどのアドレス
+
+公式サイト <https://ggplot2.tidyverse.org/index.html>
+
+レファレンス <https://ggplot2.tidyverse.org/reference/index.html>

@@ -1,0 +1,96 @@
+---
+title: "tibble"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+output:
+  word_document:
+    toc: yes
+    toc_depth: '3'
+    fig_width: 6
+    fig_height: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(tibble)) install.packages('tibble')
+```
+
+### パッケージの概要
+
+tibbleは、従来のdata.frameを洗練させたデータ構造tibbleを作成することのできるパッケージです。また、このパッケージは、Rでモダンな分析環境を構築するためのパッケージ群である「tidyberse」に含まれています。
+
+```{r tibble}
+suppressMessages(require(tidyverse))
+require(tibble)
+require(microbenchmark)
+```
+
+### tibbleの作成方法
+as_tibble関数を利用することで、listや、data.frameをtibbleに変換することができます。
+
+```{r tibble::as_tibble}
+class(iris)
+as_tibble(iris)
+```
+
+また、tibble関数を用いると、個々のベクトルをまとめて、tibbleを作成することができます。
+
+```{r tibble::tibble}
+tibble(x = 1:3, y = 1)
+```
+
+### data.frameとの違い①：表示
+あるデータをConsoleに表示する場合、tibbleはデフォルトでデータの表示数を制限し、Consoleがデータで埋め尽くされるのを防いでくれます。また、データの型がカラム名の下に表示されます。
+
+例えば、irisには150個のデータが含まれており、data.frameのまま表示すると、150個のデータが表示されます。一方、tibbleとして表示すると、Consoleに表示されるデータの数は10個だけです。
+（表示される数は、オプションで変更することが可能です）
+
+```{r tibble::as_tibble_2}
+as_tibble(iris)
+
+#head関数を利用すれば、data.frameでも表示数をコントロール可能
+head(iris, n=10)
+```
+
+### data.frameとの違い②：列名の変換有無
+ベクトルからdata.frameを作成する場合、自動で列名が変換されてしまうケースがあるが、tibbleを作成する場合、デフォルトの設定では列名が自動変換されません。
+また、name_repairsをuniversalと指定すると、列名が変換されるようになります。
+
+```{r tibble::tibble_2}
+tibble(`a + b` = 1:5)
+data.frame(`a + b` = 1:5)
+tibble(`a 1` = 1, `a 2` = 2, .name_repair = "universal")
+```
+
+### data.frameとの違い③：サブセット操作の厳密さ
+特定の列を指定して、データを表示する場合、tibbleでは厳密に列名を指定する必要があります。
+また、data.frameはサブセットを指定する条件次第で、データフレームではなく、ベクトルを返すこともありますが、tibbleは常にtibbleを返します。
+
+```{r tibble::tibble_3}
+df <- data.frame(one = 1, two = "a", three = "v")
+df2 <- tibble(df)
+
+df$o
+df2$o
+
+df[, c("one", "two")]
+df2[, c("one", "two")]
+
+df[, "one"]
+df2[, "one"]
+```
+
+### data.frameとの違い④：パフォーマンス
+as.tibble()は、as.data.frame()よりも高速です
+
+```{r tibble::as_tibble_3}
+X <- list(1:10000, 1:10000, 1:10000)
+names(X) <- c("test1", "test2", "test3")
+microbenchmark(
+  as_tibble(X),
+  as.data.frame(X)
+)
+```
+
+
+

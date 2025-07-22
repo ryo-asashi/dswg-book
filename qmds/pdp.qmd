@@ -1,0 +1,91 @@
+---
+title: "pdp"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  html:
+    fig-width: 6
+    fig-height: 3
+---
+
+```{r, setup, include=FALSE}
+
+# install packages
+pkgs <- c("ggplot2", "pdp", "randomForest")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+# detach packages
+default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
+             "package:stats", "package:graphics",
+             "package:grDevices", "package:utils",
+             "package:datasets", "package:methods",
+             "Autoloads", "package:base")
+for (pkg in setdiff(search(), default)) {
+  detach(pkg, character.only = TRUE)
+  }
+
+# clear objects
+remove(list=objects())
+```
+
+## パッケージの概要
+
+pdpパッケージは、予測モデルとデータをもとに、PDP (Partial Dependence Plot、部分依存図) を作成する機能を実装したパッケージです。
+
+なお、PDPは、関心のある説明変数 $X$ について、その値を $x_1$ に固定したときの予測値の期待値を考え、これをデータセットの全レコードについて $X=x_1$ と置き換えたときの予測値の平均で推定することによって、変数 $X$ の影響を $X$ に関する1変数関数として表現する手法です。
+
+```{r data}
+library(randomForest) # 予測モデルの構築に利用
+library(pdp) # bostonデータセットを利用
+
+# ランダムシードを固定する
+set.seed(42)
+
+# 予測モデルを構築する
+model.rf <- randomForest(cmedv~., data = boston)
+```
+
+## PD プロットを作成する
+
+予測モデルに partial() 関数を適用することで、PD プロットを作成することができます。ただし
+解釈しようとする予測モデルによっては、`pred.fun`（予測に使う関数）や `train`（学習用データ）などの引数を調整する必要があります。
+
+```{r pdp::partialPlot}
+partial(model.rf, pred.var = "lstat", plot = TRUE, rug = TRUE)
+```
+
+なお、randomForest パッケージには、PDプロットを作成するための独自の関数 partialPlot() が用意されています。
+
+```{r randomForest::partialPlot}
+# randomForest パッケージの partialPlot() 関数でも作成可能
+partialPlot(model.rf, pred.data = boston, x.var = "lstat")
+```
+
+## ICE プロットを作成する
+
+partial() 関数では、`ice = TRUE` と指定することで、ICE プロットを描画することも可能です。
+
+```{r iceplot}
+partial(model.rf, pred.var = c("lstat"), ice = TRUE, plot = TRUE)
+```
+
+# プロットをカスタマイズする
+
+partial() 関数の引数 `plot` をデフォルトの `FALSE` のままにしておくと、partial() 関数の出力はデータフレームになります。このデータフレームに対して、plotPartial() 関数を適用することで、PDプロットの見た目を柔軟にカスタマイズすることができるようになります。
+
+```{r plotPartial}
+ice <- partial(model.rf, pred.var = c("rm"), ice = TRUE)
+plotPartial(ice, rug = TRUE, alpha = .2, train = boston)
+```
+
+また、autoplot() 関数を適用することで、ggplot2 パッケージを利用したプロットを作成することもできます。
+
+```{r autoplot}
+library(ggplot2)
+ice <- partial(model.rf, pred.var = c("nox"), ice = TRUE)
+autoplot(ice, rug = TRUE, alpha = .2, train = boston) + theme_light()
+```

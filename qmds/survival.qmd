@@ -1,0 +1,148 @@
+---
+title: "survival"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  docx:
+    fig-width: 6
+    fig-height: 5
+---
+
+```{r, include=FALSE}
+
+# install packages
+pkgs <- c("survival", "MASS")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+# detach packages
+default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
+             "package:stats", "package:graphics",
+             "package:grDevices", "package:utils",
+             "package:datasets", "package:methods",
+             "Autoloads", "package:base")
+for (pkg in setdiff(search(), default)) {
+  detach(pkg, character.only = TRUE)
+  }
+
+# clear objects
+remove(list=objects())
+```
+
+## パッケージの概要
+
+`survival` パッケージはRで生存時間解析を行うためのパッケージで、生存関数やハザード関数に関する推定・検定などが実装されています。
+
+## 生存時間解析用データの作成
+
+survivalパッケージでは、`Surv()` 関数を用いて生存時間解析用のデータセット（Survオブジェクト）を作成することができます。Survオブジェクトは、生存時間（観察時間）と打ち切り指標を表すベクトルの組をもとにして作成されます。
+
+個人 $i=1,2,...$ について、死亡や要介護状態への移行などの注目するイベント（死亡等）による集団からの脱退と、注目しないイベントによる脱退や観察の終了（打ち切り）が発生するとします。死亡等の発生時間を $X_i$ 、打ち切りの発生時間を $C_i$ とすると、いずれか早い方の発生時間 $T_i = min(X_i, C_i)$ だけが観測されます。生存時間解析においては、死亡等が観察されたか打ち切られたかを表す変数を $D_i$ として、$\{(T_i, D_i)\}_{i=1,2,...}$ を収集したデータセットが分析対象とされます。
+
+```{r}
+library(survival)
+x <- c(1, 2, 3, 3, 4, 5, 5)
+c <- c(4, 1, 2, 4, 4, 6, 2)
+t <- pmin(x, c)
+d <- t == x
+Surv(time = t, event = d)
+# + は打ち切られたことを示す。
+```
+
+## ノンパラメトリック推定
+
+`survfit()` 関数を用いると、`Surv` オブジェクトに基づいて生存関数 $S(t)$ に関するKaplan-Meier推定を行うことができます。Kaplan-Meier推定法では、$S(t)$ を下式で推定します。
+
+$$\hat{S}(t)=\Pi_{i:\ t_i{\lt}t}(1-n.event_i/n.risk_i)$$
+
+```{r}
+summary(sample.sf <- survfit(Surv(t, d) ~ 1))
+plot(sample.sf)
+
+# 累積ハザード関数の Nelson-Aalen 推定量
+data.frame(sample.sf$time,
+           cumsum(sample.sf$n.event / sample.sf$n.risk))
+```
+
+処置の有無などを表す特徴量によって2群に分けられるときは、formula の `~` の右側にその特徴量を指定することで、生存関数の推定を群ごとに行うことができます。
+
+```{r}
+data(gehan, package = "MASS")
+str(gehan)
+plot(survfit(Surv(time, cens) ~ treat, data = gehan),
+     lty = 1:2, xlab = "weeks", ylab = "survival")
+legend(26, 1, levels(gehan$treat), lty = 1:2)
+```
+
+2群の差についての統計的検定として、`survdiff()` 関数を用いてログランク検定を行うことができます。ログランク検定では、生存関数が同じであるという帰無仮説がデータによってテストされます。
+
+```{r}
+survdiff(Surv(time, cens) ~ treat, data = gehan)
+```
+
+## パラメトリック推定
+
+`survreg()` 関数を用いることで、生存関数 $S(x)$ の形状として指数分布、ワイブル分布、対数ロジスティック分布などを仮定したパラメトリック推定を行うことができます。
+
+```{r}
+str(kidney)
+sreg <- survreg(Surv(time, status) ~ as.factor(sex),
+                data = kidney, dist = "weibull")
+
+# Kaplan-Meier 推定値
+plot(survfit(Surv(time, status) ~ as.factor(sex), data = kidney), lty = 1:2)
+
+# Weibull分布モデルのグラフ
+shape <- 1 / sreg$scale # 形状パラメータ
+scaleM <- exp(coef(sreg)[1]) # 尺度パラメータ
+scaleF <- exp(coef(sreg)[1]  + coef(sreg)[2])
+curve(1 - pweibull(x, shape, scaleM), add = TRUE, col = "darkcyan")
+curve(1 - pweibull(x, shape, scaleF), add = TRUE, col = "darkred", lty = 2)
+legend(200, 1, c("male", "female"), lty = 1:2)
+
+# パラメータの確認
+cat(paste0("weibull params\n  shape: ", round(shape, 4),
+           "\n  scale(male): ", round(scaleM, 4),
+           "\n  scale(female): ", round(scaleF, 4)))
+```
+
+## セミパラメトリック推定
+
+`coxph()` 関数を用いることで、Cox比例ハザード回帰モデル（Cox proportional hazards regression model）を構築することができます。
+
+Kaplan-Meier推定では集団ごとにデータを分けることで生存関数を推定しましたが、Cox比例ハザードモデルでは、個人ごとのハザード関数を説明変数（共変量）$Z$ に基づく線形予測子を用いて以下の式のようにモデル化し、回帰係数を一種の最尤法で推定します。
+
+$$\lambda_i(t; Z)=\lambda_0(t)\ exp({\beta}^{T}Z)$$
+
+比例ハザードモデルは、ベースラインハザード関数（潜在基礎ハザード関数） $\lambda_0(t)$ の部分にノンパラメトリックな仮定を残しつつ、相対ハザード $exp(\beta^TZ)$ の部分をパラメトリックにモデル化し、推定することから、セミパラメトリックモデルに分類されます。
+
+-   gehan データセットでの実行例
+
+```{r}
+summary(gehan.cox <- coxph(Surv(time, cens) ~ treat, gehan))
+# 対照群"control"のハザード関数は、処置群"6MP"の4.82倍
+
+Z <- data.frame(treat = levels(gehan$treat))
+plot(survfit(gehan.cox, Z), lty = 1:2, xlab = "weeks", ylab = "survival")
+lines(survfit(Surv(time, cens) ~ treat, gehan), lty = 1:2, col = "gray")
+legend(21, 1, c("Cox", "Kaplan-Meier"), lty = 1, col = c("black", "gray"))
+```
+
+-   kidney データセットでの実行例
+
+```{r}
+kidney.cox <- coxph(Surv(time, status) ~ age + as.factor(sex) + disease,
+                    data = kidney)
+summary(kidney.cox)
+
+Z <- data.frame(age = mean(kidney$age), sex = 1,
+                disease = levels(kidney$disease))
+# 連続変数は平均値がベースラインになるように変換されている。
+predict(kidney.cox, Z)
+
+plot(survfit(kidney.cox, Z), lty = 1:4, xlab = "age = 43.7, sex = 1")
+legend(260, 1, levels(kidney$disease), lty = 1:4)
+```

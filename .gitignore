@@ -1,0 +1,19 @@
+# RStudio generated files
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.Renviron
+
+/.quarto/
+
+# Quarto/Bookdown output
+/_book/
+/_site/
+/_freeze/
+/_cache/
+
+# Other common files
+*.html
+*.pdf
+

@@ -1,0 +1,973 @@
+---
+title: "data.table"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    fig-width: 6
+    fig-height: 5
+---
+
+```{r comment, include=FALSE, eval=FALSE}
+2024/6/25 kozuma v2での更新箇所
+※今のところきちんと履歴管理する方法が用意されていないので、ソース内に直接書き込むこととする。
+- 冒頭のパッケージインストール方法を浅芝さん式に変更
+- 「R組み込み」と「R標準」でぶれていた表現を「R標準」に統一
+　対応箇所は「パッケージの概要」に2か所、「行・列の取り出し」に1か所
+- 概要でdplyrがtidyverseに含まれることを記載
+- 列名に日本語が混じるテーブルを出力したときに、Consolasと日本語フォントの幅が異なるためにずれて表示される問題
+  - HTML出力の場合はcssでMSゴシック固定とすることで対処可能だったので、そのようにした
+  - Wordでは一旦対処しなかった。
+- dt_is について、特約件数＞主契約件数　となっていて違和感があったため修正
+- 「添え字の仕様」の以下コメント反映
+  - data.table型の紹介が目的なので、「data.frame型の場合は変数[行,列]で参照した結果がdata.frame型ではなくなることがありますが、data.table型ではそのような問題は起こらずdata.table型を保持できます。」のようなdata.table型の利点を強調する書きぶりにするのはいかがでしょうか？
+- 続く`変数[○]`表記における以下のコメント反映
+  - 両者が何を表すかパッとわからなかったため、「data.frame型とdata.table型で」とするのはいかがでしょうか？
+-「行・列の取り出し」の以下コメント反映（results='hold'外し）
+  - いろいろな書き方を紹介しているのと結果が縦に長いので、（特に初心者向けには）コードと結果を1行ずつ並べた方が見やすくなる気がしました
+  - 同じ観点からチャンク「adv_melt_df2」もresults='hold'を外した
+```
+
+```{r setup_qmd, include=FALSE, output=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# install packages
+pkgs <- c("data.table", "dplyr", "tidyr", "nycflights13", "microbenchmark", "rlang")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+# detach packages
+default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
+             "package:stats", "package:graphics",
+             "package:grDevices", "package:utils",
+             "package:datasets", "package:methods",
+             "Autoloads", "package:base")
+for (pkg in setdiff(search(), default)) {
+  detach(pkg, character.only = TRUE)
+  }
+
+# clear objects
+remove(list=objects())
+
+#kozumaの環境ではこうしないとインストールできなかったので念のため置いておく
+#install.packages('microbenchmark', type = "binary")
+```
+
+
+```{css, echo=FALSE}
+.output-jp > code {
+/*一部日本語出力があるチャンクで日本語と英字の幅が揃わずに表示がずれるため、CSSでフォントを変更することで表示を揃える*/
+  font-family: "ＭＳ ゴシック";
+}
+```
+
+## パッケージの概要
+
+`data.table`は、R標準の`data.frame`型を拡張した`data.table`型を導入するパッケージです。
+
+大規模なデータの処理に最適化されているほか、添え字部分の記法が大幅に拡張されており、 効果的に活用することで動作速度とコードの可読性を両立することが可能となります。
+
+本稿ではR標準の関数や、`tidyverse`のデータ操作パッケージとして名高い`dplyr`(一部`tidyr`)による操作とも比較しながら、 `data.table`パッケージの使用方法や特徴について解説します。
+
+```{r setup_package, output=FALSE}
+library(data.table)
+library(dplyr) 
+library(tidyr) #pivot系のみ使用 
+library(nycflights13) #大規模データの節で使用
+library(microbenchmark) #大規模データの節で使用
+library(rlang) #関数化の節で使用
+```
+
+## 基本的な使用方法
+
+### ファイルの読み込み・書き込み
+
+`data.table`パッケージを導入すると、高速なデータの読み書きが可能な関数`fread`, `fwrite`が追加されます。
+
+いずれも、デフォルトではcsv形式での読み書きを行います。
+
+```{r tut_fread, results='hold'}
+df_tmp <- iris
+file_path_tmp <- "__tmp.csv"
+fwrite(df_tmp, file = file_path_tmp) #ファイルの書き込み
+
+#冒頭5行を出力
+file_tmp <- file(file_path_tmp, "r")
+print(readLines(file_tmp, n = 5))
+close(file_tmp)
+```
+
+```{r tut_write}
+dt_tmp2 <- fread(file = file_path_tmp, data.table = TRUE)
+#ファイルの読み込み
+#data.tableをFALSEにすることでdata.frame型として読み込むことも可能
+
+head(dt_tmp2) #冒頭を表示
+```
+
+### `data.table`型変数の作成
+
+`data.table`型としてデータを読み込むには、前述の`fread`関数を用いるほかにも、`data.frame`型など他の型から変換する方法もあります。 通常は`as.data.table`関数を使用すればよいでしょう。
+
+```{r tut_setup}
+df <- iris
+dt <- as.data.table(df)
+
+class(df)
+class(dt)
+```
+
+`data.table`関数で直接生成することもできます。
+
+```{r tut_setup_datatable, class.output="output-jp"}
+dt_is <- data.table(
+  配当方式 = c("有配","有配","準有配","無配","無配","無配"),
+  商品種類コード = 1:6,
+  件数 = c(10, 16, 48, 176, 190, 15),
+  特約1件数 = c(10, 0, 24, 110, 30, 12),
+  特約2件数 = c(0, 0, 0, 0, 14, 0),
+  主契約保険金額 = c(100, 60, 240, 69, 1931, 300),
+  特約1保険金額 = c(100, 0, 24, 59, 3140, 240),
+  特約2保険金額 = c(0, 0, 0, 0, 156, 0)
+)
+dt_is
+```
+
+### 添え字の仕様
+
+`data.table`型の記法は`data.frame`型の記法を自然に拡張したものであるため、`変数[行, 列]`という記法はどちらも同じように使用することが出来ます。 
+
+細かな差異として、`data.frame`型の場合は`変数[行, 列]`で参照した結果が
+`data.frame`型ではなくなる(ベクトルや値になる)ことがありますが、
+`data.table`型では一貫して`data.table`型のまま取り出されます。
+
+```{r tut_idx1}
+##3行目だけを抽出
+df[3, ] #data.frameのまま
+dt[3, ] #data.tableのまま
+
+##"Sepal.Width"の列だけを抽出
+head(df[, "Sepal.Width"]) #ベクトルになる
+head(dt[, "Sepal.Width"]) #data.tableのまま
+
+##3行目, "Sepal.Width"の列だけを抽出
+df[3, "Sepal.Width"] #値になる
+dt[3, "Sepal.Width"] #data.tableのまま
+
+dt[[3, "Sepal.Width"]] #data.tableでも、括弧を2重にすると値にできる
+```
+
+ちなみに、この`data.frame`の一貫性のない挙動については`tibble`に変換することでも解決できます。
+
+```{r tut_idx2, results='hold'}
+df_tbl <- tibble::as_tibble(df)
+class(df_tbl)
+
+head(df_tbl[, "Sepal.Width"]) #データフレームのまま
+df_tbl[3, "Sepal.Width"] #データフレームのまま
+```
+
+ただし、本稿の趣旨から逸れるため、今後`tibble`については触れません。
+
+特定の列のみを取り出すには`変数[行, 列]`記法のほかにも`変数$列名`や`変数[["列名"]]`記法もあります。 この場合、どちらの型でもベクトルで取り出されます。
+
+※データフレームは同じ長さのベクトルを要素にもつ名前付きリストであるため、リストから要素を取り出すときと同じ動作です。
+
+```{r tut_idx3, results='hold'}
+##Sepal.Widthの列だけを抽出
+head(df$Sepal.Width)
+head(dt$Sepal.Width)
+head(df[["Sepal.Width"]])
+head(dt[["Sepal.Width"]])
+```
+
+なお、添え字を1つしか与えなかった(`変数[○]`表記)場合は`data.frame`型と`data.table`型で動作が異なるため注意してください。
+
+-   `data.frame`では列を取り出します。リストとしての性質が優先されています。
+-   `data.table`では行を取り出します。`変数[行, 列]`記法の列の省略とみなされます。
+
+```{r tut_idx4, results='hold'}
+head(df[3]) #列の取り出しになる
+head(dt[3]) #行の取り出しになる
+```
+
+### 行・列の取り出し
+
+以下、基本的なデータ操作についてR標準の記法や`dplyr`とも比較しながら説明します。
+
+`data.frame`での列の取り出し方には次のようなものがあります。
+
+```{r tut_select_df}
+head(df[["Sepal.Width"]]) #1列をベクトルとして取り出し
+head(subset(df, select = "Sepal.Width")) #1列をデータフレームとして取り出し
+head(df[,c("Sepal.Length", "Sepal.Width")]) #複数列をデータフレームとして取り出し
+head(df[, !names(df) %in% c("Sepal.Length", "Sepal.Width")]) #指定した列以外を取り出し
+```
+
+`data.table`型の場合、添え字の部分で特殊な記法が使用可能です。列名を文字列として与えるのではなく、列名そのものを書くことができます。
+
+なお、以降に現れる`.(*)`という記法は`list(*)`の省略形で、添え字などにリストを与えていることに相当します。
+
+```{r tut_select_dt, results='hold'}
+head(dt[,Sepal.Width]) #1列をベクトルとして取り出し
+head(dt[,.(Sepal.Width)]) #1列をdata.tableとして取り出し
+head(dt[,.(Sepal.Length, Sepal.Width)]) #複数列をdata.tableとして取り出し
+```
+
+列の除外は`data.frame`と同じ書き方も可能ですが、 `data.table`特有の記法を用いたものでは以下のような方法があります。
+
+```{r tut_select_dt_ex, results='hold'}
+head(dt[, !c("Sepal.Length", "Sepal.Width")], n = 1) #!は除くという意味
+cols <- c("Sepal.Length", "Sepal.Width")
+head(dt[, !..cols], n = 1) # ..colsとした場合、内部的に上で代入した c("Sepal.Length", "Sepal.Width") に置き換えられる
+head(dt[, setdiff(names(dt), c("Sepal.Length", "Sepal.Width")), with = FALSE], n = 1)
+#setdiffは差集合をとる、with = FALSEは選択する列をリストで直接指定するという意味
+head(dt[,.SD, .SDcols = !c("Sepal.Length", "Sepal.Width")], n = 1) #.SDは.SDcolsで指定した列全体を表す特殊記号
+```
+
+`dplyr`においては`select`に対応します。
+
+```{r tut_select_dplyr, results='hold'}
+df %>% select(Sepal.Length, Sepal.Width) %>% slice_head(n=2) #指定した列
+df %>% select(-Sepal.Length, -Sepal.Width) %>% slice_head(n=2) #指定した列以外
+```
+
+次に、特定の条件を満たす行を抽出する方法を見てみましょう。
+
+R標準では次のような書き方になります。
+
+```{r tut_filter_df, results='hold'}
+df[df$Sepal.Length < 6.0 & df$Sepal.Width == 3.0 & df$Species %in% c("versicolor", "virginica"),]
+```
+
+`data.table`でも同じ書き方はできますが、`dt$`(変数名)の部分を省略したような書き方も出来ます。
+
+```{r tut_filter_dt, results='hold'}
+dt[Sepal.Length < 6.0 & Sepal.Width == 3.0 & Species %in% c("versicolor", "virginica"),]
+```
+
+`dplyr`では`filter`を使用します。
+
+```{r tut_filter_dplyr, results='hold'}
+df %>% filter(Sepal.Length < 6.0 & Sepal.Width == 3.0 & Species %in% c("versicolor", "virginica"))
+```
+
+### 列の加工・追加
+
+特徴量の加工のような操作を行う場合、R標準では以下のような書き方になります。
+
+```{r tut_mutate_df, results='hold'}
+df_tmp <- df
+df_tmp$Sepal.Rate <- df_tmp$Sepal.Length / df_tmp$Sepal.Width #列を追加
+df_tmp[c("Sepal.Length.Sqrt", "Sepal.Width.Sqrt")] <-
+  c(sqrt(df_tmp$Sepal.Length), sqrt(df_tmp$Sepal.Width)) #一度に複数の列を追加
+df_tmp$Species <- substr(df_tmp$Species, 1, 2) #既存の列を加工
+head(df_tmp, n = 3)
+```
+
+`data.table`でも同じ書き方はできますが、`変数[行, 列]`記法の列の箇所で`:=`演算子を用いることでより簡潔に記述できます。
+
+```{r tut_mutate_dt, results='hold'}
+dt_tmp <- copy(dt) #:=演算子がdtに及ばないようにするため
+dt_tmp[, Sepal.Rate := Sepal.Length / Sepal.Width] #列を追加
+dt_tmp[, c("Sepal.Length.Sqrt", "Sepal.Width.Sqrt") 
+       := .(sqrt(Sepal.Length), sqrt(Sepal.Width))] #一度に複数の列を追加
+dt_tmp[, ':='(Sepal.Length.Sqrt = sqrt(Sepal.Length),
+              Sepal.Width.Sqrt = sqrt(Sepal.Width))]#↑はこのような書き方もある
+dt_tmp[, Species := substr(Species, 1, 2)] #既存の列を加工
+head(dt_tmp, n = 3)
+```
+
+ただし`:=`演算子を用いるケースでは、単に「変数の代入」でコピーを作成した場合、 **両方に同じ操作が適用されてしまう**(メモリ上の同じものを指している)ので注意してください。 これは大規模データでメモリ消費を抑えられるようにするための意図的な仕様です。
+
+この現象を避ける(コピー元の方には影響を及ぼさないようにする)ためには、 **`copy`関数で明示的にコピーを作成する**必要があります。
+
+```{r tut_mutate_dt_notcopy, results='hold'}
+dt_tmp2 <- dt_tmp
+dt_tmp[, Petal.Rate := Petal.Length / Petal.Width] #tmpの方に列を追加
+head(dt_tmp2, n = 3) #tmp2の方にも追加されている
+```
+
+`dplyr`では`mutate`を使用します。
+
+```{r tut_mutate_dplyr, results='hold'}
+#mutate文の場合敢えて分けて書く必要はないが、説明のため。
+df_tmp <- df %>% mutate(Sepal.Rate = Sepal.Length / Sepal.Width) #列を追加
+
+df_tmp <- df_tmp %>% mutate(Sepal.Length.Sqrt = sqrt(Sepal.Length),
+                            Sepal.Width.Sqrt = sqrt(Sepal.Width)) #一度に複数の列を追加
+
+df_tmp <- df_tmp %>% mutate(Species = substr(Species, 1, 2)) #既存の列を加工
+
+head(df_tmp, n = 3)
+```
+
+なお、すでにあるデータを連結する場合は`rbind`や`cbind`も使用できます(R標準と同じであるため割愛)。
+
+### データのソート
+
+`data.frame`, `data.table`ともに、`変数[行, 列]`記法の行の箇所で`order`関数を使用します。
+
+`order`関数は、ベクトルを昇順ソートした時の行番号を返す関数です。`-`を与えることで降順ソートにすることが出来ます。
+
+```{r tut_arrange_dfdt, results='hold'}
+#Speciesはfactor型であり、マイナス演算子を直接適用できないため、数値型に一度変換している
+head(df[order(-as.numeric(df$Species), df$Sepal.Length), ])
+#data.table型ではマイナス演算子をそのまま適用できる
+head(dt[order(-Species, Sepal.Length), ])
+```
+
+`dplyr`では`arrange`関数を使用します。降順ソートを行う場合は`desc`を使用します。
+
+```{r tut_arrange_dplyr, results='hold'}
+df %>% arrange(desc(Species), Sepal.Length) %>% head
+```
+
+### データのグループ化と集計・要約
+
+あるグループごとに特徴量の平均値を計算したい、といったケースを考えてみましょう。
+
+R標準機能では次のような書き方になります。
+
+```{r tut_group_df}
+aggregate(cbind(Sepal.Length, Sepal.Width) ~  Species, df, mean)
+```
+
+一方`data.table`の場合、添え字の部分に`mean`のような集計関数をそのまま書き込むことができます。
+グループ化に使用する列は引数`by`に指定します。
+
+```{r tut_group_dt}
+dt[ ,.(Sepal.Length.Mean = mean(Sepal.Length),
+       Sepal.Width.Mean = mean(Sepal.Width)),
+    by = .(Species)]
+```
+
+`dplyr`の場合はグループ化に`group_by`を用いたうえで、`summarize`で集計関数を適用します。
+
+```{r tut_group_dplyr}
+df %>% group_by(Species) %>%
+  summarize(mean(Sepal.Length), mean(Sepal.Width))
+```
+
+
+## 発展的な話題
+
+### 横長と縦長の相互変換(pivot)
+
+#### 横長→縦長
+
+まず、横長(wide型)から縦長(long型)への変換について見てみましょう。
+
+Rの標準機能では`reshape`関数が使用できますが、多機能ゆえ適切にパラメータを指定するにはコツが必要です。
+
+```{r adv_melt_df, results='hold'}
+df_long <- reshape(df, direction = "long", #縦長への変換モード
+        varying = c("Sepal.Length","Sepal.Width","Petal.Length","Petal.Width"), #縦長に変換したい列を指定
+        timevar = "VarName", #縦長に展開するときの、新たに追加されるキー列の名前
+        times = c("Sepal.Length","Sepal.Width","Petal.Length","Petal.Width"), #新たに追加されるキー列の中身(横長時の列名から指定)
+        v.names = "Value") #縦長になった結果集約される値が入る列の名前…2列以上も可
+head(df_long)
+aggregate(Value ~ VarName, df_long, mean)
+```
+
+
+一方、`data.table`では`melt`を使用します。
+
+```{r adv_melt_dt, results='hold'}
+dt_long <-  melt(dt, 
+                 measure.vars = c("Sepal.Length","Sepal.Width","Petal.Length","Petal.Width"),#縦長に変換したい列を指定
+                 variable.name = "VarName", #縦長に展開するときの、新たに追加されるキー列の名前
+                 value.name = "Value") #縦長になった結果集約される値が入る列の名前
+head(dt_long)
+dt_long[ ,mean(Value), by = VarName]
+```
+
+なお、`tidyverse`では`dplyr`ではなく`tidyr`に対応する関数があり、
+`pivot_longer`(または`gather`)を使用します。
+
+```{r adv_melt_tidy, results='hold'}
+df_long_tidy <- df %>% 
+  tibble::rowid_to_column("id") %>% #あとでもう一度横長に戻すときの基準として入れておく
+  pivot_longer(names_to = "VarName", #縦長に展開するときの、新たに追加されるキー列の名前
+                    values_to = "Value", #縦長になった結果集約される値が入る列の名前
+                    -c(id, Species)) #縦長に変換したい列を指定
+df_long_tidy %>% head #並びが異なる
+df_long_tidy %>% group_by(VarName) %>%  summarize(mean(Value))
+```
+
+`reshape`関数は多機能ゆえ、一度に2グループの列を集約することも可能ですが、
+いっそう使用方法は複雑になります。
+
+```{r adv_melt_df2}
+df_long2 <-reshape(df, direction = "long",
+        varying = c("Petal.Length","Sepal.Length","Petal.Width","Sepal.Width"), #縦長に変換したい列を指定
+        timevar = "VarName", #縦長に展開するときの、新たに追加されるキー列の名前
+        times = c("Length","Width"), #新たに追加されるキー列の中身(横長時の列名から指定)
+        v.names = c("Sepal","Petal")) #縦長になった結果集約される値が入る列の名前…2列以上も可
+head(df_long2)
+
+#実は同じような結果をもう少し簡単な指定で得ることもできる
+df_long3 <-reshape(df, direction = "long",
+        varying = c("Petal.Length","Sepal.Length","Petal.Width","Sepal.Width"), #縦長に変換したい列を指定
+        timevar = "VarName", #縦長に展開するときの、新たに追加されるキー列の名前 
+        sep = ".") #縦長に変換したい列が, 値が入る列の名前.新たに追加されるキー列の中身 という命名規則の場合
+head(df_long3)
+
+```
+
+`data.table`の場合は次のような方法が考えられます。
+
+```{r adv_melt_dt2, results='hold'}
+##data.tableのmeasure.varsにパターンを与える方法
+dt_long2 <- melt(dt, measure.vars = patterns("^Sepal", "^Petal"),
+                 variable.name = "Var",
+                 value.name = c("Sepal", "Petal"))
+head(dt_long2)
+#1.15以降ではmeasure関数が追加された
+#https://rdatatable.gitlab.io/data.table/news/index.html#datatable-v1150-30-jan-2024
+#melt(dt, measure.vars = measure(value.name, dim, sep="."))
+
+##添え字の中に欲しい形で書き下してしまう方法
+dt_long3 <- dt[,.(
+  VarName = c(rep("Length", .N), rep("Width", .N)),
+  Sepal = c(Sepal.Length, Sepal.Width),
+  Petal = c(Petal.Length, Petal.Width)
+) ,by = .(Species)]
+head(dt_long3)
+```
+
+
+#### 縦長→横長
+
+逆に縦長から横長に戻す場合、R標準では次のような書き方になります。
+
+```{r adv_dcast_df, results='hold'}
+df_wide <- reshape(df_long, direction = "wide", #縦長への変換モード
+        varying = c("Sepal.Length","Sepal.Width","Petal.Length","Petal.Width"),#横長に展開するときの列名
+        timevar = "VarName", #横長に展開するときの列の基準が入った列
+        v.names = "Value") #横長に展開するときの値となる列
+head(df_wide)
+```
+
+一方、`data.table`では`dcast`を使用します。
+
+```{r adv_dcast_dt, results='hold'}
+dt_long_tmp <- copy(dt_long)
+dt_long_tmp[ ,id := 1:.N, by = .(VarName)]
+#横長に戻した後の行番号を付与　これがないと集約されてしまう
+
+dt_wide <- dcast(dt_long_tmp,
+                 id + Species ~ VarName,
+                 #残したい列 ~ 横長に展開するときの列の名前が入った列
+                 value.var = "Value") #横長に展開するときの値となる列
+
+head(dt_wide)
+```
+
+
+`tidyr`では`pivot_wider`(または`spread`)を使用します。
+
+```{r adv_dcast_tidy, results='hold'}
+df_wide_tidy <- df_long_tidy %>%
+  pivot_wider(names_from = "VarName", #横長に展開するときの列の名前が入った列
+              values_from = "Value") #横長に展開するときの値となる列
+df_wide_tidy %>% head
+```
+
+より複雑なパターンについてはvignette ["Efficient reshaping using data.tables"](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html)にも解説があります。
+
+### テーブルの結合(join)
+
+ここでは複数のテーブルの結合を取り扱います。
+
+以下の例で使用するテーブルを準備します。
+
+
+```{r adv_join_setup, results='hold', class.output="output-jp"}
+#ある時点での保有データ
+#システム仕様の都合により保険金額が2桁までしか保持できないため、
+#大型契約の場合は同じ証券番号で複数のレコードを保持して対応する
+df_IF <- data.frame(
+  証券番号 = c(2, 2 ,3, 3, 99),
+  特約種類 = c(0, 0 ,0, 10, 0),
+  保有保険金額 = c(99, 30, 50, 25, 12)
+)
+#過去の消滅契約も含めた諸情報が蓄積されたデータ
+#ここでは、証券番号と特約種類の組によってレコードが特定されるものとする
+#ただし、df_IFに存在する証券番号99は特別なもので、当データベースには蓄積されていないものとする
+df_MF <- data.frame(
+  証券番号 = c(1, 1 ,2, 3, 3),
+  特約種類 = c(0, 10, 0 ,0, 10),
+  契約年齢 = c(30, 30, 40, 50, 50),
+  性別 = c(1, 1, 2, 1, 1)
+)
+
+dt_IF <- as.data.table(df_IF)
+dt_MF <- as.data.table(df_MF)
+
+df_IF
+df_MF
+```
+
+さて、保有テーブルに足りない情報を別のテーブルから付加するようなケースを考えます。
+
+R標準では`merge`という関数があります。
+
+```{r adv_join_df, class.output="output-jp"}
+#x側の行をすべて残す(left join)…MFにある情報をIFに付与する(契約年齢、性別がわかる)
+merge(x = df_IF, y = df_MF,
+      by.x = c("証券番号", "特約種類"), by.y = c("証券番号", "特約種類"), #結合に使うキー
+      all.x = TRUE, all.y = FALSE) #どちらの行を残すか
+#両方にある行だけを抽出する(inner join)…MFに無いような変な契約は捨てる
+merge(x = df_IF, y = df_MF,
+      by.x = c("証券番号", "特約種類"), by.y = c("証券番号", "特約種類"))
+#y側の行をすべて残す(right join)…IFにある情報をMFに付与する(ある時点での保有の状況がわかる)
+merge(x = df_IF, y = df_MF,
+      by.x = c("証券番号", "特約種類"), by.y = c("証券番号", "特約種類"),
+      all.x = FALSE, all.y = TRUE)
+```
+
+
+`data.table`の場合、上記の手法も依然として使えますが、
+`変数[行, 列]`記法の行の方に別の`data.table`を記述することでも実現できます。
+
+
+```{r adv_join_dt, class.output="output-jp"}
+#dt_IFにあるレコードをキーとして、dt_MFのデータを取得する
+#onは結合に使うキーを指定　キーが異なるときはc("証券番号" = "証券番号") のように指定する
+dt_MF[dt_IF, , on = .(証券番号, 特約種類)]
+#引数nomatch = NULLを与えることで両方にある行だけを抽出(inner join)
+dt_MF[dt_IF, , on = .(証券番号, 特約種類), nomatch = NULL]
+#dt_MFにあるレコードをキーとして、dt_IFのデータを取得する
+dt_IF[dt_MF, , on = .(証券番号, 特約種類)]
+```
+
+`dplyr`では`join`系の関数が使用できます。
+
+```{r adv_join_dplyr, class.output="output-jp"}
+dt_IF %>% left_join(dt_MF, by = join_by(証券番号, 特約種類))
+dt_IF %>% inner_join(dt_MF, by = join_by(証券番号, 特約種類))
+dt_IF %>% right_join(dt_MF, by = join_by(証券番号, 特約種類))
+```
+
+
+### `data.table`が大規模データに強い理由
+
+`data.table`が大規模データに強い理由のうち、代表的なものを挙げると次のようになります。
+
+- `fread`や`fwrite`は、標準の関数に比べて非常に高速
+- `変数[行, 列]` の形式でデータ抽出・加工を行う場合、関係のないカラムをいちいち操作しない
+- メモリの利用が効率的
+  - `:=`による代入や`set*`系関数により、メモリのデータを丸ごとコピー(ディープコピー)することなくテーブルの加工を行うことが出来る
+- いわゆるインデックスの機能がある
+  - `dt[x == 10 & y == 20, ]` のようなクエリが発行されたとき、対応するインデックスが作成されていればそれを使用して高速にレコードを抽出できる。
+  - `data.frame`から行idの機能が失われた代わりに、主キーとなる列(以下単に「キー列」)を複数持つことが出来る。キー列でソートされた形でテーブルを保持するため、キー列による検索は特に高速(いわゆるクラスター化インデックスに近い)
+  - キー列とは別に、明示的にインデックスを作成することもできる(secondary index)
+  - `dt[x == 10 & y == 20, ]` のようなクエリが発行された時点で、必要なインデックスを自動的に作成(auto indexing)
+- マルチコア処理などの低レイヤの処理を最適化している
+
+これらの特徴を把握することで、大規模データに強いコーディングを意図的に行うことも可能になります。
+
+大規模データでの動作を確認するために、いくつか例を見てみます。
+
+#### `fread`, `fwrite`の性能比較
+
+R標準の関数と簡単に速度比較をしてみます。
+
+環境・条件によっては、十数倍～数十倍程度の速度差が出ることもあるようです。
+
+```{r adv_benchmark_fwrite}
+set.seed(1)
+dt_tmp <- as.data.table(lapply(1:10, sample, x=as.numeric(1:1000), size=10000)) 
+system.time(fwrite(dt_tmp, "__tmp1.csv"))
+system.time(write.csv(dt_tmp, "__tmp2.csv",quote=FALSE, row.names=FALSE))
+print(file.info("__tmp2.csv")$size / 1024)#KB単位のファイルサイズ
+system("fc __tmp1.csv __tmp2.csv")#Windowsでのファイル比較方法 linuxではdiff
+```
+
+```{r adv_benchmark_fread}
+set.seed(1)
+fwrite(as.data.table(lapply(1:10, sample, x=as.numeric(1:1000), size=50000)) , "__tmp3.csv")
+print(file.info("__tmp3.csv")$size / 1024)#KB単位のファイルサイズ
+
+system.time(dt_tmp_r1 <- fread("__tmp3.csv"))
+system.time(dt_tmp_r2 <- read.csv("__tmp3.csv"))
+all(mapply(all.equal, dt_tmp_r1, dt_tmp_r2))
+```
+
+#### 大規模データ操作での性能比較
+
+公開データでは規模の大きい`nycflights13`パッケージの`flight`データを用いて、
+`data.table`のデータ操作の速度を比較してみましょう。
+
+まず、簡単にデータの概要を表示します。
+
+```{r adv_benchmark_fl_setup}
+df_f <- flights
+dt_f <- as.data.table(df_f)
+nrow(df_f) #レコード数
+set.seed(42)
+df_f[sample(nrow(df_f), 5), ] #サンプル抽出
+summary(df_f) #サマリー
+```
+
+カテゴリの数が多いカテゴリ変数で抽出する場合、`data.table`はインデックスの効果により抽出が高速になります。
+
+```{r adv_benchmark_fl_setup2, results='hold'}
+digits_cur <- getOption("digits")#表示桁数を一時的に少なくしておく
+options(digits=3)
+```
+
+
+```{r adv_benchmark_fl, results='hold'}
+#tailnumは機体記号(tail number) 航空機ごとにつけられる固有の記号のこと
+#本データセットには4000以上の機体記号が登録されている
+nrow(dt_f[,.N, by=.(tailnum) ])
+
+#microbenchmarkは同じ処理を複数回実行し、その実行時間を観察することができる関数
+#例えばmeanの列に平均実行時間がミリ秒単位で格納される
+
+#特定の機体記号のレコードを抽出するだけの処理
+df_tmp <- microbenchmark(df_f[df_f$tailnum == "N449US", ], times=100, unit = "milliseconds") #R標準
+df_tmp <- rbind(df_tmp, microbenchmark(dt_f[tailnum == "N449US", ], times=100, unit = "milliseconds")) #data.table:auto indexingによりインデックスを作成して使用するので早い
+df_tmp <- rbind(df_tmp, microbenchmark(df_f %>% filter(tailnum == "N449US"), times=100, unit = "milliseconds")) #dplyr
+df_tmp
+```
+
+多めの行を抽出しつつ限られた列に対してなんらかの演算を行う場合、`dplyr` が最も低速な傾向です。
+
+`変数[行, 列]`記法の場合、操作に関係のない列を自然に無視して処理できているためと考えられます。
+
+```{r adv_benchmark_fl2_df, results='hold'}
+#R標準
+#行の抽出だけ
+df_tmp <- microbenchmark(df_f[df_f$month == 12, ], times=100, unit = "milliseconds")
+#上記に加え、いくつかの列を使用して計算
+#文を2つに分けた都合上microbenchmarkの出力が2行に分かれるので、比較対象はその合計になる
+rows_tmp <- df_f$month == 12
+df_tmp <- rbind(df_tmp, microbenchmark(rows_tmp <- df_f$month == 12, df_f[rows_tmp, "hour"]*60 + df_f[rows_tmp, "minute"], times=100, unit = "milliseconds"))
+df_tmp
+```
+
+
+```{r adv_benchmark_fl2_dt, results='hold'}
+#data.table
+df_tmp <- microbenchmark(dt_f[month == 12, ], times=100, unit = "milliseconds")
+df_tmp <- rbind(df_tmp, microbenchmark(dt_f[month == 12, hour*60 + minute], times=100, unit = "milliseconds"))
+df_tmp
+```
+
+
+```{r adv_benchmark_fl2_dplyr, results='hold'}
+#dplyr
+df_tmp <- microbenchmark(df_f %>% filter(month == 12) , times=100, unit = "milliseconds")
+df_tmp <- rbind(df_tmp, microbenchmark(df_f %>% filter(month == 12) %>% mutate(m = hour*60 + minute), times=100, unit = "milliseconds"))
+#mutate %>% select や transmute とするとさらに遅くなったのでそうしなかった
+df_f_l <- df_f %>% select(month, hour, minute) #関係のない列をそぎ落としてもまだ若干低速
+df_tmp <- rbind(df_tmp, microbenchmark(df_f_l %>% filter(month == 12) %>% mutate(m = hour*60 + minute), times=100, unit = "milliseconds"))
+df_tmp
+```
+
+なお、キーやインデックスの詳細については以下のvignettesを参照してください。
+
+- [Keys and fast binary search based subset](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)
+- [Secondary indices and auto indexing](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html)
+
+また、本稿ではあまり説明していませんが、`set*`系関数などのメモリを節約する機能についてはvignette ["Reference semantics"](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html)を参照してください。
+
+```{r adv_benchmark_fl_post}
+options(digits=digits_cur)#表示桁数を元に戻す
+```
+
+
+
+### 添え字の発展的な使用方法
+
+`data.table`は`dplyr`での操作にも対応しているため可読性の観点から併用されるケースが目立ちますが、
+`data.table`の`変数[行, 列]`記法は`data.frame`のそれよりも大幅に拡張されており、
+これをフルに活用することで複雑な処理をエレガントに記述することも可能です。
+また前述のとおり、`変数[行, 列]`記法は大規模データでの実行速度向上の観点でもメリットがあります。
+本節ではこの`変数[行, 列]`記法について少しだけ掘り下げてみます。
+
+#### 「列」の自在性
+
+「列」の箇所は、列名のみならず式を書くこともできます。
+式中の列名をテーブルのカラム全体を表すベクトルに変換して計算するような動作になります。
+結果の長さが元のベクトルとは異なっていても問題ないため、
+`mean`のような集計関数(ベクトルを引数にとり数値を吐き出すような関数)も自然に使用できます。
+
+```{r adv_flex_base}
+#.(*)はlist(*)の省略形で、listを与えたときはdata.tableで結果を返却する
+head(dt[ ,.(Sepal.Length, Sepal.Width)])
+#.(*)のなかにx = aの形で記述することで、列名をxで返却する
+head(dt[ ,.(SL = Sepal.Length)])
+#一方、右辺のほうには式を書くことができる
+head(dt[ ,.(Sepal.Rate = Sepal.Length / Sepal.Width)])
+#ベクトルを引数にとり数値を吐き出すような関数も使える
+dt[ ,.(Sepal.Rate.Mean = mean(Sepal.Length / Sepal.Width))]
+```
+
+引数`by`を指定してグループ化した場合、上記の操作がグループごとに細分化されて行われるイメージです。
+
+```{r adv_flex_groupby}
+dt[ ,.(Sepal.Rate.Mean = mean(Sepal.Length / Sepal.Width)), by = Species]
+```
+
+#### 特殊記号(Special Symbols)
+
+また、「列」の欄にはいくつかの特殊記号を用いることができます。
+
+代表的なものは、そのグループの件数を表す`.N`と、テーブル全体を表す`.SD`です。
+このうち、`.SD`は引数`.SDcol`で抽出する列を指定することができます。
+
+`.SD`の応用例についてはvignette ["Using .SD for Data Analysis"](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-sd-usage.html)にも解説があります。
+また、他の特殊記号の例については`help("special-symbols")`を参照してください。
+
+```{r adv_flex_specialsymbols}
+
+##.Nの使用例
+dt[ ,.(count = .N), by = Species]
+##.SDの使用例
+#行数, 列名リスト, 全要素の合計値
+list(nrow(dt), paste(names(dt), collapse = ","), sum(sapply(dt, function(vec) if(is.numeric(vec)){sum(vec)}else{0})))
+#これをSpeciesのグループごとに行うイメージ
+dt[ ,.(nrow = nrow(.SD),
+       colnames = paste(names(.SD), collapse=", "),
+       sum = sum(sapply(.SD, function(vec) if(is.numeric(vec)){sum(vec)}else{0}))), by = Species]
+#.SDcolで指定した列だけを取り出し
+dt[ ,.(nrow = nrow(.SD),
+       colnames = paste(names(.SD), collapse=", "),
+       sum = sum(sapply(.SD, function(vec) if(is.numeric(vec)){sum(vec)}else{0}))), by = Species, .SDcol = c("Sepal.Length")]
+
+```
+
+
+#### 使用例：縦長への変形
+
+さて、ここまでに説明した内容を活用して、以下のテーブルを使いやすい形に成形してみましょう。
+
+このテーブルは特約ごとに列が分かれてしまっており、主契約と特約を合算した数値を集計したりする場合にやや使いづらい構造になってしまっています。
+
+これを「縦長」に変形することで使いやすくしてみます。
+
+```{r adv_flex_is_setup, class.output="output-jp"}
+dt_is
+```
+
+「縦長」に変形するには、例えば件数、特約1件数、特約2件数を「縦」に並べる必要があります。
+
+すなわち以下のような操作をすることになります。
+
+```{r adv_flex_is_1, class.output="output-jp"}
+c(dt_is$件数, dt_is$特約1件数, dt_is$特約2件数)
+```
+
+このベクトルを「件数」という列に格納して返却する式はこのようになります。
+
+```{r adv_flex_is_2}
+dt_is[, .(件数 = c(件数, 特約1件数, 特約2件数))]
+```
+
+主契約や特約を区別できるように、新たに特約種類なる列を追加します。
+
+もとのレコードの数と同じ長さのベクトルを3本用意する必要がありますが、ここで特殊記号`.N`が活躍します。
+
+ついでに保険金額の列も追加しておきます。
+
+```{r adv_flex_is_3, class.output="output-jp"}
+dt_is[, .(特約種類 = c(rep(0, .N), rep(1, .N), rep(2, .N)), 
+          件数 = c(件数, 特約1件数, 特約2件数),
+          保険金額 = c(主契約保険金額, 特約1保険金額, 特約2保険金額))]
+```
+
+グループ化の単位となる引数`by`にキー列を指定することで、これらを自然に補完することができます。
+
+これで欲しい形式にテーブルを変換することができました。
+
+```{r adv_flex_is_4, class.output="output-jp"}
+dt_is[, .(特約種類 = c(rep(0, .N), rep(1, .N), rep(2, .N)), 
+          件数 = c(件数, 特約1件数, 特約2件数),
+          保険金額 = c(主契約保険金額, 特約1保険金額, 特約2保険金額)),
+      by = .(配当方式, 商品種類コード)]
+```
+
+ちなみに、`[,]`は複数回つなげて記述することができます。
+例えば主契約・特約を合算しつつ配当方式別に集計したテーブルはこのように作れます。
+
+```{r adv_flex_is_5, class.output="output-jp"}
+dt_is[, .(特約種類 = c(rep(0, .N), rep(1, .N), rep(2, .N)), 
+          件数 = c(件数, 特約1件数, 特約2件数),
+          保険金額 = c(主契約保険金額, 特約1保険金額, 特約2保険金額)),
+      by = .(配当方式, 商品種類コード)][
+        ,.(件数合計 = sum(件数), 保険金額合計 = sum(保険金額)), by = .(配当方式)]
+```
+
+なお、`変数[行, 列]` 記法はSQL文との関連で次のように対応付けられることがあります。
+
+```
+SELECT aaa
+FROM bbb
+WHERE ccc
+GROUP BY ddd
+ORDER BY eee
+↓
+bbb[ccc/eee, aaa, by = ddd]
+※uPDATE文の場合は .(xxx := aaa) の形
+```
+
+今回の例からも、`変数[行, 列]` 記法は単なる添え字にとどまらず、SQLクエリと同等あるいはそれ以上の自在性を持つことがわかります。
+
+このような`data.table`独特の哲学については以下のvignettesにも解説があります。
+
+- [Introduction to data.table](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html)
+- [Frequently Asked Questions about data.table](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-faq.html)
+
+### NSEの問題
+
+#### `..`について
+
+前述のとおり`変数[行, 列]`記法は自在性が高い一方、その自在性を実現するために添え字の処理が通常とは異なっており、
+例えば以下のように列名を変数に格納して列を抽出するようなコードがエラーとなってしまいます。
+
+```{r adv_nse_singlej, eval=FALSE}
+colname <- "Sepal.Length"
+head(df[, colname]) #OK
+head(dt[, colname]) #ERROR
+#Error in `[.data.table`(dt, , colname) :
+#j (the 2nd argument inside [...]) is a single symbol but column name 'colname' is not found. Perhaps you intended DT[, #..colname]. This difference to data.frame is deliberate and explained in FAQ 1.1.
+```
+
+これは「列」部分のシンボルが1つであると処理が特殊なためで、エラー文のとおり`..colname`とすれば解決できます。
+
+```{r adv_nse_singlej2}
+colname <- "Sepal.Length"
+head(dt[, ..colname])
+```
+
+シンボルが2個以上であればいいのでは？とばかりに`colname`の後ろに空文字列を連結するという意味のない処理を加えると…
+
+```{r adv_nse_singlej3}
+head(dt[, paste0(colname, "")])
+```
+
+SQLでいえば`SELECT 'Sepal.Length'`を実行したかのような結果になってしまいます。
+
+`dt[, "Sepal.Length"]`では期待通り`Sepal.Length`の列を抽出できていたわけですが、
+これは文字列だけが「列」の箇所に記述されたときの特殊仕様。
+前述の添え字の動作原理を把握しているならば、むしろ上記の実行結果のほうが整合的です。
+
+ともかく、添え字の自在性と引き換えに、
+列名などを文字列で与えて処理を行うには工夫が必要になってしまっているということです。
+
+#### `[[ ]]`の利用
+
+より複雑な例として、以下のように既存の特徴量を2乗した特徴量を追加する操作について、
+これを他の特徴量でも簡単に使いまわせるように関数化することを考えます。
+
+```{r adv_nse_func_setup}
+dt_tmp <- copy(dt)
+dt_tmp[,Sepal.Length_Squared := Sepal.Length ^ 2][,Sepal.Width_Squared := Sepal.Width ^ 2]
+head(dt_tmp)
+dt_tmp[, .(sum(Sepal.Length_Squared), sum(Sepal.Width_Squared)), by = Species] #後で実行結果を検証するためのもの
+```
+
+この操作を、例えば `add_square(dt_tmp, c("Sepal.Length","Sepal.Width"))` のように呼び出せるようにしたいとしましょう。
+
+これをシンプルに変数に置き換えた以下の形では残念ながらエラーとなってしまいます。
+
+```{r adv_nse_func_err, eval=FALSE}
+add_square <- function(dt_tmp, cols){
+  for(col in cols)
+    dt_tmp[,paste0(col, "_Squared") := col ^ 2]
+}
+dt_tmp <- copy(dt)
+add_square(dt_tmp, c("Sepal.Length","Sepal.Width"))#ERROR
+#Error in col^2 : non-numeric argument to binary operator
+```
+
+一番シンプルな解決策は`[[ ]]`を用いることです。`:=`を使用することにこだわらないのであれば`<-`による代入でもよいでしょう。
+
+```{r adv_nse_func_se}
+add_square <- function(dt_tmp, cols){
+  for(col in cols)
+    dt_tmp[, paste0(col, "_Squared") := dt_tmp[[col]]^2 ] # := の左辺は文字列でもOK
+}
+dt_tmp <- copy(dt)
+add_square(dt_tmp, c("Sepal.Length","Sepal.Width"))
+dt_tmp[, .(sum(Sepal.Length_Squared), sum(Sepal.Width_Squared)), by = Species]
+```
+
+
+#### `.SD`の利用
+
+`data.table`特有の記法を用いた解決策もあります。
+`.SD`は引数`.SDcol`で取り出す列を指定することができることを利用します。
+簡潔な記述で複数列一度に処理できるためおすすめです。
+
+```{r adv_nse_func_DT}
+add_square <- function(dt_tmp, cols){
+  dt_tmp[, paste0(cols, "_Squared") := (.SD ^ 2), .SDcol = cols]
+}
+dt_tmp <- copy(dt)
+add_square(dt_tmp, c("Sepal.Length","Sepal.Width"))
+dt_tmp[, .(sum(Sepal.Length_Squared), sum(Sepal.Width_Squared)), by = Species]
+```
+
+このような例については以下のvignetteにも解説があります。
+
+- [Programming on data.table](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-programming.html)
+
+#### `substitute`の利用
+
+この`変数[行,列]`記法のように、通常の評価とは異なる評価が行われることをNSE(Non Standard Evaluation)といい、R言語でしばしば現れる概念です。
+
+R言語には遅延評価(lazy evaluation)という概念があり、
+スクリプトに書かれた式はその値が必要になるタイミングまで評価(≒計算)されません。
+
+たとえば関数の引数に式が書かれた場合、関数の処理に入る前に評価するのではなく、
+関数の処理の中で必要となったタイミングで評価を行いますが、
+NSEとはこの評価方法が特殊なもののことをいいます。
+身近な例では`lm`などの引数に現れる`y ~ .`の形の式や、`dplyr`の記法などがあります。
+
+`data.table`以外にもNSEが行われる場合はしばしば上記のような問題を抱えるため、
+他のケースでも用いられる解決策も参考までに提示します。
+
+```{r adv_nse_func_subst}
+add_square <- function(dt_tmp, cols){
+  for(col in cols){
+    eval(substitute(
+      dt_tmp[, var_col_Squared := var_col ^ 2],
+      env = list(var_col = as.name(col), var_col_Squared = paste0(col, "_Squared"))
+    ))
+    #バージョン1.15以降では上記機能が[.data.tableの引数`env`に組み込まれました。
+    #https://rdatatable.gitlab.io/data.table/news/index.html#datatable-v1150-30-jan-2024
+  }
+}
+dt_tmp <- copy(dt)
+add_square(dt_tmp, c("Sepal.Length","Sepal.Width"))
+dt_tmp[, .(sum(Sepal.Length_Squared), sum(Sepal.Width_Squared)), by = Species]
+```
+
+#### `rlang`パッケージの利用
+
+このような状況では`rlang`パッケージが使用されることも多いため、一例を示します。
+
+```{r adv_nse_func_rlang}
+add_square <- function(dt_tmp, cols){
+  for(col in cols){
+    col_sym <- rlang::sym(col) #文字列をシンボルに変換
+    rlang::inject(dt_tmp[, paste0(col, "_Squared") := (!!col_sym) ^ 2])
+    #rlang::injectで囲むと、!!col_symの部分がSepal.Lengthなどのシンボルに置換される
+  }
+}
+dt_tmp <- copy(dt)
+add_square(dt_tmp, c("Sepal.Length","Sepal.Width"))
+dt_tmp[, .(sum(Sepal.Length_Squared), sum(Sepal.Width_Squared)), by = Species]
+```
+
+
