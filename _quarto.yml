@@ -51,8 +51,6 @@ format:
       light: flatly
       dark: darkly
     html-math-method: katex
-  pdf:
-    documentclass: scrreprt
 
 editor: visual
 
