@@ -1,0 +1,42 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Rパッケージ活用事例集",
+    "section": "",
+    "text": "はじめに\n本ウェブサイトは、アクチュアリーの業務や研究に役立つRパッケージの情報を日本アクチュアリー会の会員に向けて広く提供することを目的として、データサイエンス関連基礎調査ワーキンググループが作成したものです。\n\n\n\n\n\n\n本リポジトリ（dswg-book）は情報共有チーム内部で出力結果を事前に参照するために用意されたものであり、会員に直接参照されることを目的としたものではありません。",
+    "crumbs": [
+      "はじめに"
+    ]
+  },
+  {
+    "objectID": "qmds/actuar.html",
+    "href": "qmds/actuar.html",
+    "title": "1  actuar",
+    "section": "",
+    "text": "1.1 パッケージの概要\nactuar パッケージは、（主に損害保険分野の）保険数理に関する機能を実装したパッケージです。actuar パッケージの特徴の一つは様々な確率分布を扱うための関数を実装していることで、パレート分布、Burr分布、対数ガンマ分布、対数ロジスティック分布など、裾の厚い分布が数多く収録されています。\nstats パッケージと同様、actuar パッケージにおいても、それぞれの分布に対して、その名称に d、p、r、q という接頭辞を付けた関数が用意されています。接頭辞ごとに関数の機能が異なり、d****(x, ...) が密度関数、p****(x, ...) が累積分布関数、r****(n, ...) が乱数を生成する関数、q(p, ...) が分位点を返す関数です。",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>actuar</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/actuar.html#確率密度関数をプロットする",
+    "href": "qmds/actuar.html#確率密度関数をプロットする",
+    "title": "1  actuar",
+    "section": "1.2 確率密度関数をプロットする",
+    "text": "1.2 確率密度関数をプロットする\n\nパレート分布 pareto\ndpareto(x,{\\alpha},{\\theta})={{\\alpha}{\\theta}^{\\alpha}}/{(x+\\theta)^{\\alpha+1}}\n\n\nlibrary(actuar)\n\nxlim &lt;- c(0, 3)\nylim &lt;- c(0, 2)\nmain &lt;- \"pareto distribution\"\n\ncurve(dpareto(x, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dpareto(x, 2, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dpareto(x, 1, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dpareto(x, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n\n\n\n\n\n\n\n\n\nBurr分布 burr\ndburr(x,{\\alpha},{\\gamma},{\\theta})={{\\alpha}{\\gamma}(x/{\\theta})^{\\gamma}}/{x[1+(x/{\\theta)^{\\gamma}}]^{\\alpha + 1}}\n\n\nxlim &lt;- c(0, 3)\nylim &lt;- c(0, 2)\nmain &lt;- \"burr distribution\"\n\ncurve(dburr(x, 1, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dburr(x, 2, 1, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dburr(x, 1, 2, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dburr(x, 2, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n\n\n\n\n\n\n\n\n\n対数ガンマ分布 lgamma\ndlgamma(x,{\\alpha},{\\lambda})={{\\lambda}^{\\alpha}{\\Gamma}({\\alpha})}/{[(\\log{x})^{\\alpha-1}x^{\\lambda+1}]}\n\n\nxlim &lt;- c(1, 4)\nylim &lt;- c(0, 2)\nmain &lt;- \"log gamma distribution\"\n\ncurve(dlgamma(x, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dlgamma(x, 2, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dlgamma(x, 1, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dlgamma(x, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n\n\n\n\n\n\n\n\n\n対数ロジスティック分布 llogis\ndllogis(x,{\\gamma},{\\theta})={{\\gamma}(x/{\\theta})^{\\gamma}}/{x[1+(x/{\\theta)}]^2}\n\n\nxlim &lt;- c(0, 3)\nylim &lt;- c(0, 2)\nmain &lt;- \"log logistic distribution\"\n\ncurve(dllogis(x, 1, 1), type = \"l\", lty = 1, col = \"darkgray\",\n      xlim = xlim, ylim = ylim, ylab = \"\", main = main)\ncurve(dllogis(x, 2, 1), type = \"l\", lty = 2, col = \"darkcyan\", add = TRUE)\ncurve(dllogis(x, 1, 2), type = \"l\", lty = 3, col = \"darkred\", add = TRUE)\ncurve(dllogis(x, 2, 2), type = \"l\", lty = 4, col = \"darkblue\", add = TRUE)\n\n\n\n\n\n\n\n\nactuar パッケージには、上記のほかにも以下のような確率分布が実装されています。\n\n\n\n逆ガンマ分布\ninvgamma\n\n\n逆パレート分布\ninvpareto\n\n\n逆バー分布\ninvburr\n\n\n逆ワイブル分布\ninvweibull\n\n\n逆指数分布\ninvexp\n\n\n一般化ベータ分布\ngenbeta\n\n\n一般化パレート分布\ngenpareto",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>actuar</span>"
+    ]
+  },
+  {
+    "objectID": "qmds/actuar.html#参考資料",
+    "href": "qmds/actuar.html#参考資料",
+    "title": "1  actuar",
+    "section": "1.3 参考資料",
+    "text": "1.3 参考資料\n[1] Dutang, C., Goulet, V. and Pigeon, M. (2008). actuar: An R Package for Actuarial Science",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>actuar</span>"
+    ]
+  }
+]
