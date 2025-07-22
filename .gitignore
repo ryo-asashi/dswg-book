@@ -5,15 +5,19 @@
 .Ruserdata
 .Renviron
 
-/.quarto/
-
-# Quarto/Bookdown output
-/_book/
-/_site/
-/_freeze/
-/_cache/
+.quarto/
+renv/
+_book/
+_site/
+_freeze/
+_cache/
 
 # Other common files
 *.html
 *.pdf
 
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
