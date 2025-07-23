@@ -42,5 +42,7 @@ jobs:
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
+          cache: true
+          cache-key: renv-${{ hashFiles('renv.lock') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
