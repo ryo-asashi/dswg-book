@@ -122,6 +122,8 @@ curve(dllogis(x, 1, 2), type = "l", lty = 3, col = "darkred", add = TRUE)
 curve(dllogis(x, 2, 2), type = "l", lty = 4, col = "darkblue", add = TRUE)
 ```
 
+### その他の分布
+
 **actuar** パッケージには、上記のほかにも以下のような確率分布が実装されています。
 
 |                    |              |
