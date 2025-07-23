@@ -824,11 +824,11 @@ div.csl-indent {
 <span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>wf <span class="ot">&lt;-</span> wf_xgboost</span>
 <span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>results_cv <span class="ot">&lt;-</span> <span class="fu">do_cv</span>(splitscv_df_train, wf) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Fold1 ... rmse: 16.06052 , 経過時間: 1.256 
-Fold2 ... rmse: 21.37279 , 経過時間: 1.126 
-Fold3 ... rmse: 16.59439 , 経過時間: 1.121 
-Fold4 ... rmse: 14.79878 , 経過時間: 1.148 
-Fold5 ... rmse: 15.17561 , 経過時間: 1.139 </code></pre>
+<pre><code>Fold1 ... rmse: 16.06052 , 経過時間: 1.253 
+Fold2 ... rmse: 21.37279 , 経過時間: 1.129 
+Fold3 ... rmse: 16.59439 , 経過時間: 1.132 
+Fold4 ... rmse: 14.79878 , 経過時間: 1.127 
+Fold5 ... rmse: 15.17561 , 経過時間: 1.126 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>rmse1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(results_cv<span class="sc">$</span>rmse) <span class="co">#RMSEの平均値で精度を測ることにする</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"rmse平均値:"</span>, rmse1, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -851,10 +851,10 @@ Fold5 ... rmse: 15.17561 , 経過時間: 1.139 </code></pre>
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co">#先ほどと同じ交差検証を行う</span></span>
 <span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>results_cv <span class="ot">&lt;-</span> <span class="fu">do_cv</span>(splitscv_df_train, wf) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Fold1 ... rmse: 16.20968 , 経過時間: 1.234 
-Fold2 ... rmse: 21.4931 , 経過時間: 1.222 
-Fold3 ... rmse: 16.56371 , 経過時間: 1.231 
-Fold4 ... rmse: 14.42167 , 経過時間: 1.216 
+<pre><code>Fold1 ... rmse: 16.20968 , 経過時間: 1.215 
+Fold2 ... rmse: 21.4931 , 経過時間: 1.201 
+Fold3 ... rmse: 16.56371 , 経過時間: 1.203 
+Fold4 ... rmse: 14.42167 , 経過時間: 1.205 
 Fold5 ... rmse: 15.65897 , 経過時間: 1.202 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>rmse2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(results_cv<span class="sc">$</span>rmse)</span>
