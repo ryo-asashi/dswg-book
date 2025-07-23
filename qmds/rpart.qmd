@@ -1,0 +1,219 @@
+---
+title: "rpart"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+output:   
+  word_document:
+    toc: yes
+    toc_depth: '3'
+    fig_width: 6
+    fig_height: 3
+---
+
+```{r setup, include=FALSE}
+
+# install packages
+pkgs <- c("rpart", "rpart.plot")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+# detach packages
+default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
+             "package:stats", "package:graphics",
+             "package:grDevices", "package:utils",
+             "package:datasets", "package:methods",
+             "Autoloads", "package:base")
+for (pkg in setdiff(search(), default)) {
+  detach(pkg, character.only = TRUE)
+  }
+
+# clear objects
+remove(list=objects())
+```
+
+## パッケージの概要
+
+rpartは再帰的分割による回帰木・分類木の実装を与えます。また、rpart.plotで決定木の可視化が可能です。 
+
+
+## 使用例：irisデータの分類
+
+irisデータを用いて、がく弁・花弁の長さ・幅の情報からアヤメの種類を特定する分類モデルを作成します。
+
+### irisデータセットを読み込む
+
+irisデータを読み込み、データの先頭を表示します。
+
+-   Sepal.Length：がく弁の長さ
+-   Sepal.Width：がく弁の幅
+-   Petal.Length：花弁の長さ
+-   Petal.Width：花弁の幅
+
+アヤメの種類はsetosa(1)、versicolor(2)、virginica(3)の3種類です。
+
+```{r}
+data(iris)
+head(iris)
+```
+
+### irisデータの構造
+
+irisデータの各種構造を確認します。
+
+```{r}
+str(iris)
+```
+
+また、データを散布図にプロットして確認します。
+
+```{r}
+plot(iris, col=c(2, 3, 4)[iris$Species])
+```
+
+### モデル構築1（全体データ）
+
+まずは全てのデータを使って分類木モデルを構築してみます。
+
+```{r}
+library(rpart)
+library(rpart.plot)
+# シードを設定
+set.seed(123) 
+(iris.rp <- rpart(Species ~ ., data = iris))
+```
+
+#### 可視化
+
+モデルを可視化します。plotで木の構造（分岐）を表示し、textで各ノードの分岐の基準や分類ラベルを表示します。デフォルトの設定だと図が見切れてしまうことがあります。
+```{r}
+plot(iris.rp)
+text(iris.rp)
+```
+rpart.plotを用いると、分類木をより分かりやすく表示させることができます。
+```{r}
+rpart.plot(iris.rp)
+```
+
+
+### モデル構築2（訓練データとテストデータに分割）
+
+irisデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします。確認のため、データサイズを出力します。
+
+```{r}
+# シードを設定
+set.seed(123) 
+
+# データの分割
+sample_indices <- sample(1:nrow(iris), 0.7 * nrow(iris))  
+df.train <- iris[sample_indices, ]
+df.test <- iris[-sample_indices, ]
+
+# データサイズの確認
+c(nrow(iris), nrow(df.train), nrow(df.test))
+```
+
+### モデル生成
+
+訓練データを用いて分類木モデルを生成します。
+
+```{r}
+# シードを設定
+set.seed(123)
+(model.rp <- rpart(Species ~ ., data = df.train))
+```
+
+#### モデル評価
+
+テストデータを使ってモデル評価を行います。まずはテストデータを元に生成したモデルを用いて予測結果を算出します。
+
+```{r}
+prediction <- predict(model.rp, df.test, type = "class")
+```
+
+予測結果とテストデータのもともとのアヤメの分類とを比較します。おおむね正しく分類できていることが分かります。
+
+```{r}
+(result <- table(prediction, df.test$Species))
+(accuracy_prediction <- sum(diag(result)) / sum(result))
+```
+
+### ハイパーパラメーターのチューニング
+
+rpartの主なハイパーパラメーターは以下の通りです。
+
+- 木の複雑度に関するパラメータ(cp)
+- ノード分割の最小サンプル数(minsplit)
+- 木の最大の深さ(maxdepth)
+
+これらのハイパーパラメータの最適な設定を探す作業がハイパーパラメーターのチューニングとなります。
+
+まずはcpの最適な設定を確認します。これはprintcpを用いることができます。
+```{r}
+printcp(model.rp)
+```
+
+xerror（交差検証誤差）が最も低くなるcpは0.01でした。これはデフォルトの設定と一致します。
+
+
+次に、minsplitのチューニングを行います。簡便的にテストデータでの設定の差を確認します。なお、デフォルトの設定は20です。
+
+```{r}
+# シードを設定
+set.seed(123)
+
+# 候補となる minsplit の値
+minsplit_values <- c(5, 20, 40)
+
+# minsplit ごとの精度を格納するデータフレーム
+results <- data.frame(minsplit = minsplit_values, Accuracy = NA)
+
+# 各 minsplit のモデルを作成し、精度を測定
+for (i in seq_along(minsplit_values)) {
+  control <- rpart.control(minsplit = minsplit_values[i])
+  model <- rpart(Species ~ ., data = df.train, method = "class", control = control)
+  
+  # 予測
+  predictions <- predict(model, df.test, type = "class")
+  accuracy <- mean(predictions == df.test$Species)
+  
+  # 結果を保存
+  results$Accuracy[i] <- accuracy
+}
+
+# 結果の確認
+print(results)
+```
+irisデータだと特段変化がないようです。
+
+
+最後にmaxdepthについても同様に試してみます。デフォルトの設定は5です。
+```{r}
+# シードを設定
+set.seed(123)
+
+# 候補となる maxdepth の値
+maxdepth_values <- c(3, 5, 7)
+
+# maxdepth ごとの精度を格納するデータフレーム
+results <- data.frame(maxdepth = maxdepth_values, Accuracy = NA)
+
+# 各 minsplit のモデルを作成し、精度を測定
+for (i in seq_along(minsplit_values)) {
+  control <- rpart.control(maxdepth = maxdepth_values[i])
+  model <- rpart(Species ~ ., data = df.train, method = "class", control = control)
+  
+  # 予測
+  predictions <- predict(model, df.test, type = "class")
+  accuracy <- mean(predictions == df.test$Species)
+  
+  # 結果を保存
+  results$Accuracy[i] <- accuracy
+}
+
+# 結果の確認
+print(results)
+```
+こちらもirisデータだとと特段変化がないようです。
