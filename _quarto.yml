@@ -35,7 +35,7 @@ book:
     - qmds/purrr.qmd
     - qmds/randomForest.Rmd
     - qmds/ranger.Rmd
-    - qmds/recipes.qmd
+#    - qmds/recipes.qmd
     - qmds/rsample.qmd
     - qmds/shapviz.qmd
     - qmds/skimr.qmd
