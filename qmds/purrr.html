@@ -605,13 +605,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(y, rnorm, <span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
-[1]  0.9093324 -0.1447077  0.2903597 -0.2665946  2.3831310
+[1] 3.6199552 0.1492013 1.8948807 0.2862961 3.1150240
 
 [[2]]
-[1] 0.9451395 1.9577484 2.8592873 2.6934718 2.1919273
+[1] 1.474272 3.558404 2.890014 2.558469 1.491119
 
 [[3]]
-[1] 2.057371 2.783786 4.625757 2.444534 5.212579</code></pre>
+[1] 3.241471 1.670057 3.171103 4.709741 3.030333</code></pre>
 </div>
 </div>
 </section>
@@ -636,13 +636,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(z, rnorm, <span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
-[1] 0.5481625 0.8619102 1.8561850 0.3151216 0.5226474
+[1]  3.5401466  0.7976675 -0.2080346 -0.1272983  0.6374422
 
 [[2]]
-[1] 0.8277958 2.6109461 2.0299560 1.8410424 1.3329490
+[1]  2.185251137  1.917922563  3.337661278 -0.002188391  3.728155884
 
 [[3]]
-[1] 4.531821 3.723649 2.827647 1.952944 3.162353</code></pre>
+[1] 5.514323 4.947298 1.278132 2.665719 2.237884</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(z, rnorm, <span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
@@ -658,7 +658,7 @@ Caused by error:
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(rnorm, <span class="at">n=</span><span class="dv">5</span>) <span class="sc">|&gt;</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dbl</span>(mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.483975 2.472525 3.000444</code></pre>
+<pre><code>[1] 1.638410 2.585230 3.515454</code></pre>
 </div>
 </div>
 </section>
