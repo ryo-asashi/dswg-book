@@ -41,7 +41,7 @@ book:
     - qmds/skimr.qmd
     - qmds/survival.qmd
     - qmds/tuneRanger.Rmd
-    - qmds/YieldCurve.qmd
+#    - qmds/YieldCurve.qmd
 #    - qmds/quantmod.qmd
 #    - qmds/datatable.qmd
 
