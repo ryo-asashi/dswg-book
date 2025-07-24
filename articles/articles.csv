@@ -1,10 +1,32 @@
 package,keywords
-actuar,確率分布 損害保険 損害額分布
-aglm,予測モデリング AGLM
-ALEPlot,モデル解釈 ALE
-C50,予測モデリング 分類木
+actuar,確率分布/保険数理/損害保険/損害額分布
+aglm,予測モデリング/AGLM
+ALEPlot,モデル解釈/ALE
+C50,予測モデリング/決定木
 class,予測モデリング
 corrplot,可視化
-DALEX,モデル解釈 IML
-distr,確率分布 確率変数
-distEx,確率分布 確率変数
+DALEX,モデル解釈/IML
+distr,確率分布/確率変数
+distEx,確率分布/確率変数
+dplyr,データ処理
+e1071,予測モデリング/SVM/サポートベクトルマシン
+forcats,データ処理/質的変数
+gghighlight,可視化
+igraph,グラフ理論
+iml,モデル解釈
+lifecontingencies,保険数理/生命保険
+makedummies,データ処理/ダミー変数
+mlbench,データセット
+palmerpenguins,データセット
+partykit,可視化/決定木
+pdp,モデル解釈/PDP/部分依存図
+pROC,評価指標/ROC
+psych,可視化/心理統計
+randomForest,予測モデリング/ランダムフォレスト
+ranger,予測モデリング/ランダムフォレスト/C++
+rpart,予測モデリング/決定木
+rsample,データ処理/リサンプリング/交差検証
+shapviz,可視化/モデル解釈/SHAP
+skimr,データ処理/要約
+survival,生存時間解析
+tuneRanger,予測モデリング/チューニング
