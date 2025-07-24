@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
+<meta name="dcterms.date" content="2025-07-24">
 
-<title>Rパッケージ活用事例集</title>
+<title>25&nbsp; purrr – Rパッケージ活用事例集</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,31 +22,67 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./articles/actuar.html" rel="next">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-1a431d08dc38a67a43972170746f6e10.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../articles/randomForest.html" rel="next">
+<link href="../articles/psych.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-1a431d08dc38a67a43972170746f6e10.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -248,7 +285,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">はじめに</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/purrr.html"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">purrr</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -263,7 +300,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Rパッケージ活用事例集</a> 
+      <a href="../">Rパッケージ活用事例集</a> 
         <div class="sidebar-tools-main">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -278,205 +315,205 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">はじめに</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/actuar.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/actuar.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">actuar</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/aglm.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/aglm.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">aglm</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/ALEPlot.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/ALEPlot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ALEPlot</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/C50.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/C50.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">C50</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/class.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/class.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">class</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/corrplot.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/corrplot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">corrplot</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/crosstable.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/crosstable.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">crosstable</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/DALEX.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/DALEX.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">DALEX</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/distr.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/distr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">distr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/distrEx.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/distrEx.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">distrEx</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/dplyr.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/dplyr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">dplyr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/e1071.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/e1071.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">e1071</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/forcats.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/forcats.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">forcats</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/gghighlight.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/gghighlight.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">gghighlight</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/igraph.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/igraph.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">igraph</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/iml.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/iml.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">iml</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/lifecontingencies.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/lifecontingencies.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">lifecontingencies</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/makedummies.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/makedummies.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">makedummies</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/mlbench.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/mlbench.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">mlbench</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/palmerpenguins.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/palmerpenguins.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">palmerpenguins</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/partykit.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/partykit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">partykit</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/pdp.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/pdp.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">pdp</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/pROC.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/pROC.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">pROC</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/psych.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/psych.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">psych</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/purrr.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/purrr.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">purrr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/randomForest.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/randomForest.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">randomForest</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/ranger.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/ranger.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">ranger</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/rpart.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/rpart.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">rpart</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/rsample.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/rsample.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">rsample</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/shapviz.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/shapviz.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">shapviz</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/skimr.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/skimr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">skimr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/survival.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/survival.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">survival</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/tuneRanger.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/tuneRanger.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">tuneRanger</span></span></a>
   </div>
 </li>
@@ -490,7 +527,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#はじめに" id="toc-はじめに" class="nav-link active" data-scroll-target="#はじめに">はじめに</a></li>
+  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">25.0.1</span> パッケージの概要</a></li>
+  <li><a href="#map関数" id="toc-map関数" class="nav-link" data-scroll-target="#map関数"><span class="header-section-number">25.0.2</span> map関数</a></li>
+  <li><a href="#map_dbl関数" id="toc-map_dbl関数" class="nav-link" data-scroll-target="#map_dbl関数"><span class="header-section-number">25.0.3</span> map_dbl関数</a></li>
+  <li><a href="#線形回帰モデルを実装する活用例" id="toc-線形回帰モデルを実装する活用例" class="nav-link" data-scroll-target="#線形回帰モデルを実装する活用例"><span class="header-section-number">25.0.4</span> 線形回帰モデルを実装する活用例</a></li>
   </ul>
 </nav>
     </div>
@@ -500,7 +540,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Rパッケージ活用事例集</h1>
+<h1 class="title"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">purrr</span></h1>
 </div>
 
 
@@ -514,6 +554,12 @@ ul.task-list li input[type="checkbox"] {
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 24, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -523,17 +569,284 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="はじめに" class="level1 unnumbered">
-<h1 class="unnumbered">はじめに</h1>
-<p>本ウェブサイトは、アクチュアリーの業務や研究に役立つRパッケージの情報を日本アクチュアリー会の会員に向けて広く提供することを目的として、データサイエンス関連基礎調査ワーキンググループが作成したものです。</p>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<section id="パッケージの概要" class="level3" data-number="25.0.1">
+<h3 data-number="25.0.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">25.0.1</span> パッケージの概要</h3>
+<p>purrrは、ベクトルやリストに対して関数を適用し、データの加工や操作を効果的に行うためのユーティリティ関数や操作を提供します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressMessages</span>(<span class="fu">require</span>(tidyverse))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(purrr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout-body-container">
-<p>本リポジトリ（<code>dswg-book</code>）は情報共有チーム内部で出力結果を事前に参照するために用意されたものであり、会員に直接参照されることを目的としたものではありません。</p>
+</section>
+<section id="map関数" class="level3" data-number="25.0.2">
+<h3 data-number="25.0.2" class="anchored" data-anchor-id="map関数"><span class="header-section-number">25.0.2</span> map関数</h3>
+<p>map関数はリストの各要素に対して、関数を適用した結果をリストに格納します 以下の例では、リストの各要素であるベクトルに対して、それぞれのベクトルの平均値を計算（meanを適用）します</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(x,mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 1.5
+
+[[2]]
+[1] 2
+
+[[3]]
+[1] 2.5</code></pre>
 </div>
+</div>
+<p>map関数はベクトルに対しても適用することが可能です。 その場合、関数の各要素に対して、単独で適用され、結果はリストに格納されます。 mean関数に適用した場合は、単純に各ベクトルの要素がリストの各要素に格納されるだけとなりますが、例えば、rnorm関数に適用すれば、ベクトルの要素の数だけ、rnorm関数を適用した結果をリストに格納することができます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(y, mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 1
+
+[[2]]
+[1] 2
+
+[[3]]
+[1] 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(y, rnorm, <span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] -0.6830353  1.1987389  1.0634702  1.6985892  0.3126189
+
+[[2]]
+[1] 2.3379429 1.5062996 1.5787680 0.8893996 2.6695193
+
+[[3]]
+[1] 4.196499 3.671695 3.644849 1.772778 2.548890</code></pre>
+</div>
+</div>
+</section>
+<section id="map_dbl関数" class="level3" data-number="25.0.3">
+<h3 data-number="25.0.3" class="anchored" data-anchor-id="map_dbl関数"><span class="header-section-number">25.0.3</span> map_dbl関数</h3>
+<p>map_dbl関数は、結果をリストではなく、数値ベクトルに格納します。 類似の関数として、map_int関数や、map_chr関数なども存在します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(z, mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3 4 5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>zclass <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(z, mean)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">typeof</span>(zclass)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "double"</code></pre>
+</div>
+</div>
+<p>map_dbl関数を利用する場合、関数を適用した結果は、それぞれの結果は1つの数値である必要があります。 例えば、map関数をrnorm関数に適用し、nを5とした場合、各リストに格納される結果は要素数が5のベクトルになるため、map_dbl関数ではエラーになります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(z, rnorm, <span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 1.7328735 2.4725877 0.4978602 2.2711195 2.1274198
+
+[[2]]
+[1] 1.723489 1.336135 3.385986 2.093522 2.310804
+
+[[3]]
+[1] 2.061896 3.616232 3.809971 3.284436 1.469127</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(z, rnorm, <span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `map_dbl()`:
+ℹ In index: 1.
+Caused by error:
+! Result must be length 1, not 5.</code></pre>
+</div>
+</div>
+<p>なお、map関数とmap_dbl関数を組み合わせることで、rnorm関数で生成した結果の平均値を1つの数値ベクトルに格納することができます</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>z <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(rnorm, <span class="at">n=</span><span class="dv">5</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dbl</span>(mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.813591 1.965680 3.189124</code></pre>
+</div>
+</div>
+</section>
+<section id="線形回帰モデルを実装する活用例" class="level3" data-number="25.0.4">
+<h3 data-number="25.0.4" class="anchored" data-anchor-id="線形回帰モデルを実装する活用例"><span class="header-section-number">25.0.4</span> 線形回帰モデルを実装する活用例</h3>
+<p>Rのデフォルトのデータセットであるmtcars（自動車の燃費などに関するデータセット）を用いた例について記載します。 車の燃費（mpg）と車の重量（wt）の関係について異なるシリンダー数（cyl）ごとに線形回帰モデルを適用し、各モデルの決定係数（R-squared）を取得する処理は、map関数、map_dbl関数を用いれば、以下のコードで実現可能です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(mtcars<span class="sc">$</span>cyl) <span class="sc">|&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="cf">function</span>(df) <span class="fu">lm</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> df)) <span class="sc">|&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(summary) <span class="sc">|&gt;</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dbl</span>(<span class="st">"r.squared"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        4         6         8 
+0.5086326 0.4645102 0.4229655 </code></pre>
+</div>
+</div>
+<p>複数のパイプ処理が連なっているため、各コードの実装結果を順番に確認します。 まず、以下のコードでは、mtcarsをシリンダー数（cyl）別に分解して、それぞれの結果をリストに格納しています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(mtcars<span class="sc">$</span>cyl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`4`
+                mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+Merc 240D      24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
+Merc 230       22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2
+Fiat 128       32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
+Honda Civic    30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+Toyota Corolla 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
+Toyota Corona  21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1
+Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+Porsche 914-2  26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
+Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
+Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
+
+$`6`
+                mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4      21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+Valiant        18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1
+Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
+Merc 280C      17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
+Ferrari Dino   19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+
+$`8`
+                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+Hornet Sportabout   18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
+Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
+Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3
+Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3
+Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3
+Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4
+Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4
+Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4
+Dodge Challenger    15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2
+AMC Javelin         15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2
+Camaro Z28          13.3   8 350.0 245 3.73 3.840 15.41  0  0    3    4
+Pontiac Firebird    19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
+Ford Pantera L      15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
+Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8</code></pre>
+</div>
+</div>
+<p>次に、以下のコードではmap関数を用いて、シリンダー数（cyl）別に分解したそれぞれのデータセットに対して、線形回帰モデルを作成し、結果をリストに格納しています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(mtcars<span class="sc">$</span>cyl)<span class="sc">|&gt;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="cf">function</span>(df) <span class="fu">lm</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> df)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`4`
+
+Call:
+lm(formula = mpg ~ wt, data = df)
+
+Coefficients:
+(Intercept)           wt  
+     39.571       -5.647  
+
+
+$`6`
+
+Call:
+lm(formula = mpg ~ wt, data = df)
+
+Coefficients:
+(Intercept)           wt  
+      28.41        -2.78  
+
+
+$`8`
+
+Call:
+lm(formula = mpg ~ wt, data = df)
+
+Coefficients:
+(Intercept)           wt  
+     23.868       -2.192  </code></pre>
+</div>
+</div>
+<p>以下のコードでは、シリンダー数（cyl）別に作成した線形回帰モデルのサマリーをリストに格納しています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(mtcars<span class="sc">$</span>cyl)<span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="cf">function</span>(df) <span class="fu">lm</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> df))  <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(summary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`4`
+
+Call:
+lm(formula = mpg ~ wt, data = df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.1513 -1.9795 -0.6272  1.9299  5.2523 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   39.571      4.347   9.104 7.77e-06 ***
+wt            -5.647      1.850  -3.052   0.0137 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.332 on 9 degrees of freedom
+Multiple R-squared:  0.5086,    Adjusted R-squared:  0.454 
+F-statistic: 9.316 on 1 and 9 DF,  p-value: 0.01374
+
+
+$`6`
+
+Call:
+lm(formula = mpg ~ wt, data = df)
+
+Residuals:
+     Mazda RX4  Mazda RX4 Wag Hornet 4 Drive        Valiant       Merc 280 
+       -0.1250         0.5840         1.9292        -0.6897         0.3547 
+     Merc 280C   Ferrari Dino 
+       -1.0453        -1.0080 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)   28.409      4.184   6.789  0.00105 **
+wt            -2.780      1.335  -2.083  0.09176 . 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.165 on 5 degrees of freedom
+Multiple R-squared:  0.4645,    Adjusted R-squared:  0.3574 
+F-statistic: 4.337 on 1 and 5 DF,  p-value: 0.09176
+
+
+$`8`
+
+Call:
+lm(formula = mpg ~ wt, data = df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.1491 -1.4664 -0.8458  1.5711  3.7619 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  23.8680     3.0055   7.942 4.05e-06 ***
+wt           -2.1924     0.7392  -2.966   0.0118 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.024 on 12 degrees of freedom
+Multiple R-squared:  0.423, Adjusted R-squared:  0.3749 
+F-statistic: 8.796 on 1 and 12 DF,  p-value: 0.01179</code></pre>
+</div>
+</div>
+<p>最後に、以下のコードでシリンダー数（cyl）別に作成した線形回帰モデルのサマリーのうち、決定係数のみを取得し、結果を数値ベクトルに格納しています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(mtcars<span class="sc">$</span>cyl) <span class="sc">|&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="cf">function</span>(df) <span class="fu">lm</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> df)) <span class="sc">|&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(summary) <span class="sc">|&gt;</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dbl</span>(<span class="st">"r.squared"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        4         6         8 
+0.5086326 0.4645102 0.4229655 </code></pre>
 </div>
 </div>
 
@@ -955,10 +1268,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="../articles/psych.html" class="pagination-link" aria-label="psych">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">psych</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./articles/actuar.html" class="pagination-link" aria-label="actuar">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">actuar</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../articles/randomForest.html" class="pagination-link" aria-label="randomForest">
+        <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">randomForest</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

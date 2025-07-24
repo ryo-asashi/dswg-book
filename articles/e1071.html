@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
+<meta name="dcterms.date" content="2025-07-24">
 
-<title>Rパッケージ活用事例集</title>
+<title>12&nbsp; e1071 – Rパッケージ活用事例集</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,31 +22,67 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./articles/actuar.html" rel="next">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-1a431d08dc38a67a43972170746f6e10.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../articles/forcats.html" rel="next">
+<link href="../articles/dplyr.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-1a431d08dc38a67a43972170746f6e10.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -248,7 +285,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">はじめに</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/e1071.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">e1071</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -263,7 +300,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Rパッケージ活用事例集</a> 
+      <a href="../">Rパッケージ活用事例集</a> 
         <div class="sidebar-tools-main">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -278,205 +315,205 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">はじめに</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/actuar.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/actuar.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">actuar</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/aglm.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/aglm.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">aglm</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/ALEPlot.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/ALEPlot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ALEPlot</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/C50.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/C50.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">C50</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/class.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/class.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">class</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/corrplot.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/corrplot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">corrplot</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/crosstable.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/crosstable.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">crosstable</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/DALEX.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/DALEX.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">DALEX</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/distr.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/distr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">distr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/distrEx.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/distrEx.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">distrEx</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/dplyr.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/dplyr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">dplyr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/e1071.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/e1071.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">e1071</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/forcats.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/forcats.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">forcats</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/gghighlight.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/gghighlight.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">gghighlight</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/igraph.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/igraph.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">igraph</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/iml.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/iml.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">iml</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/lifecontingencies.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/lifecontingencies.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">lifecontingencies</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/makedummies.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/makedummies.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">makedummies</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/mlbench.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/mlbench.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">mlbench</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/palmerpenguins.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/palmerpenguins.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">palmerpenguins</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/partykit.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/partykit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">partykit</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/pdp.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/pdp.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">pdp</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/pROC.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/pROC.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">pROC</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/psych.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/psych.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">psych</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/purrr.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/purrr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">purrr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/randomForest.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/randomForest.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">randomForest</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/ranger.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/ranger.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">ranger</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/rpart.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/rpart.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">rpart</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/rsample.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/rsample.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">rsample</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/shapviz.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/shapviz.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">shapviz</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/skimr.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/skimr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">skimr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/survival.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/survival.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">survival</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/tuneRanger.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/tuneRanger.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">tuneRanger</span></span></a>
   </div>
 </li>
@@ -490,7 +527,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#はじめに" id="toc-はじめに" class="nav-link active" data-scroll-target="#はじめに">はじめに</a></li>
+  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">12.1</span> パッケージの概要</a></li>
+  <li><a href="#サポートベクトルマシンの実装例" id="toc-サポートベクトルマシンの実装例" class="nav-link" data-scroll-target="#サポートベクトルマシンの実装例"><span class="header-section-number">12.2</span> サポートベクトルマシンの実装例</a>
+  <ul class="collapse">
+  <li><a href="#テストデータと訓練データの分割" id="toc-テストデータと訓練データの分割" class="nav-link" data-scroll-target="#テストデータと訓練データの分割"><span class="header-section-number">12.2.1</span> テストデータと訓練データの分割</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -500,7 +541,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Rパッケージ活用事例集</h1>
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">e1071</span></h1>
 </div>
 
 
@@ -514,6 +555,12 @@ ul.task-list li input[type="checkbox"] {
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 24, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -523,21 +570,264 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="はじめに" class="level1 unnumbered">
-<h1 class="unnumbered">はじめに</h1>
-<p>本ウェブサイトは、アクチュアリーの業務や研究に役立つRパッケージの情報を日本アクチュアリー会の会員に向けて広く提供することを目的として、データサイエンス関連基礎調査ワーキンググループが作成したものです。</p>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<section id="パッケージの概要" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">12.1</span> パッケージの概要</h2>
+<p>Rのパッケージe1071は、サポートベクトルマシン（Support Vector Machines）やカーネル法に関連する機械学習アルゴリズムやツールを提供するパッケージです。サポートベクトルマシンを実装するためのsvm()関数は、サポートベクトルマシンに特化したC++ライブラリであるlibsvmの機能を利用しています。</p>
+<p>本コード活用例では、iris（アイリスの花の種類ごとに測定された花弁などの長さ・幅のデータ）を用いて、サポートベクトルマシンを実装します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(iris)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">attach</span>(iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout-body-container">
-<p>本リポジトリ（<code>dswg-book</code>）は情報共有チーム内部で出力結果を事前に参照するために用意されたものであり、会員に直接参照されることを目的としたものではありません。</p>
+</section>
+<section id="サポートベクトルマシンの実装例" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="サポートベクトルマシンの実装例"><span class="header-section-number">12.2</span> サポートベクトルマシンの実装例</h2>
+<p>e1071パッケージでサポートベクトルマシンを実装する際は、svm関数を利用します。</p>
+<p>以下のコードで、iris（アヤメの花ごとの種類、花弁などの長さ・幅のデータ）のSpecies（種類）を目的変数、Species以外を説明変数として、サポートベクトルマシンを作成し、print(model)で、モデルのParametersなどを出力します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">subset</span>(iris, <span class="at">select =</span> <span class="sc">-</span>Species)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> Species</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">svm</span>(x, y)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+svm.default(x = x, y = y)
+
+
+Parameters:
+   SVM-Type:  C-classification 
+ SVM-Kernel:  radial 
+       cost:  1 
+
+Number of Support Vectors:  51</code></pre>
 </div>
+</div>
+<p>print(model)の出力結果のうち、Parametersに記載されている「SVM-Type」は、サポートベクトルマシンの種類を示しており、「SVM-Kernel」はカーネル関数の種類を示しています。</p>
+<p>svm関数で利用可能なサポートベクトルマシンの種類およびカーネル関数の種類は以下の通りです。詳細については、リンク先を参照してください。</p>
+<p>なお、e1071パッケージで利用可能なカーネル関数は下表の4種類のみです。kernlabパッケージでは、カーネル関数を自作するなど、e1071パッケージよりも柔軟にカーネル関数を設定可能です。</p>
+<p><a href="https://cran.r-project.org/web/packages/e1071/vignettes/svmdoc.pdf" class="uri">https://cran.r-project.org/web/packages/e1071/vignettes/svmdoc.pdf</a></p>
+<p>＜サポートベクトルマシンの種類＞</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>区分</th>
+<th>種類</th>
+<th>パラメータ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>分類</td>
+<td>C-classification</td>
+<td>cost</td>
+</tr>
+<tr class="even">
+<td>分類</td>
+<td>nu-classification</td>
+<td>nu</td>
+</tr>
+<tr class="odd">
+<td>分類</td>
+<td>one-classification</td>
+<td>nu</td>
+</tr>
+<tr class="even">
+<td>回帰</td>
+<td>eps-regression</td>
+<td>cost, epsilon</td>
+</tr>
+<tr class="odd">
+<td>回帰</td>
+<td>nu-regression</td>
+<td>cost, nu</td>
+</tr>
+</tbody>
+</table>
+<p>＜カーネル関数の種類＞</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>種類</th>
+<th>パラメータ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>linear</td>
+<td>なし</td>
+</tr>
+<tr class="even">
+<td>polynomial</td>
+<td>gamma, degree, coef0</td>
+</tr>
+<tr class="odd">
+<td>radial</td>
+<td>gamma</td>
+</tr>
+<tr class="even">
+<td>sigmoid</td>
+<td>coef0</td>
+</tr>
+</tbody>
+</table>
+<section id="テストデータと訓練データの分割" class="level3" data-number="12.2.1">
+<h3 data-number="12.2.1" class="anchored" data-anchor-id="テストデータと訓練データの分割"><span class="header-section-number">12.2.1</span> テストデータと訓練データの分割</h3>
+<p>本項では、irisをテストデータと訓練データに分割し、訓練データを用いて、先ほどと同じようにサポートベクトルマシンを作成します。</p>
+<p>print(model)の出力結果の通り、サポートベクトルマシンの種類は”C-classification”,カーネル関数は”radial”です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>index<span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(iris)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>N<span class="ot">&lt;-</span><span class="fu">trunc</span>(<span class="fu">length</span>(index)<span class="sc">/</span><span class="dv">3</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>testindex<span class="ot">&lt;-</span><span class="fu">sample</span>(index, N)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>testset<span class="ot">&lt;-</span>iris[testindex,]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>trainset<span class="ot">&lt;-</span>iris[<span class="sc">-</span>testindex,]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">subset</span>(trainset, <span class="at">select =</span> <span class="sc">-</span>Species)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> trainset<span class="sc">$</span>Species</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">svm</span>(x, y)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+svm.default(x = x, y = y)
+
+
+Parameters:
+   SVM-Type:  C-classification 
+ SVM-Kernel:  radial 
+       cost:  1 
+
+Number of Support Vectors:  41</code></pre>
+</div>
+</div>
+<section id="結果の確認" class="level4" data-number="12.2.1.1">
+<h4 data-number="12.2.1.1" class="anchored" data-anchor-id="結果の確認"><span class="header-section-number">12.2.1.1</span> 結果の確認</h4>
+<p>テストデータを対象に、モデルによって予測した結果と正解データを比較すると、ほとんどのデータで品種を正しく予測していることが確認できます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>svm.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, testset[, <span class="sc">-</span><span class="dv">5</span>])</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="at">pred =</span> svm.pred, <span class="at">true =</span> testset[, <span class="dv">5</span>] )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            true
+pred         setosa versicolor virginica
+  setosa         18          0         0
+  versicolor      0         15         1
+  virginica       0          2        14</code></pre>
+</div>
+</div>
+</section>
+<section id="パラメータのチューニング" class="level4" data-number="12.2.1.2">
+<h4 data-number="12.2.1.2" class="anchored" data-anchor-id="パラメータのチューニング"><span class="header-section-number">12.2.1.2</span> パラメータのチューニング</h4>
+<p>最後に、パラメータのチューニングに利用するtune関数を紹介します。先ほど作成したmodelでチューニング可能なパラメータは”cost”(サポートベクトルマシン”C-classification”のパラメータ)と”gamma”（カーネル関数”radial”のパラメータ）の2つです。</p>
+<p>以下のコードでは、rangesで指定したパラメータの組み合わせを対象にモデルのチューニングを行います。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>svm.tune <span class="ot">&lt;-</span> <span class="fu">tune</span>(svm, Species<span class="sc">~</span>., <span class="at">data =</span> iris,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">ranges =</span> <span class="fu">list</span>(<span class="at">gamma =</span> <span class="dv">2</span><span class="sc">^</span>(<span class="sc">-</span><span class="dv">6</span><span class="sc">:</span><span class="dv">2</span>), <span class="at">cost =</span> <span class="dv">2</span><span class="sc">^</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">10</span>)),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">tunecontrol =</span> <span class="fu">tune.control</span>(<span class="at">sampling =</span> <span class="st">"fix"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>summary関数を利用することで、最も良いパフォーマンスとなったパラメータの組み合わせや、パラメータの各組み合わせのパフォーマンスを確認することができます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(svm.tune)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Parameter tuning of 'svm':
+
+- sampling method: fixed training/validation set 
+
+- best parameters:
+  gamma cost
+ 0.0625    8
+
+- best performance: 0.02 
+
+- Detailed performance results:
+      gamma cost error dispersion
+1  0.015625    4  0.10         NA
+2  0.031250    4  0.08         NA
+3  0.062500    4  0.06         NA
+4  0.125000    4  0.04         NA
+5  0.250000    4  0.08         NA
+6  0.500000    4  0.08         NA
+7  1.000000    4  0.08         NA
+8  2.000000    4  0.08         NA
+9  4.000000    4  0.08         NA
+10 0.015625    8  0.08         NA
+11 0.031250    8  0.06         NA
+12 0.062500    8  0.02         NA
+13 0.125000    8  0.04         NA
+14 0.250000    8  0.08         NA
+15 0.500000    8  0.08         NA
+16 1.000000    8  0.10         NA
+17 2.000000    8  0.08         NA
+18 4.000000    8  0.08         NA
+19 0.015625   16  0.04         NA
+20 0.031250   16  0.02         NA
+21 0.062500   16  0.02         NA
+22 0.125000   16  0.06         NA
+23 0.250000   16  0.08         NA
+24 0.500000   16  0.10         NA
+25 1.000000   16  0.10         NA
+26 2.000000   16  0.08         NA
+27 4.000000   16  0.08         NA
+28 0.015625   32  0.02         NA
+29 0.031250   32  0.02         NA
+30 0.062500   32  0.06         NA
+31 0.125000   32  0.06         NA
+32 0.250000   32  0.10         NA
+33 0.500000   32  0.10         NA
+34 1.000000   32  0.10         NA
+35 2.000000   32  0.08         NA
+36 4.000000   32  0.08         NA
+37 0.015625   64  0.02         NA
+38 0.031250   64  0.06         NA
+39 0.062500   64  0.06         NA
+40 0.125000   64  0.08         NA
+41 0.250000   64  0.10         NA
+42 0.500000   64  0.10         NA
+43 1.000000   64  0.10         NA
+44 2.000000   64  0.08         NA
+45 4.000000   64  0.08         NA
+46 0.015625  128  0.06         NA
+47 0.031250  128  0.06         NA
+48 0.062500  128  0.08         NA
+49 0.125000  128  0.12         NA
+50 0.250000  128  0.10         NA
+51 0.500000  128  0.10         NA
+52 1.000000  128  0.10         NA
+53 2.000000  128  0.08         NA
+54 4.000000  128  0.08         NA
+55 0.015625  256  0.04         NA
+56 0.031250  256  0.08         NA
+57 0.062500  256  0.12         NA
+58 0.125000  256  0.12         NA
+59 0.250000  256  0.10         NA
+60 0.500000  256  0.10         NA
+61 1.000000  256  0.10         NA
+62 2.000000  256  0.08         NA
+63 4.000000  256  0.08         NA
+64 0.015625  512  0.08         NA
+65 0.031250  512  0.08         NA
+66 0.062500  512  0.12         NA
+67 0.125000  512  0.12         NA
+68 0.250000  512  0.10         NA
+69 0.500000  512  0.10         NA
+70 1.000000  512  0.10         NA
+71 2.000000  512  0.08         NA
+72 4.000000  512  0.08         NA
+73 0.015625 1024  0.08         NA
+74 0.031250 1024  0.12         NA
+75 0.062500 1024  0.12         NA
+76 0.125000 1024  0.12         NA
+77 0.250000 1024  0.10         NA
+78 0.500000 1024  0.10         NA
+79 1.000000 1024  0.10         NA
+80 2.000000 1024  0.08         NA
+81 4.000000 1024  0.08         NA</code></pre>
 </div>
 </div>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -955,10 +1245,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="../articles/dplyr.html" class="pagination-link" aria-label="dplyr">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">dplyr</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./articles/actuar.html" class="pagination-link" aria-label="actuar">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">actuar</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../articles/forcats.html" class="pagination-link" aria-label="forcats">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">forcats</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

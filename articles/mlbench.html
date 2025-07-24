@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja"><head>
 
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.7.32">
@@ -8,7 +8,7 @@
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
 
-<title>Rパッケージ活用事例集</title>
+<title>19&nbsp; mlbench – Rパッケージ活用事例集</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,31 +21,67 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./articles/actuar.html" rel="next">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-1a431d08dc38a67a43972170746f6e10.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../articles/palmerpenguins.html" rel="next">
+<link href="../articles/makedummies.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-1a431d08dc38a67a43972170746f6e10.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -60,17 +96,17 @@ ul.task-list li input[type="checkbox"] {
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
+    "search-no-results-text": "一致なし",
+    "search-matching-documents-text": "一致した文書",
+    "search-copy-link-title": "検索へのリンクをコピー",
+    "search-hide-matches-text": "追加の検索結果を非表示",
+    "search-more-match-text": "追加の検索結果",
+    "search-more-matches-text": "追加の検索結果",
+    "search-clear-button-title": "消去",
     "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-detached-cancel-button-title": "取消",
+    "search-submit-button-title": "検索",
+    "search-label": "サーチ"
   }
 }</script>
 
@@ -245,13 +281,13 @@ ul.task-list li input[type="checkbox"] {
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="サイドバーを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">はじめに</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/mlbench.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">mlbench</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="サイドバーを切り替える" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="サーチ" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -263,220 +299,220 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Rパッケージ活用事例集</a> 
+      <a href="../">Rパッケージ活用事例集</a> 
         <div class="sidebar-tools-main">
-  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="ダークモードの切り替え"><i class="bi"></i></a>
 </div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
+        <div id="quarto-search" class="" title="サーチ"></div>
         </div>
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">はじめに</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/actuar.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/actuar.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">actuar</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/aglm.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/aglm.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">aglm</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/ALEPlot.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/ALEPlot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ALEPlot</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/C50.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/C50.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">C50</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/class.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/class.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">class</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/corrplot.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/corrplot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">corrplot</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/crosstable.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/crosstable.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">crosstable</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/DALEX.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/DALEX.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">DALEX</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/distr.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/distr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">distr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/distrEx.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/distrEx.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">distrEx</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/dplyr.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/dplyr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">dplyr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/e1071.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/e1071.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">e1071</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/forcats.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/forcats.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">forcats</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/gghighlight.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/gghighlight.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">gghighlight</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/igraph.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/igraph.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">igraph</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/iml.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/iml.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">iml</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/lifecontingencies.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/lifecontingencies.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">lifecontingencies</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/makedummies.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/makedummies.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">makedummies</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/mlbench.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/mlbench.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">mlbench</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/palmerpenguins.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/palmerpenguins.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">palmerpenguins</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/partykit.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/partykit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">partykit</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/pdp.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/pdp.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">pdp</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/pROC.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/pROC.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">pROC</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/psych.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/psych.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">psych</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/purrr.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/purrr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">purrr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/randomForest.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/randomForest.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">randomForest</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/ranger.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/ranger.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">ranger</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/rpart.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/rpart.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">rpart</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/rsample.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/rsample.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">rsample</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/shapviz.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/shapviz.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">shapviz</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/skimr.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/skimr.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">skimr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/survival.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/survival.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">survival</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./articles/tuneRanger.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/tuneRanger.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">tuneRanger</span></span></a>
   </div>
 </li>
@@ -487,10 +523,16 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
+    <h2 id="toc-title">目次</h2>
    
   <ul>
-  <li><a href="#はじめに" id="toc-はじめに" class="nav-link active" data-scroll-target="#はじめに">はじめに</a></li>
+  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">19.1</span> パッケージの概要</a></li>
+  <li><a href="#パッケージの使用例" id="toc-パッケージの使用例" class="nav-link" data-scroll-target="#パッケージの使用例"><span class="header-section-number">19.2</span> パッケージの使用例</a>
+  <ul class="collapse">
+  <li><a href="#データセット" id="toc-データセット" class="nav-link" data-scroll-target="#データセット"><span class="header-section-number">19.2.1</span> データセット</a></li>
+  <li><a href="#データ生成関数" id="toc-データ生成関数" class="nav-link" data-scroll-target="#データ生成関数"><span class="header-section-number">19.2.2</span> データ生成関数</a></li>
+  </ul></li>
+  <li><a href="#参考資料" id="toc-参考資料" class="nav-link" data-scroll-target="#参考資料"><span class="header-section-number">19.3</span> 参考資料</a></li>
   </ul>
 </nav>
     </div>
@@ -500,7 +542,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Rパッケージ活用事例集</h1>
+<h1 class="title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">mlbench</span></h1>
 </div>
 
 
@@ -508,12 +550,18 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta">
 
     <div>
-    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-heading">作者</div>
     <div class="quarto-title-meta-contents">
              <p>データサイエンス関連基礎調査WG </p>
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">公開</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">2025年7月24日</p>
+    </div>
+  </div>
   
     
   </div>
@@ -523,19 +571,300 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="はじめに" class="level1 unnumbered">
-<h1 class="unnumbered">はじめに</h1>
-<p>本ウェブサイトは、アクチュアリーの業務や研究に役立つRパッケージの情報を日本アクチュアリー会の会員に向けて広く提供することを目的として、データサイエンス関連基礎調査ワーキンググループが作成したものです。</p>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<section id="パッケージの概要" class="level2" data-number="19.1">
+<h2 data-number="19.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">19.1</span> パッケージの概要</h2>
+<p>mlbenchには、機械学習モデルの性能を比較・評価するベンチマーク課題用のデータセット、およびデータを生成するための関数が用意されています。</p>
+<p>データセットは、例えばBostonHousing等の有名なデータセットや、UCIリポジトリ[1] (カリフォルニア大学アーバイン校が公開している機械学習データセットリポジトリ)の一部のデータセット等が含まれています。<br>
+また、ベンチマーク課題用のテストデータを生成する関数には、例えば複数クラスの2次元正規分布を生成するmlbench.2dnormals関数や、螺旋データを生成するmlbench.spiral関数等、様々な種類の関数が用意されています。</p>
+<p>なお、mlbenchに用意されているこれらのデータ生成用の関数は、mlbench.[データを示す名称]という形式の関数名になっています。一方、mlbenchに格納されているデータセットそのものは、BostonHousingやZooのように、mlbench.がついておらず大文字から始まる名称なので、データセットとデータ生成関数は名前で区別することができます。</p>
+</section>
+<section id="パッケージの使用例" class="level2" data-number="19.2">
+<h2 data-number="19.2" class="anchored" data-anchor-id="パッケージの使用例"><span class="header-section-number">19.2</span> パッケージの使用例</h2>
+<section id="データセット" class="level3" data-number="19.2.1">
+<h3 data-number="19.2.1" class="anchored" data-anchor-id="データセット"><span class="header-section-number">19.2.1</span> データセット</h3>
+<p>mlbenchには、様々なベンチマーク課題用のデータセットが用意されています。 データセットは以下のように、データセット名を指定してdata.frameとしてロードすることができます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlbench)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"BostonHousing"</span>, <span class="at">package =</span> <span class="st">"mlbench"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(BostonHousing)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   506 obs. of  14 variables:
+ $ crim   : num  0.00632 0.02731 0.02729 0.03237 0.06905 ...
+ $ zn     : num  18 0 0 0 0 0 12.5 12.5 12.5 12.5 ...
+ $ indus  : num  2.31 7.07 7.07 2.18 2.18 2.18 7.87 7.87 7.87 7.87 ...
+ $ chas   : Factor w/ 2 levels "0","1": 1 1 1 1 1 1 1 1 1 1 ...
+ $ nox    : num  0.538 0.469 0.469 0.458 0.458 0.458 0.524 0.524 0.524 0.524 ...
+ $ rm     : num  6.58 6.42 7.18 7 7.15 ...
+ $ age    : num  65.2 78.9 61.1 45.8 54.2 58.7 66.6 96.1 100 85.9 ...
+ $ dis    : num  4.09 4.97 4.97 6.06 6.06 ...
+ $ rad    : num  1 2 2 3 3 3 5 5 5 5 ...
+ $ tax    : num  296 242 242 222 222 222 311 311 311 311 ...
+ $ ptratio: num  15.3 17.8 17.8 18.7 18.7 18.7 15.2 15.2 15.2 15.2 ...
+ $ b      : num  397 397 393 395 397 ...
+ $ lstat  : num  4.98 9.14 4.03 2.94 5.33 ...
+ $ medv   : num  24 21.6 34.7 33.4 36.2 28.7 22.9 27.1 16.5 18.9 ...</code></pre>
 </div>
-<div class="callout-body-container">
-<p>本リポジトリ（<code>dswg-book</code>）は情報共有チーム内部で出力結果を事前に参照するために用意されたものであり、会員に直接参照されることを目的としたものではありません。</p>
+</div>
+<p>以下は格納されているデータセットの一覧です。(バージョン2.1.5時点です。)<br>
+クラス分類用のデータや回帰用のデータ、特徴量が連続変数のデータやカテゴリ変数のデータ、クラスに偏りがあるデータなど、様々な種類の機械学習のベンチマーク課題に使用できるようなデータが格納されています。 各データのカラムやデータソース等の詳細は、mlbenchのリファレンスをご参照ください。</p>
+<div id="tbl-1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+表&nbsp;19.1
+</figcaption>
+<div aria-describedby="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 32%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">データセット名</th>
+<th style="text-align: left;">概要</th>
+<th style="text-align: left;">課題の種別</th>
+<th style="text-align: right;">レコード数</th>
+<th style="text-align: right;">カラム数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">BostonHousing</td>
+<td style="text-align: left;">1970年調査によるボストン506区画の住宅価格データ</td>
+<td style="text-align: left;">回帰</td>
+<td style="text-align: right;">506</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BreastCancer</td>
+<td style="text-align: left;">乳がんの事例に関するデータから良性／悪性に分類</td>
+<td style="text-align: left;">2クラス分類</td>
+<td style="text-align: right;">699</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">DNA</td>
+<td style="text-align: left;">DNAのスプライス・ジャンクションの塩基配列データを、エクソン-イントロン／イントロン―エクソン／それ以外に分類</td>
+<td style="text-align: left;">多クラス分類</td>
+<td style="text-align: right;">3,186</td>
+<td style="text-align: right;">181</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Glass</td>
+<td style="text-align: left;">7種類のガラスに対する化学分析のデータ</td>
+<td style="text-align: left;">多クラス分類</td>
+<td style="text-align: right;">214</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HouseVotes84</td>
+<td style="text-align: left;">1984年のアメリカ合衆国議会の16の投票記録から民主党／共和党を分類</td>
+<td style="text-align: left;">2クラス分類</td>
+<td style="text-align: right;">435</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ionosphere</td>
+<td style="text-align: left;">電離層のレーダー・リターンデータをgood／badに分類</td>
+<td style="text-align: left;">2クラス分類</td>
+<td style="text-align: right;">351</td>
+<td style="text-align: right;">35</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LetterRecognition</td>
+<td style="text-align: left;">アルファベットの画像から計算された特徴量をもとにA-Zを分類</td>
+<td style="text-align: left;">多クラス分類</td>
+<td style="text-align: right;">20,000</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ozone</td>
+<td style="text-align: left;">1976年のロサンゼルスのオゾン汚染データ</td>
+<td style="text-align: left;">回帰</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PimaIndiansDiabetes</td>
+<td style="text-align: left;">ピマ・インディアン女性のデータから糖尿病発症あり／なしを分類</td>
+<td style="text-align: left;">2クラス分類</td>
+<td style="text-align: right;">768</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Satellite</td>
+<td style="text-align: left;">ランドサット衛星の衛星画像データを土壌、植生等のクラスに分類</td>
+<td style="text-align: left;">多クラス分類</td>
+<td style="text-align: right;">6,435</td>
+<td style="text-align: right;">37</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Servo</td>
+<td style="text-align: left;">サーボシステムの応答時間の予測課題(ただし、mlbenchでは応答時間が順序尺度に変換されている)</td>
+<td style="text-align: left;">多クラス分類</td>
+<td style="text-align: right;">167</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Shuttle</td>
+<td style="text-align: left;">スペースシャトルの飛行中の状態を7種類に分類</td>
+<td style="text-align: left;">多クラス分類</td>
+<td style="text-align: right;">58,000</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sonar</td>
+<td style="text-align: left;">ソナー信号が岩石からの反射か、金属円筒からの反射かを識別</td>
+<td style="text-align: left;">2クラス分類</td>
+<td style="text-align: right;">208</td>
+<td style="text-align: right;">61</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Soybean</td>
+<td style="text-align: left;">19クラスのダイズの病害を分類</td>
+<td style="text-align: left;">多クラス分類</td>
+<td style="text-align: right;">683</td>
+<td style="text-align: right;">36</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Vehicle</td>
+<td style="text-align: left;">車のシルエットに関する特徴量から4車種に分類</td>
+<td style="text-align: left;">多クラス分類</td>
+<td style="text-align: right;">846</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Vowel</td>
+<td style="text-align: left;">イギリス英語の11種類の母音を分類</td>
+<td style="text-align: left;">多クラス分類</td>
+<td style="text-align: right;">990</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Zoo</td>
+<td style="text-align: left;">毛の有無、羽の有無等、主に論理値の特徴量から動物の種類を分類</td>
+<td style="text-align: left;">多クラス分類</td>
+<td style="text-align: right;">101</td>
+<td style="text-align: right;">17</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="データ生成関数" class="level3" data-number="19.2.2">
+<h3 data-number="19.2.2" class="anchored" data-anchor-id="データ生成関数"><span class="header-section-number">19.2.2</span> データ生成関数</h3>
+<p>mlbenchには前項で紹介したデータセットに加え、ベンチマーク課題用のデータを自ら生成するための関数も用意されています。</p>
+<p>以下は、指定したクラス数のクラスごとに、2次元空間上で正規分布するデータを生成する、mlbench.2dnormalsの使用例です。 これらの生成関数によるデータは、R標準のS3 classという機能を用いて、as.data.frame関数とplot関数が適切に動作するように実装されています。 すなわち、List形式で返される生成データを引数として、as.data.frame関数によるデータフレームへ変換、およびplot関数による生成データの種類に応じたグラフのプロットができるようになっています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 乱数シードの設定</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2次元正規分布データの生成</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="do">## cl=2が2クラスを意味する</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="do">## デフォルトでは原点を中心に、半径r=(cl)^(1/2)の円上に各クラスの中心を配置する</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">mlbench.2dnormals</span>(<span class="at">n=</span><span class="dv">1000</span>, <span class="at">cl=</span><span class="dv">2</span>, <span class="at">sd=</span><span class="dv">1</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成したデータはmlbench.2dnormals classのList形式</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(p)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 2
+ $ x      : num [1:1000, 1:2] 0.3981 0.0063 2.0268 -0.2489 -0.5092 ...
+ $ classes: Factor w/ 2 levels "1","2": 1 1 1 2 1 2 2 2 1 1 ...
+ - attr(*, "class")= chr [1:2] "mlbench.2dnormals" "mlbench"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data.frameへの変換</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">as.data.frame</span>(p))</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   1000 obs. of  3 variables:
+ $ x.1    : num  0.3981 0.0063 2.0268 -0.2489 -0.5092 ...
+ $ x.2    : num  0.179 0.6927 0.0979 -0.3729 2.1204 ...
+ $ classes: Factor w/ 2 levels "1","2": 1 1 1 2 1 2 2 2 1 1 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mlbench.2dnormals classのplot</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p)</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mlbench_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
 </div>
+<p>さらに、mlbenchの生成データに対して適用可能なベイズ識別器、bayesclass関数が用意されています。内部的には、引数として渡す生成データの種類によって、適切な識別関数の実装が呼び出されています。</p>
+<p>以下は、mlbench.2dnormalsで生成した2クラス分類用のデータ対する、bayesclass関数による分類結果をプロットしています。 mlbench.2dnormalsの生成データの場合、いずれのクラスも同分散の2次元正規分布に従うため、個々のデータは、各クラスの正規分布の中心(期待値)のうち、最も距離の近い中心を持つクラスへと分類されることになります。 そのため、上のグラフで示した真のクラスと、下図の分類結果とを比較すると、グラフ中央付近の両クラスのデータが重なる領域では、誤分類が発生していることがわかります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(p<span class="sc">$</span>x, <span class="at">col=</span><span class="fu">as.numeric</span>(<span class="fu">bayesclass</span>(p)))</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mlbench_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>上で紹介したmlbench.2dnormals以外にも、mlbenchでは様々なデータ生成用の関数が用意されています。 以下ではいくつかの例をplotしています。 これらの例に挙げたもの以外を含む、関数の一覧や各関数の詳細については、mlbenchのリファレンスをご参照ください。</p>
+<section id="spiral" class="level5" data-number="19.2.2.0.1">
+<h5 data-number="19.2.2.0.1" class="anchored" data-anchor-id="spiral"><span class="header-section-number">19.2.2.0.1</span> Spiral</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">mlbench.spirals</span>(<span class="at">n=</span><span class="dv">200</span>, <span class="at">sd=</span><span class="fl">0.05</span>))</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mlbench_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="circle" class="level5" data-number="19.2.2.0.2">
+<h5 data-number="19.2.2.0.2" class="anchored" data-anchor-id="circle"><span class="header-section-number">19.2.2.0.2</span> Circle</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">mlbench.circle</span>(<span class="at">n=</span><span class="dv">1000</span>))</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mlbench_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="shapes" class="level5" data-number="19.2.2.0.3">
+<h5 data-number="19.2.2.0.3" class="anchored" data-anchor-id="shapes"><span class="header-section-number">19.2.2.0.3</span> Shapes</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">mlbench.shapes</span>(<span class="at">n=</span><span class="dv">1000</span>))</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mlbench_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="smiley" class="level5" data-number="19.2.2.0.4">
+<h5 data-number="19.2.2.0.4" class="anchored" data-anchor-id="smiley"><span class="header-section-number">19.2.2.0.4</span> Smiley</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">mlbench.smiley</span>(<span class="at">n=</span><span class="dv">1000</span>))</span></code><button title="コピー" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mlbench_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="参考資料" class="level2" data-number="19.3">
+<h2 data-number="19.3" class="anchored" data-anchor-id="参考資料"><span class="header-section-number">19.3</span> 参考資料</h2>
+<p>[1] <a href="https://archive.ics.uci.edu/">UC Irvine Machine Learning Repository</a>.</p>
 
 
 </section>
@@ -579,12 +908,12 @@ ul.task-list li input[type="checkbox"] {
       // flash "checked"
       button.classList.add('code-copy-button-checked');
       var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
+      button.setAttribute("title", "コピーしました");
       let tooltip;
       if (window.bootstrap) {
         button.setAttribute("data-bs-toggle", "tooltip");
         button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
+        button.setAttribute("data-bs-title", "コピーしました");
         tooltip = new bootstrap.Tooltip(button, 
           { trigger: "manual", 
             customClass: "code-copy-button-tooltip",
@@ -955,10 +1284,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="../articles/makedummies.html" class="pagination-link" aria-label="makedummies">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">makedummies</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./articles/actuar.html" class="pagination-link" aria-label="actuar">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">actuar</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../articles/palmerpenguins.html" class="pagination-link" aria-label="palmerpenguins">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">palmerpenguins</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
