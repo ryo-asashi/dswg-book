@@ -10,7 +10,7 @@ GitHub リポジトリ [dswg-book](https://github.com/ryo-asashi/dswg-book) は�
 pkgs <- read.csv("articles/articles.csv")
 getlink <- function(pkg) {
   root <- "https://ryo-asashi.github.io/dswg-book/articles/"
-  sprintf('<a href="%s%s.html" target="_blank">%s</a>', root, pkg, pkg)
+  sprintf('<a href="%s%s.html" target="_self">%s</a>', root, pkg, pkg)
 }
 pkgs[, 1] <- pkgs[, 1] |> sapply(getlink)
 
