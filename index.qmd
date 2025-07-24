@@ -18,6 +18,7 @@ library(DT)
 datatable(
   pkgs,
   options = list(searching = TRUE),
+  rownames = FALSE,
   escape = FALSE
 ) |> formatStyle(
   columns = names(pkgs),
