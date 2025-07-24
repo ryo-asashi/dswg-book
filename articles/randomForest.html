@@ -648,12 +648,12 @@ Call:
                      Number of trees: 500
 No. of variables tried at each split: 2
 
-        OOB estimate of  error rate: 4.67%
+        OOB estimate of  error rate: 4%
 Confusion matrix:
            setosa versicolor virginica class.error
 setosa         50          0         0        0.00
 versicolor      0         47         3        0.06
-virginica       0          4        46        0.08</code></pre>
+virginica       0          3        47        0.06</code></pre>
 </div>
 </div>
 <section id="重要度の確認" class="level4" data-number="26.3.3.1">
@@ -663,10 +663,10 @@ virginica       0          4        46        0.08</code></pre>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">importance</span>(iris.rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             MeanDecreaseGini
-Sepal.Length         8.988701
-Sepal.Width          2.043037
-Petal.Length        45.495357
-Petal.Width         42.756759</code></pre>
+Sepal.Length         9.921989
+Sepal.Width          2.404662
+Petal.Length        42.000763
+Petal.Width         44.914289</code></pre>
 </div>
 </div>
 </section>
