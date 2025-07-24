@@ -1,7 +1,26 @@
 # はじめに {.unnumbered}
 
-本ウェブサイトは、アクチュアリーの業務や研究に役立つRパッケージの情報を日本アクチュアリー会の会員に向けて広く提供することを目的として、データサイエンス関連基礎調査ワーキンググループが作成したものです。
+このウェブサイトは、アクチュアリーの業務や研究に役立つRパッケージの情報を日本アクチュアリー会の会員に向けて広く提供することを目的として、データサイエンス関連基礎調査部会の情報共有チームが作成したものです。
 
 ::: {.callout-note appearance="simple"}
-本リポジトリ（`dswg-book`）は情報共有チーム内部で出力結果を事前に参照するために用意されたものであり、会員に直接参照されることを目的としたものではありません。
+GitHub リポジトリ [dswg-book](https://github.com/ryo-asashi/dswg-book) は情報共有チーム内部で出力結果を事前に参照するために用意されたものであり、会員に直接参照されることを目的としたものではありません。
 :::
+
+```{r, echo = FALSE}
+pkgs <- read.csv("index-articles.csv")
+getlink <- function(pkg) {
+  root <- "https://ryo-asashi.github.io/dswg-book/articles/"
+  sprintf('<a href="%s%s.html" target="_blank">%s</a>', root, pkg, pkg)
+}
+pkgs[, 1] <- pkgs[, 1] |> sapply(getlink)
+
+library(DT)
+datatable(
+  pkgs,
+  options = list(searching = TRUE),
+  escape = FALSE
+) |> formatStyle(
+  columns = names(pkgs),
+  fontSize = "15px"
+)
+```
