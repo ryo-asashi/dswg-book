@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2025-07-24">
+<meta name="dcterms.date" content="2025-07-28">
 
 <title>31&nbsp; skimr – Rパッケージ活用事例集</title>
 <style>
@@ -528,9 +528,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">31.1</span> パッケージの概要</a></li>
-  <li><a href="#データフレームのスキミング" id="toc-データフレームのスキミング" class="nav-link" data-scroll-target="#データフレームのスキミング"><span class="header-section-number">31.2</span> データフレームのスキミング</a></li>
-  <li><a href="#グループ化されたデータフレームのスキミング" id="toc-グループ化されたデータフレームのスキミング" class="nav-link" data-scroll-target="#グループ化されたデータフレームのスキミング"><span class="header-section-number">31.3</span> グループ化されたデータフレームのスキミング</a></li>
-  <li><a href="#データフレーム以外のスキミング" id="toc-データフレーム以外のスキミング" class="nav-link" data-scroll-target="#データフレーム以外のスキミング"><span class="header-section-number">31.4</span> データフレーム以外のスキミング</a></li>
+  <li><a href="#データフレームを要約する" id="toc-データフレームを要約する" class="nav-link" data-scroll-target="#データフレームを要約する"><span class="header-section-number">31.2</span> データフレームを要約する</a>
+  <ul class="collapse">
+  <li><a href="#要約結果を加工抽出する" id="toc-要約結果を加工抽出する" class="nav-link" data-scroll-target="#要約結果を加工抽出する"><span class="header-section-number">31.2.1</span> 要約結果を加工・抽出する</a></li>
+  <li><a href="#グループ化されたデータフレームを要約する" id="toc-グループ化されたデータフレームを要約する" class="nav-link" data-scroll-target="#グループ化されたデータフレームを要約する"><span class="header-section-number">31.2.2</span> グループ化されたデータフレームを要約する</a></li>
+  <li><a href="#データフレーム以外のオブジェクトを要約する" id="toc-データフレーム以外のオブジェクトを要約する" class="nav-link" data-scroll-target="#データフレーム以外のオブジェクトを要約する"><span class="header-section-number">31.2.3</span> データフレーム以外のオブジェクトを要約する</a></li>
+  <li><a href="#要約関数を自作する" id="toc-要約関数を自作する" class="nav-link" data-scroll-target="#要約関数を自作する"><span class="header-section-number">31.2.4</span> 要約関数を自作する</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -557,7 +561,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 24, 2025</p>
+      <p class="date">July 28, 2025</p>
     </div>
   </div>
   
@@ -571,12 +575,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="パッケージの概要" class="level2" data-number="31.1">
 <h2 data-number="31.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">31.1</span> パッケージの概要</h2>
-<p>skimr は、data.frame、tibble、data.table などのデータフレーム形式のオブジェクトの特徴量ごとの要約を効果的に行うためにデザインされたパッケージです。R の標準関数である summary() をデータフレームに適用した場合よりも充実した要約を、特別なデータフレーム形式で出力することができ、要約結果の再利用やカスタマイズが簡単にできるように設計されています。</p>
-<p>なお、skimr パッケージの詳しい使い方については、 vignette（<a href="https://cran.r-project.org/web/packages/skimr/vignettes/skimr.html" class="uri">https://cran.r-project.org/web/packages/skimr/vignettes/skimr.html</a>）などもご参照ください。</p>
+<p><a href="https://cran.r-project.org/web/packages/skimr/"><strong>skimr</strong></a> パッケージはデータフレームの要約に特化したパッケージです。<code>skimr()</code> 関数を用いることで、R の標準関数である <code>summary()</code> よりも詳細かつ視認性の高い要約を得ることができます。</p>
 </section>
-<section id="データフレームのスキミング" class="level2" data-number="31.2">
-<h2 data-number="31.2" class="anchored" data-anchor-id="データフレームのスキミング"><span class="header-section-number">31.2</span> データフレームのスキミング</h2>
-<p>skim() 関数をデータフレームに適用すると、特徴量ごとに欠損値の数、numeric 型の平均、標準偏差、factor 型の最頻水準や水準の種類数などの要約が出力されます。特に、数値変数について簡易的なヒストグラムが出力される点が特徴的です。</p>
+<section id="データフレームを要約する" class="level2" data-number="31.2">
+<h2 data-number="31.2" class="anchored" data-anchor-id="データフレームを要約する"><span class="header-section-number">31.2</span> データフレームを要約する</h2>
+<p><code>skim()</code> 関数をデータフレームに適用すると、特徴量ごとに欠損値の数（n_missing）、非欠損値の割合（complete_rate）、数値型（numeric）の特徴量の平均および標準偏差、因子型（factor）の特徴量の最頻水準や水準数などの要約が出力されます。特に、数値変数について簡易的なヒストグラムが出力される点が特徴的です。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -740,59 +743,144 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 </div>
 </div>
-<p>skim() 関数の返り値は、skim_df オブジェクトという特別な名前の付いたデータフレームになっています。これにより、出力結果を、dplyr パッケージの関数などを使って直接加工することも可能です。</p>
+<section id="要約結果を加工抽出する" class="level3" data-number="31.2.1">
+<h3 data-number="31.2.1" class="anchored" data-anchor-id="要約結果を加工抽出する"><span class="header-section-number">31.2.1</span> 要約結果を加工・抽出する</h3>
+<p><code>skim()</code> 関数の返り値は、“skim_df” という特別なクラスを持つデータフレームです。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(iris_skim <span class="ot">&lt;-</span> <span class="fu">skim</span>(iris))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "skim_df"    "tbl_df"     "tbl"        "data.frame"</code></pre>
 </div>
 </div>
+<p><strong>skimr</strong> には “skim_df” オブジェクトを加工するための関数が用意されています。たとえば、<code>yank()</code> 関数を用いることで特定のデータ型（<code>skim_type</code>）に関する情報を取り出すことができます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># numeric 型の特徴量だけを抽出</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>iris_skim <span class="sc">%&gt;%</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(skim_type <span class="sc">==</span> <span class="st">"numeric"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(skim_variable, n_missing,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                numeric.hist, numeric.mean, numeric.sd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 5
-  skim_variable n_missing numeric.hist numeric.mean numeric.sd
-  &lt;chr&gt;             &lt;int&gt; &lt;chr&gt;               &lt;dbl&gt;      &lt;dbl&gt;
-1 Sepal.Length          0 ▆▇▇▅▂                5.84      0.828
-2 Sepal.Width           0 ▁▆▇▂▁                3.06      0.436
-3 Petal.Length          0 ▇▁▆▇▂                3.76      1.77 
-4 Petal.Width           0 ▇▁▇▅▃                1.20      0.762</code></pre>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 数値型特徴量を取り出す</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>iris_skim <span class="sc">|&gt;</span> <span class="fu">yank</span>(<span class="st">"numeric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><strong>Variable type: numeric</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 13%">
+<col style="width: 18%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 6%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">p0</th>
+<th style="text-align: right;">p25</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p75</th>
+<th style="text-align: right;">p100</th>
+<th style="text-align: left;">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Sepal.Length</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5.84</td>
+<td style="text-align: right;">0.83</td>
+<td style="text-align: right;">4.3</td>
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">5.80</td>
+<td style="text-align: right;">6.4</td>
+<td style="text-align: right;">7.9</td>
+<td style="text-align: left;">▆▇▇▅▂</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sepal.Width</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3.06</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: right;">2.8</td>
+<td style="text-align: right;">3.00</td>
+<td style="text-align: right;">3.3</td>
+<td style="text-align: right;">4.4</td>
+<td style="text-align: left;">▁▆▇▂▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Petal.Length</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3.76</td>
+<td style="text-align: right;">1.77</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">1.6</td>
+<td style="text-align: right;">4.35</td>
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">6.9</td>
+<td style="text-align: left;">▇▁▆▇▂</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Petal.Width</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.20</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">1.30</td>
+<td style="text-align: right;">1.8</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: left;">▇▁▇▅▃</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
+<p>また、<code>focus()</code> 関数を用いることで、特定の列を取り出すことができます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># factor 型の特徴量だけを抽出</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>iris_skim <span class="sc">%&gt;%</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(skim_type <span class="sc">==</span> <span class="st">"factor"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(skim_variable, n_missing, factor.n_unique,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                factor.top_counts, factor.ordered) <span class="sc">%&gt;%</span> <span class="fu">t</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                  [,1]                       
-skim_variable     "Species"                  
-n_missing         "0"                        
-factor.n_unique   "3"                        
-factor.top_counts "set: 50, ver: 50, vir: 50"
-factor.ordered    "FALSE"                    </code></pre>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 一部の要約を選択したのち因子型特徴量を取り出す</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>iris_skim <span class="sc">|&gt;</span> <span class="fu">focus</span>(factor.n_unique, factor.ordered) <span class="sc">|&gt;</span> <span class="fu">yank</span>(<span class="st">"factor"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><strong>Variable type: factor</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: left;">ordered</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Species</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">FALSE</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </section>
-<section id="グループ化されたデータフレームのスキミング" class="level2" data-number="31.3">
-<h2 data-number="31.3" class="anchored" data-anchor-id="グループ化されたデータフレームのスキミング"><span class="header-section-number">31.3</span> グループ化されたデータフレームのスキミング</h2>
-<p>skim() 関数をグループ化されたデータフレームに適用すると、各特徴量に関するグループごとの集計結果が出力されます。</p>
+<section id="グループ化されたデータフレームを要約する" class="level3" data-number="31.2.2">
+<h3 data-number="31.2.2" class="anchored" data-anchor-id="グループ化されたデータフレームを要約する"><span class="header-section-number">31.2.2</span> グループ化されたデータフレームを要約する</h3>
+<p><code>skim()</code> 関数は <code>group_by()</code> でグループ化されたデータフレームにも対応しており、各特徴量に関するグループごとの集計結果を出力することができます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span> <span class="fu">skim</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">group_by</span>(Species) <span class="sc">|&gt;</span> <span class="fu">skim</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Name</td>
-<td style="text-align: left;">Piped data</td>
+<td style="text-align: left;">dplyr::group_by(iris, Spe…</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Number of rows</td>
@@ -1030,12 +1118,12 @@ factor.ordered    "FALSE"                    </code></pre>
 </div>
 </div>
 </section>
-<section id="データフレーム以外のスキミング" class="level2" data-number="31.4">
-<h2 data-number="31.4" class="anchored" data-anchor-id="データフレーム以外のスキミング"><span class="header-section-number">31.4</span> データフレーム以外のスキミング</h2>
-<p>skimr パッケージは、主にデータフレームのスキミングを効率的に行うことを目的として設計されていますが、ベクトル、行列、時系列データなど、データフレームではない型のデータに対しても使うことができます。</p>
+<section id="データフレーム以外のオブジェクトを要約する" class="level3" data-number="31.2.3">
+<h3 data-number="31.2.3" class="anchored" data-anchor-id="データフレーム以外のオブジェクトを要約する"><span class="header-section-number">31.2.3</span> データフレーム以外のオブジェクトを要約する</h3>
+<p><strong>skimr</strong> はデータフレームの要約を効率的に行うことを目的として設計されていますが、ベクトル、行列、時系列データなど、データフレームに変換することが可能な他のデータ型のオブジェクトに対しても使うことができます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># integer型ベクトルのスキミング</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># integer型ベクトルのスキミング</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
@@ -1121,8 +1209,8 @@ factor.ordered    "FALSE"                    </code></pre>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 行列のスキミング</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(<span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="dv">3</span>, <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 行列のスキミング</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(<span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="dv">3</span>, <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
@@ -1234,12 +1322,12 @@ factor.ordered    "FALSE"                    </code></pre>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 時系列データのスキミング</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(Nile) <span class="co"># ts</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 時系列データのスキミング</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(Nile) <span class="co"># ts</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "ts"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(Nile)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(Nile)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
@@ -1332,8 +1420,131 @@ factor.ordered    "FALSE"                    </code></pre>
 </table>
 </div>
 </div>
+</section>
+<section id="要約関数を自作する" class="level3" data-number="31.2.4">
+<h3 data-number="31.2.4" class="anchored" data-anchor-id="要約関数を自作する"><span class="header-section-number">31.2.4</span> 要約関数を自作する</h3>
+<p><code>skim_with()</code> 関数を用いることで、要約関数を自作することも可能です。詳しい使い方はパッケージの <a href="https://cran.r-project.org/web/packages/skimr/vignettes/using_skimr.html#modifying-skim">Vignette</a> をご参照ください。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>my_skim <span class="ot">&lt;-</span> <span class="fu">skim_with</span>(<span class="at">numeric =</span> <span class="fu">sfl</span>(<span class="at">n =</span> length, <span class="at">sum =</span> sum))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(Species) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_skim</span>() <span class="sc">|&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">focus</span>(numeric.n, numeric.sum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">dplyr::group_by(iris, Spe…</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">150</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">Species</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">sum</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Sepal.Length</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">250.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sepal.Length</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">296.8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sepal.Length</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">329.4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sepal.Width</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">171.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sepal.Width</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">138.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sepal.Width</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">148.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Petal.Length</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">73.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Petal.Length</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">213.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Petal.Length</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">277.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Petal.Width</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">12.3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Petal.Width</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">66.3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Petal.Width</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">101.3</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
