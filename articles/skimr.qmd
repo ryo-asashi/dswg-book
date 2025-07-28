@@ -31,54 +31,50 @@ remove(list=objects())
 
 ## パッケージの概要
 
-skimr は、data.frame、tibble、data.table などのデータフレーム形式のオブジェクトの特徴量ごとの要約を効果的に行うためにデザインされたパッケージです。R の標準関数である summary() をデータフレームに適用した場合よりも充実した要約を、特別なデータフレーム形式で出力することができ、要約結果の再利用やカスタマイズが簡単にできるように設計されています。
+[**skimr**](https://cran.r-project.org/web/packages/skimr/) パッケージはデータフレームの要約に特化したパッケージです。`skimr()` 関数を用いることで、R の標準関数である `summary()` よりも詳細かつ視認性の高い要約を得ることができます。
 
-なお、skimr パッケージの詳しい使い方については、 vignette（<https://cran.r-project.org/web/packages/skimr/vignettes/skimr.html>）などもご参照ください。
+## データフレームを要約する
 
-## データフレームのスキミング
-
-skim() 関数をデータフレームに適用すると、特徴量ごとに欠損値の数、numeric 型の平均、標準偏差、factor 型の最頻水準や水準の種類数などの要約が出力されます。特に、数値変数について簡易的なヒストグラムが出力される点が特徴的です。
+`skim()` 関数をデータフレームに適用すると、特徴量ごとに欠損値の数（n_missing）、非欠損値の割合（complete_rate）、数値型（numeric）の特徴量の平均および標準偏差、因子型（factor）の特徴量の最頻水準や水準数などの要約が出力されます。特に、数値変数について簡易的なヒストグラムが出力される点が特徴的です。
 
 ```{r Matrix}
 library(skimr)
 skim(iris)
 ```
 
-skim() 関数の返り値は、skim_df オブジェクトという特別な名前の付いたデータフレームになっています。これにより、出力結果を、dplyr パッケージの関数などを使って直接加工することも可能です。
+### 要約結果を加工・抽出する
+
+`skim()` 関数の返り値は、"skim_df" という特別なクラスを持つデータフレームです。
 
 ```{r}
 class(iris_skim <- skim(iris))
 ```
 
+**skimr** には "skim_df" オブジェクトを加工するための関数が用意されています。たとえば、`yank()` 関数を用いることで特定のデータ型（`skim_type`）に関する情報を取り出すことができます。
+
 ```{r, message = FALSE}
-library(dplyr)
-
-# numeric 型の特徴量だけを抽出
-iris_skim %>%
-  dplyr::filter(skim_type == "numeric") %>%
-  dplyr::select(skim_variable, n_missing,
-                numeric.hist, numeric.mean, numeric.sd)
+# 数値型特徴量を取り出す
+iris_skim |> yank("numeric")
 ```
+
+また、`focus()` 関数を用いることで、特定の列を取り出すことができます。
 
 ```{r}
-# factor 型の特徴量だけを抽出
-iris_skim %>%
-  dplyr::filter(skim_type == "factor") %>%
-  dplyr::select(skim_variable, n_missing, factor.n_unique,
-                factor.top_counts, factor.ordered) %>% t()
+# 一部の要約を選択したのち因子型特徴量を取り出す
+iris_skim |> focus(factor.n_unique, factor.ordered) |> yank("factor")
 ```
 
-## グループ化されたデータフレームのスキミング
+### グループ化されたデータフレームを要約する
 
-skim() 関数をグループ化されたデータフレームに適用すると、各特徴量に関するグループごとの集計結果が出力されます。
+`skim()` 関数は `group_by()` でグループ化されたデータフレームにも対応しており、各特徴量に関するグループごとの集計結果を出力することができます。
 
 ```{r}
-iris %>% group_by(Species) %>% skim()
+iris |> dplyr::group_by(Species) |> skim()
 ```
 
-## データフレーム以外のスキミング
+### データフレーム以外のオブジェクトを要約する
 
-skimr パッケージは、主にデータフレームのスキミングを効率的に行うことを目的として設計されていますが、ベクトル、行列、時系列データなど、データフレームではない型のデータに対しても使うことができます。
+**skimr** はデータフレームの要約を効率的に行うことを目的として設計されていますが、ベクトル、行列、時系列データなど、データフレームに変換することが可能な他のデータ型のオブジェクトに対しても使うことができます。
 
 ```{r}
 # integer型ベクトルのスキミング
@@ -90,4 +86,16 @@ skim(matrix(1:9, 3, 3))
 # 時系列データのスキミング
 class(Nile) # ts
 skim(Nile)
+```
+
+### 要約関数を自作する
+
+`skim_with()` 関数を用いることで、要約関数を自作することも可能です。詳しい使い方はパッケージの [Vignette](https://cran.r-project.org/web/packages/skimr/vignettes/using_skimr.html#modifying-skim) をご参照ください。
+
+```{r}
+my_skim <- skim_with(numeric = sfl(n = length, sum = sum))
+iris |>
+  dplyr::group_by(Species) |>
+  my_skim() |>
+  focus(numeric.n, numeric.sum)
 ```
