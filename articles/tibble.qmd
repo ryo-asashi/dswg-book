@@ -2,12 +2,12 @@
 title: "tibble"
 author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
-output:
-  word_document:
-    toc: yes
-    toc_depth: '3'
-    fig_width: 6
-    fig_height: 3
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    fig-width: 6
+    fig-height: 3
 ---
 
 ```{r setup, include=FALSE}
