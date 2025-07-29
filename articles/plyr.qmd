@@ -1,0 +1,556 @@
+---
+title: "plyr"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    fig-width: 6
+    fig-height: 5
+    df-print: "paged"
+    embed-resources: true
+references:
+- id: BIB_WICKHAM_2011
+  type: article
+  journal: "Journal of Statistical Software"
+  volume: 40
+  title: "The Split-Apply-Combine Strategy for Data Analysis"
+  url: "https://www.jstatsoft.org/index.php/jss/article/view/v040i01"
+  doi: "10.18637/jss.v040.i01"
+  author:
+    - Wickham, Hadley
+  issued:
+    - year: 2011
+  pages: "1-29"
+nocite: |
+  @*
+---
+
+```{r comment, include=FALSE, eval=FALSE}
+## 2025/02/20 上妻
+# 初版作成
+```
+
+```{r setup_qmd, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# install packages
+pkgs <- c("plyr", "dplyr", "MASS")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+# detach packages
+default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
+             "package:stats", "package:graphics",
+             "package:grDevices", "package:utils",
+             "package:datasets", "package:methods",
+             "Autoloads", "package:base")
+for (pkg in setdiff(search(), default)) {
+  detach(pkg, character.only = TRUE)
+  }
+
+# clear objects
+remove(list=objects())
+
+```
+
+```{css, echo=FALSE}
+.output-jp > code {
+/*一部日本語出力があるチャンクで日本語と英字の幅が揃わずに表示がずれるため、CSSでフォントを変更することで表示を揃える*/
+  font-family: "ＭＳ ゴシック";
+}
+```
+
+## パッケージの概要
+
+plyrパッケージはデータフレーム等のグループ化集計（グループごとに分割し、適用し、まとめる）に特化したパッケージです。
+データフレーム操作パッケージとして名高いdplyrパッケージの前身にあたりますが、本パッケージは配列などのデータフレーム以外の操作にも対応しているのが特徴です。
+
+前述のようなグループ化集計にあたっては、R標準では`apply`系関数を用いることになりますが、
+その戻り値の型が場合によって異なること、多次元配列の操作のような高度な処理にはあまり向かないこと等の問題点がありました。
+本パッケージではこれらの問題に対処した`apply`系関数の改良版として、`**ply`という名前[^asterisk]の関数を多数提供しています。
+
+[^asterisk]: このアスタリスク「`*`」は、その場所に何らかの文字が入ったものの総称として使用しています。たとえば `l*ply` は `laply`、`ldply`、`llply`、`l_ply` の総称です。
+
+plyrパッケージの名前は、その思想の根幹を成す`**ply`系関数から取られています[^dplyr]。
+
+[^dplyr]: なお、dplyrパッケージの名前は、データフレーム操作に特化したplyrパッケージの後継というところから取られています。
+
+## 使用方法
+
+事前準備としてパッケージを読み込んでおきます。
+
+```{r setup_package, message=FALSE, warning=FALSE}
+library(plyr)
+```
+
+### `**ply` 系関数の基本
+
+`**ply`系関数は、Split-Apply-Combineというグループ化集計の流れを1つの関数で完結させるものです。
+
+- Split…データをグループごとに分割する
+- Apply…分割したデータそれぞれごとに、何らかの処理を適用する
+- Combine…処理した結果を1つのデータにまとめる
+
+たとえば、irisデータセットにおいて、アヤメの種類ごとのデータの平均値を集計するには次のようにします。
+
+```{r basic_sample}
+#Speciesの列にアヤメの種類が入っている
+head(iris)
+
+#第2引数にどのようにデータを分割するか、第3引数にどのような処理を適用するかを指定
+daply(iris, .(Species), function(df){mean(df$Sepal.Length)})
+```
+
+ここで、関数名の`daply`の最初の2文字は入出力データの型を表します。つまり、1文字目の`d`はデータフレームを入力とすること、2文字目の`a`は配列を出力とすることを表しています。
+
+この命名規則のもと、`**ply`系関数には以下のようなものが存在しています[^others]。
+
+[^others]: この命名規則に従う関数は他にも提供されていますが、これら12種とは若干趣が異なるもののため本表では省略しています。
+
+| 入力型 ＼ 出力型 | 配列(`a`) | データフレーム(`d`) | リスト(`l`) | 出力なし(`_`) |
+|------|----|----|----|----|
+|配列(`a`)|`aaply`|`adply`|`alply`|`a_ply`|
+|データフレーム(`d`)|`daply`|`ddply`|`dlply`|`d_ply`|
+|リスト(`l`)|`laply`|`ldply`|`llply`|`l_ply`|
+
+入力型の指定は、データの分割の指定方法が入力型によって異なる（後述）ことから設けられています。
+また出力型の指定は、`apply`系関数では出力型が一定でなく扱いづらかったことへの対応として設けられたものです。
+
+なお、第4引数以降は第3引数の関数に引き継がれます。
+
+```{r basic_sample_4tharg}
+daply(iris, .(Species), 
+      function(df, offset){mean(df$Sepal.Length) + offset},
+      offset = 12345)
+```
+
+以下では使用方法が特徴的なもののみを取り上げます。
+
+#### `d*ply`
+
+データフレームを入力型とする場合、第2引数にはグループ化に使用する列を指定するのでした。
+
+```{r ddply1}
+#idはプレイヤーを表す文字列、teamはチーム名
+head(plyr::baseball)
+
+#比較的最近のデータのみを抽出
+df_baseball <- subset(baseball, year >= 2003)
+
+#rbi(打点)の合計値を年度ごとに計算
+#summarise関数については後述
+ddply(df_baseball, .(year), summarise, sum_rbi = sum(rbi))
+```
+
+この第2引数には複数の列を指定することも可能です。
+
+```{r ddply2}
+#コンマで区切って複数指定
+head(ddply(df_baseball, .(year, stint), summarise, sum_rbi = sum(rbi)))
+#文字列ベクトルで指定することも可能
+head(ddply(df_baseball, c("year", "stint"), summarise, sum_rbi = sum(rbi)))
+```
+
+列名を用いた式を記述することも可能です。さらに、作成される列名を指定することもできます。
+
+```{r ddply3}
+#コンマで区切って複数指定
+ddply(df_baseball, .(year >= 2005, stint_0 = stint - 1), summarise, sum_rbi = sum(rbi))
+```
+
+
+#### `*aply`
+
+出力型が配列の場合は、グループ化に指定した列それぞれに配列の次元が対応する形になります。
+たとえば、以下の例では2変数でグループ化しているため、2次元配列が出力されます。
+
+```{r daply2}
+daply(df_baseball, .(year, stint), summarise, sum_rbi = sum(rbi))
+```
+#### `*lply`
+
+出力型がリストの場合は長さがグループ数のリストで出力されます。
+
+```{r dlply1}
+ls <- dlply(df_baseball, .(year, stint), function(df){sum(df$rbi)})
+#各グループがどのようなyearとstintの組み合わせであったかがdata.frameで記録されている
+ls
+```
+
+このとき、各要素がどのようなグループであったかが記録されており、
+`l*ply`系関数に適用した場合にこの情報が参照されます。
+
+```{r dlply2}
+#直接daply関数を用いたときと同様の結果が得られる
+laply(ls, function(x)x)
+```
+
+#### `a*ply`
+
+配列を入力型とする場合、グループ化の指定方法がデータフレームの場合とは異なります。
+
+ここではその動作を把握するため、`ozone`という3次元配列を題材として使用します。
+
+これは中央アメリカにおけるオゾン濃度を記録したデータで、
+1つめの次元(`lat`)は緯度、2つめの次元(`long`)は経度、3つ目の次元(`time`)は観測時刻を表します。
+
+```{r ar_ozone}
+ar_ozone <- plyr::ozone
+str(ar_ozone)
+```
+
+このとき、`a*ply`関数の第2引数はグループ化に使用する次元を指定します。
+
+```{r adply1}
+head(adply(ar_ozone, 1, mean))
+head(adply(ar_ozone, 2, mean))
+head(adply(ar_ozone, 3, mean))
+```
+
+複数の次元を使用することも可能です。
+
+例えば各緯度・経度ごとの平均値を計算し、緯度・経度の次元を持つ配列に結果を格納するには次のようにします。
+
+```{r aaply1}
+#最初の5×5の地点のみ計算
+aaply(ar_ozone[1:5, 1:5, ], 1:2, mean)
+```
+
+少し変わった用法ですが、データフレームに対して各行ごとに処理を行いたい場合に使用することもできます。
+
+```{r adply2}
+#各行を単純に文字列結合したものを出力
+head(adply(iris, 1, paste, collapse = " "))
+```
+
+
+### 基本形以外の `**ply` 系関数
+
+`**ply`系関数には前節で紹介した12種の基本形以外のものも存在します。[^others2]
+
+[^others2]: これらは Split-Apply-Combine の Split 部分の考え方が異なるもののため、別扱いとしました。
+
+#### `r*ply`
+
+`r*ply`関数[^r]は同じ処理を複数回繰り返し、その結果をデータフレームなどで出力するものです。
+
+[^r]: この`r`は Replicate の頭文字を取ったものと考えられます。
+
+```{r rdply}
+#100個の[0, 1)一様乱数の平均をとる、という操作を20回繰り返す
+set.seed(42)
+rdply(20, mean(runif(100)))
+```
+
+#### `m*ply`
+
+`m*ply`関数[^m]は同じ関数を異なる引数で繰り返すのに使用します。
+
+[^m]: この`m`はR標準の `mapply` 関数と同様、関数の繰り返しの際に複数引数を取り扱える(Multivariate)ことを意味していると考えられます。
+
+第1引数にはその関数に渡したい引数を行列かデータフレームで与え、第2引数には繰り返したい関数を指定します。
+
+```{r mdply}
+mdply(cbind(x = c(1, 1, 2, 2, 3), y = c(1, 3, 2, 4, 5)), function(x, y){x*y})
+maply(expand.grid(x = 1:5, y = 1:5), function(x, y){x*y})
+```
+
+### 補助関数
+
+本パッケージには `**ply` 系関数と組み合わせて使用する補助関数が多数提供されています。
+
+そのうち代表的なものを紹介します。
+
+#### `mutate`, `summarise`（データフレームの列加工）
+
+`mutate`関数はデータフレームの列加工に用いられる関数です。
+
+```{r mutate1}
+df <- data.frame(x = c(1, 2, 3, 4),
+                 y = c(2, 3, 5, 7))
+#x + yを計算して新しい列zに格納
+mutate(df, z = x + y)
+#列xを2倍
+mutate(df, x = 2 * x)
+```
+
+R標準の`transform`関数と働きは同様ですが、
+複数回の加工を一度に行う際、それまでの加工結果を引き継ぐという点が特徴です。
+
+```{r mutate2}
+#xにyを足しこんでから2倍する
+mutate(df, x = x + y, w = 2 * x)
+#2*xの計算に使うxはもともとのx
+transform(df, x = x + y, w = 2 * x)
+
+#mutate中新たに作られる列zの結果を後続で使用可能
+mutate(df, z = x + y, w = 2 * z)
+```
+
+一方、`summarise`関数は`mutate`関数と同様の計算を行うものの、
+もともとあった列が取り除かれることが特徴です。
+
+```{r summarise1}
+#xにyを足しこんでから2倍する
+summarise(df, x = x + y, w = 2 * x)
+```
+
+この性質は、`ddply`関数の第3引数に用いるときに便利です。
+
+（`mutate`関数を用いた場合はもともとある列が全て吐き出されてしまう）
+
+```{r summarise2}
+ddply(iris, .(Species), summarise,
+      mean_Sepal.Length = mean(Sepal.Length))
+```
+
+
+
+#### `colwise`（すべての列を処理する関数に変換）
+
+`colwise`関数は同じ関数を全ての列に対して実行したい場合に用いられます。
+
+```{r colwise}
+ddply(iris, .(Species), colwise(mean))
+```
+
+#### `each`（同時に複数個の関数を実行する単一の関数を生成）
+
+`each`関数は同時に複数の関数を実行したい場合に用いられます。
+例えば次のような例では、平均と分散の両方を同時に計算することができます。
+
+```{r each}
+aaply(ar_ozone[1:5, 1:5, ], 1:2, each(mean, var))
+```
+
+#### `splat`（単一リストを引数にとる関数に変換）
+
+`splat`関数は、複数引数をとる関数を単一リストを引数にとる関数に変換します。
+
+`d*ply`系関数で複数列を処理する場合に用いることができます。
+
+```{r splat}
+fn_mean_Sepal.Rate <- function(Sepal.Length, Sepal.Width, ...){
+  mean(Sepal.Length / Sepal.Width)
+}
+
+ddply(iris, .(Species), splat(fn_mean_Sepal.Rate))
+
+```
+
+#### `failwith`（エラー処理）
+
+`failwith`関数も関数を変換するものの一種で、
+実行時にエラーとなってしまう場合に`NA`等の値を当てはめるようにします。
+
+第1引数にエラー時の値、第2引数に実行する関数を指定します。
+
+```{r failwith}
+llply(-2:3, failwith(NA, 
+                     function(n) seq(1, n, 1)))
+#エラーメッセージを表示しない
+llply(-2:3, failwith(NA, 
+                     function(n) seq(1, n, 1),
+                     quiet = T))
+```
+
+#### `as.data.frame.function`
+
+`as.data.frame.function`関数も関数を変換するものの一種で、
+関数の出力をデータフレームに変更します。
+
+```{r as.data.frame}
+#as.data.frame関数の引数に関数を指定すると、
+#as.data.frame.function関数が使用される
+ldply(1:3, as.data.frame(function(n) 1:n))
+```
+
+## plyrパッケージの長所・短所
+
+### 長所
+
+plyrパッケージはグループ化集計を念頭に置きつつ、
+R標準の`apply`系関数を拡張・改良する方向性でデザインされているため、
+R標準機能になじみ深いユーザーにとっては受け入れやすいのが長所といえます。
+
+特に、多次元配列を`apply`系関数のように扱いたい場合に威力を発揮します。
+
+パッケージ開発者の論文[@BIB_WICKHAM_2011]で挙げられている`ozone`（オゾン濃度データ）の例がわかりやすいため、
+ここで紹介します。
+
+本データは12か月×6年間＝72か月分のデータがありますが、その濃度の増減には周期性がみられます。
+ある1地点での時間変化をプロットすると次のとおり。
+
+```{r ozone_example_plot}
+a_oz <- ar_ozone[1, 1, ]
+plot(a_oz)
+```
+
+1年周期の季節的な変動と考えられるので、
+このデータに対して月を説明変数としたロバスト線形回帰モデルを構築し、
+そのモデルの予測値を差し引くことで季節的な要因を取り除くことを考えます。
+
+
+```{r ozone_example_deseas}
+month <- ordered(rep(1:12, length = 72))
+model_rlm <- MASS::rlm(a_oz ~ month - 1, maxit = 50)
+model_rlm
+```
+```{r ozone_example_deseas_plot}
+#実データと予測値を重ねたプロット
+plot(a_oz)
+points(predict(model_rlm, month), pch = 3)
+legend("bottomright", NULL, c("raw", "rlm"), pch = c(1,3))
+#残差のプロット
+plot(resid(model_rlm), pch = 4)
+legend("bottomright", NULL, c("residue = raw - rlm"), pch = 4)
+```
+
+
+ただし、これはあくまで1地点における分析です。
+このような季節要因を取り除くという計算を他の地点でも同様に行いたいとしましょう。
+
+最もわかりやすいのはfor文によるものです[^suppreswarning]。
+
+[^suppreswarning]: 以下、これらのコードでは`'rlm' failed to converge in 50 steps`という警告が複数回表示されますが、本稿では記載を省略しています。
+
+```{r ozone_for, warning=FALSE}
+#季節要因を除いたデータをar_deseasに格納したい
+ar_deseas <- array(NA, c(24, 24, 72))
+dimnames(ar_deseas) <- dimnames(ar_ozone)
+#季節要因を除くのに使用したモデルを保存しておきたい
+models <- as.list(rep(NA, 24*24))
+dim(models) <- c(24, 24)
+
+for(i in 1:24){
+  for(j in 1:24){
+    a_oz <- ar_ozone[i, j, ]
+    model <- MASS::rlm(a_oz ~ month - 1, maxit = 50)
+    
+    models[[i, j]] <- model
+    ar_deseas[i, j, ] <- resid(model)
+  }
+}
+```
+
+R言語ではfor文よりも`apply`系関数によるコーディングが好まれますが、
+この例の場合は配列の次元の取り扱いに苦慮します。
+
+```{r ozone_lapply, warning=FALSE}
+fn_fitmodel <- function(a_oz){
+  MASS::rlm(a_oz ~ month - 1, maxit = 50)
+}
+models <- apply(ar_ozone, 1:2, fn_fitmodel)
+ls_deseas <- lapply(models, resid)
+ar_deseas <- unlist(ls_deseas)
+str(ar_deseas) #1次元の配列
+
+#3次元の配列に変更
+dim(ar_deseas) <- c(72, 24, 24)
+#添え字が時間→場所の順になっているので、元に戻すために入れ替える
+ar_deseas <- aperm(ar_deseas, c(2, 3, 1))
+dimnames(ar_deseas) <- dimnames(ozone)
+```
+
+plyrパッケージの`**ply`系関数を使用すれば、
+`apply`系関数によるコーディングの良さを残しつつも、コードをよりシンプルにすることが可能です。
+
+```{r ozone_plyr, warning=FALSE}
+fn_fitmodel <- function(a_oz){
+  MASS::rlm(a_oz ~ month - 1, maxit = 50)
+}
+#モデルは配列には代入できないため、aaplyではなくalplyとする
+models <- alply(ar_ozone, 1:2, fn_fitmodel)
+ar_deseas <- laply(models, resid)
+```
+
+なお参考までに実行結果を可視化すると以下のとおりで、論文の図を再現できていると考えられます。
+
+```{r ozone_vis}
+#季節要因を除く前の各地点での平均値
+ar_mean <- aaply(ar_ozone, 1:2, mean)
+ar_mean[24:20, 1:5] #左上部分のみ数値を表示
+#ヒートマップ(高いところほど濃い色)
+heatmap(ar_mean, scale = "none",
+        Rowv = NA, Colv = NA)
+#季節要因を除いた後の各地点での標準偏差
+ar_sd <- aaply(ar_deseas, 1:2, sd)
+ar_sd[24:20, 1:5] #左上部分のみ数値を表示
+#ヒートマップ(高いところほど濃い色)
+heatmap(ar_sd, scale = "none",
+        Rowv = NA, Colv = NA)
+```
+
+### 短所
+
+一方、短所は後継となるdplyrパッケージやこれを含むtidyverse環境とは併存しづらいということです。
+
+基本的に、tidyverse環境を前提とするのであれば
+データフレームの操作はdplyrパッケージの方が扱いやすいケースが多く、
+plyrパッケージが必要となる場面は限定的でしょう。
+
+```{r dplyr, message=FALSE, warning=FALSE}
+#Sepal.LengthとSepal.Widthの比の平均値を種類ごとに計算
+#plyrパッケージの場合
+df_iris <- iris
+df_iris_tmp <- plyr::mutate(df_iris,
+                        Sepal.Rate = Sepal.Length / Sepal.Width)
+ddply(df_iris_tmp, .(Species),
+      plyr::summarise,
+      mean_Sepal.Rate = mean(Sepal.Rate))
+
+#dplyrパッケージの場合
+library(dplyr)
+df_iris <- iris
+df_iris %>%
+  dplyr::mutate(Sepal.Rate = Sepal.Length / Sepal.Width) %>%
+  dplyr::group_by(Species) %>%
+  dplyr::summarise(mean_Sepal.Rate = mean(Sepal.Rate))
+```
+
+
+それでも、配列に対する操作等のplyrパッケージ特有の機能を理由に、
+dplyrパッケージとplyrパッケージを敢えて併存させることは考えられます。
+
+この場合に問題となるのは、両者で関数名の競合が多くみられ、
+どちらのパッケージの関数を用いているのかに気を配る必要がある点です。
+
+例えば以下のようにplyrパッケージをdplyrパッケージよりも後に読み込んだうえで、
+関数のパッケージ名を明示せずに使用した場合、
+意図しない動作を引き起こしてしまいます。
+
+
+```{r dplyr_before_plyr}
+#読み込んでいるパッケージを環境から取り外す（読み込む前の状態に戻る）
+detach("package:dplyr") 
+detach("package:plyr")
+
+#dplyr→plyrの順で読み込んでしまうと、dplyrの関数群がplyrのものでマスクされる
+library(dplyr)
+library(plyr)
+
+#以下のように書くとplyrパッケージのsummarise関数が実行されるため、
+#グループごとの集計に失敗
+df_iris <- iris
+df_iris %>%
+  mutate(Sepal.Rate = Sepal.Length / Sepal.Width) %>%
+  group_by(Species) %>%
+  summarise(mean_Sepal.Rate = mean(Sepal.Rate))
+```
+
+このような事態を防ぐには、plyrパッケージを読み込んでからdplyrパッケージを読み込むか、
+`plyr::***`のように逐次パッケージ名を明記するかのいずれかを選択することになります。
+前者の方法をとる場合でも、dplyrパッケージ自体が他のパッケージの前提となっている（知らぬ間に読み込まれてしまっている）こともあり、十二分に注意が必要です。
+
+このような煩雑さを避けるため、前節で挙げたようなケースでも敢えてR標準機能でしのぐことは考えられます。
+
+
+## 参考文献
+
+::: {#refs}
+:::

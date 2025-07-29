@@ -1,0 +1,376 @@
+---
+title: "parsnip"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc_depth: '3'
+    fig_width: 6
+    fig_height: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(parsnip)) install.packages('parsnip', repos = "http://cran.us.r-project.org")
+if (!require(dplyr)) install.packages('dplyr', repos = "http://cran.us.r-project.org")
+if (!require(randomForest)) install.packages('randomForest', repos = "http://cran.us.r-project.org")
+if (!require(ranger)) install.packages('ranger', repos = "http://cran.us.r-project.org")
+if (!require(xgboost)) install.packages('xgboost', repos = "http://cran.us.r-project.org")
+if (!require(modeldata)) install.packages('modeldata', repos = "http://cran.us.r-project.org")
+```
+
+## パッケージの概要
+
+parsnipは、機械学習や予測モデリングを行うパッケージ群tidymodelsに含まれるパッケージで、様々なモデルを統一的な記法で使用するためのインターフェースを提供します。
+一つのアルゴリズム、例えばランダムフォレストのモデルを構築しようとしたときに、パッケージはranger、randomForest等複数の選択肢が存在し、その実行方法やパラメータの名称、設定方法は微妙に異なっていることもあるかもしれません。
+parsnipは、これらのパッケージ間の実行方法の違いを吸収してくれるパッケージです。  
+  
+parsnipの概要を示す例として、ランダムフォレストによる回帰モデルを作成します。
+サンプルデータとして、modeldataパッケージに含まれているカリフォルニア州サクラメント市の住宅価格のデータSacramentoを用います。
+
+```{r}
+library(parsnip)
+library(modeldata)
+library(dplyr)
+
+set.seed(1234)
+
+data("Sacramento", package="modeldata") 
+# 今回はカーディナリティの高い(レコード数に対して取り得る値が多い)特徴量は除外
+d <- Sacramento[, !(colnames(Sacramento) %in% 
+                      c("city", "zip", "latitude", "longitude"))] 
+str(d)
+```
+まずはrandomForestパッケージを使用します。
+ここでは各パッケージをそのまま使用する場合とparsnipを使用する場合との違いを示すことが目的ですので詳細は割愛しますが、Sacramentoデータのpriceを目的変数として、他の変数で回帰するランダムフォレストモデルを構築しています。
+
+```{r}
+# From randomForest
+library(randomForest)
+rf_1 <- randomForest(
+  price ~ ., 
+  data = d, 
+  mtry = 3, 
+  ntree = 200, 
+  nodesize = 3,
+  importance = TRUE
+)
+rf_1
+```
+次にrangerパッケージで同じ内容のランダムフォレストモデルを構築します。
+この二つのパッケージの例では実行方法に大きな違いはありませんが、それでもなお、指定するハイパーパラメータの変数名が一部異なっていることがわかります。
+```{r}
+# From ranger
+library(ranger)
+rf_2 <- ranger(
+  price ~ ., 
+  data = d, 
+  mtry = 3, 
+  num.trees = 200, 
+  min.node.size = 3,
+  importance = "impurity"
+)
+rf_2
+```
+今度はparsnipを通して両パッケージのランダムフォレストを実行します。
+二つの実行例のコードを見比べるとわかるように、parsnipを通して実行することで多くのパラメータが同じ変数名で指定できるようになります。
+
+```{r}
+# From randomForest
+rand_forest(mtry = 3, trees = 200, min_n = 3) %>%
+  set_mode("regression") %>%
+  set_engine("randomForest", importance = TRUE) %>%
+  fit(price ~ ., data = d)
+```
+```{r}
+# From ranger
+rand_forest(mtry = 3, trees = 200, min_n = 3) %>%
+  set_mode("regression") %>%
+  set_engine("ranger", importance = "impurity") %>%
+  fit(price ~ ., data = d)
+```
+この例のように、ランダムフォレストという同じモデルの同じハイパーパラメータであっても、パッケージによって変数名は異なっている場合があります。
+また、パッケージによっては、目的変数と説明変数をformula形式(y ~ xのような形式)ではなく、それぞれを引数で与える方式を採用しているかもしれません。
+parsnipはそのような差異を吸収し、統一的な記法でモデルを構築する仕組みを提供するパッケージです。
+
+## 基本的な使用例１ - 回帰モデル
+
+前項で示したランダムフォレストの例について、１ステップごとに解説しながら、parsnipの基本的な使用方法を紹介します。  
+  
+**(1) モデルの生成**  
+まずは作成したいモデルの種類(例えば線形回帰、SVM、ランダムフォレスト等。parsnipではこれをmodel typeと呼ぶ。)に応じた関数を呼び出して、モデルを生成します。
+これらの関数を呼び出すと、model_specという形式のデータでモデルが生成されます。
+model_specはモデルに関する各種の情報を保持するparsnipのデータ形式で、モデルの種類に加えて、後述するモード、エンジン、パラメータといった情報を付加していきます。  
+  
+ランダムフォレストの場合、モデル生成関数はrand_forest関数を使用します。
+次のコードで、rand_forest関数にハイパーパラメータを与えて実行し、ランダムフォレストのmodel_specオブジェクトが作成されています。
+
+```{r}
+rf_spec <- rand_forest(mtry = 3, trees = 200)
+rf_spec
+```
+parsnipでは、モデルに与える引数は大きく、メイン引数(main arguments)とエンジン引数(engine arguments)に分けられます。
+メイン引数は、ある特定のモデルにおいて、パッケージの種類によらずどのパッケージでも指定する必要があるような基本的なモデルのパラメータを指し、モデルの種類(およびその生成関数)によって決められています。  
+  
+メイン引数は、モデルの生成関数を呼び出す際に引数として渡します。
+上の例ではランダムフォレストの生成関数であるrand_forest関数に、メイン引数として二つの引数(一つ一つの決定木を作成する際に用いる特徴量の数"mtry"、および決定木の数"trees")を渡しています。
+この二つのパラメータは、パッケージによって変数名は異なる場合があるものの、ランダムフォレストを実行するためにはどのパッケージでも指定しなければならないような基本的なパラメータです。(省略した場合、デフォルトの値が設定されます。)  
+  
+これに対してエンジン引数は、エンジンに指定したパッケージで使用できる引数のうち、メイン引数以外のものを指しています。
+エンジン引数はモデルのパッケージ(エンジン)を指定する際に合わせて引数として指定するので、「エンジンの設定」の項で解説します。
+
+**(2) モードの設定**  
+モデルをどのような課題に対して使用するかをset_mode関数で指定しますが、parsnipではこれをモードと呼びます。
+今回はランダムフォレストを回帰モデルとして使用するため、モードとして"regression"を指定します。
+
+```{r}
+rf_spec <- set_mode(rf_spec, mode = "regression")
+rf_spec
+```
+実行結果を見ると、1行目の(unknown)となっていた箇所が、(regression)に更新されたことが確認できます。  
+  
+指定できるモードの種類はモデルの種類ごとに決まっています。
+ランダムフォレストでは、回帰に用いる場合の"regression"以外にも、分類に用いる場合の"classification"および生存時間分析に用いる場合の“censored regression”が指定できます。
+また、モデルの種類によっては、教師なし学習のモデルに用いる"clustering”、生存時間分析のモデルに用いる“risk regression”といったモードが用意されています。
+
+**(3) エンジンの設定**  
+生成したモデルの具体的な実装について、set_engine関数でパッケージ(エンジン)を指定します。
+ランダムフォレストのパッケージとして、例えば"randomForest"を指定します。
+```{r}
+rf_spec <- set_engine(rf_spec, engine = "randomForest", importance = TRUE)
+rf_spec
+```
+実行結果を見ると、最終行に表示されているエンジンの指定が、デフォルトの"ranger"から"randomForest"に更新されたことが確認できます。  
+  
+上の例では、set_engine関数に"importance"という引数も渡しています。
+このimportance引数は、randomForestパッケージでランダムフォレストを実行する際に使用する引数で、特徴量重要度を算出するかどうかを制御するためのものです。
+randomForestパッケージで使用されている引数でありながら、parsnipのrand_forest関数ではメイン引数となっていない引数なので、先に述べた「エンジン引数」に該当します。
+このようにエンジン引数は、使用するエンジンの指定と併せて、エンジンとして使用するパッケージ内での引数名のまま、set_engine関数に引き渡して使用することができます。  
+  
+**(4) モデルのフィッティング**  
+ここまででモデルの設定が完了したので、データによる学習(フィッティング)を行います。
+モード、エンジンおよびパラメータを設定済みのmodel_spec、学習用のデータ、および目的変数と説明変数の関係を表す式(formula。R標準のlm等で使用するものと同じです。)をfit関数に渡します。
+fit関数を実行すると、学習済のparsnipモデルとしてmodel_fitという形式のデータが返ります。
+
+```{r}
+# train dataとtest dataに分割
+n_train <- floor(nrow(d) * 0.75)
+d_train <- d[1:n_train,]
+d_test <- d[(n_train+1):nrow(d),]
+
+# モデルのフィッティング
+rf_fit <- fit(rf_spec, price ~ ., data = d_train)
+rf_fit
+```
+なお、説明変数と目的変数の関係をformula形式で指定する方法以外にも、説明変数と目的変数をそれぞれ引数xとyで直接指定する方式のfit_xy関数が用意されています。
+
+```{r}
+rf_fit <- fit_xy(rf_spec, 
+                 x = d_train[, names(d_train)[names(d_train) != "price"]], 
+                 y = d_train$price)
+rf_fit
+```
+  
+さて、(1)から(4)では解説のために、モデルの生成から学習までの一連の処理を、一つ一つのステップへと分解して実行してきました。
+実際に使用する際は、以下のようにパイプ演算子でつなぎながら実行することで流れがわかりやすくなります。
+
+```{r}
+rf_fit <- rand_forest(mtry = 3, trees = 200) %>%
+  set_mode(mode = "regression") %>%
+  set_engine(engine = "randomForest", importance = TRUE) %>%
+  fit(price ~ ., data = d_train)
+```
+
+**(補足) モデルスペックの様々な設定方法**  
+モデルスペックの設定について、ここまでの例で示したものと異なる設定方法を紹介します。  
+  
+まずは、モデルのモードとエンジンはそれぞれset_mode関数およびset_engine関数を使用して設定しましたが、モデル生成関数の引数に指定して設定することもできます。
+
+```{r}
+# モデル生成用の関数(この例ではrand_forest)でモードとエンジンを設定する方式
+rf_spec <- rand_forest(
+  mode = "regression",
+  engine = "ranger",
+  mtry = 3, 
+  trees = 200
+)
+```
+
+続いて、一度作成したmodel_specのメイン引数(ハイパーパラメータ)を更新するupdate関数を紹介します。
+次のコードは、上の例で作成したランダムフォレストのmodel_specについて、mtryの更新および設定していなかったmin_nを新たに設定しています。
+```{r}
+rf_spec <- update(rf_spec, mtry = 5, min_n = 3, fresh = FALSE) 
+# fresh=TRUEにするとパラメータ全体を入れ替える
+# (この場合、update関数で指定していないtreesパラメータの設定は初期化される)
+```
+
+最後に、model_specのモードとパラメータを維持したまま他のエンジンに変換する、translate関数を紹介します。
+次の例では、上で生成したランダムフォレストのmodel_specを、rangerエンジンからrandomForestエンジンに変換しています。
+なお、エンジン引数を設定している場合、エンジン引数もそのまま引き継がれますが、前述のようにエンジン引数は本来的にパッケージごとに異なるパラメータですので、変換後のパッケージでは使用できないこともある点に注意が必要です。
+
+```{r}
+translate(rf_spec, engine = "randomForest")
+```
+**(5) モデルによる予測**  
+学習済のモデルをテストデータに適用して、テストデータに対する予測値を算出します。
+R標準のlm等のモデルと同じように、predict関数を使用することができます。
+
+```{r}
+y_pred = predict(rf_fit, d_test)[[1]]
+y_true = d_test$price
+plot(x = y_pred, y = y_true)
+abline(a=0, b=1, col="red")
+```
+
+なお予測値を取得する関数として、predict関数以外にも、parsnipではaugment関数が用意されています。
+augment関数は学習済のモデルと予測対象のデータを引数にとり、データに対して予測値と残差のカラムを追加したデータセットを返します。
+
+```{r}
+augment(rf_fit, d_test)[1:10,]
+```
+
+## 基本的な使用例２ - 分類モデル
+
+ここまでは、ランダムフォレストの回帰モデルを構築する例を通して、parsnipの基本的な使用方法を解説してきました。
+本項では、parsnipの別の使用例として、勾配ブースティング決定木(GBM)を分類問題に適用する例を紹介します。  
+  
+この使用例を通じて、モデルの種類やモードが異なる場合でも、parsnipでは同じ流れでモデル構築ができることを示します。
+また、学習済のparsnipモデルから情報を取り出して、更なる分析に使用する方法を紹介します。  
+  
+サンプルデータとして、modeldataパッケージに含まれるcredit_dataを使用します。
+顧客の信用度を示すStatus変数について、goodとbadを分類します。
+
+```{r}
+d2 <- na.omit(credit_data)
+
+# factor型の説明変数は数値に変換(ラベルエンコーディング)する。
+# ※factor型のままでも自動的にone-hotエンコーディングされるためモデルの構築は可能。
+# 　今回は後続の説明上の理由からラベルエンコーディングしている。
+fct_vars <- c('Home', 'Marital', 'Records', 'Job')
+d2[, fct_vars] <- (sapply(d2[, fct_vars], as.integer))
+
+str(d2)
+```
+**(1) モデルの生成～学習**  
+parsnipを通してGBMによる分類モデルを構築します。
+次の例では、GBM用のモデル生成関数boost_treeを用いて、モードには分類用の"classification"、使用するGBMパッケージとして"xgboost"をエンジンに指定しています。
+ここではGBMのハイパーパラメータ等の詳細は割愛しますが、モデルの生成、モードとエンジンの設定、学習という流れ自体は、ランダムフォレストと同じであることがわかると思います。
+
+```{r}
+# train dataとtest dataに分割
+n_train <- floor(nrow(d2) * 0.75)
+d_train <- d2[1:n_train,]
+d_test <- d2[(n_train+1):nrow(d2),]
+
+# モデルの生成～フィッティング
+gbm_fit <- 
+  boost_tree(
+    mtry = 0.8,        # 木ごとに特徴量をサンプリングする割合
+    trees = 2000,      # 作成する木の本数
+    min_n = 1,         # 葉を分岐するために必要な最小のサンプル数
+    tree_depth = 5,    # 木ごとの最大の深さ
+    learn_rate = 0.05, # 学習率
+    sample_size = 0.8, # 木ごとにデータをサンプリングする割合
+    stop_iter = 300    # アーリーストッピング(一定のラウンド数で精度が上がらなければ打ち切る)を判定するラウンド数
+  ) %>%
+  set_mode(mode = "classification") %>%
+  set_engine(engine = "xgboost",       
+             eval_metric = "logloss",  # 損失関数の種類を指定
+             counts = FALSE,           # mtryを割合で指定するオプション
+             validation = 0.25) %>%    # アーリーストッピングの判定に用いるデータの割合
+  fit(Status ~ ., data = d_train)
+gbm_fit
+```
+
+学習済のモデルをテストデータに適用し、テストデータに対する分類結果とその正解率を算出します。
+
+```{r}
+y_pred <- predict(gbm_fit, d_test)[[1]]
+y_true <- d_test$Status
+sprintf("accuracy : %.4f", sum(y_pred==y_true)/length(y_true))
+```
+
+**(2) モデル情報の利用**  
+parsnipを通して学習させたモデルからより多くの情報を取得するため、parsnipのオブジェクトとしてではなく、エンジンに指定したパッケージのオブジェクトとして扱いたい場合があるかもしれません。
+例えば、xgboostパッケージの学習済モデルであれば、xgboostのxgb.importance関数で特徴量重要度が計算できるので、parsnipで学習させたモデルをxgboostのモデルとして扱うことができれば都合がいいです。  
+  
+parsnipではextract_fit_engine関数が、そのような機能を提供します。
+次の例では、上で学習させたparsnipモデルから、extract_fit_engine関数でxgboostモデルとしての情報を取り出し、xgb.importance関数に渡しています。
+```{r}
+importance_gbm <- gbm_fit %>%
+  extract_fit_engine() %>%
+  xgb.importance(model = .)
+importance_gbm
+```
+
+この特徴量重要度の情報を利用して、重要度が上位の変数のみを使用した一般化線形モデル(ロジスティック回帰)によるモデルを構築することを考えます。
+特徴量重要度(Gain)の数値が、ある一定の値を超えている変数のみを使用して、parsnipを通したロジスティック回帰モデルを作成します。
+ロジスティック回帰はlogistic_reg関数を使用しますが、モデル構築から予測までの流れはやはり、ランダムフォレストやGBMと同じです。
+
+```{r}
+d3 <- na.omit(credit_data)
+d_train <- d3[1:n_train,]
+d_test <- d3[(n_train+1):nrow(d3),]
+
+glm_fit <- 
+  logistic_reg() %>%
+  set_mode("classification") %>%
+  set_engine("glm") %>%  # エンジンとしてR標準のglmを使用
+  fit_xy(x=d_train[, importance_gbm[importance_gbm$Gain > 0.05,][["Feature"]]], 
+         y=d_train$Status)
+glm_fit
+```
+
+```{r}
+y_pred <- predict(glm_fit, d_test)[[1]]
+y_true <- d_test$Status
+sprintf("accuracy : %.4f", sum(y_pred==y_true)/length(y_true))
+```
+ここではロジスティック回帰のエンジンとしてR標準のglmを使用していますが、glmのモデルは、summary関数で各説明変数の標準誤差等のより詳細な情報が確認できます。
+そこで再度extract_fit_engine関数を使用して、parsnipモデルからglmモデルとしての情報を取り出し、summary関数に渡します。
+```{r}
+glm_fit %>% 
+  extract_fit_engine() %>%
+  summary(.)
+```
+
+## parsnipで様々なモデルを使用する
+
+ここまでの例で示してきたように、parsnipではモデルの種類、エンジン、モードの組み合わせでモデルを特定します。
+あるモデルの種類に関して、parsnipが対応しているパッケージ(エンジン)とモードの組み合わせを表示するshow_engines関数が用意されています。
+例えばGBMについてこれらの情報を知りたい場合、show_engines関数に、GBMの生成関数の名称である"boost_tree"を引数として渡して実行します。
+
+```{r}
+show_engines("boost_tree")
+```
+tidymodelsの公式サイトではparsnipが対応しているモデル、エンジン、モードの全ての組み合わせが一覧化されているので、そちらもご参照ください。  
+  
+ - **Search parsnip models**. [https://www.tidymodels.org/find/parsnip/](https://www.tidymodels.org/find/parsnip/).  
+  
+また、更に発展的な使用方法として、parsnipに用意されていないモデルを新たに登録し、parsnipのインターフェースで実行できるようにする方法も用意されています。
+これにより、parsnipベースで記述したコードを再利用できたり、tidymodelsの他のパッケージとの連携が可能になるといった利点が考えられます。
+モデルの追加はparsnipのディベロッパー・ツールとして用意されている関数を使用します。
+次のコードは新たなモデルとそのモード、エンジンとなるパッケージを登録しています。
+
+```{r}
+# 架空のnewpkgパッケージをnew_modelの回帰モデルとして登録する
+set_new_model("new_model")
+set_model_mode(model = "new_model", mode = "regression")
+set_model_engine(
+  model = "new_model",
+  mode = "regression",
+  eng = "newpkg"
+)
+set_dependency("new_model", eng = "newpkg", pkg = "newpkg")
+show_model_info("new_model")
+```
+実際に使用するには更に、モデル生成関数の作成、引数の設定、fit関数及びpreditct関数に対する動作の設定等が必要になります。
+内容はやや高度になりますので、興味がある方はtidymodels公式サイトの以下記事をご参照ください。  
+  
+ - **How to build a parsnip model**. [https://www.tidymodels.org/learn/develop/models/](https://www.tidymodels.org/learn/develop/models/).  
+  
+## 参考資料
+
+[1] Kuhn et al., (2020). Tidymodels: a collection of packages for modeling and machine learning using tidyverse principles. [https://www.tidymodels.org](https://www.tidymodels.org).  
+[2] Kuhn M, Vaughan D (2025). parsnip: A Common API to Modeling and Analysis Functions. R package version 1.3.1, [https://parsnip.tidymodels.org/](https://parsnip.tidymodels.org/), [https://github.com/tidymodels/parsnip](https://github.com/tidymodels/parsnip).  

@@ -1,0 +1,99 @@
+---
+title: "stringr"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc_depth: '3'
+    fig_width: 6
+    fig_height: 3
+---
+
+```{r setup, include=FALSE}
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+knitr::opts_chunk$set(echo = TRUE)
+
+# install packages
+pkgs <- c("stringr", "dplyr")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+```
+
+## パッケージの概要
+
+stringrは、文字列を操作するための関数群を提供するパッケージです。また、このパッケージは、Rでモダンな分析環境を構築するためのパッケージ群である「tidyverse」に含まれています。
+
+```{r stringr}
+library(stringr)
+library(dplyr) #パイプ処理の例に利用
+```
+
+## R標準の関数との比較
+
+R標準の関数と比較すると、stringrパッケージの関数は、基本的には関数の名称がstrから始まり、最初の引数は文字列になるなど、命名規則・引数の取扱いに一貫性があります。
+
+```{r stringr1}
+# 比較するベクトルを作成
+x <- c("apple", "banana", NA, "", "あいう") 
+
+# strから始まる関数がstringrパッケージの関数
+# 文字数の確認
+str_length(x)
+nchar(x)
+
+# 小文字（a）を大文字（A）に変換
+str_replace_all(x, "a", "A")
+gsub("a", "A", x)
+
+```
+
+また、stringrパッケージはtidyverseに含まれるパッケージであるため、パイプ処理（%>%）と一緒に利用しやすくなっています。
+
+```{r stringr2}
+# 比較するベクトルを作成
+x <- c("apple", "banana", NA, "", "あいう") 
+
+# パイプ処理の例（R標準）
+x %>%
+  { gsub("a", "A", .) }
+
+# パイプ処理の例(stringr)
+# 最初の引数が文字列となるため、自然な記載が可能
+x %>%
+  str_replace_all("a", "A")
+```
+
+## 関数の紹介
+stringrパッケージの関数の実行例をいくつか紹介します。
+
+```{r stringr3}
+# 文字列の一部を抽出
+str_sub("abcdef", 2, 4)
+
+# 文字列の連結
+str_c("a", "b")
+
+# 指定したパターンに合致するかを判定。正規表現も利用可能
+X <- c("apple", "banana")
+str_detect(X, "a")  # 文字列にaが含まれるかどうかを判定
+str_detect(X, "^a") # 文字列がaから始まるかどうかを判定
+
+# 指定したパターンに合致する最初の文字を置換
+str_replace("apple", "p", "P")
+
+# 指定した区切り文字で分割
+str_split("a,b,c", ",")
+
+# 文字列の先頭・末尾の空白を削除
+str_trim(" hello world ")
+
+# 大文字に変換
+str_to_upper("abc")
+```
+

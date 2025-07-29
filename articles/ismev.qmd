@@ -1,0 +1,186 @@
+---
+title: "ismev"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    fig-width: 6
+    fig-height: 5
+---
+
+```{r setup_qmd, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# install packages
+pkgs <- c('ismev')
+
+for (pkg in pkgs){
+  if (!(pkg %in% installed.packages())){
+    install.packages(pkg)
+  }
+}
+
+```
+
+## パッケージの概要
+
+ismevは、極値理論に基づく統計解析を行うためのパッケージです。
+Stuart Colesによる極値理論を紹介する著書『An Introduction to Statistical Modeling of Extreme Values』に登場する計算をサポートする関数が含まれています。
+極値理論は、分布から大きく外れるような極端な事象をモデル化するための手法であり、保険分野においても、再保険や巨大自然災害リスクの分析、リスク管理でのテイル評価等に利用されています。
+
+```{r ismev, include=FALSE, output=FALSE}
+require(ismev)
+
+```
+
+## ブロック最大値モデル
+
+ブロック最大値モデルは、同一分布からの独立な標本の最大値の確率的性質を扱うモデルです。
+ここでは、ismevパッケージに入っているportpirieのデータセットを使って、一般化極値分布（GEV）のフィッティングを行います。
+portpirieは、65行2列で構成されるデータセットであり、1923年から1987年までの南オーストラリアのポートピリーで記録された年間最大海面水位を示しています。1列目は対応する年を示しています。年ごとの最大値のデータとなっているため、このままGEVのフィッティングを行います。フィッティングにはgev.fit関数を使います。
+
+```{r GEV1, warning=FALSE}
+
+# データセット"portpirie"を取得
+data(portpirie)
+head(portpirie)
+
+# ヒストグラムを表示
+hist(portpirie$SeaLevel)
+
+# "portpirie"の年間最大海面水位についてGEVフィッティング
+fit_portpirie <- gev.fit(portpirie$SeaLevel)
+
+```
+
+gev.fit関数によるフィッティング結果の見方は次のとおりです。
+
+
+-   $conv 
+    *   収束のステータスを表しています。0の場合は収束したことを意味し、最適なパラメータが見つかり、アルゴリズムが正常終了したことを示します。 
+-   $nllh 
+    *   負の対数尤度です。GEV分布のパラメータを推定する際に、尤度関数を最大化しますが、この値はその最大化した尤度関数の対数を負にしたものです。この値が小さいほど、データに適合したモデルであることを示します。 
+-   $mle
+
+    *   GEV分布の推定されたパラメータ（最尤推定値、MLE）です。順番に、位置パラメータ（location）$\mu$、尺度パラメータ（scale）$\sigma$、形状パラメータ（shape）$\xi$の値を示しています。
+-   $se
+    *   各パラメータの標準誤差です。最尤推定値の不確実性を示しており、値が小さいほど、推定値がより正確であることを意味します。
+    
+    
+次に、gev.diag関数を用いて、先ほど作成したGEVモデルについて、データに適合しているかどうかを視覚的および統計的に評価します。
+gev.diag関数により、P-Pプロット、Q-Qプロット、再現レベルプロット、データのヒストグラムと適合した密度を出力することができます。
+
+```{r GEV2, warning=FALSE}
+
+gev.diag(fit_portpirie)
+
+```
+
+次に、指数分布に従う乱数から作成した最大値のデータに対して、GEVフィッティングを行います。理論的には、最大値$M_n$を正規化した値$Z_n$はグンベル分布に法則収束するはずです。
+
+```{r GEV3, warning=FALSE}
+
+# シード値を設定
+set.seed(1234)
+
+# λ = 2 の指数分布に従う乱数を100万個生成
+N <- 1000000
+lambda <- 2
+random_exp <- rexp(N, rate = lambda)
+
+# ヒストグラムを表示
+hist(random_exp)
+
+# 1000個ずつのブロックに分けて、各ブロックの最大値を計算
+n <- 1000
+max_exp <- tapply(random_exp, (seq_along(random_exp) - 1) %/% n + 1, max)
+
+# 各ブロックの最大値M_nをデータフレームに格納
+df_max_exp <- data.frame(Block = 1:length(max_exp), M_n = max_exp)
+
+# M_nを正規化した値Z_nをデータフレームに格納
+d_n <- log(n) / lambda
+c_n <- 1 / lambda
+df_max_exp$Z_n <- (df_max_exp$M_n - d_n) / c_n
+
+# データフレームの最初の数行を表示
+head(df_max_exp)
+
+# 生成したデータフレームについてGEVフィッティング
+fit_max_exp <- gev.fit(df_max_exp$Z_n)
+
+# フィッティング結果を評価
+gev.diag(fit_max_exp)
+
+```
+
+$\mu \fallingdotseq 0$、$\sigma\fallingdotseq 1$、$\xi\fallingdotseq 0$となり、グンベル分布が概ね再現できました。
+
+## 閾値超過モデル
+
+閾値超過モデルはある閾値を超過したデータを対象とするモデルです。
+先ほど生成した指数分布に従う乱数データを用いて、閾値超過モデルである一般化パレート分布（GPD）のフィッティングを行います。
+
+```{r GPD1, warning=FALSE}
+
+# 乱数データをデータフレームに格納
+df_random_exp <- data.frame(X = random_exp)
+
+# 結果を確認
+head(df_random_exp)
+
+# 閾値を設定
+u <- 3
+
+# 生成したデータフレームについてGPDフィッティング
+fit_excess_exp <- gpd.fit(df_random_exp$X, u)
+
+```
+
+gpd.fit関数によるフィッティング結果の見方は、gev.fit関数と共通する箇所もありますが、次のとおりです。形状パラメータ$\xi$が0に近い数値となっており、想定どおり指数分布の形状を示す結果となっています。
+
+
+-   $threshold 
+    *   引数にて設定した閾値です。 
+-   $nexc 
+    *   閾値を超えたデータの件数を示します。閾値を超えたデータのみがGPDのフィットに使用されます。 
+-   $conv 
+    *   gev.fit関数と同じく収束のステータスを表しています。0の場合は収束したことを意味します。 
+-   $nllh 
+    *   gev.fit関数と同じく負の対数尤度であり、この値が小さいほど、データに適合したモデルであることを示します。 
+-   $mle
+
+    *   GPDの推定されたパラメータ（最尤推定値、MLE）です。順番に、尺度パラメータ（scale）$\sigma$、形状パラメータ（shape）$\xi$の値を示しています。GEVと異なり、位置パラメータはありません。
+-   $rate
+    *   閾値を超えたデータの割合です。
+-   $se
+    *   gev.fit関数と同じく各パラメータの標準誤差であり、値が小さいほど、推定値がより正確であることを意味します。
+
+
+GPDにおいても、次のとおりgpd.diag関数により作成したモデルについて評価することが可能です。出力内容はgev.diagと同じです。
+    
+```{r GPD2, warning=FALSE}
+
+# フィッティング結果を評価
+gpd.diag(fit_excess_exp)
+
+```
+
+gpd.fit関数では閾値を自分で設定する必要があります。適切な閾値を選択する方法はいくつか考えられますが、gpd.fitrange関数を使えば、異なる閾値に対してGPDを適合させ、パラメータの推定値の変化を調べることができます。2つのパラメータが安定するように閾値を設定することでより信頼性の高いフィッティングが可能になります。
+    
+```{r GPD3, warning=FALSE}
+
+# 閾値が2～5の場合のパラメータ推定値を出力
+gpd.fitrange(df_random_exp$X, 2, 5)
+
+```
+
+上記の結果では、閾値が4に差し掛かる辺りから信頼区間が急激に広がり不安定になることがわかります。このため、3～3.5の辺りで閾値を設定することが考えられます。
+
+## 参考資料
+
+[1] Stuart Coles. [An Introduction to Statistical Modeling of Extreme Values](https://link.springer.com/book/10.1007/978-1-4471-3675-0).  
+[2] 日本アクチュアリー会. [損保数理](https://www.actuaries.jp/examin/textbook/pdf/sonpo-suuri.pdf).  
+
