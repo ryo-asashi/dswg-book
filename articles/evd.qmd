@@ -2,8 +2,7 @@
 title: "evd"
 author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
-format:
-  html:
+format: html
 ---
 
 ```{r setup_qmd, include=FALSE}
