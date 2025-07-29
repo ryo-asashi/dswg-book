@@ -46,7 +46,7 @@ book:
 #    - articles/quantmod.qmd
     - articles/randomForest.qmd
     - articles/ranger.qmd
-    - articles/readr.qmd
+#    - articles/readr.qmd
 #    - articles/readxl.qmd
 #    - articles/recipes.qmd
     - articles/rpart.qmd
