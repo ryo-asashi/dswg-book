@@ -5,11 +5,13 @@ ALEPlot,モデル解釈/ALE
 C50,予測モデリング/決定木
 class,予測モデリング
 corrplot,可視化
+crosstable,データ処理/クロス集計表
 DALEX,モデル解釈/IML
 distr,確率分布/確率変数
 distEx,確率分布/確率変数
 dplyr,データ処理
 e1071,予測モデリング/SVM/サポートベクトルマシン
+evd,極値統計学
 forcats,データ処理/質的変数
 gghighlight,可視化
 igraph,グラフ理論
