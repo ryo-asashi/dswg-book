@@ -20,6 +20,7 @@ book:
     - articles/distrEx.qmd
     - articles/dplyr.qmd
     - articles/e1071.qmd
+    - articles/evd.qmd
     - articles/forcats.qmd
     - articles/gghighlight.qmd
     - articles/igraph.qmd
