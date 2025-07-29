@@ -3,7 +3,7 @@ title: "ggplot2"
 author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
 output:
-  word_document:
+  html:
     toc: yes
     toc_depth: '3'
     fig_width: 6
