@@ -3,12 +3,7 @@ title: "NipponMap"
 author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
 format:
-  #html:
-  docx:
-    toc: true
-    toc-depth: 3
-    fig-width: 6
-    fig-height: 5
+  html:
 ---
 
 ```{r setup, include=FALSE, output=FALSE}
