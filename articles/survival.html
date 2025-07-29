@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2025-07-28">
+<meta name="dcterms.date" content="2025-07-29">
 
-<title>32&nbsp; survival – Rパッケージ活用事例集</title>
+<title>41&nbsp; survival – Rパッケージ活用事例集</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -67,8 +67,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../articles/tuneRanger.html" rel="next">
-<link href="../articles/skimr.html" rel="prev">
+<link href="../articles/tibble.html" rel="next">
+<link href="../articles/stringr.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -328,7 +328,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/survival.html"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">survival</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/survival.html"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">survival</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -436,128 +436,194 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/evd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">evd</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/fastshap.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">fastshap</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/forcats.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">forcats</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">forcats</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/genlasso.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">genlasso</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/gghighlight.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">gghighlight</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">gghighlight</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">ggplot2</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/igraph.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">igraph</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">igraph</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/iml.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">iml</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">iml</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ismev.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">ismev</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/lifecontingencies.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">lifecontingencies</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">lifecontingencies</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/makedummies.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">makedummies</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">makedummies</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/mlbench.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">mlbench</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">mlbench</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/modeldata.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">modeldata</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/palmerpenguins.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">palmerpenguins</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">palmerpenguins</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/parsnip.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">parsnip</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/partykit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">partykit</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">partykit</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/pdp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">pdp</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">pdp</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/plyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">plyr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/pROC.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">pROC</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">pROC</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/psych.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">psych</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">psych</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/purrr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">purrr</span></span></a>
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">purrr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/randomForest.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">randomForest</span></span></a>
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">randomForest</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/ranger.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">ranger</span></span></a>
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">ranger</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/rpart.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">rpart</span></span></a>
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">rpart</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/rsample.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">rsample</span></span></a>
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">rsample</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/shapviz.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">shapviz</span></span></a>
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">shapviz</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/skimr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">skimr</span></span></a>
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">skimr</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/stringr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">stringr</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/survival.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">survival</span></span></a>
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">survival</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/tibble.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">tibble</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/tuneRanger.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">tuneRanger</span></span></a>
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">tuneRanger</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/yardstick.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">yardstick</span></span></a>
   </div>
 </li>
     </ul>
@@ -570,11 +636,11 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">32.1</span> パッケージの概要</a></li>
-  <li><a href="#生存時間解析用データの作成" id="toc-生存時間解析用データの作成" class="nav-link" data-scroll-target="#生存時間解析用データの作成"><span class="header-section-number">32.2</span> 生存時間解析用データの作成</a></li>
-  <li><a href="#ノンパラメトリック推定" id="toc-ノンパラメトリック推定" class="nav-link" data-scroll-target="#ノンパラメトリック推定"><span class="header-section-number">32.3</span> ノンパラメトリック推定</a></li>
-  <li><a href="#パラメトリック推定" id="toc-パラメトリック推定" class="nav-link" data-scroll-target="#パラメトリック推定"><span class="header-section-number">32.4</span> パラメトリック推定</a></li>
-  <li><a href="#セミパラメトリック推定" id="toc-セミパラメトリック推定" class="nav-link" data-scroll-target="#セミパラメトリック推定"><span class="header-section-number">32.5</span> セミパラメトリック推定</a></li>
+  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">41.1</span> パッケージの概要</a></li>
+  <li><a href="#生存時間解析用データの作成" id="toc-生存時間解析用データの作成" class="nav-link" data-scroll-target="#生存時間解析用データの作成"><span class="header-section-number">41.2</span> 生存時間解析用データの作成</a></li>
+  <li><a href="#ノンパラメトリック推定" id="toc-ノンパラメトリック推定" class="nav-link" data-scroll-target="#ノンパラメトリック推定"><span class="header-section-number">41.3</span> ノンパラメトリック推定</a></li>
+  <li><a href="#パラメトリック推定" id="toc-パラメトリック推定" class="nav-link" data-scroll-target="#パラメトリック推定"><span class="header-section-number">41.4</span> パラメトリック推定</a></li>
+  <li><a href="#セミパラメトリック推定" id="toc-セミパラメトリック推定" class="nav-link" data-scroll-target="#セミパラメトリック推定"><span class="header-section-number">41.5</span> セミパラメトリック推定</a></li>
   </ul>
 </nav>
     </div>
@@ -584,7 +650,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">survival</span></h1>
+<h1 class="title"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">survival</span></h1>
 </div>
 
 
@@ -601,7 +667,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 28, 2025</p>
+      <p class="date">July 29, 2025</p>
     </div>
   </div>
   
@@ -613,12 +679,12 @@ window.Quarto = {
 </header>
 
 
-<section id="パッケージの概要" class="level2" data-number="32.1">
-<h2 data-number="32.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">32.1</span> パッケージの概要</h2>
+<section id="パッケージの概要" class="level2" data-number="41.1">
+<h2 data-number="41.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">41.1</span> パッケージの概要</h2>
 <p><code>survival</code> パッケージはRで生存時間解析を行うためのパッケージで、生存関数やハザード関数に関する推定・検定などが実装されています。</p>
 </section>
-<section id="生存時間解析用データの作成" class="level2" data-number="32.2">
-<h2 data-number="32.2" class="anchored" data-anchor-id="生存時間解析用データの作成"><span class="header-section-number">32.2</span> 生存時間解析用データの作成</h2>
+<section id="生存時間解析用データの作成" class="level2" data-number="41.2">
+<h2 data-number="41.2" class="anchored" data-anchor-id="生存時間解析用データの作成"><span class="header-section-number">41.2</span> 生存時間解析用データの作成</h2>
 <p>survivalパッケージでは、<code>Surv()</code> 関数を用いて生存時間解析用のデータセット（Survオブジェクト）を作成することができます。Survオブジェクトは、生存時間（観察時間）と打ち切り指標を表すベクトルの組をもとにして作成されます。</p>
 <p>個人 <span class="math inline">i=1,2,...</span> について、死亡や要介護状態への移行などの注目するイベント（死亡等）による集団からの脱退と、注目しないイベントによる脱退や観察の終了（打ち切り）が発生するとします。死亡等の発生時間を <span class="math inline">X_i</span> 、打ち切りの発生時間を <span class="math inline">C_i</span> とすると、いずれか早い方の発生時間 <span class="math inline">T_i = min(X_i, C_i)</span> だけが観測されます。生存時間解析においては、死亡等が観察されたか打ち切られたかを表す変数を <span class="math inline">D_i</span> として、<span class="math inline">\{(T_i, D_i)\}_{i=1,2,...}</span> を収集したデータセットが分析対象とされます。</p>
 <div class="cell">
@@ -634,8 +700,8 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># + は打ち切られたことを示す。</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="ノンパラメトリック推定" class="level2" data-number="32.3">
-<h2 data-number="32.3" class="anchored" data-anchor-id="ノンパラメトリック推定"><span class="header-section-number">32.3</span> ノンパラメトリック推定</h2>
+<section id="ノンパラメトリック推定" class="level2" data-number="41.3">
+<h2 data-number="41.3" class="anchored" data-anchor-id="ノンパラメトリック推定"><span class="header-section-number">41.3</span> ノンパラメトリック推定</h2>
 <p><code>survfit()</code> 関数を用いると、<code>Surv</code> オブジェクトに基づいて生存関数 <span class="math inline">S(t)</span> に関するKaplan-Meier推定を行うことができます。Kaplan-Meier推定法では、<span class="math inline">S(t)</span> を下式で推定します。</p>
 <p><span class="math display">\hat{S}(t)=\Pi_{i:\ t_i{\lt}t}(1-n.event_i/n.risk_i)</span></p>
 <div class="cell">
@@ -706,8 +772,8 @@ treat=control 21       21     10.7      9.77      16.8
 </div>
 </div>
 </section>
-<section id="パラメトリック推定" class="level2" data-number="32.4">
-<h2 data-number="32.4" class="anchored" data-anchor-id="パラメトリック推定"><span class="header-section-number">32.4</span> パラメトリック推定</h2>
+<section id="パラメトリック推定" class="level2" data-number="41.4">
+<h2 data-number="41.4" class="anchored" data-anchor-id="パラメトリック推定"><span class="header-section-number">41.4</span> パラメトリック推定</h2>
 <p><code>survreg()</code> 関数を用いることで、生存関数 <span class="math inline">S(x)</span> の形状として指数分布、ワイブル分布、対数ロジスティック分布などを仮定したパラメトリック推定を行うことができます。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(kidney)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -753,8 +819,8 @@ treat=control 21       21     10.7      9.77      16.8
 </div>
 </div>
 </section>
-<section id="セミパラメトリック推定" class="level2" data-number="32.5">
-<h2 data-number="32.5" class="anchored" data-anchor-id="セミパラメトリック推定"><span class="header-section-number">32.5</span> セミパラメトリック推定</h2>
+<section id="セミパラメトリック推定" class="level2" data-number="41.5">
+<h2 data-number="41.5" class="anchored" data-anchor-id="セミパラメトリック推定"><span class="header-section-number">41.5</span> セミパラメトリック推定</h2>
 <p><code>coxph()</code> 関数を用いることで、Cox比例ハザード回帰モデル（Cox proportional hazards regression model）を構築することができます。</p>
 <p>Kaplan-Meier推定では集団ごとにデータを分けることで生存関数を推定しましたが、Cox比例ハザードモデルでは、個人ごとのハザード関数を説明変数（共変量）<span class="math inline">Z</span> に基づく線形予測子を用いて以下の式のようにモデル化し、回帰係数を一種の最尤法で推定します。</p>
 <p><span class="math display">\lambda_i(t; Z)=\lambda_0(t)\ exp({\beta}^{T}Z)</span></p>
@@ -1269,13 +1335,13 @@ Score (logrank) test = 20.13  on 5 df,   p=0.001</code></pre>
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../articles/skimr.html" class="pagination-link" aria-label="skimr">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">skimr</span></span>
+      <a href="../articles/stringr.html" class="pagination-link" aria-label="stringr">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">stringr</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../articles/tuneRanger.html" class="pagination-link" aria-label="tuneRanger">
-        <span class="nav-page-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">tuneRanger</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../articles/tibble.html" class="pagination-link" aria-label="tibble">
+        <span class="nav-page-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">tibble</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

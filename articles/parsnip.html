@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="データサイエンス関連基礎調査WG">
+<meta name="dcterms.date" content="2025-07-29">
+
+<title>27&nbsp; parsnip – Rパッケージ活用事例集</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../articles/partykit.html" rel="next">
+<link href="../articles/palmerpenguins.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-1a431d08dc38a67a43972170746f6e10.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/parsnip.html"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">parsnip</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Rパッケージ活用事例集</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">はじめに</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/actuar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">actuar</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/aglm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">aglm</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ALEPlot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ALEPlot</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/C50.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">C50</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">class</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/corrplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">corrplot</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/crosstable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">crosstable</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/DALEX.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">DALEX</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">distr</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/distrEx.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">distrEx</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">dplyr</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/e1071.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">e1071</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/evd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">evd</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/fastshap.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">fastshap</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/forcats.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">forcats</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/genlasso.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">genlasso</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/gghighlight.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">gghighlight</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">ggplot2</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/igraph.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">igraph</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/iml.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">iml</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ismev.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">ismev</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/lifecontingencies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">lifecontingencies</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/makedummies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">makedummies</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/mlbench.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">mlbench</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/modeldata.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">modeldata</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/palmerpenguins.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">palmerpenguins</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/parsnip.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">parsnip</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/partykit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">partykit</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/pdp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">pdp</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/plyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">plyr</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/pROC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">pROC</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/psych.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">psych</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/purrr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">purrr</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/randomForest.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">randomForest</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ranger.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">ranger</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/rpart.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">rpart</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/rsample.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">rsample</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/shapviz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">shapviz</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/skimr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">skimr</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/stringr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">stringr</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/survival.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">survival</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/tibble.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">tibble</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/tuneRanger.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">tuneRanger</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/yardstick.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">yardstick</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">27.1</span> パッケージの概要</a></li>
+  <li><a href="#基本的な使用例１---回帰モデル" id="toc-基本的な使用例１---回帰モデル" class="nav-link" data-scroll-target="#基本的な使用例１---回帰モデル"><span class="header-section-number">27.2</span> 基本的な使用例１ - 回帰モデル</a></li>
+  <li><a href="#基本的な使用例２---分類モデル" id="toc-基本的な使用例２---分類モデル" class="nav-link" data-scroll-target="#基本的な使用例２---分類モデル"><span class="header-section-number">27.3</span> 基本的な使用例２ - 分類モデル</a></li>
+  <li><a href="#parsnipで様々なモデルを使用する" id="toc-parsnipで様々なモデルを使用する" class="nav-link" data-scroll-target="#parsnipで様々なモデルを使用する"><span class="header-section-number">27.4</span> parsnipで様々なモデルを使用する</a></li>
+  <li><a href="#参考資料" id="toc-参考資料" class="nav-link" data-scroll-target="#参考資料"><span class="header-section-number">27.5</span> 参考資料</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">parsnip</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>データサイエンス関連基礎調査WG </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 29, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="パッケージの概要" class="level2" data-number="27.1">
+<h2 data-number="27.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">27.1</span> パッケージの概要</h2>
+<p>parsnipは、機械学習や予測モデリングを行うパッケージ群tidymodelsに含まれるパッケージで、様々なモデルを統一的な記法で使用するためのインターフェースを提供します。 一つのアルゴリズム、例えばランダムフォレストのモデルを構築しようとしたときに、パッケージはranger、randomForest等複数の選択肢が存在し、その実行方法やパラメータの名称、設定方法は微妙に異なっていることもあるかもしれません。 parsnipは、これらのパッケージ間の実行方法の違いを吸収してくれるパッケージです。</p>
+<p>parsnipの概要を示す例として、ランダムフォレストによる回帰モデルを作成します。 サンプルデータとして、modeldataパッケージに含まれているカリフォルニア州サクラメント市の住宅価格のデータSacramentoを用います。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parsnip)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modeldata)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Sacramento"</span>, <span class="at">package=</span><span class="st">"modeldata"</span>) </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 今回はカーディナリティの高い(レコード数に対して取り得る値が多い)特徴量は除外</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> Sacramento[, <span class="sc">!</span>(<span class="fu">colnames</span>(Sacramento) <span class="sc">%in%</span> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">c</span>(<span class="st">"city"</span>, <span class="st">"zip"</span>, <span class="st">"latitude"</span>, <span class="st">"longitude"</span>))] </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [932 × 5] (S3: tbl_df/tbl/data.frame)
+ $ beds : int [1:932] 2 3 2 2 2 3 3 3 2 3 ...
+ $ baths: num [1:932] 1 1 1 1 1 1 2 1 2 2 ...
+ $ sqft : int [1:932] 836 1167 796 852 797 1122 1104 1177 941 1146 ...
+ $ type : Factor w/ 3 levels "Condo","Multi_Family",..: 3 3 3 3 3 1 3 3 1 3 ...
+ $ price: int [1:932] 59222 68212 68880 69307 81900 89921 90895 91002 94905 98937 ...</code></pre>
+</div>
+</div>
+<p>まずはrandomForestパッケージを使用します。 ここでは各パッケージをそのまま使用する場合とparsnipを使用する場合との違いを示すことが目的ですので詳細は割愛しますが、Sacramentoデータのpriceを目的変数として、他の変数で回帰するランダムフォレストモデルを構築しています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># From randomForest</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>rf_1 <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  price <span class="sc">~</span> ., </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> d, </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mtry =</span> <span class="dv">3</span>, </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ntree =</span> <span class="dv">200</span>, </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">nodesize =</span> <span class="dv">3</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">importance =</span> <span class="cn">TRUE</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>rf_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+ randomForest(formula = price ~ ., data = d, mtry = 3, ntree = 200,      nodesize = 3, importance = TRUE) 
+               Type of random forest: regression
+                     Number of trees: 200
+No. of variables tried at each split: 3
+
+          Mean of squared residuals: 7646314367
+                    % Var explained: 55.48</code></pre>
+</div>
+</div>
+<p>次にrangerパッケージで同じ内容のランダムフォレストモデルを構築します。 この二つのパッケージの例では実行方法に大きな違いはありませんが、それでもなお、指定するハイパーパラメータの変数名が一部異なっていることがわかります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># From ranger</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ranger)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>rf_2 <span class="ot">&lt;-</span> <span class="fu">ranger</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  price <span class="sc">~</span> ., </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> d, </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mtry =</span> <span class="dv">3</span>, </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">num.trees =</span> <span class="dv">200</span>, </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">min.node.size =</span> <span class="dv">3</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">importance =</span> <span class="st">"impurity"</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>rf_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Ranger result
+
+Call:
+ ranger(price ~ ., data = d, mtry = 3, num.trees = 200, min.node.size = 3,      importance = "impurity") 
+
+Type:                             Regression 
+Number of trees:                  200 
+Sample size:                      932 
+Number of independent variables:  4 
+Mtry:                             3 
+Target node size:                 3 
+Variable importance mode:         impurity 
+Splitrule:                        variance 
+OOB prediction error (MSE):       7674868879 
+R squared (OOB):                  0.5536376 </code></pre>
+</div>
+</div>
+<p>今度はparsnipを通して両パッケージのランダムフォレストを実行します。 二つの実行例のコードを見比べるとわかるように、parsnipを通して実行することで多くのパラメータが同じ変数名で指定できるようになります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># From randomForest</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rand_forest</span>(<span class="at">mtry =</span> <span class="dv">3</span>, <span class="at">trees =</span> <span class="dv">200</span>, <span class="at">min_n =</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"randomForest"</span>, <span class="at">importance =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(price <span class="sc">~</span> ., <span class="at">data =</span> d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+
+Call:
+ randomForest(x = maybe_data_frame(x), y = y, ntree = ~200, mtry = min_cols(~3,      x), nodesize = min_rows(~3, x), importance = ~TRUE) 
+               Type of random forest: regression
+                     Number of trees: 200
+No. of variables tried at each split: 3
+
+          Mean of squared residuals: 7633083891
+                    % Var explained: 55.56</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># From ranger</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rand_forest</span>(<span class="at">mtry =</span> <span class="dv">3</span>, <span class="at">trees =</span> <span class="dv">200</span>, <span class="at">min_n =</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>, <span class="at">importance =</span> <span class="st">"impurity"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(price <span class="sc">~</span> ., <span class="at">data =</span> d)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+Ranger result
+
+Call:
+ ranger::ranger(x = maybe_data_frame(x), y = y, mtry = min_cols(~3,      x), num.trees = ~200, min.node.size = min_rows(~3, x), importance = ~"impurity",      num.threads = 1, verbose = FALSE, seed = sample.int(10^5,          1)) 
+
+Type:                             Regression 
+Number of trees:                  200 
+Sample size:                      932 
+Number of independent variables:  4 
+Mtry:                             3 
+Target node size:                 3 
+Variable importance mode:         impurity 
+Splitrule:                        variance 
+OOB prediction error (MSE):       7655884183 
+R squared (OOB):                  0.5547417 </code></pre>
+</div>
+</div>
+<p>この例のように、ランダムフォレストという同じモデルの同じハイパーパラメータであっても、パッケージによって変数名は異なっている場合があります。 また、パッケージによっては、目的変数と説明変数をformula形式(y ~ xのような形式)ではなく、それぞれを引数で与える方式を採用しているかもしれません。 parsnipはそのような差異を吸収し、統一的な記法でモデルを構築する仕組みを提供するパッケージです。</p>
+</section>
+<section id="基本的な使用例１---回帰モデル" class="level2" data-number="27.2">
+<h2 data-number="27.2" class="anchored" data-anchor-id="基本的な使用例１---回帰モデル"><span class="header-section-number">27.2</span> 基本的な使用例１ - 回帰モデル</h2>
+<p>前項で示したランダムフォレストの例について、１ステップごとに解説しながら、parsnipの基本的な使用方法を紹介します。</p>
+<p><strong>(1) モデルの生成</strong><br>
+まずは作成したいモデルの種類(例えば線形回帰、SVM、ランダムフォレスト等。parsnipではこれをmodel typeと呼ぶ。)に応じた関数を呼び出して、モデルを生成します。 これらの関数を呼び出すと、model_specという形式のデータでモデルが生成されます。 model_specはモデルに関する各種の情報を保持するparsnipのデータ形式で、モデルの種類に加えて、後述するモード、エンジン、パラメータといった情報を付加していきます。</p>
+<p>ランダムフォレストの場合、モデル生成関数はrand_forest関数を使用します。 次のコードで、rand_forest関数にハイパーパラメータを与えて実行し、ランダムフォレストのmodel_specオブジェクトが作成されています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">mtry =</span> <span class="dv">3</span>, <span class="at">trees =</span> <span class="dv">200</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>rf_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Random Forest Model Specification (unknown mode)
+
+Main Arguments:
+  mtry = 3
+  trees = 200
+
+Computational engine: ranger </code></pre>
+</div>
+</div>
+<p>parsnipでは、モデルに与える引数は大きく、メイン引数(main arguments)とエンジン引数(engine arguments)に分けられます。 メイン引数は、ある特定のモデルにおいて、パッケージの種類によらずどのパッケージでも指定する必要があるような基本的なモデルのパラメータを指し、モデルの種類(およびその生成関数)によって決められています。</p>
+<p>メイン引数は、モデルの生成関数を呼び出す際に引数として渡します。 上の例ではランダムフォレストの生成関数であるrand_forest関数に、メイン引数として二つの引数(一つ一つの決定木を作成する際に用いる特徴量の数”mtry”、および決定木の数”trees”)を渡しています。 この二つのパラメータは、パッケージによって変数名は異なる場合があるものの、ランダムフォレストを実行するためにはどのパッケージでも指定しなければならないような基本的なパラメータです。(省略した場合、デフォルトの値が設定されます。)</p>
+<p>これに対してエンジン引数は、エンジンに指定したパッケージで使用できる引数のうち、メイン引数以外のものを指しています。 エンジン引数はモデルのパッケージ(エンジン)を指定する際に合わせて引数として指定するので、「エンジンの設定」の項で解説します。</p>
+<p><strong>(2) モードの設定</strong><br>
+モデルをどのような課題に対して使用するかをset_mode関数で指定しますが、parsnipではこれをモードと呼びます。 今回はランダムフォレストを回帰モデルとして使用するため、モードとして”regression”を指定します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">set_mode</span>(rf_spec, <span class="at">mode =</span> <span class="st">"regression"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>rf_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Random Forest Model Specification (regression)
+
+Main Arguments:
+  mtry = 3
+  trees = 200
+
+Computational engine: ranger </code></pre>
+</div>
+</div>
+<p>実行結果を見ると、1行目の(unknown)となっていた箇所が、(regression)に更新されたことが確認できます。</p>
+<p>指定できるモードの種類はモデルの種類ごとに決まっています。 ランダムフォレストでは、回帰に用いる場合の”regression”以外にも、分類に用いる場合の”classification”および生存時間分析に用いる場合の“censored regression”が指定できます。 また、モデルの種類によっては、教師なし学習のモデルに用いる”clustering”、生存時間分析のモデルに用いる“risk regression”といったモードが用意されています。</p>
+<p><strong>(3) エンジンの設定</strong><br>
+生成したモデルの具体的な実装について、set_engine関数でパッケージ(エンジン)を指定します。 ランダムフォレストのパッケージとして、例えば”randomForest”を指定します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">set_engine</span>(rf_spec, <span class="at">engine =</span> <span class="st">"randomForest"</span>, <span class="at">importance =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>rf_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Random Forest Model Specification (regression)
+
+Main Arguments:
+  mtry = 3
+  trees = 200
+
+Engine-Specific Arguments:
+  importance = TRUE
+
+Computational engine: randomForest </code></pre>
+</div>
+</div>
+<p>実行結果を見ると、最終行に表示されているエンジンの指定が、デフォルトの”ranger”から”randomForest”に更新されたことが確認できます。</p>
+<p>上の例では、set_engine関数に”importance”という引数も渡しています。 このimportance引数は、randomForestパッケージでランダムフォレストを実行する際に使用する引数で、特徴量重要度を算出するかどうかを制御するためのものです。 randomForestパッケージで使用されている引数でありながら、parsnipのrand_forest関数ではメイン引数となっていない引数なので、先に述べた「エンジン引数」に該当します。 このようにエンジン引数は、使用するエンジンの指定と併せて、エンジンとして使用するパッケージ内での引数名のまま、set_engine関数に引き渡して使用することができます。</p>
+<p><strong>(4) モデルのフィッティング</strong><br>
+ここまででモデルの設定が完了したので、データによる学習(フィッティング)を行います。 モード、エンジンおよびパラメータを設定済みのmodel_spec、学習用のデータ、および目的変数と説明変数の関係を表す式(formula。R標準のlm等で使用するものと同じです。)をfit関数に渡します。 fit関数を実行すると、学習済のparsnipモデルとしてmodel_fitという形式のデータが返ります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># train dataとtest dataに分割</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>n_train <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">nrow</span>(d) <span class="sc">*</span> <span class="fl">0.75</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>d_train <span class="ot">&lt;-</span> d[<span class="dv">1</span><span class="sc">:</span>n_train,]</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>d_test <span class="ot">&lt;-</span> d[(n_train<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="fu">nrow</span>(d),]</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># モデルのフィッティング</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(rf_spec, price <span class="sc">~</span> ., <span class="at">data =</span> d_train)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>rf_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+
+Call:
+ randomForest(x = maybe_data_frame(x), y = y, ntree = ~200, mtry = min_cols(~3,      x), importance = ~TRUE) 
+               Type of random forest: regression
+                     Number of trees: 200
+No. of variables tried at each split: 3
+
+          Mean of squared residuals: 7699846058
+                    % Var explained: 51.66</code></pre>
+</div>
+</div>
+<p>なお、説明変数と目的変数の関係をformula形式で指定する方法以外にも、説明変数と目的変数をそれぞれ引数xとyで直接指定する方式のfit_xy関数が用意されています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="ot">&lt;-</span> <span class="fu">fit_xy</span>(rf_spec, </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">x =</span> d_train[, <span class="fu">names</span>(d_train)[<span class="fu">names</span>(d_train) <span class="sc">!=</span> <span class="st">"price"</span>]], </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> d_train<span class="sc">$</span>price)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>rf_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+
+Call:
+ randomForest(x = maybe_data_frame(x), y = y, ntree = ~200, mtry = min_cols(~3,      x), importance = ~TRUE) 
+               Type of random forest: regression
+                     Number of trees: 200
+No. of variables tried at each split: 3
+
+          Mean of squared residuals: 7671604694
+                    % Var explained: 51.83</code></pre>
+</div>
+</div>
+<p>さて、(1)から(4)では解説のために、モデルの生成から学習までの一連の処理を、一つ一つのステップへと分解して実行してきました。 実際に使用する際は、以下のようにパイプ演算子でつなぎながら実行することで流れがわかりやすくなります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">mtry =</span> <span class="dv">3</span>, <span class="at">trees =</span> <span class="dv">200</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="at">mode =</span> <span class="st">"regression"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="at">engine =</span> <span class="st">"randomForest"</span>, <span class="at">importance =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(price <span class="sc">~</span> ., <span class="at">data =</span> d_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>(補足) モデルスペックの様々な設定方法</strong><br>
+モデルスペックの設定について、ここまでの例で示したものと異なる設定方法を紹介します。</p>
+<p>まずは、モデルのモードとエンジンはそれぞれset_mode関数およびset_engine関数を使用して設定しましたが、モデル生成関数の引数に指定して設定することもできます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># モデル生成用の関数(この例ではrand_forest)でモードとエンジンを設定する方式</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="st">"regression"</span>,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">engine =</span> <span class="st">"ranger"</span>,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mtry =</span> <span class="dv">3</span>, </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">trees =</span> <span class="dv">200</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>続いて、一度作成したmodel_specのメイン引数(ハイパーパラメータ)を更新するupdate関数を紹介します。 次のコードは、上の例で作成したランダムフォレストのmodel_specについて、mtryの更新および設定していなかったmin_nを新たに設定しています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">update</span>(rf_spec, <span class="at">mtry =</span> <span class="dv">5</span>, <span class="at">min_n =</span> <span class="dv">3</span>, <span class="at">fresh =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># fresh=TRUEにするとパラメータ全体を入れ替える</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (この場合、update関数で指定していないtreesパラメータの設定は初期化される)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>最後に、model_specのモードとパラメータを維持したまま他のエンジンに変換する、translate関数を紹介します。 次の例では、上で生成したランダムフォレストのmodel_specを、rangerエンジンからrandomForestエンジンに変換しています。 なお、エンジン引数を設定している場合、エンジン引数もそのまま引き継がれますが、前述のようにエンジン引数は本来的にパッケージごとに異なるパラメータですので、変換後のパッケージでは使用できないこともある点に注意が必要です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">translate</span>(rf_spec, <span class="at">engine =</span> <span class="st">"randomForest"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Random Forest Model Specification (regression)
+
+Main Arguments:
+  mtry = 5
+  trees = 200
+  min_n = 3
+
+Computational engine: randomForest 
+
+Model fit template:
+randomForest::randomForest(x = missing_arg(), y = missing_arg(), 
+    mtry = min_cols(~5, x), ntree = 200, nodesize = min_rows(~3, 
+        x))</code></pre>
+</div>
+</div>
+<p><strong>(5) モデルによる予測</strong><br>
+学習済のモデルをテストデータに適用して、テストデータに対する予測値を算出します。 R標準のlm等のモデルと同じように、predict関数を使用することができます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="ot">=</span> <span class="fu">predict</span>(rf_fit, d_test)[[<span class="dv">1</span>]]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>y_true <span class="ot">=</span> d_test<span class="sc">$</span>price</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> y_pred, <span class="at">y =</span> y_true)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a=</span><span class="dv">0</span>, <span class="at">b=</span><span class="dv">1</span>, <span class="at">col=</span><span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="parsnip_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>なお予測値を取得する関数として、predict関数以外にも、parsnipではaugment関数が用意されています。 augment関数は学習済のモデルと予測対象のデータを引数にとり、データに対して予測値と残差のカラムを追加したデータセットを返します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(rf_fit, d_test)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 7
+     .pred   .resid  beds baths  sqft type         price
+     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;fct&gt;        &lt;int&gt;
+ 1 189186.   70814.     3   2    1196 Residential 260000
+ 2 302809.  -42809.     3   2    1621 Residential 260000
+ 3 303272.  -39772.     3   2    1811 Residential 263500
+ 4 249206.   17304.     3   2    1540 Residential 266510
+ 5 390607. -122857.     4   2.5  2647 Residential 267750
+ 6 393610. -123610.     2   2    2750 Residential 270000
+ 7 363463.  -92463.     3   2.5  1910 Residential 271000
+ 8 261279.   11421.     4   2.5  1846 Residential 272700
+ 9 244198.   30802.     3   2    1543 Residential 275000
+10 299032.  -23032.     5   3    2494 Residential 276000</code></pre>
+</div>
+</div>
+</section>
+<section id="基本的な使用例２---分類モデル" class="level2" data-number="27.3">
+<h2 data-number="27.3" class="anchored" data-anchor-id="基本的な使用例２---分類モデル"><span class="header-section-number">27.3</span> 基本的な使用例２ - 分類モデル</h2>
+<p>ここまでは、ランダムフォレストの回帰モデルを構築する例を通して、parsnipの基本的な使用方法を解説してきました。 本項では、parsnipの別の使用例として、勾配ブースティング決定木(GBM)を分類問題に適用する例を紹介します。</p>
+<p>この使用例を通じて、モデルの種類やモードが異なる場合でも、parsnipでは同じ流れでモデル構築ができることを示します。 また、学習済のparsnipモデルから情報を取り出して、更なる分析に使用する方法を紹介します。</p>
+<p>サンプルデータとして、modeldataパッケージに含まれるcredit_dataを使用します。 顧客の信用度を示すStatus変数について、goodとbadを分類します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(credit_data)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># factor型の説明変数は数値に変換(ラベルエンコーディング)する。</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ※factor型のままでも自動的にone-hotエンコーディングされるためモデルの構築は可能。</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 　今回は後続の説明上の理由からラベルエンコーディングしている。</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>fct_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">'Home'</span>, <span class="st">'Marital'</span>, <span class="st">'Records'</span>, <span class="st">'Job'</span>)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>d2[, fct_vars] <span class="ot">&lt;-</span> (<span class="fu">sapply</span>(d2[, fct_vars], as.integer))</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(d2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   4039 obs. of  14 variables:
+ $ Status   : Factor w/ 2 levels "bad","good": 2 2 1 2 2 2 2 2 2 1 ...
+ $ Seniority: int  9 17 10 0 0 1 29 9 0 0 ...
+ $ Home     : int  6 6 3 6 6 3 3 4 3 4 ...
+ $ Time     : int  60 60 36 60 36 60 60 12 60 48 ...
+ $ Age      : int  30 58 46 24 26 36 44 27 32 41 ...
+ $ Marital  : int  2 5 2 4 4 2 2 4 2 2 ...
+ $ Records  : int  1 1 2 1 1 1 1 1 1 1 ...
+ $ Job      : int  2 1 2 1 1 1 1 1 2 4 ...
+ $ Expenses : int  73 48 90 63 46 75 75 35 90 90 ...
+ $ Income   : int  129 131 200 182 107 214 125 80 107 80 ...
+ $ Assets   : int  0 0 3000 2500 0 3500 10000 0 15000 0 ...
+ $ Debt     : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ Amount   : int  800 1000 2000 900 310 650 1600 200 1200 1200 ...
+ $ Price    : int  846 1658 2985 1325 910 1645 1800 1093 1957 1468 ...
+ - attr(*, "na.action")= 'omit' Named int [1:415] 30 114 144 153 158 177 195 206 240 241 ...
+  ..- attr(*, "names")= chr [1:415] "30" "114" "144" "153" ...</code></pre>
+</div>
+</div>
+<p><strong>(1) モデルの生成～学習</strong><br>
+parsnipを通してGBMによる分類モデルを構築します。 次の例では、GBM用のモデル生成関数boost_treeを用いて、モードには分類用の”classification”、使用するGBMパッケージとして”xgboost”をエンジンに指定しています。 ここではGBMのハイパーパラメータ等の詳細は割愛しますが、モデルの生成、モードとエンジンの設定、学習という流れ自体は、ランダムフォレストと同じであることがわかると思います。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># train dataとtest dataに分割</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>n_train <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">nrow</span>(d2) <span class="sc">*</span> <span class="fl">0.75</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>d_train <span class="ot">&lt;-</span> d2[<span class="dv">1</span><span class="sc">:</span>n_train,]</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>d_test <span class="ot">&lt;-</span> d2[(n_train<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="fu">nrow</span>(d2),]</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co"># モデルの生成～フィッティング</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>gbm_fit <span class="ot">&lt;-</span> </span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">boost_tree</span>(</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">mtry =</span> <span class="fl">0.8</span>,        <span class="co"># 木ごとに特徴量をサンプリングする割合</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">trees =</span> <span class="dv">2000</span>,      <span class="co"># 作成する木の本数</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">min_n =</span> <span class="dv">1</span>,         <span class="co"># 葉を分岐するために必要な最小のサンプル数</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">tree_depth =</span> <span class="dv">5</span>,    <span class="co"># 木ごとの最大の深さ</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">learn_rate =</span> <span class="fl">0.05</span>, <span class="co"># 学習率</span></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">sample_size =</span> <span class="fl">0.8</span>, <span class="co"># 木ごとにデータをサンプリングする割合</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">stop_iter =</span> <span class="dv">300</span>    <span class="co"># アーリーストッピング(一定のラウンド数で精度が上がらなければ打ち切る)を判定するラウンド数</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="at">mode =</span> <span class="st">"classification"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="at">engine =</span> <span class="st">"xgboost"</span>,       </span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">eval_metric =</span> <span class="st">"logloss"</span>,  <span class="co"># 損失関数の種類を指定</span></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">counts =</span> <span class="cn">FALSE</span>,           <span class="co"># mtryを割合で指定するオプション</span></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">validation =</span> <span class="fl">0.25</span>) <span class="sc">%&gt;%</span>    <span class="co"># アーリーストッピングの判定に用いるデータの割合</span></span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(Status <span class="sc">~</span> ., <span class="at">data =</span> d_train)</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>gbm_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+##### xgb.Booster
+raw: 799.2 Kb 
+call:
+  xgboost::xgb.train(params = list(eta = 0.05, max_depth = 5, gamma = 0, 
+    colsample_bytree = 1, colsample_bynode = 0.8, min_child_weight = 1, 
+    subsample = 0.8), data = x$data, nrounds = 2000, watchlist = x$watchlist, 
+    verbose = 0, early_stopping_rounds = 300, eval_metric = "logloss", 
+    nthread = 1, objective = "binary:logistic")
+params (as set within xgb.train):
+  eta = "0.05", max_depth = "5", gamma = "0", colsample_bytree = "1", colsample_bynode = "0.8", min_child_weight = "1", subsample = "0.8", eval_metric = "logloss", nthread = "1", objective = "binary:logistic", validate_parameters = "TRUE"
+xgb.attributes:
+  best_iteration, best_msg, best_ntreelimit, best_score, niter
+callbacks:
+  cb.evaluation.log()
+  cb.early.stop(stopping_rounds = early_stopping_rounds, maximize = maximize, 
+    verbose = verbose)
+# of features: 13 
+niter: 386
+best_iteration : 86 
+best_ntreelimit : 86 
+best_score : 0.4452538 
+best_msg : [86] validation-logloss:0.445254 
+nfeatures : 13 
+evaluation_log:
+  iter validation_logloss
+ &lt;num&gt;              &lt;num&gt;
+     1          0.6733157
+     2          0.6546558
+   ---                ---
+   385          0.4888858
+   386          0.4891175</code></pre>
+</div>
+</div>
+<p>学習済のモデルをテストデータに適用し、テストデータに対する分類結果とその正解率を算出します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(gbm_fit, d_test)[[<span class="dv">1</span>]]</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>y_true <span class="ot">&lt;-</span> d_test<span class="sc">$</span>Status</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"accuracy : %.4f"</span>, <span class="fu">sum</span>(y_pred<span class="sc">==</span>y_true)<span class="sc">/</span><span class="fu">length</span>(y_true))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "accuracy : 0.7921"</code></pre>
+</div>
+</div>
+<p><strong>(2) モデル情報の利用</strong><br>
+parsnipを通して学習させたモデルからより多くの情報を取得するため、parsnipのオブジェクトとしてではなく、エンジンに指定したパッケージのオブジェクトとして扱いたい場合があるかもしれません。 例えば、xgboostパッケージの学習済モデルであれば、xgboostのxgb.importance関数で特徴量重要度が計算できるので、parsnipで学習させたモデルをxgboostのモデルとして扱うことができれば都合がいいです。</p>
+<p>parsnipではextract_fit_engine関数が、そのような機能を提供します。 次の例では、上で学習させたparsnipモデルから、extract_fit_engine関数でxgboostモデルとしての情報を取り出し、xgb.importance関数に渡しています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>importance_gbm <span class="ot">&lt;-</span> gbm_fit <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xgb.importance</span>(<span class="at">model =</span> .)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>importance_gbm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Feature        Gain      Cover  Frequency
+       &lt;char&gt;       &lt;num&gt;      &lt;num&gt;      &lt;num&gt;
+ 1:    Income 0.162361809 0.15308392 0.15144738
+ 2:     Price 0.152862530 0.19189145 0.18225867
+ 3:    Amount 0.134619300 0.13369218 0.13318425
+ 4: Seniority 0.118221478 0.10297003 0.08957634
+ 5:       Age 0.081321036 0.08125753 0.11454839
+ 6:   Records 0.077957485 0.05251855 0.02633868
+ 7:    Assets 0.066155159 0.06963897 0.07764940
+ 8:  Expenses 0.062748185 0.05693741 0.06994658
+ 9:       Job 0.041249101 0.03177091 0.03093552
+10:      Time 0.036138501 0.03563342 0.04149584
+11:      Home 0.032315613 0.03410136 0.03640204
+12:      Debt 0.024199277 0.03237239 0.02932041
+13:   Marital 0.009850526 0.02413188 0.01689651</code></pre>
+</div>
+</div>
+<p>この特徴量重要度の情報を利用して、重要度が上位の変数のみを使用した一般化線形モデル(ロジスティック回帰)によるモデルを構築することを考えます。 特徴量重要度(Gain)の数値が、ある一定の値を超えている変数のみを使用して、parsnipを通したロジスティック回帰モデルを作成します。 ロジスティック回帰はlogistic_reg関数を使用しますが、モデル構築から予測までの流れはやはり、ランダムフォレストやGBMと同じです。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>d3 <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(credit_data)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>d_train <span class="ot">&lt;-</span> d3[<span class="dv">1</span><span class="sc">:</span>n_train,]</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>d_test <span class="ot">&lt;-</span> d3[(n_train<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span><span class="fu">nrow</span>(d3),]</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>glm_fit <span class="ot">&lt;-</span> </span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">logistic_reg</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">%&gt;%</span>  <span class="co"># エンジンとしてR標準のglmを使用</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_xy</span>(<span class="at">x=</span>d_train[, importance_gbm[importance_gbm<span class="sc">$</span>Gain <span class="sc">&gt;</span> <span class="fl">0.05</span>,][[<span class="st">"Feature"</span>]]], </span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">y=</span>d_train<span class="sc">$</span>Status)</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>glm_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+
+Call:  stats::glm(formula = ..y ~ ., family = stats::binomial, data = data)
+
+Coefficients:
+(Intercept)       Income        Price       Amount    Seniority          Age  
+  1.094e+00    7.647e-03    1.310e-03   -2.288e-03    1.075e-01   -6.543e-03  
+ Recordsyes       Assets     Expenses  
+ -1.846e+00    2.478e-05   -1.219e-02  
+
+Degrees of Freedom: 3028 Total (i.e. Null);  3020 Residual
+Null Deviance:      3410 
+Residual Deviance: 2683     AIC: 2701</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(glm_fit, d_test)[[<span class="dv">1</span>]]</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>y_true <span class="ot">&lt;-</span> d_test<span class="sc">$</span>Status</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"accuracy : %.4f"</span>, <span class="fu">sum</span>(y_pred<span class="sc">==</span>y_true)<span class="sc">/</span><span class="fu">length</span>(y_true))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "accuracy : 0.7752"</code></pre>
+</div>
+</div>
+<p>ここではロジスティック回帰のエンジンとしてR標準のglmを使用していますが、glmのモデルは、summary関数で各説明変数の標準誤差等のより詳細な情報が確認できます。 そこで再度extract_fit_engine関数を使用して、parsnipモデルからglmモデルとしての情報を取り出し、summary関数に渡します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>glm_fit <span class="sc">%&gt;%</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(.)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+stats::glm(formula = ..y ~ ., family = stats::binomial, data = data)
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  1.094e+00  2.274e-01   4.811 1.50e-06 ***
+Income       7.647e-03  8.305e-04   9.207  &lt; 2e-16 ***
+Price        1.310e-03  1.634e-04   8.021 1.05e-15 ***
+Amount      -2.288e-03  1.966e-04 -11.641  &lt; 2e-16 ***
+Seniority    1.075e-01  9.039e-03  11.890  &lt; 2e-16 ***
+Age         -6.543e-03  5.264e-03  -1.243  0.21388    
+Recordsyes  -1.846e+00  1.287e-01 -14.340  &lt; 2e-16 ***
+Assets       2.478e-05  7.969e-06   3.109  0.00188 ** 
+Expenses    -1.219e-02  2.582e-03  -4.722 2.33e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 3410.5  on 3028  degrees of freedom
+Residual deviance: 2682.8  on 3020  degrees of freedom
+AIC: 2700.8
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+</div>
+</section>
+<section id="parsnipで様々なモデルを使用する" class="level2" data-number="27.4">
+<h2 data-number="27.4" class="anchored" data-anchor-id="parsnipで様々なモデルを使用する"><span class="header-section-number">27.4</span> parsnipで様々なモデルを使用する</h2>
+<p>ここまでの例で示してきたように、parsnipではモデルの種類、エンジン、モードの組み合わせでモデルを特定します。 あるモデルの種類に関して、parsnipが対応しているパッケージ(エンジン)とモードの組み合わせを表示するshow_engines関数が用意されています。 例えばGBMについてこれらの情報を知りたい場合、show_engines関数に、GBMの生成関数の名称である”boost_tree”を引数として渡して実行します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_engines</span>(<span class="st">"boost_tree"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 2
+  engine  mode          
+  &lt;chr&gt;   &lt;chr&gt;         
+1 xgboost classification
+2 xgboost regression    
+3 C5.0    classification
+4 spark   classification
+5 spark   regression    </code></pre>
+</div>
+</div>
+<p>tidymodelsの公式サイトではparsnipが対応しているモデル、エンジン、モードの全ての組み合わせが一覧化されているので、そちらもご参照ください。</p>
+<ul>
+<li><strong>Search parsnip models</strong>. <a href="https://www.tidymodels.org/find/parsnip/">https://www.tidymodels.org/find/parsnip/</a>.</li>
+</ul>
+<p>また、更に発展的な使用方法として、parsnipに用意されていないモデルを新たに登録し、parsnipのインターフェースで実行できるようにする方法も用意されています。 これにより、parsnipベースで記述したコードを再利用できたり、tidymodelsの他のパッケージとの連携が可能になるといった利点が考えられます。 モデルの追加はparsnipのディベロッパー・ツールとして用意されている関数を使用します。 次のコードは新たなモデルとそのモード、エンジンとなるパッケージを登録しています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 架空のnewpkgパッケージをnew_modelの回帰モデルとして登録する</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set_new_model</span>(<span class="st">"new_model"</span>)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set_model_mode</span>(<span class="at">model =</span> <span class="st">"new_model"</span>, <span class="at">mode =</span> <span class="st">"regression"</span>)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set_model_engine</span>(</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="st">"new_model"</span>,</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode =</span> <span class="st">"regression"</span>,</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">eng =</span> <span class="st">"newpkg"</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set_dependency</span>(<span class="st">"new_model"</span>, <span class="at">eng =</span> <span class="st">"newpkg"</span>, <span class="at">pkg =</span> <span class="st">"newpkg"</span>)</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a><span class="fu">show_model_info</span>(<span class="st">"new_model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Information for `new_model`
+ modes: unknown, regression 
+
+ engines: 
+   regression: newpkgNA
+
+
+ no registered arguments.
+
+ no registered fit modules.
+
+ no registered prediction modules.</code></pre>
+</div>
+</div>
+<p>実際に使用するには更に、モデル生成関数の作成、引数の設定、fit関数及びpreditct関数に対する動作の設定等が必要になります。 内容はやや高度になりますので、興味がある方はtidymodels公式サイトの以下記事をご参照ください。</p>
+<ul>
+<li><strong>How to build a parsnip model</strong>. <a href="https://www.tidymodels.org/learn/develop/models/">https://www.tidymodels.org/learn/develop/models/</a>.</li>
+</ul>
+</section>
+<section id="参考資料" class="level2" data-number="27.5">
+<h2 data-number="27.5" class="anchored" data-anchor-id="参考資料"><span class="header-section-number">27.5</span> 参考資料</h2>
+<p>[1] Kuhn et al., (2020). Tidymodels: a collection of packages for modeling and machine learning using tidyverse principles. <a href="https://www.tidymodels.org">https://www.tidymodels.org</a>.<br>
+[2] Kuhn M, Vaughan D (2025). parsnip: A Common API to Modeling and Analysis Functions. R package version 1.3.1, <a href="https://parsnip.tidymodels.org/">https://parsnip.tidymodels.org/</a>, <a href="https://github.com/tidymodels/parsnip">https://github.com/tidymodels/parsnip</a>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../articles/palmerpenguins.html" class="pagination-link" aria-label="palmerpenguins">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">palmerpenguins</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../articles/partykit.html" class="pagination-link" aria-label="partykit">
+        <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">partykit</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
