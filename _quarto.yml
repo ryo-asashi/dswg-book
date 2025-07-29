@@ -22,9 +22,11 @@ book:
     - articles/dplyr.qmd
     - articles/e1071.qmd
     - articles/evd.qmd
+    - articles/fastshap.qmd
     - articles/forcats.qmd
     - articles/genlasso.qmd
     - articles/gghighlight.qmd
+    - articles/ggplot2.qmd
     - articles/igraph.qmd
     - articles/iml.qmd
     - articles/ismev.qmd
@@ -33,17 +35,19 @@ book:
     - articles/mlbench.qmd
     - articles/modeldata.qmd
     - articles/palmerpenguins.qmd
-    - articles/partykit.Rmd
     - articles/parsnip.qmd
+    - articles/partykit.qmd
     - articles/pdp.qmd
+#    - articles/plotly.qmd
     - articles/plyr.qmd
     - articles/pROC.qmd
     - articles/psych.qmd
     - articles/purrr.qmd
 #    - articles/quantmod.qmd
-    - articles/randomForest.Rmd
-    - articles/ranger.Rmd
+    - articles/randomForest.qmd
+    - articles/ranger.qmd
     - articles/readr.qmd
+#    - articles/readxl.qmd
 #    - articles/recipes.qmd
     - articles/rpart.qmd
     - articles/rsample.qmd
@@ -51,7 +55,8 @@ book:
     - articles/skimr.qmd
     - articles/stringr.qmd
     - articles/survival.qmd
-    - articles/tuneRanger.Rmd
+    - articles/tibble.qmd
+    - articles/tuneRanger.qmd
     - articles/yardstick.qmd
 #    - articles/YieldCurve.qmd
 
