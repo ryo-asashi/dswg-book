@@ -2,9 +2,8 @@
 title: "class"
 author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
-output:   
-  word_document:
-    toc: yes
+format:
+  html:
     toc_depth: '3'
     fig_width: 6
     fig_height: 3
