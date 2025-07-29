@@ -42,7 +42,7 @@ library(skimr)
 skim(iris)
 ```
 
-### 要約結果を加工・抽出する
+## 要約結果を加工・抽出する
 
 `skim()` 関数の返り値は、"skim_df" という特別なクラスを持つデータフレームです。
 
@@ -64,7 +64,7 @@ iris_skim |> yank("numeric")
 iris_skim |> focus(factor.n_unique, factor.ordered) |> yank("factor")
 ```
 
-### グループ化されたデータフレームを要約する
+## グループ化されたデータフレームを要約する
 
 `skim()` 関数は `group_by()` でグループ化されたデータフレームにも対応しており、各特徴量に関するグループごとの集計結果を出力することができます。
 
@@ -72,7 +72,7 @@ iris_skim |> focus(factor.n_unique, factor.ordered) |> yank("factor")
 iris |> dplyr::group_by(Species) |> skim()
 ```
 
-### データフレーム以外のオブジェクトを要約する
+## データフレーム以外のオブジェクトを要約する
 
 **skimr** はデータフレームの要約を効率的に行うことを目的として設計されていますが、ベクトル、行列、時系列データなど、データフレームに変換することが可能な他のデータ型のオブジェクトに対しても使うことができます。
 
@@ -88,14 +88,15 @@ class(Nile) # ts
 skim(Nile)
 ```
 
-### 要約関数を自作する
+## 要約関数を自作する
 
 `skim_with()` 関数を用いることで、要約関数を自作することも可能です。詳しい使い方はパッケージの [Vignette](https://cran.r-project.org/web/packages/skimr/vignettes/using_skimr.html#modifying-skim) をご参照ください。
 
 ```{r}
-my_skim <- skim_with(numeric = sfl(n = length, sum = sum))
+my_skim <- skim_with(numeric = sfl(n = length, sum, var))
 iris |>
   dplyr::group_by(Species) |>
   my_skim() |>
-  focus(numeric.n, numeric.sum)
+  yank("numeric") |>
+  dplyr::select(skim_variable, Species, hist, n, sum, var)
 ```
