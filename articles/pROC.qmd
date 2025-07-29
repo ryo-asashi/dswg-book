@@ -3,7 +3,7 @@ title: "pROC"
 author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
 format:
-  docx:
+  html:
     fig-width: 6
     fig-height: 3
 ---
