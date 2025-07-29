@@ -12,7 +12,7 @@ book:
     - articles/aglm.qmd
     - articles/ALEPlot.qmd
     - articles/C50.qmd
-    - articles/class.Rmd
+    - articles/class.qmd
     - articles/corrplot.qmd
     - articles/crosstable.qmd
     - articles/DALEX.qmd
