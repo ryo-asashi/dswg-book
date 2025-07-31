@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2025-07-29">
+<meta name="dcterms.date" content="2025-07-31">
 
 <title>2&nbsp; aglm – Rパッケージ活用事例集</title>
 <style>
@@ -639,13 +639,13 @@ window.Quarto = {
   <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">2.1</span> パッケージの概要</a></li>
   <li><a href="#aglm-モデルを構築する" id="toc-aglm-モデルを構築する" class="nav-link" data-scroll-target="#aglm-モデルを構築する"><span class="header-section-number">2.2</span> AGLM モデルを構築する</a>
   <ul class="collapse">
-  <li><a href="#lasso回帰によるaglmモデル" id="toc-lasso回帰によるaglmモデル" class="nav-link" data-scroll-target="#lasso回帰によるaglmモデル"><span class="header-section-number">2.2.1</span> Lasso回帰によるAGLMモデル</a></li>
+  <li><a href="#ラッソ回帰によるaglmモデル" id="toc-ラッソ回帰によるaglmモデル" class="nav-link" data-scroll-target="#ラッソ回帰によるaglmモデル"><span class="header-section-number">2.2.1</span> ラッソ回帰によるAGLMモデル</a></li>
   <li><a href="#ridge回帰によるaglmモデル" id="toc-ridge回帰によるaglmモデル" class="nav-link" data-scroll-target="#ridge回帰によるaglmモデル"><span class="header-section-number">2.2.2</span> Ridge回帰によるAGLMモデル</a></li>
   <li><a href="#elastic-netによるaglmモデル" id="toc-elastic-netによるaglmモデル" class="nav-link" data-scroll-target="#elastic-netによるaglmモデル"><span class="header-section-number">2.2.3</span> Elastic-NetによるAGLMモデル</a></li>
   </ul></li>
-  <li><a href="#最適な-λ-を探索しながら-aglm-モデルを構築する" id="toc-最適な-λ-を探索しながら-aglm-モデルを構築する" class="nav-link" data-scroll-target="#最適な-λ-を探索しながら-aglm-モデルを構築する"><span class="header-section-number">2.3</span> 最適な λ を探索しながら AGLM モデルを構築する</a></li>
-  <li><a href="#最適な-λ-α-を探索しながら-aglm-モデルを構築する" id="toc-最適な-λ-α-を探索しながら-aglm-モデルを構築する" class="nav-link" data-scroll-target="#最適な-λ-α-を探索しながら-aglm-モデルを構築する"><span class="header-section-number">2.4</span> 最適な λ, α を探索しながら AGLM モデルを構築する</a></li>
-  <li><a href="#参考資料" id="toc-参考資料" class="nav-link" data-scroll-target="#参考資料"><span class="header-section-number">2.5</span> 参考資料</a></li>
+  <li><a href="#最適な-λ-による-aglm-モデルを構築する" id="toc-最適な-λ-による-aglm-モデルを構築する" class="nav-link" data-scroll-target="#最適な-λ-による-aglm-モデルを構築する"><span class="header-section-number">3</span> 最適な λ による AGLM モデルを構築する</a></li>
+  <li><a href="#最適な-α-と-λ-による-aglm-モデルを構築する" id="toc-最適な-α-と-λ-による-aglm-モデルを構築する" class="nav-link" data-scroll-target="#最適な-α-と-λ-による-aglm-モデルを構築する"><span class="header-section-number">4</span> 最適な α と λ による AGLM モデルを構築する</a></li>
+  <li><a href="#参考資料" id="toc-参考資料" class="nav-link" data-scroll-target="#参考資料"><span class="header-section-number">5</span> 参考資料</a></li>
   </ul>
 </nav>
     </div>
@@ -672,7 +672,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 29, 2025</p>
+      <p class="date">July 31, 2025</p>
     </div>
   </div>
   
@@ -686,7 +686,32 @@ window.Quarto = {
 
 <section id="パッケージの概要" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">2.1</span> パッケージの概要</h2>
-<p>aglm パッケージは、Accurate Generalized Linear Model (AGLM) を実装したパッケージです。AGLM は、加法的モデルの枠組にとどまることで一定の解釈性を維持しながら、「数値変数の離散化」と「フューズドラッソを応用した正則化手法」を組み合わせることによって目的変数と予測変数の非線形な関係を表現する予測モデルです。</p>
+<p><a href="https://CRAN.R-project.org/package=aglm"><strong>aglm</strong></a> パッケージは、<a href="https://www.jarip.org/publication/risk_and_insurance/pdf/RI_v15_045.pdf">藤田ほか (2019)</a> によって提唱された <strong>Accurate GLM</strong> (<strong>AGLM</strong>) を実装したパッケージです。AGLM は、目的変数の値を特徴量ことの非線形な効果の加法的な組み合わせとして表現するモデルであり、高い解釈性を保ちながら柔軟な予測を可能にします。</p>
+<p>AGLM は、以下の２つの手法を組み合わせることで、目的変数と予測変数の非線形な関係を効果的に捉えます。</p>
+<ol type="1">
+<li><p>連続変数の<strong>離散化</strong>：連続変数である特徴量が取りうる値の範囲を適切な区間に分割し、その特徴量の効果を区分的関数としてモデル化することによって非線形な効果を表現します。</p></li>
+<li><p><strong>フューズドラッソ</strong>（Fused Lasso）による正則化：AGLM では、連続変数を単純に区間に対応させてダミー変数化する代わりに、「順序ダミー（<strong>O-ダミー</strong>）変数化」と呼ばれる方法を利用します。これにより、モデルの学習時に推定される各パラメーターは、隣接する区間における効果水準の差に対応することになります。そのようにモデル化したうえでラッソ回帰を適用すると、隣接区間の効果の差が重要でないような区切りを消失させて、区間を自動的に再統合することができます。</p></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>AGLM モデルの学習における最小化問題の正則化項は、おおむね次の形式で与えられます。</p>
+<p><span class="math display">
+R{ \left(\{\beta_{j,k}\}_{j,k}\;\middle|\;\lambda, \alpha \right)}
+=\lambda\left\{(1-\alpha)\sum_j\sum_k{\left|\beta_{j,k}\right|}^2
++\alpha\sum_j\sum_k{\left|\beta_{j,k}\right|}\right\}
+</span></p>
+<p>ここで、罰則の対象となるパラメータ <span class="math inline">\beta_{j,k}</span> は、連続変数である特徴量 <span class="math inline">x_j</span> が取りうる値の範囲を離散化した区間ごとの効果の水準ではなく、<strong>隣接する区間の水準の差</strong>に対応します。このため、<span class="math inline">\beta_{j,k}</span> が小さくなるほど特徴量 <span class="math inline">x_j</span> の効果がなめらかになります。また、<span class="math inline">\beta_{j,k}</span> がゼロのときは隣り合う区間における効果の水準が等しくなります。これは、離散化した区間の再統合としてとらえることができます。</p>
+<p><span class="math inline">\lambda</span> は正則化項の影響度を決めるパラメーターで、この値が大きいほど、各パラメーター <span class="math inline">\beta_{j,k}</span> の値が小さく抑えられるようになります。また、<span class="math inline">\alpha</span> は正則化項の第1項と第2項のバランスを決めるパラメーターで、<span class="math inline">\alpha=1</span> の場合をラッソ正則化、<span class="math inline">\alpha=0</span> の場合をリッジ正則化、<span class="math inline">0&lt;\alpha&lt;1</span> の場合をエラスティックネットと呼びます。なお、<span class="math inline">\lambda</span> や <span class="math inline">\alpha</span> の値を決めるときは、意味のある <span class="math inline">\lambda</span> の値の範囲が <span class="math inline">\alpha</span> の値によって大きく異なることに注意が必要です。</p>
+</div>
+</div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS) <span class="co"># Bostonデータセットを利用します</span></span>
@@ -708,10 +733,10 @@ window.Quarto = {
 </section>
 <section id="aglm-モデルを構築する" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="aglm-モデルを構築する"><span class="header-section-number">2.2</span> AGLM モデルを構築する</h2>
-<section id="lasso回帰によるaglmモデル" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="lasso回帰によるaglmモデル"><span class="header-section-number">2.2.1</span> Lasso回帰によるAGLMモデル</h3>
-<p>aglm関数の第1引数 <code>x</code> に説明変数（デザイン行列）を渡し、第2引数 <code>y</code> に目的変数を渡すことで、AGLMを学習させることができます。 また、<code>predict</code> 関数の引数 <code>newx</code> に新たなデータを渡せば、そのデータに対する予測が出力されます。</p>
-<p>なお、AGLMは<code>glmnet</code>パッケージを活用して実装されており、出力される<code>AccurateGLM</code>オブジェクトには多数のλの値に対応する結果が保存されています。 <code>AccurateGLM</code>オブジェクト用の<code>predict()</code>関数のメソッドの引数<code>s</code>の値を指定することで、正則化の度合いが異なるさまざまなモデルによる予測を得ることができます。</p>
+<section id="ラッソ回帰によるaglmモデル" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="ラッソ回帰によるaglmモデル"><span class="header-section-number">2.2.1</span> ラッソ回帰によるAGLMモデル</h3>
+<p><code>aglm()</code> 関数の第1引数 <code>x</code> に説明変数（デザイン行列）を渡し、第2引数 <code>y</code> に目的変数を渡すことで、AGLM モデルを学習させることができます。</p>
+<p>また、<code>predict()</code> 関数に学習済みの AGLM モデルと新たなデータを渡せば、そのデータに対する予測値を出力することができます。なお、<strong>aglm</strong> は <strong>glmnet</strong> パッケージを活用して実装されており、出力される “AccurateGLM” オブジェクトには多数の<span class="math inline">\lambda</span> の値に対応する結果が保存されています。“AccurateGLM” オブジェクトに対する <code>predict()</code> 関数のメソッドの引数 <code>s</code> の値を指定することで、正則化の強さが異なるさまざまなモデルによる予測値を得ることが可能です。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(aglm)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
@@ -728,17 +753,20 @@ window.Quarto = {
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">newx =</span> test_X,</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">s =</span> <span class="fl">0.062</span> <span class="co"># 正則化項のλパラメーターを数値またはベクトルで指定</span></span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">c</span>() <span class="co"># 行列形式の出力をベクトルに変換</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>.rmse <span class="ot">=</span> <span class="fu">round</span>(yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds), <span class="dv">3</span>)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste</span>(<span class="st">"Lasso@0.062 | RMSE:"</span>, .rmse))</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_lasso, test_X, <span class="at">s =</span> <span class="fl">0.62</span>) <span class="sc">|&gt;</span> <span class="fu">c</span>()</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>.rmse <span class="ot">=</span> <span class="fu">round</span>(yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds), <span class="dv">3</span>)</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste</span>(<span class="st">"Lasso@0.62 | RMSE:"</span>, .rmse))</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> q</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>set_title <span class="ot">&lt;-</span> <span class="cf">function</span>(label, rmse)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">sprintf</span>(<span class="st">"%s | RMSE: %.3f"</span>, label, rmse))</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_title</span>(<span class="st">"Lasso s0.062"</span>, yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds))</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_lasso, test_X, <span class="at">s =</span> <span class="fl">0.62</span>) <span class="sc">|&gt;</span> <span class="fu">c</span>()</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_title</span>(<span class="st">"Lasso s0.62"</span>, yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds))</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> q</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -747,7 +775,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>構築した AGLM モデルを plot() 関数に渡すことで、特徴量ごとの予測値への影響を可視化することができます。Lasso正則化を用いている場合、λの値を大きくするほど離散化した区間ごとに当てはめられたパラメータの差が消失していき、予測値が異なる区間の数が減っていきます。また、（<code>add_linear_columns = FALSE</code> としている場合）最後には特徴量の効果は消失します。</p>
+<p>構築した AGLM モデルを <code>plot()</code> 関数に渡すことで、特徴量ごとの予測値への影響を可視化することができます。正則化項としてラッソを用いる場合、<span class="math inline">\lambda</span> を大きくするほど、離散化した区間ごとに当てはめられた効果水準の差が消失して意味のある区間の数が減少していき、（<code>add_linear_columns = FALSE</code> としている場合）最後には特徴量の効果は消失します。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>)) <span class="co"># プロット領域中の余白を調整</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>vars <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"lstat"</span>, <span class="st">"rm"</span>, <span class="st">"dis"</span>, <span class="st">"ptratio"</span>)</span>
@@ -787,28 +815,27 @@ window.Quarto = {
 </section>
 <section id="ridge回帰によるaglmモデル" class="level3" data-number="2.2.2">
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="ridge回帰によるaglmモデル"><span class="header-section-number">2.2.2</span> Ridge回帰によるAGLMモデル</h3>
-<p><code>aglm</code>() 関数の引数 <code>alpha</code> を0にすると、パラメータの推定がリッジ回帰によって行われます。ここでは、λの値を明示的に与えてみます。</p>
+<p><code>aglm()</code> 関数の引数 <code>alpha</code> を <span class="math inline">0</span> にすると、パラメータの推定がリッジ正則化によって行われます。ここでは、<span class="math inline">\lambda</span> の値を明示的に与えてみます。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>model_ridge <span class="ot">&lt;-</span> <span class="fu">aglm</span>(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> train_X,</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> train_y,</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> <span class="dv">0</span>, <span class="co"># 正則化項のαパラメーターを指定（1：ラッソ、0：リッジ）</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">add_linear_columns =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">lambda =</span> <span class="fu">c</span>(<span class="dv">1000</span>, <span class="dv">100</span>, <span class="dv">10</span>, <span class="dv">1</span>, <span class="fl">0.1</span>) <span class="co"># 正則化項のλを指定</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">lambda =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">1</span>) <span class="co"># 正則化項のλを指定</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_ridge, test_X, <span class="at">s =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">c</span>()</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>.rmse <span class="ot">=</span> <span class="fu">round</span>(yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds), <span class="dv">3</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste</span>(<span class="st">"Ridge@1 | RMSE:"</span>, .rmse))</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_ridge, test_X, <span class="at">s =</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> <span class="fu">c</span>()</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>.rmse <span class="ot">=</span> <span class="fu">round</span>(yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds), <span class="dv">3</span>)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste</span>(<span class="st">"Ridge@100 | RMSE ="</span>, .rmse))</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> q</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_title</span>(<span class="st">"Ridge s1"</span>, yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds))</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_ridge, test_X, <span class="at">s =</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> <span class="fu">c</span>()</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_title</span>(<span class="st">"Ridge s100"</span>, yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds))</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> q</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -817,7 +844,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Ridge正則化を用いている場合、λの値を大きくしたときに、離散化した区間ごとに当てはめられたパラメータの差は小さくなるもののゼロにはならず、特徴量ごとの影響をあらわす関数がなめらかになっていきます。</p>
+<p>Ridge正則化を用いている場合、<span class="math inline">\lambda</span> の値を大きくしたときに、離散化した区間ごとに当てはめられたパラメータの差は小さくなるもののゼロにはならず、特徴量ごとの影響をあらわす関数がなめらかになっていきます。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>)) <span class="co"># プロット領域中の余白を調整</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_ridge, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -828,7 +855,8 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_ridge, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_ridge, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="dv">1</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_ridge, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -836,7 +864,7 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_ridge, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_ridge, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -844,40 +872,31 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_ridge, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="aglm_files/figure-html/unnamed-chunk-3-4.png" class="img-fluid figure-img" width="576"></p>
-</figure>
-</div>
-</div>
 </div>
 </section>
 <section id="elastic-netによるaglmモデル" class="level3" data-number="2.2.3">
 <h3 data-number="2.2.3" class="anchored" data-anchor-id="elastic-netによるaglmモデル"><span class="header-section-number">2.2.3</span> Elastic-NetによるAGLMモデル</h3>
-<p><code>aglm</code>() 関数の引数 <code>alpha</code> に <span class="math inline">0&lt;\alpha&lt;1</span> の値を渡すことで、エラスティックネットによる正則化を利用することもでき、ラッソとリッジの中間的な性質を持ったモデルが出力されます。</p>
+<p><code>aglm()</code> 関数の引数 <code>alpha</code> に <span class="math inline">0&lt;\alpha&lt;1</span> の値を渡すことで、エラスティックネットによる正則化を利用することができます。エラスティックネットでは、ラッソとリッジの中間的な性質を持ったモデルが出力されます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model_EN <span class="ot">&lt;-</span> <span class="fu">aglm</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> train_X,</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> train_y,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="co"># 正則化項のαパラメーターを指定（エラスティックネット）</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">add_linear_columns =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">lambda =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">1</span>, <span class="fl">0.1</span>, <span class="fl">0.01</span>) <span class="co"># 正則化項のλを指定</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a> )</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_EN, test_X, <span class="at">s =</span> <span class="fl">0.1</span>) <span class="sc">|&gt;</span> <span class="fu">c</span>()</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>.rmse <span class="ot">=</span> <span class="fu">round</span>(yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds), <span class="dv">3</span>)</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste</span>(<span class="st">"Elastic-Net@0.1 | RMSE ="</span>, .rmse))</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_EN, test_X, <span class="at">s =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">c</span>()</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>.rmse <span class="ot">=</span> <span class="fu">round</span>(yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds), <span class="dv">3</span>)</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste</span>(<span class="st">"Elastic-Net@1 | RMSE ="</span>, .rmse))</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> q</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model_EN <span class="ot">&lt;-</span> <span class="fu">aglm</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> train_X,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> train_y,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="co"># 正則化項のαパラメーターを指定（エラスティックネット）</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">add_linear_columns =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">lambda =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">1</span>, <span class="fl">0.1</span>, <span class="fl">0.01</span>) <span class="co"># 正則化項のλを指定</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_EN, test_X, <span class="at">s =</span> <span class="fl">0.1</span>) <span class="sc">|&gt;</span> <span class="fu">c</span>()</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_title</span>(<span class="st">"ElasticNet α0.5 s0.1"</span>, yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds))</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_EN, test_X, <span class="at">s =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">c</span>()</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_title</span>(<span class="st">"ElasticNet α0.5 s1"</span>, yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds))</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> q</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -887,8 +906,8 @@ window.Quarto = {
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>)) <span class="co"># プロット領域中の余白を調整</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_EN, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="fl">0.01</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>)) <span class="co"># プロット領域中の余白を調整</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_EN, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="fl">0.01</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -896,7 +915,7 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_EN, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_EN, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -904,7 +923,7 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_EN, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_EN, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -912,7 +931,7 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_EN, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_EN, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -921,45 +940,28 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>AGLMの学習における正則化項は次の式で与えられます。</p>
-<p><span class="math display">R(\{\beta_{jk}\};\lambda, \alpha)=\lambda\{(1-\alpha)\sum_j\sum_k|\beta_{jk}|^2+\alpha\sum_j\sum_k|\beta_{jk}|\}</span></p>
-<p>ここで、罰則の対象となるパラメータ <span class="math inline">\beta</span> は、連続変数を離散化して得られる区間のうち隣接するものの間の効果の大きさに対応しており、これが小さくなるほど特徴量の効果がなめらかになります。また、 <span class="math inline">\beta</span> がゼロになると、隣り合う区間の効果が等しくなり、つまり、離散化の区間数が減少することになります。</p>
-<p><span class="math inline">\alpha</span> はL1正則化とL2正則化のバランスを決めるパラメーターです。この形式の正則化項について、<span class="math inline">\alpha=1</span> の場合をラッソ、<span class="math inline">\alpha=0</span> の場合をリッジ、<span class="math inline">0&lt;\alpha&lt;1</span> の場合をエラスティックネットと呼びます。</p>
-<p>λ は正則化項の影響度を決めるパラメーターで、この値が大きいほど、回帰係数の値が小さく抑えられるようになります。AGLMの正則化では、λ の値が意味をもつ範囲が <span class="math inline">\alpha</span> の値によって大きく異なることに注意が必要です。</p>
-</div>
-</div>
 </section>
 </section>
-<section id="最適な-λ-を探索しながら-aglm-モデルを構築する" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="最適な-λ-を探索しながら-aglm-モデルを構築する"><span class="header-section-number">2.3</span> 最適な λ を探索しながら AGLM モデルを構築する</h2>
-<p>AGLM パッケージは、ベースになっている glmnet パッケージの機能を数多く継承しており、たとえば cv.aglm() 関数を用いることで、λ のチューニングを自動で行うことが可能です。</p>
+<section id="最適な-λ-による-aglm-モデルを構築する" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> 最適な λ による AGLM モデルを構築する</h1>
+<p><strong>aglm</strong> パッケージは <strong>glmnet</strong> パッケージの機能を数多く継承しており、たとえば <code>cv.aglm()</code> 関数を用いることで、交差検証による <span class="math inline">\lambda</span> の値のチューニングを実行することができます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>lambda_candidates <span class="ot">=</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">10</span>, <span class="at">to =</span> <span class="dv">0</span>, <span class="at">by =</span> <span class="sc">-</span><span class="fl">0.1</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>model_cv.aglm <span class="ot">&lt;-</span> <span class="fu">cv.aglm</span>(</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> train_X,</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> train_y,</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">add_linear_columns =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> <span class="dv">1</span>, <span class="co"># 正則化項のαパラメーターを指定（デフォルトは1）</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">lambda =</span> lambda_candidates, <span class="co"># lambda の候補を指定</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">nfolds =</span> <span class="dv">5</span> <span class="co"># クロスバリデーションの分割数を指定</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> model_cv.aglm<span class="sc">@</span>lambda.min <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_cv.aglm, test_X, <span class="at">s =</span> lambda) <span class="sc">|&gt;</span> <span class="fu">c</span>()</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>.rmse <span class="ot">=</span> <span class="fu">round</span>(yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds), <span class="dv">3</span>)</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(<span class="st">"Lasso CV Best@"</span>, lambda, <span class="st">" | RMSE = "</span>, .rmse))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>lambda_candidates <span class="ot">=</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">10</span>, <span class="at">to =</span> <span class="dv">0</span>, <span class="at">by =</span> <span class="sc">-</span><span class="fl">0.1</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>model_cv.aglm <span class="ot">&lt;-</span> <span class="fu">cv.aglm</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> train_X,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> train_y,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">add_linear_columns =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">alpha =</span> <span class="dv">1</span>, <span class="co"># 正則化項のαパラメーターを指定（デフォルトは1）</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">lambda =</span> lambda_candidates, <span class="co"># lambda の候補を指定</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">nfolds =</span> <span class="dv">5</span> <span class="co"># クロスバリデーションの分割数を指定</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> model_cv.aglm<span class="sc">@</span>lambda.min <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_cv.aglm, test_X, <span class="at">s =</span> lambda) <span class="sc">|&gt;</span> <span class="fu">c</span>()</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_title</span>(<span class="fu">paste0</span>(<span class="st">"Lasso-CVBest s"</span>, lambda),</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>            yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -967,8 +969,8 @@ Note
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>)) <span class="co"># プロット領域中の余白を調整</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_cv.aglm, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> lambda)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>)) <span class="co"># プロット領域中の余白を調整</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_cv.aglm, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> lambda)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -978,31 +980,30 @@ Note
 </div>
 </div>
 </section>
-<section id="最適な-λ-α-を探索しながら-aglm-モデルを構築する" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="最適な-λ-α-を探索しながら-aglm-モデルを構築する"><span class="header-section-number">2.4</span> 最適な λ, α を探索しながら AGLM モデルを構築する</h2>
-<p>また、同様に cva.aglm() 関数を用いることで、λ と α のチューニングを自動で行うこともできます。ただし、リッジ回帰を用いる場合のみ、意味のある λ の値の幅がまったく異なることに注意が必要です。</p>
+<section id="最適な-α-と-λ-による-aglm-モデルを構築する" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> 最適な α と λ による AGLM モデルを構築する</h1>
+<p>同様に <code>cva.aglm()</code> 関数を用いることで、交差検証による <span class="math inline">\lambda</span> と <span class="math inline">\alpha</span> のチューニングを実行することもできます。ただし、パラメーターの探索範囲を指定する際は、<span class="math inline">\alpha</span> の値によって、特徴量の効果に実践的な違いをもたらす <span class="math inline">\lambda</span> の値の範囲がまったく異なりうることに注意が必要です。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>lambda_candidates <span class="ot">=</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">100</span>, <span class="at">to =</span> <span class="dv">0</span>, <span class="at">by =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>models_cva.aglm <span class="ot">&lt;-</span> <span class="fu">cva.aglm</span>(</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> train_X,</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> train_y,</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">add_linear_columns =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">lambda =</span> lambda_candidates, <span class="co"># lambda の候補を指定</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">nfolds =</span> <span class="dv">5</span> <span class="co"># クロスバリデーションの分割数を指定</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> models_cva.aglm<span class="sc">@</span>alpha.min <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>) <span class="co"># 最適なα</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> models_cva.aglm<span class="sc">@</span>alpha.min.index <span class="co"># 最適なαのインデックス番号</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>model_cva.aglm <span class="ot">&lt;-</span> models_cva.aglm<span class="sc">@</span>models_list[[idx]] <span class="co"># 最適なαによるモデル</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> model_cva.aglm<span class="sc">@</span>lambda.min <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>) <span class="co"># 最適なλ</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_cva.aglm, test_X, <span class="at">s =</span> lambda) <span class="sc">|&gt;</span> <span class="fu">c</span>()</span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>.rmse <span class="ot">=</span> <span class="fu">round</span>(yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds), <span class="dv">3</span>)</span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(<span class="st">"AGLM (alpha = "</span>, alpha,</span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>                 <span class="st">", lambda = "</span>, lambda, <span class="st">") | RMSE = "</span>, .rmse))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>lambda_candidates <span class="ot">=</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">100</span>, <span class="at">to =</span> <span class="dv">0</span>, <span class="at">by =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>models_cva.aglm <span class="ot">&lt;-</span> <span class="fu">cva.aglm</span>(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> train_X,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> train_y,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">add_linear_columns =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">lambda =</span> lambda_candidates, <span class="co"># lambda の候補を指定</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">nfolds =</span> <span class="dv">5</span> <span class="co"># クロスバリデーションの分割数を指定</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> models_cva.aglm<span class="sc">@</span>alpha.min <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>) <span class="co"># 最適なα</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> models_cva.aglm<span class="sc">@</span>alpha.min.index <span class="co"># 最適なαのインデックス番号</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>model_cva.aglm <span class="ot">&lt;-</span> models_cva.aglm<span class="sc">@</span>models_list[[idx]] <span class="co"># 最適なαによるモデル</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> model_cva.aglm<span class="sc">@</span>lambda.min <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>) <span class="co"># 最適なλ</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_cva.aglm, test_X, <span class="at">s =</span> lambda) <span class="sc">|&gt;</span> <span class="fu">c</span>()</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> test_y, <span class="at">y =</span> preds)) <span class="sc">+</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_title</span>(<span class="fu">sprintf</span>(<span class="st">"AGLM-CVBest α%.3f λ%.1f"</span>, alpha, lambda),</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>            yardstick<span class="sc">::</span><span class="fu">rmse_vec</span>(test_y, preds))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1010,8 +1011,8 @@ Note
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>)) <span class="co"># プロット領域中の余白を調整</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_cva.aglm, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> lambda)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">1</span>)) <span class="co"># プロット領域中の余白を調整</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_cva.aglm, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">vars =</span> vars, <span class="at">s =</span> lambda)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1021,10 +1022,10 @@ Note
 </div>
 </div>
 </section>
-<section id="参考資料" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="参考資料"><span class="header-section-number">2.5</span> 参考資料</h2>
-<p>[1] 藤田・田中・岩沢. (2019). <a href="https://www.jarip.org/publication/risk_and_insurance/pdf/RI_v15_045.pdf">“AGLM: アクチュアリー実務のためのデータサイエンスの技術を用いたGLMの拡張”</a>.</p>
-<p>[2] Fujita, S., Tanaka, T., Kondo, K. and Iwasawa, H. (2020). <a href="https://www.institutdesactuaires.com/global/gene/link.php?doc_id=16273&amp;fg=1">“A Hybrid Modeling Method of GLM and Data Science Techniques”</a>.</p>
+<section id="参考資料" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> 参考資料</h1>
+<p>[1] 藤田卓・田中豊人・岩沢宏和 (2019). “AGLM: アクチュアリー実務のためのデータサイエンスの技術を用いたGLMの拡張”. https://www.jarip.org/publication/risk_and_insurance/pdf/RI_v15_045.pdf</p>
+<p>[2] Fujita, S., Tanaka, T., Kondo, K. and Iwasawa, H. (2020). “A Hybrid Modeling Method of GLM and Data Science Techniques”. https://www.institutdesactuaires.com/global/gene/link.php?doc_id=16273&amp;fg=1</p>
 
 
 </section>

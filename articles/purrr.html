@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2025-07-29">
+<meta name="dcterms.date" content="2025-07-31">
 
 <title>33&nbsp; purrr – Rパッケージ活用事例集</title>
 <style>
@@ -623,7 +623,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 29, 2025</p>
+      <p class="date">July 31, 2025</p>
     </div>
   </div>
   
@@ -677,13 +677,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(y, rnorm, <span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
-[1] 1.9495149 1.4727386 0.8442256 1.7828989 2.5546677
+[1] 0.1831271 1.2307618 0.5603198 2.4197886 1.5692810
 
 [[2]]
-[1] 0.9772363 0.6978560 0.5928613 1.0711471 1.9854482
+[1] 3.878047 2.448056 1.686850 3.580666 1.464299
 
 [[3]]
-[1] 2.554430 2.603975 3.864713 2.732413 2.305236</code></pre>
+[1] 3.495650 2.271086 2.558911 2.813061 2.865754</code></pre>
 </div>
 </div>
 </section>
@@ -708,13 +708,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(z, rnorm, <span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
-[1]  2.2506031  0.7953237  1.2336875  1.6252324 -0.4296563
+[1]  0.3442392 -0.4549268  1.5351746  1.0934910  0.3928994
 
 [[2]]
-[1] 3.506152 1.909064 2.033411 1.003619 3.435673
+[1] 1.566721 2.270701 2.827915 1.813246 3.462178
 
 [[3]]
-[1] 3.772725 1.945061 3.582599 2.366810 1.514744</code></pre>
+[1] 2.311702 2.798103 3.466758 2.064794 3.535244</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(z, rnorm, <span class="at">n=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
@@ -730,7 +730,7 @@ Caused by error:
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(rnorm, <span class="at">n=</span><span class="dv">5</span>) <span class="sc">|&gt;</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dbl</span>(mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.2941843 1.6282870 3.2115086</code></pre>
+<pre><code>[1] 1.560528 1.198604 3.156951</code></pre>
 </div>
 </div>
 </section>
