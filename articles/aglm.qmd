@@ -78,7 +78,7 @@ test_y <- test$medv
 
 ## AGLM モデルを構築する
 
-### ラッソ回帰によるAGLMモデル
+### ラッソ正則化
 
 `aglm()` 関数の第1引数 `x` に説明変数（デザイン行列）を渡し、第2引数 `y` に目的変数を渡すことで、AGLM モデルを学習させることができます。
 
@@ -127,7 +127,7 @@ plot(model_lasso, verbose = FALSE, vars = vars, s = 0.62)
 plot(model_lasso, verbose = FALSE, vars = vars, s = 6.3)
 ```
 
-### Ridge回帰によるAGLMモデル
+### リッジ正則化
 
 `aglm()` 関数の引数 `alpha` を $0$ にすると、パラメータの推定がリッジ正則化によって行われます。ここでは、$\lambda$ の値を明示的に与えてみます。
 
@@ -163,7 +163,7 @@ plot(model_ridge, verbose = FALSE, vars = vars, s = 10)
 plot(model_ridge, verbose = FALSE, vars = vars, s = 100)
 ```
 
-### Elastic-NetによるAGLMモデル
+### Elastic-Net
 
 `aglm()` 関数の引数 `alpha` に $0<\alpha<1$ の値を渡すことで、エラスティックネットによる正則化を利用することができます。エラスティックネットでは、ラッソとリッジの中間的な性質を持ったモデルが出力されます。
 
