@@ -594,7 +594,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">17.1</span> パッケージの概要</a></li>
-  <li><a href="#プロットの一部を強調する" id="toc-プロットの一部を強調する" class="nav-link" data-scroll-target="#プロットの一部を強調する"><span class="header-section-number">17.2</span> プロットの一部を強調する</a></li>
+  <li><a href="#プロットの一部を強調する" id="toc-プロットの一部を強調する" class="nav-link" data-scroll-target="#プロットの一部を強調する"><span class="header-section-number">17.2</span> プロットの一部を強調する</a>
+  <ul class="collapse">
+  <li><a href="#折れ線グラフの一部を強調する" id="toc-折れ線グラフの一部を強調する" class="nav-link" data-scroll-target="#折れ線グラフの一部を強調する"><span class="header-section-number">17.2.1</span> 折れ線グラフの一部を強調する</a></li>
+  <li><a href="#散布図の一部を強調する" id="toc-散布図の一部を強調する" class="nav-link" data-scroll-target="#散布図の一部を強調する"><span class="header-section-number">17.2.2</span> 散布図の一部を強調する</a></li>
+  <li><a href="#棒グラフヒストグラムの一部を強調する" id="toc-棒グラフヒストグラムの一部を強調する" class="nav-link" data-scroll-target="#棒グラフヒストグラムの一部を強調する"><span class="header-section-number">17.2.3</span> 棒グラフ、ヒストグラムの一部を強調する</a></li>
+  </ul></li>
   <li><a href="#参考資料" id="toc-参考資料" class="nav-link" data-scroll-target="#参考資料"><span class="header-section-number">17.3</span> 参考資料</a></li>
   </ul>
 </nav>
@@ -636,18 +641,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="パッケージの概要" class="level2" data-number="17.1">
 <h2 data-number="17.1" class="anchored" data-anchor-id="パッケージの概要"><span class="header-section-number">17.1</span> パッケージの概要</h2>
-<p>gghighlight パッケージは、ggplot2 パッケージで作成されたプロットの特定の部分だけを強調する機能に特化したパッケージです。使い方はとても簡単で、ggplot オブジェクトの最終レイヤーとして gghighlight() 関数を追加し、強調したいデータの条件を指定するだけです。</p>
+<p><a href="https://CRAN.R-project.org/package=gghighlight"><strong>gghighlight</strong></a> パッケージは、<strong>ggplot2</strong> で作成したプロットの中から、特定の部分だけを強調表示するための機能に特化したツールです。使い方は非常にシンプルで、“ggplot” オブジェクトの最後のレイヤーとして <code>gghighlight()</code> 関数を追加し、強調したいデータの条件を指定するだけ利用できます。</p>
 </section>
 <section id="プロットの一部を強調する" class="level2" data-number="17.2">
 <h2 data-number="17.2" class="anchored" data-anchor-id="プロットの一部を強調する"><span class="header-section-number">17.2</span> プロットの一部を強調する</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gghighlight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="折れ線グラフの一部を強調する" class="level3" data-number="17.2.1">
+<h3 data-number="17.2.1" class="anchored" data-anchor-id="折れ線グラフの一部を強調する"><span class="header-section-number">17.2.1</span> 折れ線グラフの一部を強調する</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 折れ線グラフの一部を強調する</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ChickWeight, <span class="fu">aes</span>(<span class="at">x =</span> Time, <span class="at">y =</span> weight, <span class="at">group =</span> Chick)) <span class="sc">+</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color=</span><span class="st">'gray20'</span>) <span class="sc">+</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gghighlight</span>(<span class="fu">max</span>(weight) <span class="sc">&gt;</span> <span class="dv">330</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ChickWeight, <span class="fu">aes</span>(<span class="at">x =</span> Time, <span class="at">y =</span> weight, <span class="at">group =</span> Chick)) <span class="sc">+</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color=</span><span class="st">'gray20'</span>) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gghighlight</span>(<span class="fu">max</span>(weight) <span class="sc">&gt;</span> <span class="dv">330</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -656,13 +662,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+</section>
+<section id="散布図の一部を強調する" class="level3" data-number="17.2.2">
+<h3 data-number="17.2.2" class="anchored" data-anchor-id="散布図の一部を強調する"><span class="header-section-number">17.2.2</span> 散布図の一部を強調する</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 散布図の一部を強調する</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble) <span class="co"># rownames_to_column() 関数を利用</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">rownames_to_column</span>(USArrests, <span class="st">'State'</span>), <span class="co"># 行の名前を列に変換</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> Murder, <span class="at">y =</span> Assault)) <span class="sc">+</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">col=</span><span class="st">'darkcyan'</span>) <span class="sc">+</span> </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gghighlight</span>(<span class="fu">grepl</span>(<span class="st">'New'</span>, State), <span class="at">label_key =</span> State)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble) <span class="co"># rownames_to_column() 関数を利用</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">rownames_to_column</span>(USArrests, <span class="st">'State'</span>), <span class="co"># 行の名前を列に変換</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> Murder, <span class="at">y =</span> Assault)) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">col=</span><span class="st">'darkcyan'</span>) <span class="sc">+</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gghighlight</span>(<span class="fu">grepl</span>(<span class="st">'New'</span>, State), <span class="at">label_key =</span> State)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -671,12 +679,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+</section>
+<section id="棒グラフヒストグラムの一部を強調する" class="level3" data-number="17.2.3">
+<h3 data-number="17.2.3" class="anchored" data-anchor-id="棒グラフヒストグラムの一部を強調する"><span class="header-section-number">17.2.3</span> 棒グラフ、ヒストグラムの一部を強調する</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 棒グラフ、ヒストグラムの一部を強調する</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x =</span> Sepal.Width, <span class="at">fill =</span> Species)) <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gghighlight</span>() <span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(iris, <span class="fu">aes</span>(<span class="at">x =</span> Sepal.Width, <span class="at">fill =</span> Species)) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gghighlight</span>() <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -686,10 +696,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
+</section>
 <section id="参考資料" class="level2" data-number="17.3">
 <h2 data-number="17.3" class="anchored" data-anchor-id="参考資料"><span class="header-section-number">17.3</span> 参考資料</h2>
-<p>gghighlight パッケージの便利な使い方について、作者である湯谷啓明氏が解説スライドを公開しています。<br>
-https://yutani.quarto.pub/tokyor-109-gghighlight/#/title-slide</p>
+<p>[1] 湯谷啓明. “gghighlight の作者です。すべてをお話しします。”. パッケージの作者による解説スライド. https://yutani.quarto.pub/tokyor-109-gghighlight/</p>
 
 
 </section>

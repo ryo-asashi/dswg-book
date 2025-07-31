@@ -639,9 +639,9 @@ window.Quarto = {
   <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要"><span class="header-section-number">2.1</span> パッケージの概要</a></li>
   <li><a href="#aglm-モデルを構築する" id="toc-aglm-モデルを構築する" class="nav-link" data-scroll-target="#aglm-モデルを構築する"><span class="header-section-number">2.2</span> AGLM モデルを構築する</a>
   <ul class="collapse">
-  <li><a href="#ラッソ回帰によるaglmモデル" id="toc-ラッソ回帰によるaglmモデル" class="nav-link" data-scroll-target="#ラッソ回帰によるaglmモデル"><span class="header-section-number">2.2.1</span> ラッソ回帰によるAGLMモデル</a></li>
-  <li><a href="#ridge回帰によるaglmモデル" id="toc-ridge回帰によるaglmモデル" class="nav-link" data-scroll-target="#ridge回帰によるaglmモデル"><span class="header-section-number">2.2.2</span> Ridge回帰によるAGLMモデル</a></li>
-  <li><a href="#elastic-netによるaglmモデル" id="toc-elastic-netによるaglmモデル" class="nav-link" data-scroll-target="#elastic-netによるaglmモデル"><span class="header-section-number">2.2.3</span> Elastic-NetによるAGLMモデル</a></li>
+  <li><a href="#ラッソ正則化" id="toc-ラッソ正則化" class="nav-link" data-scroll-target="#ラッソ正則化"><span class="header-section-number">2.2.1</span> ラッソ正則化</a></li>
+  <li><a href="#リッジ正則化" id="toc-リッジ正則化" class="nav-link" data-scroll-target="#リッジ正則化"><span class="header-section-number">2.2.2</span> リッジ正則化</a></li>
+  <li><a href="#elastic-net" id="toc-elastic-net" class="nav-link" data-scroll-target="#elastic-net"><span class="header-section-number">2.2.3</span> Elastic-Net</a></li>
   </ul></li>
   <li><a href="#最適な-λ-による-aglm-モデルを構築する" id="toc-最適な-λ-による-aglm-モデルを構築する" class="nav-link" data-scroll-target="#最適な-λ-による-aglm-モデルを構築する"><span class="header-section-number">3</span> 最適な λ による AGLM モデルを構築する</a></li>
   <li><a href="#最適な-α-と-λ-による-aglm-モデルを構築する" id="toc-最適な-α-と-λ-による-aglm-モデルを構築する" class="nav-link" data-scroll-target="#最適な-α-と-λ-による-aglm-モデルを構築する"><span class="header-section-number">4</span> 最適な α と λ による AGLM モデルを構築する</a></li>
@@ -733,8 +733,8 @@ R{ \left(\{\beta_{j,k}\}_{j,k}\;\middle|\;\lambda, \alpha \right)}
 </section>
 <section id="aglm-モデルを構築する" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="aglm-モデルを構築する"><span class="header-section-number">2.2</span> AGLM モデルを構築する</h2>
-<section id="ラッソ回帰によるaglmモデル" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="ラッソ回帰によるaglmモデル"><span class="header-section-number">2.2.1</span> ラッソ回帰によるAGLMモデル</h3>
+<section id="ラッソ正則化" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="ラッソ正則化"><span class="header-section-number">2.2.1</span> ラッソ正則化</h3>
 <p><code>aglm()</code> 関数の第1引数 <code>x</code> に説明変数（デザイン行列）を渡し、第2引数 <code>y</code> に目的変数を渡すことで、AGLM モデルを学習させることができます。</p>
 <p>また、<code>predict()</code> 関数に学習済みの AGLM モデルと新たなデータを渡せば、そのデータに対する予測値を出力することができます。なお、<strong>aglm</strong> は <strong>glmnet</strong> パッケージを活用して実装されており、出力される “AccurateGLM” オブジェクトには多数の<span class="math inline">\lambda</span> の値に対応する結果が保存されています。“AccurateGLM” オブジェクトに対する <code>predict()</code> 関数のメソッドの引数 <code>s</code> の値を指定することで、正則化の強さが異なるさまざまなモデルによる予測値を得ることが可能です。</p>
 <div class="cell">
@@ -813,8 +813,8 @@ R{ \left(\{\beta_{j,k}\}_{j,k}\;\middle|\;\lambda, \alpha \right)}
 </div>
 </div>
 </section>
-<section id="ridge回帰によるaglmモデル" class="level3" data-number="2.2.2">
-<h3 data-number="2.2.2" class="anchored" data-anchor-id="ridge回帰によるaglmモデル"><span class="header-section-number">2.2.2</span> Ridge回帰によるAGLMモデル</h3>
+<section id="リッジ正則化" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="リッジ正則化"><span class="header-section-number">2.2.2</span> リッジ正則化</h3>
 <p><code>aglm()</code> 関数の引数 <code>alpha</code> を <span class="math inline">0</span> にすると、パラメータの推定がリッジ正則化によって行われます。ここでは、<span class="math inline">\lambda</span> の値を明示的に与えてみます。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>model_ridge <span class="ot">&lt;-</span> <span class="fu">aglm</span>(</span>
@@ -874,8 +874,8 @@ R{ \left(\{\beta_{j,k}\}_{j,k}\;\middle|\;\lambda, \alpha \right)}
 </div>
 </div>
 </section>
-<section id="elastic-netによるaglmモデル" class="level3" data-number="2.2.3">
-<h3 data-number="2.2.3" class="anchored" data-anchor-id="elastic-netによるaglmモデル"><span class="header-section-number">2.2.3</span> Elastic-NetによるAGLMモデル</h3>
+<section id="elastic-net" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="elastic-net"><span class="header-section-number">2.2.3</span> Elastic-Net</h3>
 <p><code>aglm()</code> 関数の引数 <code>alpha</code> に <span class="math inline">0&lt;\alpha&lt;1</span> の値を渡すことで、エラスティックネットによる正則化を利用することができます。エラスティックネットでは、ラッソとリッジの中間的な性質を持ったモデルが出力されます。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model_EN <span class="ot">&lt;-</span> <span class="fu">aglm</span>(</span>
