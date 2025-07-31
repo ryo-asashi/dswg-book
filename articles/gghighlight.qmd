@@ -34,7 +34,7 @@ remove(list=objects())
 
 ## パッケージの概要
 
-gghighlight パッケージは、ggplot2 パッケージで作成されたプロットの特定の部分だけを強調する機能に特化したパッケージです。使い方はとても簡単で、ggplot オブジェクトの最終レイヤーとして gghighlight() 関数を追加し、強調したいデータの条件を指定するだけです。
+[**gghighlight**](https://CRAN.R-project.org/package=gghighlight) パッケージは、**ggplot2** で作成したプロットの中から、特定の部分だけを強調表示するための機能に特化したツールです。使い方は非常にシンプルで、"ggplot" オブジェクトの最後のレイヤーとして `gghighlight()` 関数を追加し、強調したいデータの条件を指定するだけ利用できます。
 
 ## プロットの一部を強調する
 
@@ -42,15 +42,17 @@ gghighlight パッケージは、ggplot2 パッケージで作成されたプロ
 library(gghighlight)
 ```
 
+### 折れ線グラフの一部を強調する
+
 ```{r gghighlight::gghighlight, geom_line, message = FALSE}
-# 折れ線グラフの一部を強調する
 ggplot(ChickWeight, aes(x = Time, y = weight, group = Chick)) +
   geom_line(color='gray20') +
   gghighlight(max(weight) > 330)
 ```
 
+### 散布図の一部を強調する
+
 ```{r gghitglight::gghighlight, geom_point}
-# 散布図の一部を強調する
 library(tibble) # rownames_to_column() 関数を利用
 ggplot(rownames_to_column(USArrests, 'State'), # 行の名前を列に変換
        aes(x = Murder, y = Assault)) +
@@ -58,8 +60,9 @@ ggplot(rownames_to_column(USArrests, 'State'), # 行の名前を列に変換
   gghighlight(grepl('New', State), label_key = State)
 ```
 
+### 棒グラフ、ヒストグラムの一部を強調する
+
 ```{r gghitglight::gghighlight, geom_bar, message = FALSE}
-# 棒グラフ、ヒストグラムの一部を強調する
 ggplot(iris, aes(x = Sepal.Width, fill = Species)) +
   geom_histogram(bins = 10) +
   gghighlight() +
@@ -68,5 +71,4 @@ ggplot(iris, aes(x = Sepal.Width, fill = Species)) +
 
 ## 参考資料
 
-gghighlight パッケージの便利な使い方について、作者である湯谷啓明氏が解説スライドを公開しています。\
-https://yutani.quarto.pub/tokyor-109-gghighlight/#/title-slide
+\[1\] 湯谷啓明. "gghighlight の作者です。すべてをお話しします。". パッケージの作者による解説スライド. https://yutani.quarto.pub/tokyor-109-gghighlight/
