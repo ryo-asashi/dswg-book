@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="データサイエンス関連基礎調査WG">
+<meta name="dcterms.date" content="2025-08-01">
+
+<title>fastshap – Rパッケージ活用事例集</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../articles/forcats.html" rel="next">
+<link href="../articles/evd.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/fastshap.html"><span class="chapter-title">fastshap</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Rパッケージ活用事例集</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">はじめに</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/actuar.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">actuar</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/aglm.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">aglm</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ALEPlot.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">ALEPlot</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/C50.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">C50</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/class.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">class</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/corrplot.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">corrplot</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/crosstable.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">crosstable</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/DALEX.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">DALEX</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/distr.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">distr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/distrEx.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">distrEx</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">dplyr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/e1071.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">e1071</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/evd.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">evd</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/fastshap.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">fastshap</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/forcats.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">forcats</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/genlasso.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">genlasso</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/gghighlight.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">gghighlight</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ggplot2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">ggplot2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/igraph.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">igraph</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/iml.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">iml</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ismev.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">ismev</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/lifecontingencies.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">lifecontingencies</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/makedummies.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">makedummies</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/mlbench.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">mlbench</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/modeldata.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">modeldata</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/palmerpenguins.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">palmerpenguins</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/parsnip.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">parsnip</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/partykit.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">partykit</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/pdp.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">pdp</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/plyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">plyr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/pROC.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">pROC</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/psych.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">psych</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/purrr.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">purrr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/randomForest.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">randomForest</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ranger.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">ranger</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/readxl.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">readxl</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/rpart.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">rpart</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/rsample.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">rsample</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/shapviz.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">shapviz</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/skimr.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">skimr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/stringr.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">stringr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/survival.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">survival</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/tibble.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">tibble</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/tuneRanger.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">tuneRanger</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/yardstick.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">yardstick</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要">パッケージの概要</a>
+  <ul>
+  <li><a href="#shapとは" id="toc-shapとは" class="nav-link" data-scroll-target="#shapとは">SHAPとは</a></li>
+  <li><a href="#fastshapの特徴" id="toc-fastshapの特徴" class="nav-link" data-scroll-target="#fastshapの特徴">fastshapの特徴</a></li>
+  </ul></li>
+  <li><a href="#準備" id="toc-準備" class="nav-link" data-scroll-target="#準備">準備</a>
+  <ul>
+  <li><a href="#パッケージの読み込み" id="toc-パッケージの読み込み" class="nav-link" data-scroll-target="#パッケージの読み込み">パッケージの読み込み</a></li>
+  <li><a href="#データセットの読み込み" id="toc-データセットの読み込み" class="nav-link" data-scroll-target="#データセットの読み込み">データセットの読み込み</a></li>
+  <li><a href="#前処理" id="toc-前処理" class="nav-link" data-scroll-target="#前処理">前処理</a></li>
+  <li><a href="#モデル構築" id="toc-モデル構築" class="nav-link" data-scroll-target="#モデル構築">モデル構築</a></li>
+  </ul></li>
+  <li><a href="#fastshapの使用方法" id="toc-fastshapの使用方法" class="nav-link" data-scroll-target="#fastshapの使用方法">fastshapの使用方法</a>
+  <ul>
+  <li><a href="#基本的な使用方法" id="toc-基本的な使用方法" class="nav-link" data-scroll-target="#基本的な使用方法">基本的な使用方法</a></li>
+  <li><a href="#並列計算" id="toc-並列計算" class="nav-link" data-scroll-target="#並列計算">並列計算</a></li>
+  <li><a href="#引数adjustによる局所正確性の確保" id="toc-引数adjustによる局所正確性の確保" class="nav-link" data-scroll-target="#引数adjustによる局所正確性の確保">引数adjustによる局所正確性の確保</a></li>
+  <li><a href="#引数exactによる理論値の計算" id="toc-引数exactによる理論値の計算" class="nav-link" data-scroll-target="#引数exactによる理論値の計算">引数exactによる理論値の計算</a></li>
+  </ul></li>
+  <li><a href="#他のパッケージとの比較" id="toc-他のパッケージとの比較" class="nav-link" data-scroll-target="#他のパッケージとの比較">他のパッケージとの比較</a>
+  <ul>
+  <li><a href="#kernelshapの例" id="toc-kernelshapの例" class="nav-link" data-scroll-target="#kernelshapの例">kernelshapの例</a></li>
+  <li><a href="#dalexの例" id="toc-dalexの例" class="nav-link" data-scroll-target="#dalexの例">DALEXの例</a></li>
+  <li><a href="#他のモデルの例" id="toc-他のモデルの例" class="nav-link" data-scroll-target="#他のモデルの例">他のモデルの例</a>
+  <ul class="collapse">
+  <li><a href="#glm" id="toc-glm" class="nav-link" data-scroll-target="#glm">GLM</a></li>
+  <li><a href="#特徴量エンジニアリングを加えた正則化glm" id="toc-特徴量エンジニアリングを加えた正則化glm" class="nav-link" data-scroll-target="#特徴量エンジニアリングを加えた正則化glm">特徴量エンジニアリングを加えた（正則化）GLM</a></li>
+  <li><a href="#rangerによるランダムフォレスト" id="toc-rangerによるランダムフォレスト" class="nav-link" data-scroll-target="#rangerによるランダムフォレスト">rangerによるランダムフォレスト</a></li>
+  <li><a href="#予測モデルの精度比較" id="toc-予測モデルの精度比較" class="nav-link" data-scroll-target="#予測モデルの精度比較">予測モデルの精度比較</a></li>
+  </ul></li>
+  <li><a href="#計算時間比較" id="toc-計算時間比較" class="nav-link" data-scroll-target="#計算時間比較">計算時間比較</a></li>
+  </ul></li>
+  <li><a href="#参考文献" id="toc-参考文献" class="nav-link" data-scroll-target="#参考文献">参考文献</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">fastshap</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>データサイエンス関連基礎調査WG </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 1, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="パッケージの概要" class="level2">
+<h2 class="anchored" data-anchor-id="パッケージの概要">パッケージの概要</h2>
+<p>fastshapは、予測モデルの解釈手法の一種であるSHAPを、モンテカルロシミュレーションにより計算するパッケージです。 他のパッケージと比較すると、非常に軽量かつ動作原理がシンプルであるのが特徴です。</p>
+<section id="shapとは" class="level3">
+<h3 class="anchored" data-anchor-id="shapとは">SHAPとは</h3>
+<p>SHAPという手法については <span class="citation" data-cites="BIB_JOURNAL_IAJ_IML">データサイエンス関連基礎調査WG　大江麗地 (<a href="fastshap.html#ref-BIB_JOURNAL_IAJ_IML" role="doc-biblioref">2024</a>)</span> に解説があるため、こちらを参照することをお勧めします。 以下では詳細な説明は避け、概要のみを記載します。</p>
+<p><strong>SHAP(SHapley Additive exPlanation)</strong>とは予測モデルの解釈に用いられる手法の一種で、 ある予測モデルの入力（説明変数）と出力（予測値）の組に対して、 <strong>どの説明変数の寄与によってその予測値となったのかを加法的に分解</strong>するものです。</p>
+<p><span class="math display"> 個別の予測値 = その予測の説明変数1の寄与 + \cdots + その予測の説明変数Nの寄与 + 予測値平均</span></p>
+<p>このようにして分解された各サンプル・説明変数の寄与を<strong>SHAP値</strong>と呼びます。</p>
+<p>個別サンプルの予測に対する解釈を与える、いわゆるローカルな手法だと考えられますが、 多くのサンプルのSHAPを計算してそれをグラフにする、平均値で要約する等により、 モデル全体の解釈を与える、いわゆるグローバルな手法としても使用することが出来ます。</p>
+</section>
+<section id="fastshapの特徴" class="level3">
+<h3 class="anchored" data-anchor-id="fastshapの特徴">fastshapの特徴</h3>
+<p>説明変数ごとの寄与は、「その説明変数が<strong>入力されていない場合とされた場合の予測値の差</strong>」の（加重）平均で計算されます。 しかし、実際には「ある説明変数だけ予測モデルに入力しない」ということは通常出来ないため、 条件付期待値や、その説明変数を実データからランダムに選び出したときの予測値の平均のようなものを当てはめることとなります。 そのうえで、例えばN個の説明変数がある場合は、入力されているかどうかの組み合わせは<span class="math inline">2^N</span>通りあることになるので、 <strong>たった1サンプルに対して、予測値の平均値のようなものを<span class="math inline">2^N</span>通り分計算</strong>する必要があります。</p>
+<p>1サンプルならまだしも、グローバルな手法として使用するために多数のサンプルで計算する場合は計算量が莫大なものとなります。 そこで高速に計算する手法がいくつか提案されており、 そのうち fastshap は <span class="citation" data-cites="BIB_STRUMVELJ_2014">Štrumbelj, Erik and Kononenko, Igor (<a href="fastshap.html#ref-BIB_STRUMVELJ_2014" role="doc-biblioref">2014</a>)</span> によって提案されるモンテカルロシミュレーションによる近似を実装したものです。</p>
+<p>原理は非常にシンプルで、例えばあるサンプルのk番目の説明変数の寄与を計算する場合、</p>
+<ul>
+<li>「入力」する説明変数の数をランダムに決める（個数に関して一様な分布）</li>
+<li>その数だけ、「入力」する説明変数をk番目以外からランダムに選び出す</li>
+<li>k番目以外の説明変数について、「入力」する説明変数はそのサンプルそのまま、「入力」しない説明変数は全サンプルからランダムに選ぶ</li>
+<li>k番目の説明変数について「入力」した場合と「入力」しない（全サンプルからランダムに選んだ）場合の2回の予測を計算し、その差分を取る</li>
+<li>この操作を複数回行い、差分の平均値をk番目の説明変数の寄与とする</li>
+</ul>
+<p>という流れになります。</p>
+<p>全サンプルのSHAPを計算したとしても予測を行う回数が 説明変数の数×2×試行回数×用意したサンプルの数 となり、 現実的な計算時間でグローバルな手法としてのSHAPを用いることが可能です。 ただし、特徴量の数・サンプル数によっては計算値を収束させるほど試行回数を増やすのは現実的ではないこともあるため、 <strong>あくまで近似値を計算するものと捉えるべき</strong>でしょう。</p>
+<p>なお、乱数の適用にC++を使用する、並列処理に対応させるという工夫により高速化を図っているのも本パッケージの特徴です。</p>
+</section>
+</section>
+<section id="準備" class="level2">
+<h2 class="anchored" data-anchor-id="準備">準備</h2>
+<section id="パッケージの読み込み" class="level3">
+<h3 class="anchored" data-anchor-id="パッケージの読み込み">パッケージの読み込み</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER) <span class="co">#データセット</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble) <span class="co">#data.frame拡張版</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co">#data.frameの操作</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rsample) <span class="co">#データ分割</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(recipes) <span class="co">#前処理</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xgboost) <span class="co">#今回使用するモデルのパッケージ</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ranger)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glmnet)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ROCR) <span class="co">#精度評価</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fastshap) <span class="co">#SHAPを計算できるパッケージ群</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(treeshap)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kernelshap)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DALEX)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach) <span class="co">#並列計算による高速化</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co">#グラフの描画</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork) <span class="co">#複数のgpplotを組み合わせる</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shapviz) <span class="co">#SHAPの可視化</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="データセットの読み込み" class="level3">
+<h3 class="anchored" data-anchor-id="データセットの読み込み">データセットの読み込み</h3>
+<p><span class="citation" data-cites="BIB_BOOK_AER">Christian Kleiber and Achim Zeileis (<a href="fastshap.html#ref-BIB_BOOK_AER" role="doc-biblioref">2008</a>)</span> で使用されたデータセット等をまとめたパッケージAERに含まれる、 HealthInsuranceというデータセットを使用します。</p>
+<p>性別・年齢・学歴・家族構成・雇用状態（自営業か否か）健康保険の加入状況等に関する 約9,000個のサンプルが含まれています。 今回は、健康保険に加入しているかどうかを予測するモデルを作成することとします。</p>
+<p>データセットの詳細については <span class="citation" data-cites="BIB_AER_HEALTHINSURANCE">Achim Zeileis (<a href="fastshap.html#ref-BIB_AER_HEALTHINSURANCE" role="doc-biblioref">2024</a>)</span> を参照してください<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"HealthInsurance"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df_all <span class="ot">&lt;-</span> HealthInsurance</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df_all)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> health          age        limit         gender     insurance  married   
+ no : 629   Min.   :18.00   no :7571   female:4169   no :1750   no :3369  
+ yes:8173   1st Qu.:30.00   yes:1231   male  :4633   yes:7052   yes:5433  
+            Median :39.00                                                 
+            Mean   :38.94                                                 
+            3rd Qu.:48.00                                                 
+            Max.   :62.00                                                 
+                                                                          
+ selfemp        family             region     ethnicity         education   
+ no :7731   Min.   : 1.000   northeast:1682   other: 365   none      :1119  
+ yes:1071   1st Qu.: 2.000   midwest  :2023   afam :1083   ged       : 374  
+            Median : 3.000   south    :3075   cauc :7354   highschool:4434  
+            Mean   : 3.094   west     :2022                bachelor  :1549  
+            3rd Qu.: 4.000                                 master    : 524  
+            Max.   :14.000                                 phd       : 135  
+                                                           other     : 667  </code></pre>
+</div>
+</div>
+</section>
+<section id="前処理" class="level3">
+<h3 class="anchored" data-anchor-id="前処理">前処理</h3>
+<p>今回例として使用するモデルでは、説明変数が数値型である必要があるので、factor型変数を数値型に変換しておきます<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>rec_init <span class="ot">&lt;-</span> df_all <span class="sc">%&gt;%</span> <span class="fu">recipe</span>(insurance <span class="sc">~</span> .) <span class="sc">%&gt;%</span> <span class="co">#前処理手順の定義</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#ethinicityは最も多いカテゴリがcaucなので、これを基準カテゴリに変更</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_relevel</span>(ethnicity, <span class="at">ref_level =</span> <span class="st">"cauc"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#educationは学歴を表す説明変数で、大きいほど高学歴であるため、そのままダミー変数にするのではなく、数値に変換</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">education_main =</span> <span class="fu">as.numeric</span>(education) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#ただし、最後のカテゴリだけは「その他」を表しているので、これだけは別のダミー変数に分離する</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">education_other =</span> <span class="fu">if_else</span>(education_main <span class="sc">==</span> <span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">education_main =</span> <span class="fu">if_else</span>(education_main <span class="sc">&lt;</span> <span class="dv">6</span>, education_main, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_rm</span>(education) <span class="sc">%&gt;%</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_factor_predictors</span>()) <span class="sc">%&gt;%</span> <span class="co">#他のfactor型変数は単純にダミー変数化</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_relevel</span>(insurance, <span class="at">ref_level =</span> <span class="st">"yes"</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">#目的変数は健康保険に加入しているかを表すinsurance</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>df_baked <span class="ot">&lt;-</span> rec_init <span class="sc">%&gt;%</span> <span class="fu">prep</span>() <span class="sc">%&gt;%</span> <span class="fu">bake</span>(<span class="at">new_data =</span> <span class="cn">NULL</span>) <span class="co">#上記で定義した前処理手順を実際に実行</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>上記前処理を施したうえで、学習データとテストデータに分割します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>split_df <span class="ot">&lt;-</span> rsample<span class="sc">::</span><span class="fu">initial_split</span>(df_baked, <span class="at">prop =</span> <span class="fl">0.8</span>) <span class="co">#80%を学習データ、20%をテストデータとする</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df_train <span class="ot">&lt;-</span> rsample<span class="sc">::</span><span class="fu">training</span>(split_df)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>df_test <span class="ot">&lt;-</span> rsample<span class="sc">::</span><span class="fu">testing</span>(split_df)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>df_train_x <span class="ot">&lt;-</span> df_train <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>insurance)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>df_train_y <span class="ot">&lt;-</span> df_train<span class="sc">$</span>insurance</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>df_test_x <span class="ot">&lt;-</span> df_test <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>insurance)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>df_test_y <span class="ot">&lt;-</span> df_test<span class="sc">$</span>insurance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="モデル構築" class="level3">
+<h3 class="anchored" data-anchor-id="モデル構築">モデル構築</h3>
+<p>続いてXGBoostによる予測モデルを学習データをもとに構築します。<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<p>2値分類の問題ですが、予測モデルの出力としては加入しているか否かの2通りではなく、 加入している確率を出力するようにしています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>model_xgboost <span class="ot">&lt;-</span> <span class="fu">xgboost</span>(<span class="at">data =</span> <span class="fu">as.matrix</span>(df_train_x), <span class="at">label =</span> <span class="fu">as.matrix</span>(<span class="dv">2</span> <span class="sc">-</span> <span class="fu">as.numeric</span>(df_train_y)), <span class="at">nrounds =</span> <span class="dv">100</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">params =</span> <span class="fu">list</span>(<span class="at">eta =</span> <span class="fl">0.3</span>, <span class="at">max_depth =</span> <span class="dv">2</span>, <span class="at">gamma =</span> <span class="dv">0</span>, <span class="at">min_child_weight =</span> <span class="dv">1</span>, </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">subsample =</span> <span class="dv">1</span>, <span class="at">colsample_bytree =</span> <span class="dv">1</span>, <span class="at">colsample_bynode =</span> <span class="dv">2</span><span class="sc">/</span><span class="dv">14</span>, <span class="at">objective =</span> <span class="st">"binary:logistic"</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">verbose =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>構築した予測モデルの精度をテストデータを用いて確認しておきます。</p>
+<p>まずはAUC(ROC)を確認します。これは2値分類モデルで使用される評価指標で、高いほど精度が良いという評価になります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>calc_logloss <span class="ot">&lt;-</span> <span class="cf">function</span>(act, pred){<span class="fu">mean</span>(<span class="sc">-</span>act <span class="sc">*</span><span class="fu">log</span>(pred)<span class="sc">-</span>(<span class="dv">1</span><span class="sc">-</span>act)<span class="sc">*</span><span class="fu">log</span>(<span class="dv">1</span><span class="sc">-</span>pred))}</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>calc_score <span class="ot">&lt;-</span> <span class="cf">function</span>(object, predfun, df_test_x, df_test_y){</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  yhat <span class="ot">&lt;-</span> object <span class="sc">%&gt;%</span> <span class="fu">predfun</span>(df_test_x)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  pr <span class="ot">&lt;-</span> ROCR<span class="sc">::</span><span class="fu">prediction</span>(yhat, df_test_y)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  auc <span class="ot">&lt;-</span> pr <span class="sc">%&gt;%</span> ROCR<span class="sc">::</span><span class="fu">performance</span>(<span class="st">"auc"</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  auc_plot <span class="ot">&lt;-</span> pr <span class="sc">%&gt;%</span> ROCR<span class="sc">::</span><span class="fu">performance</span>(<span class="st">"tpr"</span>, <span class="st">"fpr"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">auc_plot =</span> auc_plot,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">auc =</span> auc<span class="sc">@</span>y.values <span class="sc">%&gt;%</span> <span class="fu">as.numeric</span>(),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">logloss =</span> <span class="fu">calc_logloss</span>(<span class="at">act =</span> <span class="dv">2</span> <span class="sc">-</span> <span class="fu">as.numeric</span>(df_test_y), <span class="at">pred =</span> yhat)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>predfun_xgboost <span class="ot">&lt;-</span> <span class="cf">function</span>(object, newdata){</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  dt <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(newdata)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  object <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">newdata =</span> dt)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> <span class="fu">calc_score</span>(model_xgboost, predfun_xgboost, df_test_x, df_test_y)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>score<span class="sc">$</span>auc_plot <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/xgb_test-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>score<span class="sc">$</span>auc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7503933</code></pre>
+</div>
+</div>
+<p>0.75は高くもなく低くもないといった程度ではあるものの、用途によってはこれでも十分でしょう。 （例えば True Positive Rate = 0.6, False Positive Rate = 0.2 あたりとなるしきい値をとれば、 　全体の8割程度を占める加入者のうち6割を削減しつつ、少数派の非加入者のうち8割を残した集団が作れる） 　 　 後で他のモデルと比較する際の参考のため、LogLossスコアも計算しておきます。 こちらは出力される確率値の正確性を評価するもので、低いほうが精度が良いという評価になります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#後で別のモデルと比較するため、スコアをデータフレームに格納</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>df_scores <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">model =</span> <span class="st">"xgboost"</span>, <span class="at">auc =</span> score<span class="sc">$</span>auc, <span class="at">logloss =</span> score<span class="sc">$</span>logloss)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>score<span class="sc">$</span>logloss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4424059</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="fastshapの使用方法" class="level2">
+<h2 class="anchored" data-anchor-id="fastshapの使用方法">fastshapの使用方法</h2>
+<section id="基本的な使用方法" class="level3">
+<h3 class="anchored" data-anchor-id="基本的な使用方法">基本的な使用方法</h3>
+<p>まず、実際にSHAPを計算したいサンプルと、SHAP計算時に「入力しない説明変数」のためにランダムで選ぶ元になるサンプルを選びます。 この両者は同じでもよいですが、前者は数百件程度が一応の目安です。 後者は計算パフォーマンス次第ですが、前者を多めに取りたい場合は前者よりも少なめにします。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>) <span class="co">#SHAPを計算したいサンプル</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>nrow_shap <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>df_shap <span class="ot">&lt;-</span> df_train[<span class="fu">sample</span>(<span class="fu">nrow</span>(df_train), nrow_shap), ]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>df_shap_x <span class="ot">&lt;-</span> df_shap <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>insurance)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span><span class="sc">+</span><span class="dv">1</span>) <span class="co">#ランダムで選ぶ元になるサンプル</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>nrow_shapbg <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>df_shapbg <span class="ot">&lt;-</span> df_train[<span class="fu">sample</span>(<span class="fu">nrow</span>(df_train), nrow_shapbg), ]</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>df_shapbg_x <span class="ot">&lt;-</span> df_shapbg <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>insurance)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>次に、explain関数で実際にSHAPを計算します。</p>
+<p>ここで、0から1の確率値を加法的に分解するよりも、 ロジット変換により実数全体の数値に変換してから分解したほうが説明変数ごとの寄与を比較する際には有用と考えられます。</p>
+<p>predict関数で出力される確率値をロジット変換したものを出力する関数を作成し、 引数<code>pred_wrapper</code>にこの関数を指定することでこれを実現することが出来ます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>logit <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">log</span>(x) <span class="sc">-</span> <span class="fu">log</span>(<span class="dv">1</span><span class="sc">-</span>x) </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>predfun_xgboost_logit <span class="ot">&lt;-</span> <span class="cf">function</span>(object, newdata){ <span class="co">#predict関数の結果をロジット変換する関数</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predfun_xgboost</span>(object, newdata) <span class="sc">%&gt;%</span> <span class="fu">logit</span>()</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>shap_fs <span class="ot">&lt;-</span> fastshap<span class="sc">::</span><span class="fu">explain</span>(model_xgboost, <span class="co">#予測モデルのオブジェクト</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">X =</span> df_shapbg_x, <span class="co">#ランダムで選ぶもとになるサンプル</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                             <span class="co"># SHAPを計算したいサンプル　こちらは厳密にdata.frame型でないとエラー(バグ?)</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>                             <span class="at">newdata =</span> <span class="fu">as.data.frame</span>(df_shap_x),</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>                             <span class="at">pred_wrapper =</span> predfun_xgboost_logit, <span class="co">#予測値を生成する関数</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>                             <span class="at">nsim =</span> <span class="dv">10</span>, <span class="co">#試行回数</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>                             <span class="at">parallel =</span> <span class="cn">FALSE</span>) <span class="co">#並列処理の設定</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>t2 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">&lt;-</span> (t2<span class="sc">-</span>t1)[<span class="dv">3</span>]</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(t0) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"処理時間:"</span>, t0, <span class="st">"秒"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>処理時間: 2.07 秒</code></pre>
+</div>
+</div>
+<p>最後にこれを可視化します。これにはshapvizパッケージを用いるとよいでしょう。 まず、個別のサンプルに対する寄与の分解を表示するには次のようにします。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>sv <span class="ot">&lt;-</span> shapviz<span class="sc">::</span><span class="fu">shapviz</span>(shap_fs, <span class="at">X =</span> df_shap_x) <span class="co">#shapvizパッケージで可視化できるオブジェクトに変換</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_waterfall</span>(sv, <span class="at">row_id =</span> <span class="dv">1</span>) <span class="co">#1つ目のサンプルの予測結果に対してプロット</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/basic_shapviz-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>このサンプルでは、自営業であること（<code>selfemp_yes=1</code>）や独身である（<code>married_yes=0</code>）ことによって、 平均的な被験者よりも健康保険に加入しない傾向にあると判断されたようです。</p>
+<p>また、グローバルな手法として全サンプルの結果を一覧に表示し、 説明変数ごとに全般的にどの程度寄与しているかをプロットするには次のようにします。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_importance</span>(sv, <span class="at">kind =</span> <span class="st">"beeswarm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/basic_shapviz_sfi-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>横軸は寄与の大きさを、色付けは説明変数の値を示しており、 例えば明るい色の点が右側にある場合は、その説明変数が高いほど予測確率が高くなることを示します。</p>
+<p><code>shapviz::sv_importance</code>関数はデフォルトでは寄与が大きい説明変数から順に並べられるので、 最も予測確率への寄与が大きい説明変数は学歴（<code>education_main</code>）であることがわかります。 また、学歴が高いほど健康保険に加入する傾向があることがわかります。</p>
+</section>
+<section id="並列計算" class="level3">
+<h3 class="anchored" data-anchor-id="並列計算">並列計算</h3>
+<p>fastshapにはforeachパッケージによる並列計算が実装されています。</p>
+<p>事前にdoParallelパッケージの関数を使用して適切に並列計算の設定を行ったのちに、 引数<code>parallel</code>を<code>TRUE</code>にしたうえで、<code>foreach</code>関数に渡したい引数を追加することで並列計算が可能になります。</p>
+<p>foreachパッケージによる並列計算の際は複数の独立したR環境が生成されますが、 その環境に引き渡すべきパッケージや関数は明示的に指定する必要があることに注意してください。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cluster <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(<span class="fu">detectCores</span>()<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cluster)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>shap_fs <span class="ot">&lt;-</span> fastshap<span class="sc">::</span><span class="fu">explain</span>(model_xgboost,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">X =</span> df_shapbg_x,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">newdata =</span> <span class="fu">as.data.frame</span>(df_shap_x),</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">pred_wrapper =</span> predfun_xgboost_logit,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>                             <span class="at">nsim =</span> <span class="dv">100</span>,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>                             <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>                             <span class="co">#独立したR環境に引き渡すべきパッケージや関数を記述</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>                             <span class="at">.packages=</span><span class="fu">c</span>(<span class="st">'dplyr'</span>), <span class="at">.export=</span><span class="fu">c</span>(<span class="st">"logit"</span>, <span class="st">"predfun_xgboost"</span>))</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>t2 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> (t2<span class="sc">-</span>t1)[<span class="dv">3</span>]</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(t) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"処理時間:"</span>, t, <span class="st">"秒"</span>)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cluster)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>処理時間: 10.97 秒</code></pre>
+</div>
+</div>
+<p>並列計算しない場合は10回の試行に2.07秒かかっていました。 上記では試行回数を100回に増やしましたが、並列計算の恩恵によってその10倍よりは短い時間で計算できています。</p>
+<p>なお、どのような状況であっても並列計算で劇的に高速化する訳ではなく、また環境によって効果は異なってくる点に注意してください。</p>
+<p>ちなみに、<code>shapviz::sv_importance</code>関数の結果は次のとおりであり、 試行回数を増やすことによって計算結果が収束してきていることがわかります。 逆に、試行回数10回では流石に少なすぎるかもしれません。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>sv <span class="ot">&lt;-</span> shapviz<span class="sc">::</span><span class="fu">shapviz</span>(shap_fs, <span class="at">X =</span> df_shap_x)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_importance</span>(sv, <span class="at">kind =</span> <span class="st">"beeswarm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/foreach_2-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="引数adjustによる局所正確性の確保" class="level3">
+<h3 class="anchored" data-anchor-id="引数adjustによる局所正確性の確保">引数adjustによる局所正確性の確保</h3>
+<p>説明変数ごとの寄与を積み上げると元の予測値になるというSHAPの性質を局所正確性（local accuracy）といいます。 しかし、fastshapは近似的な手法のため、そのままでは局所正確性が満たされないという弱点があります。 引数<code>adjust</code>を<code>TRUE</code>にすることで、局所正確性を確保できるように補正することができます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>shap_fs_notadjusted <span class="ot">&lt;-</span> fastshap<span class="sc">::</span><span class="fu">explain</span>(model_xgboost,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">X =</span> df_shapbg_x,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">newdata =</span> <span class="fu">as.data.frame</span>(df_shap_x),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">pred_wrapper =</span> predfun_xgboost_logit,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">nsim =</span> <span class="dv">4</span>,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">parallel =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">adjust =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>sv_notadjusted <span class="ot">&lt;-</span> shapviz<span class="sc">::</span><span class="fu">shapviz</span>(shap_fs_notadjusted, <span class="at">X =</span> df_shap_x)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>shap_fs_adjusted <span class="ot">&lt;-</span> fastshap<span class="sc">::</span><span class="fu">explain</span>(model_xgboost,</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>                             <span class="at">X =</span> df_shapbg_x,</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>                             <span class="at">newdata =</span> <span class="fu">as.data.frame</span>(df_shap_x),</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>                             <span class="at">pred_wrapper =</span> predfun_xgboost_logit,</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>                             <span class="at">nsim =</span> <span class="dv">4</span>,</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>                             <span class="at">parallel =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>                             <span class="at">adjust =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>sv_adjusted <span class="ot">&lt;-</span> shapviz<span class="sc">::</span><span class="fu">shapviz</span>(shap_fs_adjusted, <span class="at">X =</span> df_shap_x)</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>(shapviz<span class="sc">::</span><span class="fu">sv_waterfall</span>(sv_notadjusted, <span class="at">row_id =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"補正前"</span>)) <span class="sc">+</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>(shapviz<span class="sc">::</span><span class="fu">sv_waterfall</span>(sv_adjusted, <span class="at">row_id =</span> <span class="dv">1</span>)  <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"補正後"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/adjust-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"実際の予測値（のロジット変換後）:"</span>, <span class="fu">predfun_xgboost_logit</span>(model_xgboost, df_shap_x[<span class="dv">1</span>, ]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>実際の予測値（のロジット変換後）: -0.1223738</code></pre>
+</div>
+</div>
+<p>補正後は、プロットの上部にあるf(x)の値が実際の予測値と一致していることが確認できます。</p>
+</section>
+<section id="引数exactによる理論値の計算" class="level3">
+<h3 class="anchored" data-anchor-id="引数exactによる理論値の計算">引数exactによる理論値の計算</h3>
+<p>引数<code>exact</code>を<code>TRUE</code>にした場合、次のモデルに限り、 モンテカルロシミュレーションを行うのではなくパラメータから理論的な値を計算することができます。</p>
+<ul>
+<li><code>stats::lm()</code> ：線形回帰モデル…最初から加法的に関数が分解されているため、係数×説明変数を計算すればよい</li>
+<li><code>xgboost::xgboost()</code>, <code>lightgbm::lightgbm()</code> ：ブースティング木モデル…Tree SHAPを用いる</li>
+</ul>
+<p>XGBoostの場合を示すと次のとおり。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>shap_exact <span class="ot">&lt;-</span> fastshap<span class="sc">::</span><span class="fu">explain</span>(model_xgboost,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">X =</span> <span class="fu">as.matrix</span>(df_shap_x),</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">exact =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">parallel =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>t2 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">&lt;-</span> (t2<span class="sc">-</span>t1)[<span class="dv">3</span>]</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(t0) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"処理時間:"</span>, t0, <span class="st">"秒"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>処理時間: 0.12 秒</code></pre>
+</div>
+</div>
+<p><code>shapviz::sv_importance</code>関数で可視化してみると次のとおりです。<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>sv_exact <span class="ot">&lt;-</span> shapviz<span class="sc">::</span><span class="fu">shapviz</span>(shap_exact, <span class="at">X =</span> df_shap_x)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_importance</span>(sv_exact, <span class="at">kind =</span> <span class="st">"beeswarm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/exact_shapviz-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="他のパッケージとの比較" class="level2">
+<h2 class="anchored" data-anchor-id="他のパッケージとの比較">他のパッケージとの比較</h2>
+<p>SHAPの計算を実装したパッケージは他にもいくつかあり、代表的なものを比較して整理すると次のようになります。</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 38%">
+<col style="width: 23%">
+<col style="width: 15%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>パッケージ名</th>
+<th>概要</th>
+<th>対応モデル</th>
+<th>計算速度</th>
+<th>計算精度</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>fastshap</td>
+<td>モンテカルロシミュレーションによる計算</td>
+<td>すべての予測モデル</td>
+<td>高速</td>
+<td>低い</td>
+</tr>
+<tr class="even">
+<td>kernelshap</td>
+<td>Kernel SHAPの高速な実装</td>
+<td>すべての予測モデル</td>
+<td>普通</td>
+<td>高い</td>
+</tr>
+<tr class="odd">
+<td>treeshap</td>
+<td>Tree SHAP</td>
+<td>ランダムフォレスト、ブースティング木</td>
+<td>非常に高速</td>
+<td>高い</td>
+</tr>
+<tr class="even">
+<td>DALEX</td>
+<td>他の手法(breakdown等)も統合的に扱える</td>
+<td>すべての予測モデル</td>
+<td>非常に低速</td>
+<td>高い</td>
+</tr>
+</tbody>
+</table>
+<p>最も高速なのはTree SHAPを実装したtreeshapです。</p>
+<p>Tree SHAPは、決定木の場合は条件付期待値の理論値が予測モデルのパラメータから計算可能であり、 さらにアンサンブルモデルの場合には平均値でSHAPを計算できるという特徴によって高速に計算する手法です。 そのため、対応しているのはランダムフォレストやブースティング木を実装した一部のパッケージに限られます。</p>
+<p>それ以外のモデルの場合、kernelshapは計算精度の高さと計算速度をある程度両立してはいるものの、 サンプル数や説明変数の数が多い場合には実行が難しい場合もあります。</p>
+<p>これらに比べてfastshapは非常に軽量かつシンプルなため、 利用者側で精度と計算速度の調整が行いやすいという点が特徴と言えます。</p>
+<p>DALEXはSHAP以外の他の解釈手法をも統合的に扱える点が特徴ですが、 計算速度は低速であり、グローバルな手法としては扱いづらいかもしれません。 グローバルな手法として用いる場合はshapvizパッケージが使用できない（2024.8時点）という弱点もあります。</p>
+<section id="kernelshapの例" class="level3">
+<h3 class="anchored" data-anchor-id="kernelshapの例">kernelshapの例</h3>
+<p>今回の例の場合はfastshapで並列計算を採用するよりも、高速で良い結果が得られているように思われます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>shap_ks <span class="ot">&lt;-</span> kernelshap<span class="sc">::</span><span class="fu">kernelshap</span>(model_xgboost, <span class="at">X =</span> df_shap_x, <span class="at">bg_X =</span> df_shapbg_x,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">pred_fun =</span> predfun_xgboost_logit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Kernel SHAP values by the hybrid strategy of degree 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>t2 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">&lt;-</span> (t2<span class="sc">-</span>t1)[<span class="dv">3</span>]</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(t0) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"処理時間:"</span>, t0, <span class="st">"秒"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>処理時間: 3.16 秒</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>sv <span class="ot">&lt;-</span> shapviz<span class="sc">::</span><span class="fu">shapviz</span>(shap_ks) <span class="co">#kernelshapの場合引数Xは不要</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_importance</span>(sv, <span class="at">kind =</span> <span class="st">"beeswarm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/kernelshap_shapviz-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="dalexの例" class="level3">
+<h3 class="anchored" data-anchor-id="dalexの例">DALEXの例</h3>
+<p>DALEXの場合はshapvizで可視化できるのは個別サンプルの寄与を計算する<code>DALEX::predict_parts</code>関数のみで、 グローバルな手法で用いる<code>DALEX::shap_aggregated</code>関数は対応していません。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>explainer <span class="ot">&lt;-</span> DALEX<span class="sc">::</span><span class="fu">explain</span>(model_xgboost,</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> df_shapbg_x,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">predict_function =</span> predfun_xgboost_logit,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">quietly =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>shap_dalex <span class="ot">&lt;-</span> DALEX<span class="sc">::</span><span class="fu">predict_parts</span>(explainer, df_shap_x[<span class="dv">1</span>, ], <span class="at">type =</span> <span class="st">'shap'</span>)</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>t2 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">&lt;-</span> (t2<span class="sc">-</span>t1)[<span class="dv">3</span>]</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(t0) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"処理時間:"</span>, t0, <span class="st">"秒"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>処理時間: 1.97 秒</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>sv_dalex <span class="ot">&lt;-</span> shapviz<span class="sc">::</span><span class="fu">shapviz</span>(shap_dalex)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_waterfall</span>(sv_dalex, <span class="at">row_id =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/DALEX_shapviz-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>さらに、<code>DALEX::shap_aggregated</code>関数は計算時間が非常に長く、実用的とはいえません。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>df_shap_x_dalex <span class="ot">&lt;-</span> df_shap_x</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co">#DALEX::shap_aggregatedには説明変数の型がすべて同じではエラーになるバグがある（2024.8時点）ため、</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co">#一つだけ別の型（numericからinteger）に変換しておく</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>df_shap_x_dalex<span class="sc">$</span>education_main <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(df_shap_x<span class="sc">$</span>education_main)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>df_shap_x_dalex <span class="ot">&lt;-</span> df_shap_x_dalex[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, ] <span class="co">#あまりにも計算時間が長いので、4サンプルに限定</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>explainer <span class="ot">&lt;-</span> DALEX<span class="sc">::</span><span class="fu">explain</span>(model_xgboost,</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> df_shapbg_x,</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">predict_function =</span> predfun_xgboost_logit,</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">quietly =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>shap_dalex_agg <span class="ot">&lt;-</span> DALEX<span class="sc">::</span><span class="fu">shap_aggregated</span>(explainer, df_shap_x_dalex, <span class="at">type =</span> <span class="st">'shap'</span>, <span class="at">B =</span> <span class="dv">10</span>) <span class="co">#Bは試行回数</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>t2 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">&lt;-</span> (t2<span class="sc">-</span>t1)[<span class="dv">3</span>]</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(t0) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"処理時間:"</span>, t0, <span class="st">"秒"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>処理時間: 2.9 秒</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>shap_dalex_agg <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="他のモデルの例" class="level3">
+<h3 class="anchored" data-anchor-id="他のモデルの例">他のモデルの例</h3>
+<section id="glm" class="level4">
+<h4 class="anchored" data-anchor-id="glm">GLM</h4>
+<p>最も単純な予測モデルの例として、ロジスティック回帰の例を用意します。</p>
+<p>実は単純なロジスティック回帰でもそれなりの予測精度になります。 最も重要な説明変数である学歴については単純に学歴の低いものから0, 1, 2, …と並べて数値に変換しただけですが、 これでも非常によくフィットします。 前述までのSHAPによるグローバルな分析にて、<code>education_main</code>の点がおおむね等間隔に群団を作っていたことと整合します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>model_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(insurance <span class="sc">~</span> ., <span class="at">data =</span> df_train, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>predfun_glm <span class="ot">&lt;-</span> <span class="cf">function</span>(object, newdata){</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> object <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">newdata =</span> newdata, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span> <span class="sc">-</span> res</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>predfun_glm_logit <span class="ot">&lt;-</span> <span class="cf">function</span>(object, newdata){</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> object <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">newdata =</span> newdata, <span class="at">type =</span> <span class="st">"link"</span>)</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span>res</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> <span class="fu">calc_score</span>(model_glm, predfun_glm, df_test_x, df_test_y)</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>df_scores <span class="ot">&lt;-</span> df_scores <span class="sc">%&gt;%</span> <span class="fu">bind_rows</span>(<span class="fu">tibble</span>(<span class="at">model =</span> <span class="st">"glm"</span>, <span class="at">auc =</span> score<span class="sc">$</span>auc, <span class="at">logloss =</span> score<span class="sc">$</span>logloss))</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>score<span class="sc">$</span>auc_plot <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/glm_fit-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"auc:"</span>, score<span class="sc">$</span>auc, <span class="st">"logloss:"</span>, score<span class="sc">$</span>logloss)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>auc: 0.7400438 logloss: 0.4504438</code></pre>
+</div>
+</div>
+</section>
+<section id="特徴量エンジニアリングを加えた正則化glm" class="level4">
+<h4 class="anchored" data-anchor-id="特徴量エンジニアリングを加えた正則化glm">特徴量エンジニアリングを加えた（正則化）GLM</h4>
+<p>特徴量エンジニアリング（説明変数の加工）を行うことで、非線形な作用をGLMで捉えられるようになります。 この場合はモデル自身の係数が複雑になってしまい解釈可能性が低下してしまうので、 SHAPのような手法を駆使して解釈することは考えられます。</p>
+<p>Tree SHAPを用いることができない例として、この特徴量エンジニアリングを加えたGLMを用意します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>recp_glm_prep <span class="ot">&lt;-</span> df_train <span class="sc">%&gt;%</span> <span class="fu">recipe</span>(insurance <span class="sc">~</span> .) <span class="sc">%&gt;%</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#高学歴層では等間隔とならないことへの対応</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">education_geq_4 =</span> <span class="dv">1</span><span class="sc">*</span>(education_main <span class="sc">&gt;=</span> <span class="dv">4</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#年齢が非常に複雑に作用することを捉える</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">age_geq_20 =</span> <span class="dv">1</span><span class="sc">*</span>(age <span class="sc">&gt;=</span> <span class="dv">20</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">age_geq_24 =</span> <span class="dv">1</span><span class="sc">*</span>(age <span class="sc">&gt;=</span> <span class="dv">24</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">age_geq_26 =</span> <span class="dv">1</span><span class="sc">*</span>(age <span class="sc">&gt;=</span> <span class="dv">26</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">age_geq_27 =</span> <span class="dv">1</span><span class="sc">*</span>(age <span class="sc">&gt;=</span> <span class="dv">27</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">age_geq_57 =</span> <span class="dv">1</span><span class="sc">*</span>(age <span class="sc">&gt;=</span> <span class="dv">57</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">age_geq_58 =</span> <span class="dv">1</span><span class="sc">*</span>(age <span class="sc">&gt;=</span> <span class="dv">58</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">#家族の数もわずかに非線形な作用がある</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">family_geq_2 =</span> <span class="dv">1</span><span class="sc">*</span>(family <span class="sc">&gt;=</span> <span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">family_geq_3 =</span> <span class="dv">1</span><span class="sc">*</span>(family <span class="sc">&gt;=</span> <span class="dv">3</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">family_geq_7 =</span> <span class="dv">1</span><span class="sc">*</span>(family <span class="sc">&gt;=</span> <span class="dv">7</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">family_geq_11 =</span> <span class="dv">1</span><span class="sc">*</span>(family <span class="sc">&gt;=</span> <span class="dv">11</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_mutate</span>(<span class="at">family_geq_12 =</span> <span class="dv">1</span><span class="sc">*</span>(family <span class="sc">&gt;=</span> <span class="dv">12</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">#重要な説明変数に関連する交互作用項を追加</span></span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_interact</span>(<span class="at">terms =</span> <span class="sc">~</span> (tidyselect<span class="sc">::</span><span class="fu">starts_with</span>(<span class="st">"age"</span>) <span class="sc">+</span> tidyselect<span class="sc">::</span><span class="fu">starts_with</span>(<span class="st">"education_"</span>) <span class="sc">+</span></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>                       married_yes <span class="sc">+</span> selfemp_yes <span class="sc">+</span> education_other)<span class="sc">*</span><span class="fu">all_numeric_predictors</span>(), <span class="at">sep =</span> <span class="st">":"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">prep</span>()</span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>df_train_x_glm_prep <span class="ot">&lt;-</span> recp_glm_prep <span class="sc">%&gt;%</span> <span class="fu">bake</span>(<span class="at">new_data =</span> df_train_x)</span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>lambda_glm_prep <span class="ot">&lt;-</span> <span class="fl">0.0036</span> <span class="co">#正則化項の係数</span></span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a><span class="co">#交互作用項が多数作られてしまうので、Lasso回帰による変数選択を組み合わせる</span></span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>model_glm_prep <span class="ot">&lt;-</span> glmnet<span class="sc">::</span><span class="fu">glmnet</span>(<span class="at">x =</span> df_train_x_glm_prep, <span class="at">y =</span> <span class="dv">2</span> <span class="sc">-</span> <span class="fu">as.numeric</span>(df_train_y),</span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">lambda =</span> lambda_glm_prep, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a><span class="co">#予測関数の中に上記前処理を行う処理を差し込むことで</span></span>
+<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a><span class="co">#他のモデルと同じ形式のデータフレームを入力できるようにしておく</span></span>
+<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a>predfun_glm_prep <span class="ot">&lt;-</span> <span class="cf">function</span>(object, newdata){</span>
+<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> recp_glm_prep <span class="sc">%&gt;%</span> <span class="fu">bake</span>(<span class="at">new_data =</span> newdata)</span>
+<span id="cb40-33"><a href="#cb40-33" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> object <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">newx =</span> <span class="fu">as.matrix</span>(df), <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb40-34"><a href="#cb40-34" aria-hidden="true" tabindex="-1"></a>  res[,<span class="dv">1</span>]</span>
+<span id="cb40-35"><a href="#cb40-35" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb40-36"><a href="#cb40-36" aria-hidden="true" tabindex="-1"></a>predfun_glm_prep_logit <span class="ot">&lt;-</span> <span class="cf">function</span>(object, newdata){</span>
+<span id="cb40-37"><a href="#cb40-37" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> recp_glm_prep <span class="sc">%&gt;%</span> <span class="fu">bake</span>(<span class="at">new_data =</span> newdata)</span>
+<span id="cb40-38"><a href="#cb40-38" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> object <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">newx =</span> <span class="fu">as.matrix</span>(df), <span class="at">type =</span> <span class="st">"link"</span>)</span>
+<span id="cb40-39"><a href="#cb40-39" aria-hidden="true" tabindex="-1"></a>  res[,<span class="dv">1</span>] <span class="co">#ベクトルにしておかないとfastshapの計算に失敗する</span></span>
+<span id="cb40-40"><a href="#cb40-40" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb40-41"><a href="#cb40-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-42"><a href="#cb40-42" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> <span class="fu">calc_score</span>(model_glm_prep, predfun_glm_prep, df_test_x, df_test_y)</span>
+<span id="cb40-43"><a href="#cb40-43" aria-hidden="true" tabindex="-1"></a>df_scores <span class="ot">&lt;-</span> df_scores <span class="sc">%&gt;%</span> <span class="fu">bind_rows</span>(<span class="fu">tibble</span>(<span class="at">model =</span> <span class="st">"glm_prep"</span>, <span class="at">auc =</span> score<span class="sc">$</span>auc, <span class="at">logloss =</span> score<span class="sc">$</span>logloss))</span>
+<span id="cb40-44"><a href="#cb40-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-45"><a href="#cb40-45" aria-hidden="true" tabindex="-1"></a>score<span class="sc">$</span>auc_plot <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/glm_prep_fit-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"auc:"</span>, score<span class="sc">$</span>auc, <span class="st">"logloss:"</span>, score<span class="sc">$</span>logloss)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>auc: 0.7446471 logloss: 0.4475717</code></pre>
+</div>
+</div>
+</section>
+<section id="rangerによるランダムフォレスト" class="level4">
+<h4 class="anchored" data-anchor-id="rangerによるランダムフォレスト">rangerによるランダムフォレスト</h4>
+<p>Tree SHAPが使用できる他の例として、rangerパッケージのランダムフォレストを用意します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>df_train_ranger <span class="ot">&lt;-</span> df_train</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>df_train_ranger<span class="sc">$</span>insurance <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">-</span> <span class="fu">as.numeric</span>(df_train_ranger<span class="sc">$</span>insurance)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>model_ranger <span class="ot">&lt;-</span> ranger<span class="sc">::</span><span class="fu">ranger</span>(<span class="at">formula =</span> insurance <span class="sc">~</span> ., <span class="at">data =</span> df_train_ranger, </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">importance =</span> <span class="st">'none'</span>, <span class="co">#probability = TRUE,</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">num.trees =</span> <span class="dv">100</span>, <span class="at">min.node.size =</span> <span class="dv">40</span>, <span class="at">mtry =</span> <span class="dv">4</span>)</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="co">#分類問題の場合はprobability = TRUEとすべきだが、treeshap::unifyでエラーとなるため通常の回帰モデルとする</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>predfun_ranger <span class="ot">&lt;-</span> <span class="cf">function</span>(object, newdata){</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> object <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">data =</span> newdata)</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  res<span class="sc">$</span>predictions</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>predfun_ranger_logit <span class="ot">&lt;-</span> <span class="cf">function</span>(object, newdata){ <span class="co">#predict関数の結果をロジット変換する関数</span></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predfun_ranger</span>(object, newdata) <span class="sc">%&gt;%</span> <span class="fu">logit</span>()</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> <span class="fu">calc_score</span>(model_ranger, predfun_ranger, df_test_x, df_test_y)</span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>df_scores <span class="ot">&lt;-</span> df_scores <span class="sc">%&gt;%</span> <span class="fu">bind_rows</span>(<span class="fu">tibble</span>(<span class="at">model =</span> <span class="st">"ranger"</span>, <span class="at">auc =</span> score<span class="sc">$</span>auc, <span class="at">logloss =</span> score<span class="sc">$</span>logloss))</span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>score<span class="sc">$</span>auc_plot <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/ranger_fit-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"auc:"</span>, score<span class="sc">$</span>auc, <span class="st">"logloss:"</span>, score<span class="sc">$</span>logloss)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>auc: 0.7360556 logloss: 0.4536576</code></pre>
+</div>
+</div>
+</section>
+<section id="予測モデルの精度比較" class="level4">
+<h4 class="anchored" data-anchor-id="予測モデルの精度比較">予測モデルの精度比較</h4>
+<p>本稿の主題を外れるため、各予測モデルの解釈を比較したりはしませんが、 いずれもうまく学習できているということを確かめるために XGBoostと比較しても精度があまり変わらないということを確認しておきます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>df_scores</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["model"],"name":[1],"type":["chr"],"align":["left"]},{"label":["auc"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["logloss"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"xgboost","2":"0.7503933","3":"0.4424059"},{"1":"glm","2":"0.7400438","3":"0.4504438"},{"1":"glm_prep","2":"0.7446471","3":"0.4475717"},{"1":"ranger","2":"0.7360556","3":"0.4536576"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="計算時間比較" class="level3">
+<h3 class="anchored" data-anchor-id="計算時間比較">計算時間比較</h3>
+<p>ここまでに用意した4つのモデル（XGBoost、rangerによるランダムフォレスト、GLM、特徴量エンジニアリング付GLM）に対して、 fastshap、kernelshap、treeshapによるSHAPの計算時間を比較してみます。</p>
+<p>SHAPを計算するサンプル数を増やした時に計算時間がどのように変化するかをプロットすると次のとおり。 （treeshap以外で使用する<code>nrow_shapbg</code>は50、fastshapの試行回数は10）</p>
+<p>サンプル数を増やしてもfastshapはあまり計算時間が増えませんが、 kernelshapは比例的に計算時間が増加します。 treeshapは非常に高速ですが、rangerではツリーの構造のためなのか、サンプル数を増やすとfastshapと逆転します。</p>
+<p>特徴量エンジニアリング付きGLM（<code>glm_prep</code>）は予測関数を呼び出すたびに前処理を実行するため、 他のモデルと比べて計算時間が長くなっています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> results <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(nrow_shapbg <span class="sc">&lt;=</span> <span class="dv">50</span>, nsim <span class="sc">&lt;=</span> <span class="dv">10</span>),</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> nrow_shap, <span class="at">y =</span> time, <span class="at">color =</span> model, <span class="at">linetype =</span> method)) <span class="sc">+</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/comp_nrow_shap-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>特徴量エンジニアリング付きGLMを除くと次のとおり。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> results <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(nrow_shapbg <span class="sc">&lt;=</span> <span class="dv">50</span>, nsim <span class="sc">&lt;=</span> <span class="dv">10</span>, model <span class="sc">!=</span> <span class="st">"glm_prep"</span>),</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> nrow_shap, <span class="at">y =</span> time, <span class="at">color =</span> model, <span class="at">linetype =</span> method)) <span class="sc">+</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/comp_nrow_shap_1-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>さらにXGBoostに着目すると次のとおり。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> results <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(nrow_shapbg <span class="sc">&lt;=</span> <span class="dv">50</span>, nsim <span class="sc">&lt;=</span> <span class="dv">10</span>, model <span class="sc">==</span> <span class="st">"xgboost"</span>),</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> nrow_shap, <span class="at">y =</span> time, <span class="at">color =</span> model, <span class="at">linetype =</span> method)) <span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/comp_nrow_shap_xgb-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>横軸を<code>nrow_shapbg</code>（「入力しない説明変数」のためにランダムで選ぶ元になるサンプル数）とすると次のとおり。 kernelshapではおおむね件数に比例して計算時間が増加しています。 一方fastshapではSHAPを計算するサンプル数ほど計算時間との関係性が明確ではありませんでした。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> results <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(nrow_shap <span class="sc">==</span> <span class="dv">50</span>, nrow_shapbg <span class="sc">&gt;=</span> <span class="dv">50</span>, nsim <span class="sc">&lt;=</span> <span class="dv">10</span>),</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> nrow_shapbg, <span class="at">y =</span> time, <span class="at">color =</span> model, <span class="at">linetype =</span> method)) <span class="sc">+</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/comp_nrow_shapbp-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>fastshapの試行回数を横軸にとると、計算時間は試行回数と正比例していることがわかります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> results <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(nrow_shap <span class="sc">==</span> <span class="dv">50</span>, nrow_shapbg <span class="sc">==</span> <span class="dv">50</span>, nsim <span class="sc">&gt;=</span> <span class="dv">10</span>),</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> nsim, <span class="at">y =</span> time, <span class="at">color =</span> model, <span class="at">linetype =</span> method)) <span class="sc">+</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fastshap_files/figure-html/comp_nsim-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>参考までに、上記グラフを作成するためのコードは次のとおりです。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co">#計算時間比較をしたいモデルの定義</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>modelsets <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>modelsets<span class="sc">$</span>glm <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">object =</span> model_glm, <span class="at">predfun =</span> predfun_glm_logit)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>modelsets<span class="sc">$</span>glm_prep <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">object =</span> model_glm_prep, <span class="at">predfun =</span> predfun_glm_prep_logit)</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>modelsets<span class="sc">$</span>xgboost <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">object =</span> model_xgboost, <span class="at">predfun =</span> predfun_xgboost_logit)</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>modelsets<span class="sc">$</span>ranger <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">object =</span> model_ranger, <span class="at">predfun =</span> predfun_ranger_logit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co">#計算パターンの定義</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>          tidyr<span class="sc">::</span><span class="fu">expand_grid</span>(</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">model =</span> <span class="fu">c</span>(<span class="st">"glm"</span>, <span class="st">"glm_prep"</span>, <span class="st">"xgboost"</span>, <span class="st">"ranger"</span>),</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>            <span class="fu">bind_rows</span>(</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>              tidyr<span class="sc">::</span><span class="fu">expand_grid</span>(</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">"kernelshap"</span>,</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>                <span class="fu">bind_rows</span>(tidyr<span class="sc">::</span><span class="fu">expand_grid</span>(<span class="at">nrow_shap =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">5</span>)<span class="sc">*</span><span class="dv">50</span>, <span class="at">nrow_shapbg =</span> <span class="dv">50</span>, <span class="at">nsim =</span> <span class="dv">10</span>),</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>                          tidyr<span class="sc">::</span><span class="fu">expand_grid</span>(<span class="at">nrow_shap =</span> <span class="dv">50</span>, <span class="at">nrow_shapbg =</span> <span class="fu">seq</span>(<span class="dv">2</span>,<span class="dv">5</span>)<span class="sc">*</span><span class="dv">50</span>, <span class="at">nsim =</span> <span class="dv">10</span>))</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>              ),</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>              tidyr<span class="sc">::</span><span class="fu">expand_grid</span>(</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">"fastshap"</span>,</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>                <span class="fu">bind_rows</span>(tidyr<span class="sc">::</span><span class="fu">expand_grid</span>(<span class="at">nrow_shap =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">5</span>)<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span><span class="dv">50</span>, <span class="at">nrow_shapbg =</span> <span class="dv">50</span>, <span class="at">nsim =</span> <span class="dv">10</span>),</span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>                          tidyr<span class="sc">::</span><span class="fu">expand_grid</span>(<span class="at">nrow_shap =</span> <span class="dv">50</span>, <span class="at">nrow_shapbg =</span> <span class="fu">seq</span>(<span class="dv">2</span>,<span class="dv">5</span>)<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span><span class="dv">50</span>, <span class="at">nsim =</span> <span class="dv">10</span>),</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>                          tidyr<span class="sc">::</span><span class="fu">expand_grid</span>(<span class="at">nrow_shap =</span> <span class="dv">50</span>, <span class="at">nrow_shapbg =</span> <span class="dv">50</span>, <span class="at">nsim =</span> <span class="fu">seq</span>(<span class="dv">2</span>,<span class="dv">5</span>)<span class="sc">*</span><span class="dv">10</span>))</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>              )</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>          ),</span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>          tidyr<span class="sc">::</span><span class="fu">expand_grid</span>(</span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">model =</span> <span class="fu">c</span>(<span class="st">"xgboost"</span>, <span class="st">"ranger"</span>),</span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>            tidyr<span class="sc">::</span><span class="fu">expand_grid</span>(</span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>              tidyr<span class="sc">::</span><span class="fu">expand_grid</span>(</span>
+<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">"treeshap"</span>,</span>
+<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a>                <span class="fu">bind_rows</span>(tidyr<span class="sc">::</span><span class="fu">expand_grid</span>(<span class="at">nrow_shap =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">5</span>)<span class="sc">^</span><span class="dv">2</span><span class="sc">*</span><span class="dv">50</span>, <span class="at">nrow_shapbg =</span> <span class="dv">0</span>, <span class="at">nsim =</span> <span class="dv">10</span>))</span>
+<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a>              )</span>
+<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a>          )</span>
+<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a>        )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co">#計算パターン1つに対して計算時間を測る関数</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>calc_shap <span class="ot">&lt;-</span> <span class="cf">function</span>(object, predfun, method, <span class="at">nrow_shap =</span> <span class="dv">500</span>, <span class="at">nrow_shapbg =</span> <span class="dv">60</span>, <span class="at">nsim =</span> <span class="dv">1</span>){</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  t1 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  df_shap <span class="ot">&lt;-</span> df_train[<span class="fu">sample</span>(<span class="fu">nrow</span>(df_train), nrow_shap), ]</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  df_shap_x <span class="ot">&lt;-</span> df_shap <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>insurance)</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">2024</span><span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>  df_shapbg <span class="ot">&lt;-</span> df_train[<span class="fu">sample</span>(<span class="fu">nrow</span>(df_train), nrow_shapbg), ]</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>  df_shapbg_x <span class="ot">&lt;-</span> df_shapbg <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>insurance)</span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>  nsim_res <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>  nrow_shapbg_res <span class="ot">&lt;-</span> nrow_shapbg</span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(method <span class="sc">==</span> <span class="st">"fastshap"</span>){</span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>    shap_fs <span class="ot">&lt;-</span> fastshap<span class="sc">::</span><span class="fu">explain</span>(object, </span>
+<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">X =</span> df_shapbg_x, </span>
+<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">newdata =</span> <span class="fu">as.data.frame</span>(df_shap_x), </span>
+<span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">pred_wrapper =</span> predfun, <span class="at">nsim =</span> nsim)</span>
+<span id="cb54-21"><a href="#cb54-21" aria-hidden="true" tabindex="-1"></a>    sv <span class="ot">&lt;-</span> <span class="fu">shapviz</span>(shap_fs, <span class="at">X =</span> df_shap_x)</span>
+<span id="cb54-22"><a href="#cb54-22" aria-hidden="true" tabindex="-1"></a>    nsim_res <span class="ot">&lt;-</span> nsim</span>
+<span id="cb54-23"><a href="#cb54-23" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(method <span class="sc">==</span> <span class="st">"treeshap"</span>){</span>
+<span id="cb54-24"><a href="#cb54-24" aria-hidden="true" tabindex="-1"></a>    obj_uni <span class="ot">&lt;-</span> treeshap<span class="sc">::</span><span class="fu">unify</span>(object, df_shap_x)</span>
+<span id="cb54-25"><a href="#cb54-25" aria-hidden="true" tabindex="-1"></a>    shap_ts <span class="ot">&lt;-</span> treeshap<span class="sc">::</span><span class="fu">treeshap</span>(obj_uni, <span class="at">x =</span> df_shap_x)</span>
+<span id="cb54-26"><a href="#cb54-26" aria-hidden="true" tabindex="-1"></a>    sv <span class="ot">&lt;-</span> <span class="fu">shapviz</span>(shap_ts)</span>
+<span id="cb54-27"><a href="#cb54-27" aria-hidden="true" tabindex="-1"></a>    nrow_shapbg_res <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb54-28"><a href="#cb54-28" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(method <span class="sc">==</span> <span class="st">"kernelshap"</span>){</span>
+<span id="cb54-29"><a href="#cb54-29" aria-hidden="true" tabindex="-1"></a>    shap_ks <span class="ot">&lt;-</span> <span class="fu">kernelshap</span>(object, <span class="at">X =</span> df_shap_x, <span class="at">bg_X =</span> df_shapbg_x, <span class="at">pred_fun =</span> predfun)</span>
+<span id="cb54-30"><a href="#cb54-30" aria-hidden="true" tabindex="-1"></a>    sv <span class="ot">&lt;-</span> <span class="fu">shapviz</span>(shap_ks)</span>
+<span id="cb54-31"><a href="#cb54-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb54-32"><a href="#cb54-32" aria-hidden="true" tabindex="-1"></a>  plot <span class="ot">&lt;-</span> <span class="fu">sv_importance</span>(sv, <span class="at">kind =</span> <span class="st">"beeswarm"</span>)</span>
+<span id="cb54-33"><a href="#cb54-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb54-34"><a href="#cb54-34" aria-hidden="true" tabindex="-1"></a>  t2 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb54-35"><a href="#cb54-35" aria-hidden="true" tabindex="-1"></a>  t0 <span class="ot">&lt;-</span> (t2<span class="sc">-</span>t1)[<span class="dv">3</span>]</span>
+<span id="cb54-36"><a href="#cb54-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(t0) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb54-37"><a href="#cb54-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">method =</span> method, <span class="at">nrow_shap =</span> nrow_shap, <span class="at">nrow_shapbg =</span> nrow_shapbg_res,</span>
+<span id="cb54-38"><a href="#cb54-38" aria-hidden="true" tabindex="-1"></a>              <span class="at">nsim =</span> nsim_res, <span class="at">sv =</span> sv, <span class="at">sv_importance =</span> plot, <span class="at">time =</span> t0))</span>
+<span id="cb54-39"><a href="#cb54-39" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">#実際に計算時間の計測を行うループ</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">tibble</span>()</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>results_plots <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="fu">undebug</span>(calc_shap)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(r <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(grid)){</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">&lt;-</span> grid<span class="sc">$</span>model[[r]]</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">calc_shap</span>(<span class="at">object =</span> modelsets[[model]]<span class="sc">$</span>object,</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">predfun =</span> modelsets[[model]]<span class="sc">$</span>predfun,</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">method =</span> grid<span class="sc">$</span>method[[r]],</span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">nrow_shap =</span> grid<span class="sc">$</span>nrow_shap[[r]],</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">nrow_shapbg =</span> grid<span class="sc">$</span>nrow_shapbg[[r]],</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">nsim =</span> grid<span class="sc">$</span>nsim[[r]])</span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>  rw <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>  rw<span class="sc">$</span>model <span class="ot">&lt;-</span> model</span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>  rw<span class="sc">$</span>method <span class="ot">&lt;-</span> res<span class="sc">$</span>method</span>
+<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a>  rw<span class="sc">$</span>nrow_shap <span class="ot">&lt;-</span> res<span class="sc">$</span>nrow_shap</span>
+<span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a>  rw<span class="sc">$</span>nrow_shapbg <span class="ot">&lt;-</span> res<span class="sc">$</span>nrow_shapbg</span>
+<span id="cb55-18"><a href="#cb55-18" aria-hidden="true" tabindex="-1"></a>  rw<span class="sc">$</span>nsim <span class="ot">&lt;-</span> res<span class="sc">$</span>nsim</span>
+<span id="cb55-19"><a href="#cb55-19" aria-hidden="true" tabindex="-1"></a>  rw<span class="sc">$</span>time <span class="ot">&lt;-</span> res<span class="sc">$</span>time</span>
+<span id="cb55-20"><a href="#cb55-20" aria-hidden="true" tabindex="-1"></a>  rw<span class="sc">$</span>id <span class="ot">&lt;-</span> <span class="fu">paste</span>(rw<span class="sc">$</span>model, rw<span class="sc">$</span>method, rw<span class="sc">$</span>nrow_shap, rw<span class="sc">$</span>nrow_shapbg, rw<span class="sc">$</span>nsim, <span class="at">sep =</span> <span class="st">","</span>)</span>
+<span id="cb55-21"><a href="#cb55-21" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(results, <span class="fu">as.tibble</span>(rw))</span>
+<span id="cb55-22"><a href="#cb55-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb55-23"><a href="#cb55-23" aria-hidden="true" tabindex="-1"></a>  results_plots[[rw<span class="sc">$</span>id]] <span class="ot">&lt;-</span> res</span>
+<span id="cb55-24"><a href="#cb55-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(rw<span class="sc">$</span>id, rw<span class="sc">$</span>time))</span>
+<span id="cb55-25"><a href="#cb55-25" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="参考文献" class="level2">
+<h2 class="anchored" data-anchor-id="参考文献">参考文献</h2>
+
+
+
+
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>元の研究は、自営業者の健康保険加入率の低さと健康状態の関係性を調べたものです。この研究で用いられた、1996年の米国医療費パネル調査(MEPS<span class="citation" data-cites="BIB_MEPS">(<a href="fastshap.html#ref-BIB_MEPS" role="doc-biblioref">Agency for Healthcare Research and Quality, n.d.</a>)</span>)から抽出されたものがこのデータセットです。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>なお、ここではデータ前処理にrecipesパッケージを使用しています。 また、<code>%&gt;%</code>はmagrittrパッケージによるパイプ演算子で、右辺の関数の第1引数に左辺を渡すという働きがあります。 たとえば<code>a %&gt;% f %&gt;% g(b)</code>という記述は<code>g(f(a),b)</code>と同等です。<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>ハイパーパラメータは事前にチューニングしたものを入力しています。 チューニングの過程については本稿の主題を外れるので、割愛します。<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>実はXGBoostの場合fastshapパッケージを用いずとも直接shapvizパッケージによる可視化を行うことが出来るので、実用性はあまりありません。<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../articles/evd.html" class="pagination-link" aria-label="evd">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">evd</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../articles/forcats.html" class="pagination-link" aria-label="forcats">
+        <span class="nav-page-text"><span class="chapter-title">forcats</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
