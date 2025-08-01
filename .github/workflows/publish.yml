@@ -53,6 +53,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./_book
           user_name: "GitHub Actions [Bot]"
           user_email: "actions@github.com"
