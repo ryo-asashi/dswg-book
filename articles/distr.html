@@ -67,7 +67,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../articles/distrEx.html" rel="next">
-<link href="../articles/DALEX.html" rel="prev">
+<link href="../articles/datatable.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -234,6 +234,11 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/datatable.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">data.table</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/distr.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">distr</span></a>
   </div>
 </li>
@@ -359,12 +364,22 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/quantmod.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">quantmod</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/randomForest.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">randomForest</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/ranger.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">ranger</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/readr.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">readr</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -415,6 +430,11 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/yardstick.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">yardstick</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/YieldCurve.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">YieldCurve</span></a>
   </div>
 </li>
     </ul>
@@ -484,7 +504,7 @@ window.Quarto = {
 <div id="tbl-1" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-表&nbsp;9.1
+表&nbsp;10.1
 </figcaption>
 <div aria-describedby="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -527,7 +547,7 @@ window.Quarto = {
 <pre><code>[1] 0.9494974</code></pre>
 </div>
 </div>
-<p>これに対してdistrでは、まずは対象の確率分布に従う確率変数を生成し、この確率変数を通じて確率分布を取り扱います。distrの確率変数を操作する関数として、例えば <a href="mlbench.html#tbl-1" class="quarto-xref">表&nbsp;<span>24.1</span></a> のprefixに示した4種類のアルファベット1文字を関数名とする、R標準と同様の機能を持つ4種類の関数（r、d、p、q）が用意されています。</p>
+<p>これに対してdistrでは、まずは対象の確率分布に従う確率変数を生成し、この確率変数を通じて確率分布を取り扱います。distrの確率変数を操作する関数として、例えば <a href="mlbench.html#tbl-1" class="quarto-xref">表&nbsp;<span>25.1</span></a> のprefixに示した4種類のアルファベット1文字を関数名とする、R標準と同様の機能を持つ4種類の関数（r、d、p、q）が用意されています。</p>
 <p>以下のコードは確率変数を生成し、当該確率変数を引数としてp関数を呼び出すことで、累積分布関数の値を取得しています。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(distr)</span>
@@ -1361,8 +1381,8 @@ distrで用意されている確率分布よりも更に数値的な誤差に注
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../articles/DALEX.html" class="pagination-link" aria-label="DALEX">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">DALEX</span></span>
+      <a href="../articles/datatable.html" class="pagination-link" aria-label="data.table">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">data.table</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

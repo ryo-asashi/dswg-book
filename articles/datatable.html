@@ -1,0 +1,2439 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2025-08-01">
+
+<title>data.table – Rパッケージ活用事例集</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../articles/distr.html" rel="next">
+<link href="../articles/DALEX.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-5da34b3394ed8fb83884acce701c43ff.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/datatable.html"><span class="chapter-title">data.table</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Rパッケージ活用事例集</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">はじめに</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/actuar.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">actuar</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/aglm.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">aglm</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ALEPlot.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">ALEPlot</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/C50.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">C50</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/class.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">class</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/corrplot.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">corrplot</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/crosstable.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">crosstable</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/DALEX.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">DALEX</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/datatable.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">data.table</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/distr.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">distr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/distrEx.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">distrEx</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">dplyr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/e1071.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">e1071</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/evd.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">evd</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/fastshap.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">fastshap</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/forcats.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">forcats</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/genlasso.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">genlasso</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/gghighlight.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">gghighlight</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ggplot2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">ggplot2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/igraph.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">igraph</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/iml.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">iml</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ismev.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">ismev</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/lifecontingencies.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">lifecontingencies</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/makedummies.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">makedummies</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/mlbench.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">mlbench</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/modeldata.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">modeldata</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/palmerpenguins.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">palmerpenguins</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/parsnip.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">parsnip</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/partykit.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">partykit</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/pdp.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">pdp</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/plyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">plyr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/pROC.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">pROC</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/psych.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">psych</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/purrr.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">purrr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/quantmod.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">quantmod</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/randomForest.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">randomForest</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ranger.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">ranger</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/readr.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">readr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/readxl.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">readxl</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/rpart.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">rpart</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/rsample.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">rsample</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/shapviz.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">shapviz</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/skimr.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">skimr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/stringr.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">stringr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/survival.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">survival</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/tibble.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">tibble</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/tuneRanger.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">tuneRanger</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/yardstick.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">yardstick</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/YieldCurve.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">YieldCurve</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要">パッケージの概要</a></li>
+  <li><a href="#基本的な使用方法" id="toc-基本的な使用方法" class="nav-link" data-scroll-target="#基本的な使用方法">基本的な使用方法</a>
+  <ul>
+  <li><a href="#ファイルの読み込み書き込み" id="toc-ファイルの読み込み書き込み" class="nav-link" data-scroll-target="#ファイルの読み込み書き込み">ファイルの読み込み・書き込み</a></li>
+  <li><a href="#data.table型変数の作成" id="toc-data.table型変数の作成" class="nav-link" data-scroll-target="#data.table型変数の作成"><code>data.table</code>型変数の作成</a></li>
+  <li><a href="#添え字の仕様" id="toc-添え字の仕様" class="nav-link" data-scroll-target="#添え字の仕様">添え字の仕様</a></li>
+  <li><a href="#行列の取り出し" id="toc-行列の取り出し" class="nav-link" data-scroll-target="#行列の取り出し">行・列の取り出し</a></li>
+  <li><a href="#列の加工追加" id="toc-列の加工追加" class="nav-link" data-scroll-target="#列の加工追加">列の加工・追加</a></li>
+  <li><a href="#データのソート" id="toc-データのソート" class="nav-link" data-scroll-target="#データのソート">データのソート</a></li>
+  <li><a href="#データのグループ化と集計要約" id="toc-データのグループ化と集計要約" class="nav-link" data-scroll-target="#データのグループ化と集計要約">データのグループ化と集計・要約</a></li>
+  </ul></li>
+  <li><a href="#発展的な話題" id="toc-発展的な話題" class="nav-link" data-scroll-target="#発展的な話題">発展的な話題</a>
+  <ul>
+  <li><a href="#横長と縦長の相互変換pivot" id="toc-横長と縦長の相互変換pivot" class="nav-link" data-scroll-target="#横長と縦長の相互変換pivot">横長と縦長の相互変換(pivot)</a>
+  <ul class="collapse">
+  <li><a href="#横長縦長" id="toc-横長縦長" class="nav-link" data-scroll-target="#横長縦長">横長→縦長</a></li>
+  <li><a href="#縦長横長" id="toc-縦長横長" class="nav-link" data-scroll-target="#縦長横長">縦長→横長</a></li>
+  </ul></li>
+  <li><a href="#テーブルの結合join" id="toc-テーブルの結合join" class="nav-link" data-scroll-target="#テーブルの結合join">テーブルの結合(join)</a></li>
+  <li><a href="#data.tableが大規模データに強い理由" id="toc-data.tableが大規模データに強い理由" class="nav-link" data-scroll-target="#data.tableが大規模データに強い理由"><code>data.table</code>が大規模データに強い理由</a>
+  <ul class="collapse">
+  <li><a href="#fread-fwriteの性能比較" id="toc-fread-fwriteの性能比較" class="nav-link" data-scroll-target="#fread-fwriteの性能比較"><code>fread</code>, <code>fwrite</code>の性能比較</a></li>
+  <li><a href="#大規模データ操作での性能比較" id="toc-大規模データ操作での性能比較" class="nav-link" data-scroll-target="#大規模データ操作での性能比較">大規模データ操作での性能比較</a></li>
+  </ul></li>
+  <li><a href="#添え字の発展的な使用方法" id="toc-添え字の発展的な使用方法" class="nav-link" data-scroll-target="#添え字の発展的な使用方法">添え字の発展的な使用方法</a>
+  <ul class="collapse">
+  <li><a href="#列の自在性" id="toc-列の自在性" class="nav-link" data-scroll-target="#列の自在性">「列」の自在性</a></li>
+  <li><a href="#特殊記号special-symbols" id="toc-特殊記号special-symbols" class="nav-link" data-scroll-target="#特殊記号special-symbols">特殊記号(Special Symbols)</a></li>
+  <li><a href="#使用例縦長への変形" id="toc-使用例縦長への変形" class="nav-link" data-scroll-target="#使用例縦長への変形">使用例：縦長への変形</a></li>
+  </ul></li>
+  <li><a href="#nseの問題" id="toc-nseの問題" class="nav-link" data-scroll-target="#nseの問題">NSEの問題</a>
+  <ul class="collapse">
+  <li><a href="#について" id="toc-について" class="nav-link" data-scroll-target="#について"><code>..</code>について</a></li>
+  <li><a href="#の利用" id="toc-の利用" class="nav-link" data-scroll-target="#の利用"><code>[[ ]]</code>の利用</a></li>
+  <li><a href="#sdの利用" id="toc-sdの利用" class="nav-link" data-scroll-target="#sdの利用"><code>.SD</code>の利用</a></li>
+  <li><a href="#substituteの利用" id="toc-substituteの利用" class="nav-link" data-scroll-target="#substituteの利用"><code>substitute</code>の利用</a></li>
+  <li><a href="#rlangパッケージの利用" id="toc-rlangパッケージの利用" class="nav-link" data-scroll-target="#rlangパッケージの利用"><code>rlang</code>パッケージの利用</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">data.table</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 1, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<style type="text/css">
+.output-jp > code {
+/*一部日本語出力があるチャンクで日本語と英字の幅が揃わずに表示がずれるため、CSSでフォントを変更することで表示を揃える*/
+  font-family: "ＭＳ ゴシック";
+}
+</style>
+</div>
+<section id="パッケージの概要" class="level2">
+<h2 class="anchored" data-anchor-id="パッケージの概要">パッケージの概要</h2>
+<p><code>data.table</code>は、R標準の<code>data.frame</code>型を拡張した<code>data.table</code>型を導入するパッケージです。</p>
+<p>大規模なデータの処理に最適化されているほか、添え字部分の記法が大幅に拡張されており、 効果的に活用することで動作速度とコードの可読性を両立することが可能となります。</p>
+<p>本稿ではR標準の関数や、<code>tidyverse</code>のデータ操作パッケージとして名高い<code>dplyr</code>(一部<code>tidyr</code>)による操作とも比較しながら、 <code>data.table</code>パッケージの使用方法や特徴について解説します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr) <span class="co">#pivot系のみ使用 </span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nycflights13) <span class="co">#大規模データの節で使用</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(microbenchmark) <span class="co">#大規模データの節で使用</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rlang) <span class="co">#関数化の節で使用</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="基本的な使用方法" class="level2">
+<h2 class="anchored" data-anchor-id="基本的な使用方法">基本的な使用方法</h2>
+<section id="ファイルの読み込み書き込み" class="level3">
+<h3 class="anchored" data-anchor-id="ファイルの読み込み書き込み">ファイルの読み込み・書き込み</h3>
+<p><code>data.table</code>パッケージを導入すると、高速なデータの読み書きが可能な関数<code>fread</code>, <code>fwrite</code>が追加されます。</p>
+<p>いずれも、デフォルトではcsv形式での読み書きを行います。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ファイルの書き込み</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># fwrite(iris, file = "../data/iris.csv")</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ファイルの読み込み</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>dt_tmp <span class="ot">&lt;-</span> <span class="fu">fread</span>(<span class="at">file =</span> <span class="st">"../data/insurance.csv"</span>, <span class="at">data.table =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#data.tableをFALSEにすることでdata.frame型として読み込むことも可能</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt_tmp) <span class="co">#冒頭を表示</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     age    sex   bmi children smoker    region expenses
+   &lt;int&gt; &lt;char&gt; &lt;num&gt;    &lt;int&gt; &lt;char&gt;    &lt;char&gt;    &lt;num&gt;
+1:    19 female  27.9        0    yes southwest 16884.92
+2:    18   male  33.8        1     no southeast  1725.55
+3:    28   male  33.0        3     no southeast  4449.46
+4:    33   male  22.7        0     no northwest 21984.47
+5:    32   male  28.9        0     no northwest  3866.86
+6:    31 female  25.7        0     no southeast  3756.62</code></pre>
+</div>
+</div>
+</section>
+<section id="data.table型変数の作成" class="level3">
+<h3 class="anchored" data-anchor-id="data.table型変数の作成"><code>data.table</code>型変数の作成</h3>
+<p><code>data.table</code>型としてデータを読み込むには、前述の<code>fread</code>関数を用いるほかにも、<code>data.frame</code>型など他の型から変換する方法もあります。 通常は<code>as.data.table</code>関数を使用すればよいでしょう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> iris</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>dt <span class="ot">&lt;-</span> <span class="fu">as.data.table</span>(df)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data.frame"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data.table" "data.frame"</code></pre>
+</div>
+</div>
+<p><code>data.table</code>関数で直接生成することもできます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dt_is <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  配当方式 <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"有配"</span>,<span class="st">"有配"</span>,<span class="st">"準有配"</span>,<span class="st">"無配"</span>,<span class="st">"無配"</span>,<span class="st">"無配"</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  商品種類コード <span class="ot">=</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  件数 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">16</span>, <span class="dv">48</span>, <span class="dv">176</span>, <span class="dv">190</span>, <span class="dv">15</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  特約1件数 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">0</span>, <span class="dv">24</span>, <span class="dv">110</span>, <span class="dv">30</span>, <span class="dv">12</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  特約2件数 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">14</span>, <span class="dv">0</span>),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  主契約保険金額 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">60</span>, <span class="dv">240</span>, <span class="dv">69</span>, <span class="dv">1931</span>, <span class="dv">300</span>),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  特約1保険金額 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">24</span>, <span class="dv">59</span>, <span class="dv">3140</span>, <span class="dv">240</span>),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  特約2保険金額 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">156</span>, <span class="dv">0</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>dt_is</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>   配当方式 商品種類コード  件数 特約1件数 特約2件数 主契約保険金額
+     &lt;char&gt;          &lt;int&gt; &lt;num&gt;     &lt;num&gt;     &lt;num&gt;          &lt;num&gt;
+1:     有配              1    10        10         0            100
+2:     有配              2    16         0         0             60
+3:   準有配              3    48        24         0            240
+4:     無配              4   176       110         0             69
+5:     無配              5   190        30        14           1931
+6:     無配              6    15        12         0            300
+   特約1保険金額 特約2保険金額
+           &lt;num&gt;         &lt;num&gt;
+1:           100             0
+2:             0             0
+3:            24             0
+4:            59             0
+5:          3140           156
+6:           240             0</code></pre>
+</div>
+</div>
+</section>
+<section id="添え字の仕様" class="level3">
+<h3 class="anchored" data-anchor-id="添え字の仕様">添え字の仕様</h3>
+<p><code>data.table</code>型の記法は<code>data.frame</code>型の記法を自然に拡張したものであるため、<code>変数[行, 列]</code>という記法はどちらも同じように使用することが出来ます。</p>
+<p>細かな差異として、<code>data.frame</code>型の場合は<code>変数[行, 列]</code>で参照した結果が <code>data.frame</code>型ではなくなる(ベクトルや値になる)ことがありますが、 <code>data.table</code>型では一貫して<code>data.table</code>型のまま取り出されます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="do">##3行目だけを抽出</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">3</span>, ] <span class="co">#data.frameのまま</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+3          4.7         3.2          1.3         0.2  setosa</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>dt[<span class="dv">3</span>, ] <span class="co">#data.tableのまま</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+          &lt;num&gt;       &lt;num&gt;        &lt;num&gt;       &lt;num&gt;  &lt;fctr&gt;
+1:          4.7         3.2          1.3         0.2  setosa</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">##"Sepal.Width"の列だけを抽出</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df[, <span class="st">"Sepal.Width"</span>]) <span class="co">#ベクトルになる</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.5 3.0 3.2 3.1 3.6 3.9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[, <span class="st">"Sepal.Width"</span>]) <span class="co">#data.tableのまま</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Sepal.Width
+         &lt;num&gt;
+1:         3.5
+2:         3.0
+3:         3.2
+4:         3.1
+5:         3.6
+6:         3.9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">##3行目, "Sepal.Width"の列だけを抽出</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">3</span>, <span class="st">"Sepal.Width"</span>] <span class="co">#値になる</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dt[<span class="dv">3</span>, <span class="st">"Sepal.Width"</span>] <span class="co">#data.tableのまま</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Sepal.Width
+         &lt;num&gt;
+1:         3.2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>dt[[<span class="dv">3</span>, <span class="st">"Sepal.Width"</span>]] <span class="co">#data.tableでも、括弧を2重にすると値にできる</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.2</code></pre>
+</div>
+</div>
+<p>ちなみに、この<code>data.frame</code>の一貫性のない挙動については<code>tibble</code>に変換することでも解決できます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>df_tbl <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">as_tibble</span>(df)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(df_tbl)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_tbl[, <span class="st">"Sepal.Width"</span>]) <span class="co">#データフレームのまま</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>df_tbl[<span class="dv">3</span>, <span class="st">"Sepal.Width"</span>] <span class="co">#データフレームのまま</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "tbl_df"     "tbl"        "data.frame"
+# A tibble: 6 × 1
+  Sepal.Width
+        &lt;dbl&gt;
+1         3.5
+2         3  
+3         3.2
+4         3.1
+5         3.6
+6         3.9
+# A tibble: 1 × 1
+  Sepal.Width
+        &lt;dbl&gt;
+1         3.2</code></pre>
+</div>
+</div>
+<p>ただし、本稿の趣旨から逸れるため、今後<code>tibble</code>については触れません。</p>
+<p>特定の列のみを取り出すには<code>変数[行, 列]</code>記法のほかにも<code>変数$列名</code>や<code>変数[["列名"]]</code>記法もあります。 この場合、どちらの型でもベクトルで取り出されます。</p>
+<p>※データフレームは同じ長さのベクトルを要素にもつ名前付きリストであるため、リストから要素を取り出すときと同じ動作です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="do">##Sepal.Widthの列だけを抽出</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df<span class="sc">$</span>Sepal.Width)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt<span class="sc">$</span>Sepal.Width)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df[[<span class="st">"Sepal.Width"</span>]])</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[[<span class="st">"Sepal.Width"</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.5 3.0 3.2 3.1 3.6 3.9
+[1] 3.5 3.0 3.2 3.1 3.6 3.9
+[1] 3.5 3.0 3.2 3.1 3.6 3.9
+[1] 3.5 3.0 3.2 3.1 3.6 3.9</code></pre>
+</div>
+</div>
+<p>なお、添え字を1つしか与えなかった(<code>変数[○]</code>表記)場合は<code>data.frame</code>型と<code>data.table</code>型で動作が異なるため注意してください。</p>
+<ul>
+<li><code>data.frame</code>では列を取り出します。リストとしての性質が優先されています。</li>
+<li><code>data.table</code>では行を取り出します。<code>変数[行, 列]</code>記法の列の省略とみなされます。</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df[<span class="dv">3</span>]) <span class="co">#列の取り出しになる</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[<span class="dv">3</span>]) <span class="co">#行の取り出しになる</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Petal.Length
+1          1.4
+2          1.4
+3          1.3
+4          1.5
+5          1.4
+6          1.7
+   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+          &lt;num&gt;       &lt;num&gt;        &lt;num&gt;       &lt;num&gt;  &lt;fctr&gt;
+1:          4.7         3.2          1.3         0.2  setosa</code></pre>
+</div>
+</div>
+</section>
+<section id="行列の取り出し" class="level3">
+<h3 class="anchored" data-anchor-id="行列の取り出し">行・列の取り出し</h3>
+<p>以下、基本的なデータ操作についてR標準の記法や<code>dplyr</code>とも比較しながら説明します。</p>
+<p><code>data.frame</code>での列の取り出し方には次のようなものがあります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df[[<span class="st">"Sepal.Width"</span>]]) <span class="co">#1列をベクトルとして取り出し</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.5 3.0 3.2 3.1 3.6 3.9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">subset</span>(df, <span class="at">select =</span> <span class="st">"Sepal.Width"</span>)) <span class="co">#1列をデータフレームとして取り出し</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Width
+1         3.5
+2         3.0
+3         3.2
+4         3.1
+5         3.6
+6         3.9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df[,<span class="fu">c</span>(<span class="st">"Sepal.Length"</span>, <span class="st">"Sepal.Width"</span>)]) <span class="co">#複数列をデータフレームとして取り出し</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width
+1          5.1         3.5
+2          4.9         3.0
+3          4.7         3.2
+4          4.6         3.1
+5          5.0         3.6
+6          5.4         3.9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df[, <span class="sc">!</span><span class="fu">names</span>(df) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Sepal.Length"</span>, <span class="st">"Sepal.Width"</span>)]) <span class="co">#指定した列以外を取り出し</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Petal.Length Petal.Width Species
+1          1.4         0.2  setosa
+2          1.4         0.2  setosa
+3          1.3         0.2  setosa
+4          1.5         0.2  setosa
+5          1.4         0.2  setosa
+6          1.7         0.4  setosa</code></pre>
+</div>
+</div>
+<p><code>data.table</code>型の場合、添え字の部分で特殊な記法が使用可能です。列名を文字列として与えるのではなく、列名そのものを書くことができます。</p>
+<p>なお、以降に現れる<code>.(*)</code>という記法は<code>list(*)</code>の省略形で、添え字などにリストを与えていることに相当します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[,Sepal.Width]) <span class="co">#1列をベクトルとして取り出し</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[,.(Sepal.Width)]) <span class="co">#1列をdata.tableとして取り出し</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[,.(Sepal.Length, Sepal.Width)]) <span class="co">#複数列をdata.tableとして取り出し</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.5 3.0 3.2 3.1 3.6 3.9
+   Sepal.Width
+         &lt;num&gt;
+1:         3.5
+2:         3.0
+3:         3.2
+4:         3.1
+5:         3.6
+6:         3.9
+   Sepal.Length Sepal.Width
+          &lt;num&gt;       &lt;num&gt;
+1:          5.1         3.5
+2:          4.9         3.0
+3:          4.7         3.2
+4:          4.6         3.1
+5:          5.0         3.6
+6:          5.4         3.9</code></pre>
+</div>
+</div>
+<p>列の除外は<code>data.frame</code>と同じ書き方も可能ですが、 <code>data.table</code>特有の記法を用いたものでは以下のような方法があります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[, <span class="sc">!</span><span class="fu">c</span>(<span class="st">"Sepal.Length"</span>, <span class="st">"Sepal.Width"</span>)], <span class="at">n =</span> <span class="dv">1</span>) <span class="co">#!は除くという意味</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Sepal.Length"</span>, <span class="st">"Sepal.Width"</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[, <span class="sc">!</span>..cols], <span class="at">n =</span> <span class="dv">1</span>) <span class="co"># ..colsとした場合、内部的に上で代入した c("Sepal.Length", "Sepal.Width") に置き換えられる</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[, <span class="fu">setdiff</span>(<span class="fu">names</span>(dt), <span class="fu">c</span>(<span class="st">"Sepal.Length"</span>, <span class="st">"Sepal.Width"</span>)), <span class="at">with =</span> <span class="cn">FALSE</span>], <span class="at">n =</span> <span class="dv">1</span>)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co">#setdiffは差集合をとる、with = FALSEは選択する列をリストで直接指定するという意味</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[,.SD, <span class="at">.SDcols =</span> <span class="sc">!</span><span class="fu">c</span>(<span class="st">"Sepal.Length"</span>, <span class="st">"Sepal.Width"</span>)], <span class="at">n =</span> <span class="dv">1</span>) <span class="co">#.SDは.SDcolsで指定した列全体を表す特殊記号</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Petal.Length Petal.Width Species
+          &lt;num&gt;       &lt;num&gt;  &lt;fctr&gt;
+1:          1.4         0.2  setosa
+   Petal.Length Petal.Width Species
+          &lt;num&gt;       &lt;num&gt;  &lt;fctr&gt;
+1:          1.4         0.2  setosa
+   Petal.Length Petal.Width Species
+          &lt;num&gt;       &lt;num&gt;  &lt;fctr&gt;
+1:          1.4         0.2  setosa
+   Petal.Length Petal.Width Species
+          &lt;num&gt;       &lt;num&gt;  &lt;fctr&gt;
+1:          1.4         0.2  setosa</code></pre>
+</div>
+</div>
+<p><code>dplyr</code>においては<code>select</code>に対応します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">select</span>(Sepal.Length, Sepal.Width) <span class="sc">%&gt;%</span> <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">2</span>) <span class="co">#指定した列</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>Sepal.Length, <span class="sc">-</span>Sepal.Width) <span class="sc">%&gt;%</span> <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">2</span>) <span class="co">#指定した列以外</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width
+1          5.1         3.5
+2          4.9         3.0
+  Petal.Length Petal.Width Species
+1          1.4         0.2  setosa
+2          1.4         0.2  setosa</code></pre>
+</div>
+</div>
+<p>次に、特定の条件を満たす行を抽出する方法を見てみましょう。</p>
+<p>R標準では次のような書き方になります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>df[df<span class="sc">$</span>Sepal.Length <span class="sc">&lt;</span> <span class="fl">6.0</span> <span class="sc">&amp;</span> df<span class="sc">$</span>Sepal.Width <span class="sc">==</span> <span class="fl">3.0</span> <span class="sc">&amp;</span> df<span class="sc">$</span>Species <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"versicolor"</span>, <span class="st">"virginica"</span>),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+62           5.9           3          4.2         1.5 versicolor
+67           5.6           3          4.5         1.5 versicolor
+85           5.4           3          4.5         1.5 versicolor
+89           5.6           3          4.1         1.3 versicolor
+96           5.7           3          4.2         1.2 versicolor
+150          5.9           3          5.1         1.8  virginica</code></pre>
+</div>
+</div>
+<p><code>data.table</code>でも同じ書き方はできますが、<code>dt$</code>(変数名)の部分を省略したような書き方も出来ます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>dt[Sepal.Length <span class="sc">&lt;</span> <span class="fl">6.0</span> <span class="sc">&amp;</span> Sepal.Width <span class="sc">==</span> <span class="fl">3.0</span> <span class="sc">&amp;</span> Species <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"versicolor"</span>, <span class="st">"virginica"</span>),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+          &lt;num&gt;       &lt;num&gt;        &lt;num&gt;       &lt;num&gt;     &lt;fctr&gt;
+1:          5.9           3          4.2         1.5 versicolor
+2:          5.6           3          4.5         1.5 versicolor
+3:          5.4           3          4.5         1.5 versicolor
+4:          5.6           3          4.1         1.3 versicolor
+5:          5.7           3          4.2         1.2 versicolor
+6:          5.9           3          5.1         1.8  virginica</code></pre>
+</div>
+</div>
+<p><code>dplyr</code>では<code>filter</code>を使用します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Sepal.Length <span class="sc">&lt;</span> <span class="fl">6.0</span> <span class="sc">&amp;</span> Sepal.Width <span class="sc">==</span> <span class="fl">3.0</span> <span class="sc">&amp;</span> Species <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"versicolor"</span>, <span class="st">"virginica"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+1          5.9           3          4.2         1.5 versicolor
+2          5.6           3          4.5         1.5 versicolor
+3          5.4           3          4.5         1.5 versicolor
+4          5.6           3          4.1         1.3 versicolor
+5          5.7           3          4.2         1.2 versicolor
+6          5.9           3          5.1         1.8  virginica</code></pre>
+</div>
+</div>
+</section>
+<section id="列の加工追加" class="level3">
+<h3 class="anchored" data-anchor-id="列の加工追加">列の加工・追加</h3>
+<p>特徴量の加工のような操作を行う場合、R標準では以下のような書き方になります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> df</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>df_tmp<span class="sc">$</span>Sepal.Rate <span class="ot">&lt;-</span> df_tmp<span class="sc">$</span>Sepal.Length <span class="sc">/</span> df_tmp<span class="sc">$</span>Sepal.Width <span class="co">#列を追加</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>df_tmp[<span class="fu">c</span>(<span class="st">"Sepal.Length.Sqrt"</span>, <span class="st">"Sepal.Width.Sqrt"</span>)] <span class="ot">&lt;-</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fu">sqrt</span>(df_tmp<span class="sc">$</span>Sepal.Length), <span class="fu">sqrt</span>(df_tmp<span class="sc">$</span>Sepal.Width)) <span class="co">#一度に複数の列を追加</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>df_tmp<span class="sc">$</span>Species <span class="ot">&lt;-</span> <span class="fu">substr</span>(df_tmp<span class="sc">$</span>Species, <span class="dv">1</span>, <span class="dv">2</span>) <span class="co">#既存の列を加工</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_tmp, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species Sepal.Rate
+1          5.1         3.5          1.4         0.2      se   1.457143
+2          4.9         3.0          1.4         0.2      se   1.633333
+3          4.7         3.2          1.3         0.2      se   1.468750
+  Sepal.Length.Sqrt Sepal.Width.Sqrt
+1          2.258318         1.870829
+2          2.213594         1.732051
+3          2.167948         1.788854</code></pre>
+</div>
+</div>
+<p><code>data.table</code>でも同じ書き方はできますが、<code>変数[行, 列]</code>記法の列の箇所で<code>:=</code>演算子を用いることでより簡潔に記述できます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>dt_tmp <span class="ot">&lt;-</span> <span class="fu">copy</span>(dt) <span class="co">#:=演算子がdtに及ばないようにするため</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>dt_tmp[, Sepal.Rate <span class="sc">:</span><span class="er">=</span> Sepal.Length <span class="sc">/</span> Sepal.Width] <span class="co">#列を追加</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>dt_tmp[, <span class="fu">c</span>(<span class="st">"Sepal.Length.Sqrt"</span>, <span class="st">"Sepal.Width.Sqrt"</span>) </span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>       <span class="sc">:</span><span class="er">=</span> .(<span class="fu">sqrt</span>(Sepal.Length), <span class="fu">sqrt</span>(Sepal.Width))] <span class="co">#一度に複数の列を追加</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>dt_tmp[, <span class="st">':='</span>(<span class="at">Sepal.Length.Sqrt =</span> <span class="fu">sqrt</span>(Sepal.Length),</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">Sepal.Width.Sqrt =</span> <span class="fu">sqrt</span>(Sepal.Width))]<span class="co">#↑はこのような書き方もある</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>dt_tmp[, Species <span class="sc">:</span><span class="er">=</span> <span class="fu">substr</span>(Species, <span class="dv">1</span>, <span class="dv">2</span>)] <span class="co">#既存の列を加工</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt_tmp, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species Sepal.Rate
+          &lt;num&gt;       &lt;num&gt;        &lt;num&gt;       &lt;num&gt;  &lt;char&gt;      &lt;num&gt;
+1:          5.1         3.5          1.4         0.2      se   1.457143
+2:          4.9         3.0          1.4         0.2      se   1.633333
+3:          4.7         3.2          1.3         0.2      se   1.468750
+   Sepal.Length.Sqrt Sepal.Width.Sqrt
+               &lt;num&gt;            &lt;num&gt;
+1:          2.258318         1.870829
+2:          2.213594         1.732051
+3:          2.167948         1.788854</code></pre>
+</div>
+</div>
+<p>ただし<code>:=</code>演算子を用いるケースでは、単に「変数の代入」でコピーを作成した場合、 <strong>両方に同じ操作が適用されてしまう</strong>(メモリ上の同じものを指している)ので注意してください。 これは大規模データでメモリ消費を抑えられるようにするための意図的な仕様です。</p>
+<p>この現象を避ける(コピー元の方には影響を及ぼさないようにする)ためには、 <strong><code>copy</code>関数で明示的にコピーを作成する</strong>必要があります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>dt_tmp2 <span class="ot">&lt;-</span> dt_tmp</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>dt_tmp[, Petal.Rate <span class="sc">:</span><span class="er">=</span> Petal.Length <span class="sc">/</span> Petal.Width] <span class="co">#tmpの方に列を追加</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt_tmp2, <span class="at">n =</span> <span class="dv">3</span>) <span class="co">#tmp2の方にも追加されている</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species Sepal.Rate
+          &lt;num&gt;       &lt;num&gt;        &lt;num&gt;       &lt;num&gt;  &lt;char&gt;      &lt;num&gt;
+1:          5.1         3.5          1.4         0.2      se   1.457143
+2:          4.9         3.0          1.4         0.2      se   1.633333
+3:          4.7         3.2          1.3         0.2      se   1.468750
+   Sepal.Length.Sqrt Sepal.Width.Sqrt Petal.Rate
+               &lt;num&gt;            &lt;num&gt;      &lt;num&gt;
+1:          2.258318         1.870829        7.0
+2:          2.213594         1.732051        7.0
+3:          2.167948         1.788854        6.5</code></pre>
+</div>
+</div>
+<p><code>dplyr</code>では<code>mutate</code>を使用します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co">#mutate文の場合敢えて分けて書く必要はないが、説明のため。</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Sepal.Rate =</span> Sepal.Length <span class="sc">/</span> Sepal.Width) <span class="co">#列を追加</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> df_tmp <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Sepal.Length.Sqrt =</span> <span class="fu">sqrt</span>(Sepal.Length),</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">Sepal.Width.Sqrt =</span> <span class="fu">sqrt</span>(Sepal.Width)) <span class="co">#一度に複数の列を追加</span></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> df_tmp <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Species =</span> <span class="fu">substr</span>(Species, <span class="dv">1</span>, <span class="dv">2</span>)) <span class="co">#既存の列を加工</span></span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_tmp, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species Sepal.Rate
+1          5.1         3.5          1.4         0.2      se   1.457143
+2          4.9         3.0          1.4         0.2      se   1.633333
+3          4.7         3.2          1.3         0.2      se   1.468750
+  Sepal.Length.Sqrt Sepal.Width.Sqrt
+1          2.258318         1.870829
+2          2.213594         1.732051
+3          2.167948         1.788854</code></pre>
+</div>
+</div>
+<p>なお、すでにあるデータを連結する場合は<code>rbind</code>や<code>cbind</code>も使用できます(R標準と同じであるため割愛)。</p>
+</section>
+<section id="データのソート" class="level3">
+<h3 class="anchored" data-anchor-id="データのソート">データのソート</h3>
+<p><code>data.frame</code>, <code>data.table</code>ともに、<code>変数[行, 列]</code>記法の行の箇所で<code>order</code>関数を使用します。</p>
+<p><code>order</code>関数は、ベクトルを昇順ソートした時の行番号を返す関数です。<code>-</code>を与えることで降順ソートにすることが出来ます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Speciesはfactor型であり、マイナス演算子を直接適用できないため、数値型に一度変換している</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df[<span class="fu">order</span>(<span class="sc">-</span><span class="fu">as.numeric</span>(df<span class="sc">$</span>Species), df<span class="sc">$</span>Sepal.Length), ])</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="co">#data.table型ではマイナス演算子をそのまま適用できる</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[<span class="fu">order</span>(<span class="sc">-</span>Species, Sepal.Length), ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+107          4.9         2.5          4.5         1.7 virginica
+122          5.6         2.8          4.9         2.0 virginica
+114          5.7         2.5          5.0         2.0 virginica
+102          5.8         2.7          5.1         1.9 virginica
+115          5.8         2.8          5.1         2.4 virginica
+143          5.8         2.7          5.1         1.9 virginica
+   Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+          &lt;num&gt;       &lt;num&gt;        &lt;num&gt;       &lt;num&gt;    &lt;fctr&gt;
+1:          4.9         2.5          4.5         1.7 virginica
+2:          5.6         2.8          4.9         2.0 virginica
+3:          5.7         2.5          5.0         2.0 virginica
+4:          5.8         2.7          5.1         1.9 virginica
+5:          5.8         2.8          5.1         2.4 virginica
+6:          5.8         2.7          5.1         1.9 virginica</code></pre>
+</div>
+</div>
+<p><code>dplyr</code>では<code>arrange</code>関数を使用します。降順ソートを行う場合は<code>desc</code>を使用します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(Species), Sepal.Length) <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+1          4.9         2.5          4.5         1.7 virginica
+2          5.6         2.8          4.9         2.0 virginica
+3          5.7         2.5          5.0         2.0 virginica
+4          5.8         2.7          5.1         1.9 virginica
+5          5.8         2.8          5.1         2.4 virginica
+6          5.8         2.7          5.1         1.9 virginica</code></pre>
+</div>
+</div>
+</section>
+<section id="データのグループ化と集計要約" class="level3">
+<h3 class="anchored" data-anchor-id="データのグループ化と集計要約">データのグループ化と集計・要約</h3>
+<p>あるグループごとに特徴量の平均値を計算したい、といったケースを考えてみましょう。</p>
+<p>R標準機能では次のような書き方になります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(<span class="fu">cbind</span>(Sepal.Length, Sepal.Width) <span class="sc">~</span>  Species, df, mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Species Sepal.Length Sepal.Width
+1     setosa        5.006       3.428
+2 versicolor        5.936       2.770
+3  virginica        6.588       2.974</code></pre>
+</div>
+</div>
+<p>一方<code>data.table</code>の場合、添え字の部分に<code>mean</code>のような集計関数をそのまま書き込むことができます。 グループ化に使用する列は引数<code>by</code>に指定します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>dt[ ,.(<span class="at">Sepal.Length.Mean =</span> <span class="fu">mean</span>(Sepal.Length),</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">Sepal.Width.Mean =</span> <span class="fu">mean</span>(Sepal.Width)),</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>    by <span class="ot">=</span> .(Species)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Species Sepal.Length.Mean Sepal.Width.Mean
+       &lt;fctr&gt;             &lt;num&gt;            &lt;num&gt;
+1:     setosa             5.006            3.428
+2: versicolor             5.936            2.770
+3:  virginica             6.588            2.974</code></pre>
+</div>
+</div>
+<p><code>dplyr</code>の場合はグループ化に<code>group_by</code>を用いたうえで、<code>summarize</code>で集計関数を適用します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Species) <span class="sc">%&gt;%</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">mean</span>(Sepal.Length), <span class="fu">mean</span>(Sepal.Width))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  Species    `mean(Sepal.Length)` `mean(Sepal.Width)`
+  &lt;fct&gt;                     &lt;dbl&gt;               &lt;dbl&gt;
+1 setosa                     5.01                3.43
+2 versicolor                 5.94                2.77
+3 virginica                  6.59                2.97</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="発展的な話題" class="level2">
+<h2 class="anchored" data-anchor-id="発展的な話題">発展的な話題</h2>
+<section id="横長と縦長の相互変換pivot" class="level3">
+<h3 class="anchored" data-anchor-id="横長と縦長の相互変換pivot">横長と縦長の相互変換(pivot)</h3>
+<section id="横長縦長" class="level4">
+<h4 class="anchored" data-anchor-id="横長縦長">横長→縦長</h4>
+<p>まず、横長(wide型)から縦長(long型)への変換について見てみましょう。</p>
+<p>Rの標準機能では<code>reshape</code>関数が使用できますが、多機能ゆえ適切にパラメータを指定するにはコツが必要です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>df_long <span class="ot">&lt;-</span> <span class="fu">reshape</span>(df, <span class="at">direction =</span> <span class="st">"long"</span>, <span class="co">#縦長への変換モード</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">varying =</span> <span class="fu">c</span>(<span class="st">"Sepal.Length"</span>,<span class="st">"Sepal.Width"</span>,<span class="st">"Petal.Length"</span>,<span class="st">"Petal.Width"</span>), <span class="co">#縦長に変換したい列を指定</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">timevar =</span> <span class="st">"VarName"</span>, <span class="co">#縦長に展開するときの、新たに追加されるキー列の名前</span></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">times =</span> <span class="fu">c</span>(<span class="st">"Sepal.Length"</span>,<span class="st">"Sepal.Width"</span>,<span class="st">"Petal.Length"</span>,<span class="st">"Petal.Width"</span>), <span class="co">#新たに追加されるキー列の中身(横長時の列名から指定)</span></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">v.names =</span> <span class="st">"Value"</span>) <span class="co">#縦長になった結果集約される値が入る列の名前…2列以上も可</span></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_long)</span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(Value <span class="sc">~</span> VarName, df_long, mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Species      VarName Value id
+1.Sepal.Length  setosa Sepal.Length   5.1  1
+2.Sepal.Length  setosa Sepal.Length   4.9  2
+3.Sepal.Length  setosa Sepal.Length   4.7  3
+4.Sepal.Length  setosa Sepal.Length   4.6  4
+5.Sepal.Length  setosa Sepal.Length   5.0  5
+6.Sepal.Length  setosa Sepal.Length   5.4  6
+       VarName    Value
+1 Petal.Length 3.758000
+2  Petal.Width 1.199333
+3 Sepal.Length 5.843333
+4  Sepal.Width 3.057333</code></pre>
+</div>
+</div>
+<p>一方、<code>data.table</code>では<code>melt</code>を使用します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>dt_long <span class="ot">&lt;-</span>  <span class="fu">melt</span>(dt, </span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">measure.vars =</span> <span class="fu">c</span>(<span class="st">"Sepal.Length"</span>,<span class="st">"Sepal.Width"</span>,<span class="st">"Petal.Length"</span>,<span class="st">"Petal.Width"</span>),<span class="co">#縦長に変換したい列を指定</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">variable.name =</span> <span class="st">"VarName"</span>, <span class="co">#縦長に展開するときの、新たに追加されるキー列の名前</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">value.name =</span> <span class="st">"Value"</span>) <span class="co">#縦長になった結果集約される値が入る列の名前</span></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt_long)</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>dt_long[ ,<span class="fu">mean</span>(Value), by <span class="ot">=</span> VarName]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Species      VarName Value
+    &lt;fctr&gt;       &lt;fctr&gt; &lt;num&gt;
+1:  setosa Sepal.Length   5.1
+2:  setosa Sepal.Length   4.9
+3:  setosa Sepal.Length   4.7
+4:  setosa Sepal.Length   4.6
+5:  setosa Sepal.Length   5.0
+6:  setosa Sepal.Length   5.4
+        VarName       V1
+         &lt;fctr&gt;    &lt;num&gt;
+1: Sepal.Length 5.843333
+2:  Sepal.Width 3.057333
+3: Petal.Length 3.758000
+4:  Petal.Width 1.199333</code></pre>
+</div>
+</div>
+<p>なお、<code>tidyverse</code>では<code>dplyr</code>ではなく<code>tidyr</code>に対応する関数があり、 <code>pivot_longer</code>(または<code>gather</code>)を使用します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>df_long_tidy <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rowid_to_column</span>(<span class="st">"id"</span>) <span class="sc">%&gt;%</span> <span class="co">#あとでもう一度横長に戻すときの基準として入れておく</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">names_to =</span> <span class="st">"VarName"</span>, <span class="co">#縦長に展開するときの、新たに追加されるキー列の名前</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">values_to =</span> <span class="st">"Value"</span>, <span class="co">#縦長になった結果集約される値が入る列の名前</span></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>                    <span class="sc">-</span><span class="fu">c</span>(id, Species)) <span class="co">#縦長に変換したい列を指定</span></span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>df_long_tidy <span class="sc">%&gt;%</span> head <span class="co">#並びが異なる</span></span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>df_long_tidy <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(VarName) <span class="sc">%&gt;%</span>  <span class="fu">summarize</span>(<span class="fu">mean</span>(Value))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+     id Species VarName      Value
+  &lt;int&gt; &lt;fct&gt;   &lt;chr&gt;        &lt;dbl&gt;
+1     1 setosa  Sepal.Length   5.1
+2     1 setosa  Sepal.Width    3.5
+3     1 setosa  Petal.Length   1.4
+4     1 setosa  Petal.Width    0.2
+5     2 setosa  Sepal.Length   4.9
+6     2 setosa  Sepal.Width    3  
+# A tibble: 4 × 2
+  VarName      `mean(Value)`
+  &lt;chr&gt;                &lt;dbl&gt;
+1 Petal.Length          3.76
+2 Petal.Width           1.20
+3 Sepal.Length          5.84
+4 Sepal.Width           3.06</code></pre>
+</div>
+</div>
+<p><code>reshape</code>関数は多機能ゆえ、一度に2グループの列を集約することも可能ですが、 いっそう使用方法は複雑になります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>df_long2 <span class="ot">&lt;-</span><span class="fu">reshape</span>(df, <span class="at">direction =</span> <span class="st">"long"</span>,</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">varying =</span> <span class="fu">c</span>(<span class="st">"Petal.Length"</span>,<span class="st">"Sepal.Length"</span>,<span class="st">"Petal.Width"</span>,<span class="st">"Sepal.Width"</span>), <span class="co">#縦長に変換したい列を指定</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">timevar =</span> <span class="st">"VarName"</span>, <span class="co">#縦長に展開するときの、新たに追加されるキー列の名前</span></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">times =</span> <span class="fu">c</span>(<span class="st">"Length"</span>,<span class="st">"Width"</span>), <span class="co">#新たに追加されるキー列の中身(横長時の列名から指定)</span></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">v.names =</span> <span class="fu">c</span>(<span class="st">"Sepal"</span>,<span class="st">"Petal"</span>)) <span class="co">#縦長になった結果集約される値が入る列の名前…2列以上も可</span></span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_long2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Species VarName Sepal Petal id
+1.Length  setosa  Length   5.1   1.4  1
+2.Length  setosa  Length   4.9   1.4  2
+3.Length  setosa  Length   4.7   1.3  3
+4.Length  setosa  Length   4.6   1.5  4
+5.Length  setosa  Length   5.0   1.4  5
+6.Length  setosa  Length   5.4   1.7  6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co">#実は同じような結果をもう少し簡単な指定で得ることもできる</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>df_long3 <span class="ot">&lt;-</span><span class="fu">reshape</span>(df, <span class="at">direction =</span> <span class="st">"long"</span>,</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">varying =</span> <span class="fu">c</span>(<span class="st">"Petal.Length"</span>,<span class="st">"Sepal.Length"</span>,<span class="st">"Petal.Width"</span>,<span class="st">"Sepal.Width"</span>), <span class="co">#縦長に変換したい列を指定</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">timevar =</span> <span class="st">"VarName"</span>, <span class="co">#縦長に展開するときの、新たに追加されるキー列の名前 </span></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">sep =</span> <span class="st">"."</span>) <span class="co">#縦長に変換したい列が, 値が入る列の名前.新たに追加されるキー列の中身 という命名規則の場合</span></span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_long3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Species VarName Petal Sepal id
+1.Length  setosa  Length   1.4   5.1  1
+2.Length  setosa  Length   1.4   4.9  2
+3.Length  setosa  Length   1.3   4.7  3
+4.Length  setosa  Length   1.5   4.6  4
+5.Length  setosa  Length   1.4   5.0  5
+6.Length  setosa  Length   1.7   5.4  6</code></pre>
+</div>
+</div>
+<p><code>data.table</code>の場合は次のような方法が考えられます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="do">##data.tableのmeasure.varsにパターンを与える方法</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>dt_long2 <span class="ot">&lt;-</span> <span class="fu">melt</span>(dt, <span class="at">measure.vars =</span> <span class="fu">patterns</span>(<span class="st">"^Sepal"</span>, <span class="st">"^Petal"</span>),</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">variable.name =</span> <span class="st">"Var"</span>,</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">value.name =</span> <span class="fu">c</span>(<span class="st">"Sepal"</span>, <span class="st">"Petal"</span>))</span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt_long2)</span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a><span class="co">#1.15以降ではmeasure関数が追加された</span></span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a><span class="co">#https://rdatatable.gitlab.io/data.table/news/index.html#datatable-v1150-30-jan-2024</span></span>
+<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a><span class="co">#melt(dt, measure.vars = measure(value.name, dim, sep="."))</span></span>
+<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a><span class="do">##添え字の中に欲しい形で書き下してしまう方法</span></span>
+<span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a>dt_long3 <span class="ot">&lt;-</span> dt[,.(</span>
+<span id="cb78-12"><a href="#cb78-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">VarName =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"Length"</span>, .N), <span class="fu">rep</span>(<span class="st">"Width"</span>, .N)),</span>
+<span id="cb78-13"><a href="#cb78-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sepal =</span> <span class="fu">c</span>(Sepal.Length, Sepal.Width),</span>
+<span id="cb78-14"><a href="#cb78-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Petal =</span> <span class="fu">c</span>(Petal.Length, Petal.Width)</span>
+<span id="cb78-15"><a href="#cb78-15" aria-hidden="true" tabindex="-1"></a>) ,by <span class="ot">=</span> .(Species)]</span>
+<span id="cb78-16"><a href="#cb78-16" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt_long3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Species    Var Sepal Petal
+    &lt;fctr&gt; &lt;fctr&gt; &lt;num&gt; &lt;num&gt;
+1:  setosa      1   5.1   1.4
+2:  setosa      1   4.9   1.4
+3:  setosa      1   4.7   1.3
+4:  setosa      1   4.6   1.5
+5:  setosa      1   5.0   1.4
+6:  setosa      1   5.4   1.7
+   Species VarName Sepal Petal
+    &lt;fctr&gt;  &lt;char&gt; &lt;num&gt; &lt;num&gt;
+1:  setosa  Length   5.1   1.4
+2:  setosa  Length   4.9   1.4
+3:  setosa  Length   4.7   1.3
+4:  setosa  Length   4.6   1.5
+5:  setosa  Length   5.0   1.4
+6:  setosa  Length   5.4   1.7</code></pre>
+</div>
+</div>
+</section>
+<section id="縦長横長" class="level4">
+<h4 class="anchored" data-anchor-id="縦長横長">縦長→横長</h4>
+<p>逆に縦長から横長に戻す場合、R標準では次のような書き方になります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>df_wide <span class="ot">&lt;-</span> <span class="fu">reshape</span>(df_long, <span class="at">direction =</span> <span class="st">"wide"</span>, <span class="co">#縦長への変換モード</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">varying =</span> <span class="fu">c</span>(<span class="st">"Sepal.Length"</span>,<span class="st">"Sepal.Width"</span>,<span class="st">"Petal.Length"</span>,<span class="st">"Petal.Width"</span>),<span class="co">#横長に展開するときの列名</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">timevar =</span> <span class="st">"VarName"</span>, <span class="co">#横長に展開するときの列の基準が入った列</span></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">v.names =</span> <span class="st">"Value"</span>) <span class="co">#横長に展開するときの値となる列</span></span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Species id Sepal.Length Sepal.Width Petal.Length Petal.Width
+1.Sepal.Length  setosa  1          5.1         3.5          1.4         0.2
+2.Sepal.Length  setosa  2          4.9         3.0          1.4         0.2
+3.Sepal.Length  setosa  3          4.7         3.2          1.3         0.2
+4.Sepal.Length  setosa  4          4.6         3.1          1.5         0.2
+5.Sepal.Length  setosa  5          5.0         3.6          1.4         0.2
+6.Sepal.Length  setosa  6          5.4         3.9          1.7         0.4</code></pre>
+</div>
+</div>
+<p>一方、<code>data.table</code>では<code>dcast</code>を使用します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>dt_long_tmp <span class="ot">&lt;-</span> <span class="fu">copy</span>(dt_long)</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>dt_long_tmp[ ,id <span class="sc">:</span><span class="er">=</span> <span class="dv">1</span><span class="sc">:</span>.N, by <span class="ot">=</span> .(VarName)]</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a><span class="co">#横長に戻した後の行番号を付与　これがないと集約されてしまう</span></span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>dt_wide <span class="ot">&lt;-</span> <span class="fu">dcast</span>(dt_long_tmp,</span>
+<span id="cb82-6"><a href="#cb82-6" aria-hidden="true" tabindex="-1"></a>                 id <span class="sc">+</span> Species <span class="sc">~</span> VarName,</span>
+<span id="cb82-7"><a href="#cb82-7" aria-hidden="true" tabindex="-1"></a>                 <span class="co">#残したい列 ~ 横長に展開するときの列の名前が入った列</span></span>
+<span id="cb82-8"><a href="#cb82-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">value.var =</span> <span class="st">"Value"</span>) <span class="co">#横長に展開するときの値となる列</span></span>
+<span id="cb82-9"><a href="#cb82-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-10"><a href="#cb82-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt_wide)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Key: &lt;id, Species&gt;
+      id Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+   &lt;int&gt;  &lt;fctr&gt;        &lt;num&gt;       &lt;num&gt;        &lt;num&gt;       &lt;num&gt;
+1:     1  setosa          5.1         3.5          1.4         0.2
+2:     2  setosa          4.9         3.0          1.4         0.2
+3:     3  setosa          4.7         3.2          1.3         0.2
+4:     4  setosa          4.6         3.1          1.5         0.2
+5:     5  setosa          5.0         3.6          1.4         0.2
+6:     6  setosa          5.4         3.9          1.7         0.4</code></pre>
+</div>
+</div>
+<p><code>tidyr</code>では<code>pivot_wider</code>(または<code>spread</code>)を使用します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>df_wide_tidy <span class="ot">&lt;-</span> df_long_tidy <span class="sc">%&gt;%</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">"VarName"</span>, <span class="co">#横長に展開するときの列の名前が入った列</span></span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> <span class="st">"Value"</span>) <span class="co">#横長に展開するときの値となる列</span></span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>df_wide_tidy <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+     id Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+  &lt;int&gt; &lt;fct&gt;          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+1     1 setosa           5.1         3.5          1.4         0.2
+2     2 setosa           4.9         3            1.4         0.2
+3     3 setosa           4.7         3.2          1.3         0.2
+4     4 setosa           4.6         3.1          1.5         0.2
+5     5 setosa           5           3.6          1.4         0.2
+6     6 setosa           5.4         3.9          1.7         0.4</code></pre>
+</div>
+</div>
+<p>より複雑なパターンについてはvignette <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reshape.html">“Efficient reshaping using data.tables”</a>にも解説があります。</p>
+</section>
+</section>
+<section id="テーブルの結合join" class="level3">
+<h3 class="anchored" data-anchor-id="テーブルの結合join">テーブルの結合(join)</h3>
+<p>ここでは複数のテーブルの結合を取り扱います。</p>
+<p>以下の例で使用するテーブルを準備します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ある時点での保有データ</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="co">#システム仕様の都合により保険金額が2桁までしか保持できないため、</span></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a><span class="co">#大型契約の場合は同じ証券番号で複数のレコードを保持して対応する</span></span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>df_IF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>  証券番号 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span> ,<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">99</span>),</span>
+<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a>  特約種類 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span> ,<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">0</span>),</span>
+<span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a>  保有保険金額 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">99</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">25</span>, <span class="dv">12</span>)</span>
+<span id="cb86-8"><a href="#cb86-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb86-9"><a href="#cb86-9" aria-hidden="true" tabindex="-1"></a><span class="co">#過去の消滅契約も含めた諸情報が蓄積されたデータ</span></span>
+<span id="cb86-10"><a href="#cb86-10" aria-hidden="true" tabindex="-1"></a><span class="co">#ここでは、証券番号と特約種類の組によってレコードが特定されるものとする</span></span>
+<span id="cb86-11"><a href="#cb86-11" aria-hidden="true" tabindex="-1"></a><span class="co">#ただし、df_IFに存在する証券番号99は特別なもので、当データベースには蓄積されていないものとする</span></span>
+<span id="cb86-12"><a href="#cb86-12" aria-hidden="true" tabindex="-1"></a>df_MF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb86-13"><a href="#cb86-13" aria-hidden="true" tabindex="-1"></a>  証券番号 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span> ,<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>),</span>
+<span id="cb86-14"><a href="#cb86-14" aria-hidden="true" tabindex="-1"></a>  特約種類 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">0</span> ,<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb86-15"><a href="#cb86-15" aria-hidden="true" tabindex="-1"></a>  契約年齢 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">50</span>),</span>
+<span id="cb86-16"><a href="#cb86-16" aria-hidden="true" tabindex="-1"></a>  性別 <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb86-17"><a href="#cb86-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb86-18"><a href="#cb86-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-19"><a href="#cb86-19" aria-hidden="true" tabindex="-1"></a>dt_IF <span class="ot">&lt;-</span> <span class="fu">as.data.table</span>(df_IF)</span>
+<span id="cb86-20"><a href="#cb86-20" aria-hidden="true" tabindex="-1"></a>dt_MF <span class="ot">&lt;-</span> <span class="fu">as.data.table</span>(df_MF)</span>
+<span id="cb86-21"><a href="#cb86-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-22"><a href="#cb86-22" aria-hidden="true" tabindex="-1"></a>df_IF</span>
+<span id="cb86-23"><a href="#cb86-23" aria-hidden="true" tabindex="-1"></a>df_MF</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>  証券番号 特約種類 保有保険金額
+1        2        0           99
+2        2        0           30
+3        3        0           50
+4        3       10           25
+5       99        0           12
+  証券番号 特約種類 契約年齢 性別
+1        1        0       30    1
+2        1       10       30    1
+3        2        0       40    2
+4        3        0       50    1
+5        3       10       50    1</code></pre>
+</div>
+</div>
+<p>さて、保有テーブルに足りない情報を別のテーブルから付加するようなケースを考えます。</p>
+<p>R標準では<code>merge</code>という関数があります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co">#x側の行をすべて残す(left join)…MFにある情報をIFに付与する(契約年齢、性別がわかる)</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="fu">merge</span>(<span class="at">x =</span> df_IF, <span class="at">y =</span> df_MF,</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">by.x =</span> <span class="fu">c</span>(<span class="st">"証券番号"</span>, <span class="st">"特約種類"</span>), <span class="at">by.y =</span> <span class="fu">c</span>(<span class="st">"証券番号"</span>, <span class="st">"特約種類"</span>), <span class="co">#結合に使うキー</span></span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">all.x =</span> <span class="cn">TRUE</span>, <span class="at">all.y =</span> <span class="cn">FALSE</span>) <span class="co">#どちらの行を残すか</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>  証券番号 特約種類 保有保険金額 契約年齢 性別
+1        2        0           99       40    2
+2        2        0           30       40    2
+3        3        0           50       50    1
+4        3       10           25       50    1
+5       99        0           12       NA   NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co">#両方にある行だけを抽出する(inner join)…MFに無いような変な契約は捨てる</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="fu">merge</span>(<span class="at">x =</span> df_IF, <span class="at">y =</span> df_MF,</span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">by.x =</span> <span class="fu">c</span>(<span class="st">"証券番号"</span>, <span class="st">"特約種類"</span>), <span class="at">by.y =</span> <span class="fu">c</span>(<span class="st">"証券番号"</span>, <span class="st">"特約種類"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>  証券番号 特約種類 保有保険金額 契約年齢 性別
+1        2        0           99       40    2
+2        2        0           30       40    2
+3        3        0           50       50    1
+4        3       10           25       50    1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co">#y側の行をすべて残す(right join)…IFにある情報をMFに付与する(ある時点での保有の状況がわかる)</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="fu">merge</span>(<span class="at">x =</span> df_IF, <span class="at">y =</span> df_MF,</span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">by.x =</span> <span class="fu">c</span>(<span class="st">"証券番号"</span>, <span class="st">"特約種類"</span>), <span class="at">by.y =</span> <span class="fu">c</span>(<span class="st">"証券番号"</span>, <span class="st">"特約種類"</span>),</span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">all.x =</span> <span class="cn">FALSE</span>, <span class="at">all.y =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>  証券番号 特約種類 保有保険金額 契約年齢 性別
+1        1        0           NA       30    1
+2        1       10           NA       30    1
+3        2        0           99       40    2
+4        2        0           30       40    2
+5        3        0           50       50    1
+6        3       10           25       50    1</code></pre>
+</div>
+</div>
+<p><code>data.table</code>の場合、上記の手法も依然として使えますが、 <code>変数[行, 列]</code>記法の行の方に別の<code>data.table</code>を記述することでも実現できます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co">#dt_IFにあるレコードをキーとして、dt_MFのデータを取得する</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="co">#onは結合に使うキーを指定　キーが異なるときはc("証券番号" = "証券番号") のように指定する</span></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>dt_MF[dt_IF, , on <span class="ot">=</span> .(証券番号, 特約種類)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>   証券番号 特約種類 契約年齢  性別 保有保険金額
+      &lt;num&gt;    &lt;num&gt;    &lt;num&gt; &lt;num&gt;        &lt;num&gt;
+1:        2        0       40     2           99
+2:        2        0       40     2           30
+3:        3        0       50     1           50
+4:        3       10       50     1           25
+5:       99        0       NA    NA           12</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co">#引数nomatch = NULLを与えることで両方にある行だけを抽出(inner join)</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>dt_MF[dt_IF, , on <span class="ot">=</span> .(証券番号, 特約種類), nomatch <span class="ot">=</span> <span class="cn">NULL</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>   証券番号 特約種類 契約年齢  性別 保有保険金額
+      &lt;num&gt;    &lt;num&gt;    &lt;num&gt; &lt;num&gt;        &lt;num&gt;
+1:        2        0       40     2           99
+2:        2        0       40     2           30
+3:        3        0       50     1           50
+4:        3       10       50     1           25</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co">#dt_MFにあるレコードをキーとして、dt_IFのデータを取得する</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>dt_IF[dt_MF, , on <span class="ot">=</span> .(証券番号, 特約種類)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>   証券番号 特約種類 保有保険金額 契約年齢  性別
+      &lt;num&gt;    &lt;num&gt;        &lt;num&gt;    &lt;num&gt; &lt;num&gt;
+1:        1        0           NA       30     1
+2:        1       10           NA       30     1
+3:        2        0           99       40     2
+4:        2        0           30       40     2
+5:        3        0           50       50     1
+6:        3       10           25       50     1</code></pre>
+</div>
+</div>
+<p><code>dplyr</code>では<code>join</code>系の関数が使用できます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>dt_IF <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(dt_MF, <span class="at">by =</span> <span class="fu">join_by</span>(証券番号, 特約種類))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>   証券番号 特約種類 保有保険金額 契約年齢  性別
+      &lt;num&gt;    &lt;num&gt;        &lt;num&gt;    &lt;num&gt; &lt;num&gt;
+1:        2        0           99       40     2
+2:        2        0           30       40     2
+3:        3        0           50       50     1
+4:        3       10           25       50     1
+5:       99        0           12       NA    NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>dt_IF <span class="sc">%&gt;%</span> <span class="fu">inner_join</span>(dt_MF, <span class="at">by =</span> <span class="fu">join_by</span>(証券番号, 特約種類))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>   証券番号 特約種類 保有保険金額 契約年齢  性別
+      &lt;num&gt;    &lt;num&gt;        &lt;num&gt;    &lt;num&gt; &lt;num&gt;
+1:        2        0           99       40     2
+2:        2        0           30       40     2
+3:        3        0           50       50     1
+4:        3       10           25       50     1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>dt_IF <span class="sc">%&gt;%</span> <span class="fu">right_join</span>(dt_MF, <span class="at">by =</span> <span class="fu">join_by</span>(証券番号, 特約種類))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>   証券番号 特約種類 保有保険金額 契約年齢  性別
+      &lt;num&gt;    &lt;num&gt;        &lt;num&gt;    &lt;num&gt; &lt;num&gt;
+1:        2        0           99       40     2
+2:        2        0           30       40     2
+3:        3        0           50       50     1
+4:        3       10           25       50     1
+5:        1        0           NA       30     1
+6:        1       10           NA       30     1</code></pre>
+</div>
+</div>
+</section>
+<section id="data.tableが大規模データに強い理由" class="level3">
+<h3 class="anchored" data-anchor-id="data.tableが大規模データに強い理由"><code>data.table</code>が大規模データに強い理由</h3>
+<p><code>data.table</code>が大規模データに強い理由のうち、代表的なものを挙げると次のようになります。</p>
+<ul>
+<li><code>fread</code>や<code>fwrite</code>は、標準の関数に比べて非常に高速</li>
+<li><code>変数[行, 列]</code> の形式でデータ抽出・加工を行う場合、関係のないカラムをいちいち操作しない</li>
+<li>メモリの利用が効率的
+<ul>
+<li><code>:=</code>による代入や<code>set*</code>系関数により、メモリのデータを丸ごとコピー(ディープコピー)することなくテーブルの加工を行うことが出来る</li>
+</ul></li>
+<li>いわゆるインデックスの機能がある
+<ul>
+<li><code>dt[x == 10 &amp; y == 20, ]</code> のようなクエリが発行されたとき、対応するインデックスが作成されていればそれを使用して高速にレコードを抽出できる。</li>
+<li><code>data.frame</code>から行idの機能が失われた代わりに、主キーとなる列(以下単に「キー列」)を複数持つことが出来る。キー列でソートされた形でテーブルを保持するため、キー列による検索は特に高速(いわゆるクラスター化インデックスに近い)</li>
+<li>キー列とは別に、明示的にインデックスを作成することもできる(secondary index)</li>
+<li><code>dt[x == 10 &amp; y == 20, ]</code> のようなクエリが発行された時点で、必要なインデックスを自動的に作成(auto indexing)</li>
+</ul></li>
+<li>マルチコア処理などの低レイヤの処理を最適化している</li>
+</ul>
+<p>これらの特徴を把握することで、大規模データに強いコーディングを意図的に行うことも可能になります。</p>
+<p>大規模データでの動作を確認するために、いくつか例を見てみます。</p>
+<section id="fread-fwriteの性能比較" class="level4">
+<h4 class="anchored" data-anchor-id="fread-fwriteの性能比較"><code>fread</code>, <code>fwrite</code>の性能比較</h4>
+<p>R標準の関数と簡単に速度比較をしてみます。</p>
+<p>環境・条件によっては、十数倍～数十倍程度の速度差が出ることもあるようです。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">file.info</span>(<span class="st">"../data/lapse_study.csv"</span>)<span class="sc">$</span>size <span class="sc">/</span> <span class="dv">1024</span>)<span class="co">#KB単位のファイルサイズ</span></span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(dt_tmp_r1 <span class="ot">&lt;-</span> <span class="fu">fread</span>(<span class="st">"../data/lapse_study.csv"</span>))</span>
+<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(dt_tmp_r2 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../data/lapse_study.csv"</span>))</span>
+<span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(<span class="fu">mapply</span>(all.equal, dt_tmp_r1, dt_tmp_r2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>[1] 1949.819
+  ユーザ システム     経過 
+    0.00     0.00     0.02 
+  ユーザ システム     経過 
+    0.11     0.00     0.11 
+[1] TRUE</code></pre>
+</section>
+<section id="大規模データ操作での性能比較" class="level4">
+<h4 class="anchored" data-anchor-id="大規模データ操作での性能比較">大規模データ操作での性能比較</h4>
+<p>公開データでは規模の大きい<code>nycflights13</code>パッケージの<code>flight</code>データを用いて、 <code>data.table</code>のデータ操作の速度を比較してみましょう。</p>
+<p>まず、簡単にデータの概要を表示します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>df_f <span class="ot">&lt;-</span> flights</span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>dt_f <span class="ot">&lt;-</span> <span class="fu">as.data.table</span>(df_f)</span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df_f) <span class="co">#レコード数</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 336776</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>df_f[<span class="fu">sample</span>(<span class="fu">nrow</span>(df_f), <span class="dv">5</span>), ] <span class="co">#サンプル抽出</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 19
+   year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+  &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+1  2013    11     7      600            600         0      826            825
+2  2013    10    30     1252           1250         2     1356           1400
+3  2013    12    18     1723           1715         8     2008           2020
+4  2013    11    20     2029           2030        -1     2141           2205
+5  2013    10    21     1620           1625        -5     1818           1831
+# ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+#   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+#   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df_f) <span class="co">#サマリー</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      year          month             day           dep_time    sched_dep_time
+ Min.   :2013   Min.   : 1.000   Min.   : 1.00   Min.   :   1   Min.   : 106  
+ 1st Qu.:2013   1st Qu.: 4.000   1st Qu.: 8.00   1st Qu.: 907   1st Qu.: 906  
+ Median :2013   Median : 7.000   Median :16.00   Median :1401   Median :1359  
+ Mean   :2013   Mean   : 6.549   Mean   :15.71   Mean   :1349   Mean   :1344  
+ 3rd Qu.:2013   3rd Qu.:10.000   3rd Qu.:23.00   3rd Qu.:1744   3rd Qu.:1729  
+ Max.   :2013   Max.   :12.000   Max.   :31.00   Max.   :2400   Max.   :2359  
+                                                 NA's   :8255                 
+   dep_delay          arr_time    sched_arr_time   arr_delay       
+ Min.   : -43.00   Min.   :   1   Min.   :   1   Min.   : -86.000  
+ 1st Qu.:  -5.00   1st Qu.:1104   1st Qu.:1124   1st Qu.: -17.000  
+ Median :  -2.00   Median :1535   Median :1556   Median :  -5.000  
+ Mean   :  12.64   Mean   :1502   Mean   :1536   Mean   :   6.895  
+ 3rd Qu.:  11.00   3rd Qu.:1940   3rd Qu.:1945   3rd Qu.:  14.000  
+ Max.   :1301.00   Max.   :2400   Max.   :2359   Max.   :1272.000  
+ NA's   :8255      NA's   :8713                  NA's   :9430      
+   carrier              flight       tailnum             origin         
+ Length:336776      Min.   :   1   Length:336776      Length:336776     
+ Class :character   1st Qu.: 553   Class :character   Class :character  
+ Mode  :character   Median :1496   Mode  :character   Mode  :character  
+                    Mean   :1972                                        
+                    3rd Qu.:3465                                        
+                    Max.   :8500                                        
+                                                                        
+     dest              air_time        distance         hour      
+ Length:336776      Min.   : 20.0   Min.   :  17   Min.   : 1.00  
+ Class :character   1st Qu.: 82.0   1st Qu.: 502   1st Qu.: 9.00  
+ Mode  :character   Median :129.0   Median : 872   Median :13.00  
+                    Mean   :150.7   Mean   :1040   Mean   :13.18  
+                    3rd Qu.:192.0   3rd Qu.:1389   3rd Qu.:17.00  
+                    Max.   :695.0   Max.   :4983   Max.   :23.00  
+                    NA's   :9430                                  
+     minute        time_hour                  
+ Min.   : 0.00   Min.   :2013-01-01 05:00:00  
+ 1st Qu.: 8.00   1st Qu.:2013-04-04 13:00:00  
+ Median :29.00   Median :2013-07-03 10:00:00  
+ Mean   :26.23   Mean   :2013-07-03 05:22:54  
+ 3rd Qu.:44.00   3rd Qu.:2013-10-01 07:00:00  
+ Max.   :59.00   Max.   :2013-12-31 23:00:00  
+                                              </code></pre>
+</div>
+</div>
+<p>カテゴリの数が多いカテゴリ変数で抽出する場合、<code>data.table</code>はインデックスの効果により抽出が高速になります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>digits_cur <span class="ot">&lt;-</span> <span class="fu">getOption</span>(<span class="st">"digits"</span>)<span class="co">#表示桁数を一時的に少なくしておく</span></span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">digits=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="co">#tailnumは機体記号(tail number) 航空機ごとにつけられる固有の記号のこと</span></span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a><span class="co">#本データセットには4000以上の機体記号が登録されている</span></span>
+<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(dt_f[,.N, <span class="at">by=</span>.(tailnum) ])</span>
+<span id="cb115-4"><a href="#cb115-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-5"><a href="#cb115-5" aria-hidden="true" tabindex="-1"></a><span class="co">#microbenchmarkは同じ処理を複数回実行し、その実行時間を観察することができる関数</span></span>
+<span id="cb115-6"><a href="#cb115-6" aria-hidden="true" tabindex="-1"></a><span class="co">#例えばmeanの列に平均実行時間がミリ秒単位で格納される</span></span>
+<span id="cb115-7"><a href="#cb115-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-8"><a href="#cb115-8" aria-hidden="true" tabindex="-1"></a><span class="co">#特定の機体記号のレコードを抽出するだけの処理</span></span>
+<span id="cb115-9"><a href="#cb115-9" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> <span class="fu">microbenchmark</span>(df_f[df_f<span class="sc">$</span>tailnum <span class="sc">==</span> <span class="st">"N449US"</span>, ], <span class="at">times=</span><span class="dv">100</span>, <span class="at">unit =</span> <span class="st">"milliseconds"</span>) <span class="co">#R標準</span></span>
+<span id="cb115-10"><a href="#cb115-10" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df_tmp, <span class="fu">microbenchmark</span>(dt_f[tailnum <span class="sc">==</span> <span class="st">"N449US"</span>, ], <span class="at">times=</span><span class="dv">100</span>, <span class="at">unit =</span> <span class="st">"milliseconds"</span>)) <span class="co">#data.table:auto indexingによりインデックスを作成して使用するので早い</span></span>
+<span id="cb115-11"><a href="#cb115-11" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df_tmp, <span class="fu">microbenchmark</span>(df_f <span class="sc">%&gt;%</span> <span class="fu">filter</span>(tailnum <span class="sc">==</span> <span class="st">"N449US"</span>), <span class="at">times=</span><span class="dv">100</span>, <span class="at">unit =</span> <span class="st">"milliseconds"</span>)) <span class="co">#dplyr</span></span>
+<span id="cb115-12"><a href="#cb115-12" aria-hidden="true" tabindex="-1"></a>df_tmp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4044
+Unit: milliseconds
+                                 expr  min   lq mean median   uq  max neval
+     df_f[df_f$tailnum == "N449US", ] 1.72 1.84 2.09   1.93 2.20 5.65   100
+          dt_f[tailnum == "N449US", ] 1.17 1.30 1.58   1.39 1.57 8.71   100
+ df_f %&gt;% filter(tailnum == "N449US") 2.93 3.00 3.58   3.18 3.59 7.40   100</code></pre>
+</div>
+</div>
+<p>多めの行を抽出しつつ限られた列に対してなんらかの演算を行う場合、<code>dplyr</code> が最も低速な傾向です。</p>
+<p><code>変数[行, 列]</code>記法の場合、操作に関係のない列を自然に無視して処理できているためと考えられます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co">#R標準</span></span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="co">#行の抽出だけ</span></span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> <span class="fu">microbenchmark</span>(df_f[df_f<span class="sc">$</span>month <span class="sc">==</span> <span class="dv">12</span>, ], <span class="at">times=</span><span class="dv">100</span>, <span class="at">unit =</span> <span class="st">"milliseconds"</span>)</span>
+<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a><span class="co">#上記に加え、いくつかの列を使用して計算</span></span>
+<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a><span class="co">#文を2つに分けた都合上microbenchmarkの出力が2行に分かれるので、比較対象はその合計になる</span></span>
+<span id="cb117-6"><a href="#cb117-6" aria-hidden="true" tabindex="-1"></a>rows_tmp <span class="ot">&lt;-</span> df_f<span class="sc">$</span>month <span class="sc">==</span> <span class="dv">12</span></span>
+<span id="cb117-7"><a href="#cb117-7" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df_tmp, <span class="fu">microbenchmark</span>(rows_tmp <span class="ot">&lt;-</span> df_f<span class="sc">$</span>month <span class="sc">==</span> <span class="dv">12</span>, df_f[rows_tmp, <span class="st">"hour"</span>]<span class="sc">*</span><span class="dv">60</span> <span class="sc">+</span> df_f[rows_tmp, <span class="st">"minute"</span>], <span class="at">times=</span><span class="dv">100</span>, <span class="at">unit =</span> <span class="st">"milliseconds"</span>))</span>
+<span id="cb117-8"><a href="#cb117-8" aria-hidden="true" tabindex="-1"></a>df_tmp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Unit: milliseconds
+                                                   expr   min    lq  mean
+                               df_f[df_f$month == 12, ] 2.197 2.306 2.836
+                           rows_tmp &lt;- df_f$month == 12 0.583 0.586 0.791
+ df_f[rows_tmp, "hour"] * 60 + df_f[rows_tmp, "minute"] 0.913 0.950 1.048
+ median    uq  max neval
+  2.442 2.985 6.39   100
+  0.595 0.884 5.60   100
+  0.966 1.010 5.72   100</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="co">#data.table</span></span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> <span class="fu">microbenchmark</span>(dt_f[month <span class="sc">==</span> <span class="dv">12</span>, ], <span class="at">times=</span><span class="dv">100</span>, <span class="at">unit =</span> <span class="st">"milliseconds"</span>)</span>
+<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df_tmp, <span class="fu">microbenchmark</span>(dt_f[month <span class="sc">==</span> <span class="dv">12</span>, hour<span class="sc">*</span><span class="dv">60</span> <span class="sc">+</span> minute], <span class="at">times=</span><span class="dv">100</span>, <span class="at">unit =</span> <span class="st">"milliseconds"</span>))</span>
+<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a>df_tmp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Unit: milliseconds
+                                  expr  min   lq mean median   uq  max neval
+                   dt_f[month == 12, ] 3.17 3.37 3.95   3.51 3.88 9.08   100
+ dt_f[month == 12, hour * 60 + minute] 1.88 1.99 2.32   2.17 2.31 7.49   100</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="co">#dplyr</span></span>
+<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> <span class="fu">microbenchmark</span>(df_f <span class="sc">%&gt;%</span> <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">12</span>) , <span class="at">times=</span><span class="dv">100</span>, <span class="at">unit =</span> <span class="st">"milliseconds"</span>)</span>
+<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df_tmp, <span class="fu">microbenchmark</span>(df_f <span class="sc">%&gt;%</span> <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">12</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">m =</span> hour<span class="sc">*</span><span class="dv">60</span> <span class="sc">+</span> minute), <span class="at">times=</span><span class="dv">100</span>, <span class="at">unit =</span> <span class="st">"milliseconds"</span>))</span>
+<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a><span class="co">#mutate %&gt;% select や transmute とするとさらに遅くなったのでそうしなかった</span></span>
+<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>df_f_l <span class="ot">&lt;-</span> df_f <span class="sc">%&gt;%</span> <span class="fu">select</span>(month, hour, minute) <span class="co">#関係のない列をそぎ落としてもまだ若干低速</span></span>
+<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> <span class="fu">rbind</span>(df_tmp, <span class="fu">microbenchmark</span>(df_f_l <span class="sc">%&gt;%</span> <span class="fu">filter</span>(month <span class="sc">==</span> <span class="dv">12</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">m =</span> hour<span class="sc">*</span><span class="dv">60</span> <span class="sc">+</span> minute), <span class="at">times=</span><span class="dv">100</span>, <span class="at">unit =</span> <span class="st">"milliseconds"</span>))</span>
+<span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a>df_tmp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Unit: milliseconds
+                                                              expr  min   lq
+                                      df_f %&gt;% filter(month == 12) 3.41 3.55
+   df_f %&gt;% filter(month == 12) %&gt;% mutate(m = hour * 60 + minute) 4.31 4.47
+ df_f_l %&gt;% filter(month == 12) %&gt;% mutate(m = hour * 60 + minute) 3.10 3.25
+ mean median   uq    max neval
+ 4.25   3.66 4.31   8.55   100
+ 6.06   4.58 4.94 104.21   100
+ 4.13   3.60 4.37   9.91   100</code></pre>
+</div>
+</div>
+<p>なお、キーやインデックスの詳細については以下のvignettesを参照してください。</p>
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html">Keys and fast binary search based subset</a></li>
+<li><a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-keys-fast-subset.html">Secondary indices and auto indexing</a></li>
+</ul>
+<p>また、本稿ではあまり説明していませんが、<code>set*</code>系関数などのメモリを節約する機能についてはvignette <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-reference-semantics.html">“Reference semantics”</a>を参照してください。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">digits=</span>digits_cur)<span class="co">#表示桁数を元に戻す</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="添え字の発展的な使用方法" class="level3">
+<h3 class="anchored" data-anchor-id="添え字の発展的な使用方法">添え字の発展的な使用方法</h3>
+<p><code>data.table</code>は<code>dplyr</code>での操作にも対応しているため可読性の観点から併用されるケースが目立ちますが、 <code>data.table</code>の<code>変数[行, 列]</code>記法は<code>data.frame</code>のそれよりも大幅に拡張されており、 これをフルに活用することで複雑な処理をエレガントに記述することも可能です。 また前述のとおり、<code>変数[行, 列]</code>記法は大規模データでの実行速度向上の観点でもメリットがあります。 本節ではこの<code>変数[行, 列]</code>記法について少しだけ掘り下げてみます。</p>
+<section id="列の自在性" class="level4">
+<h4 class="anchored" data-anchor-id="列の自在性">「列」の自在性</h4>
+<p>「列」の箇所は、列名のみならず式を書くこともできます。 式中の列名をテーブルのカラム全体を表すベクトルに変換して計算するような動作になります。 結果の長さが元のベクトルとは異なっていても問題ないため、 <code>mean</code>のような集計関数(ベクトルを引数にとり数値を吐き出すような関数)も自然に使用できます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="co">#.(*)はlist(*)の省略形で、listを与えたときはdata.tableで結果を返却する</span></span>
+<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[ ,.(Sepal.Length, Sepal.Width)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Sepal.Length Sepal.Width
+          &lt;num&gt;       &lt;num&gt;
+1:          5.1         3.5
+2:          4.9         3.0
+3:          4.7         3.2
+4:          4.6         3.1
+5:          5.0         3.6
+6:          5.4         3.9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="co">#.(*)のなかにx = aの形で記述することで、列名をxで返却する</span></span>
+<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[ ,.(<span class="at">SL =</span> Sepal.Length)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      SL
+   &lt;num&gt;
+1:   5.1
+2:   4.9
+3:   4.7
+4:   4.6
+5:   5.0
+6:   5.4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="co">#一方、右辺のほうには式を書くことができる</span></span>
+<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[ ,.(<span class="at">Sepal.Rate =</span> Sepal.Length <span class="sc">/</span> Sepal.Width)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Sepal.Rate
+        &lt;num&gt;
+1:   1.457143
+2:   1.633333
+3:   1.468750
+4:   1.483871
+5:   1.388889
+6:   1.384615</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ベクトルを引数にとり数値を吐き出すような関数も使える</span></span>
+<span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a>dt[ ,.(<span class="at">Sepal.Rate.Mean =</span> <span class="fu">mean</span>(Sepal.Length <span class="sc">/</span> Sepal.Width))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Sepal.Rate.Mean
+             &lt;num&gt;
+1:        1.953681</code></pre>
+</div>
+</div>
+<p>引数<code>by</code>を指定してグループ化した場合、上記の操作がグループごとに細分化されて行われるイメージです。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a>dt[ ,.(<span class="at">Sepal.Rate.Mean =</span> <span class="fu">mean</span>(Sepal.Length <span class="sc">/</span> Sepal.Width)), by <span class="ot">=</span> Species]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Species Sepal.Rate.Mean
+       &lt;fctr&gt;           &lt;num&gt;
+1:     setosa        1.470188
+2: versicolor        2.160402
+3:  virginica        2.230453</code></pre>
+</div>
+</div>
+</section>
+<section id="特殊記号special-symbols" class="level4">
+<h4 class="anchored" data-anchor-id="特殊記号special-symbols">特殊記号(Special Symbols)</h4>
+<p>また、「列」の欄にはいくつかの特殊記号を用いることができます。</p>
+<p>代表的なものは、そのグループの件数を表す<code>.N</code>と、テーブル全体を表す<code>.SD</code>です。 このうち、<code>.SD</code>は引数<code>.SDcol</code>で抽出する列を指定することができます。</p>
+<p><code>.SD</code>の応用例についてはvignette <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-sd-usage.html">“Using .SD for Data Analysis”</a>にも解説があります。 また、他の特殊記号の例については<code>help("special-symbols")</code>を参照してください。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="do">##.Nの使用例</span></span>
+<span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a>dt[ ,.(<span class="at">count =</span> .N), by <span class="ot">=</span> Species]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Species count
+       &lt;fctr&gt; &lt;int&gt;
+1:     setosa    50
+2: versicolor    50
+3:  virginica    50</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="do">##.SDの使用例</span></span>
+<span id="cb136-2"><a href="#cb136-2" aria-hidden="true" tabindex="-1"></a><span class="co">#行数, 列名リスト, 全要素の合計値</span></span>
+<span id="cb136-3"><a href="#cb136-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(<span class="fu">nrow</span>(dt), <span class="fu">paste</span>(<span class="fu">names</span>(dt), <span class="at">collapse =</span> <span class="st">","</span>), <span class="fu">sum</span>(<span class="fu">sapply</span>(dt, <span class="cf">function</span>(vec) <span class="cf">if</span>(<span class="fu">is.numeric</span>(vec)){<span class="fu">sum</span>(vec)}<span class="cf">else</span>{<span class="dv">0</span>})))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 150
+
+[[2]]
+[1] "Sepal.Length,Sepal.Width,Petal.Length,Petal.Width,Species"
+
+[[3]]
+[1] 2078.7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="co">#これをSpeciesのグループごとに行うイメージ</span></span>
+<span id="cb138-2"><a href="#cb138-2" aria-hidden="true" tabindex="-1"></a>dt[ ,.(<span class="at">nrow =</span> <span class="fu">nrow</span>(.SD),</span>
+<span id="cb138-3"><a href="#cb138-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">colnames =</span> <span class="fu">paste</span>(<span class="fu">names</span>(.SD), <span class="at">collapse=</span><span class="st">", "</span>),</span>
+<span id="cb138-4"><a href="#cb138-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">sum =</span> <span class="fu">sum</span>(<span class="fu">sapply</span>(.SD, <span class="cf">function</span>(vec) <span class="cf">if</span>(<span class="fu">is.numeric</span>(vec)){<span class="fu">sum</span>(vec)}<span class="cf">else</span>{<span class="dv">0</span>}))), by <span class="ot">=</span> Species]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Species  nrow                                             colnames   sum
+       &lt;fctr&gt; &lt;int&gt;                                               &lt;char&gt; &lt;num&gt;
+1:     setosa    50 Sepal.Length, Sepal.Width, Petal.Length, Petal.Width 507.1
+2: versicolor    50 Sepal.Length, Sepal.Width, Petal.Length, Petal.Width 714.6
+3:  virginica    50 Sepal.Length, Sepal.Width, Petal.Length, Petal.Width 857.0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="co">#.SDcolで指定した列だけを取り出し</span></span>
+<span id="cb140-2"><a href="#cb140-2" aria-hidden="true" tabindex="-1"></a>dt[ ,.(<span class="at">nrow =</span> <span class="fu">nrow</span>(.SD),</span>
+<span id="cb140-3"><a href="#cb140-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">colnames =</span> <span class="fu">paste</span>(<span class="fu">names</span>(.SD), <span class="at">collapse=</span><span class="st">", "</span>),</span>
+<span id="cb140-4"><a href="#cb140-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">sum =</span> <span class="fu">sum</span>(<span class="fu">sapply</span>(.SD, <span class="cf">function</span>(vec) <span class="cf">if</span>(<span class="fu">is.numeric</span>(vec)){<span class="fu">sum</span>(vec)}<span class="cf">else</span>{<span class="dv">0</span>}))), by <span class="ot">=</span> Species, .SDcol <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Sepal.Length"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Species  nrow     colnames   sum
+       &lt;fctr&gt; &lt;int&gt;       &lt;char&gt; &lt;num&gt;
+1:     setosa    50 Sepal.Length 250.3
+2: versicolor    50 Sepal.Length 296.8
+3:  virginica    50 Sepal.Length 329.4</code></pre>
+</div>
+</div>
+</section>
+<section id="使用例縦長への変形" class="level4">
+<h4 class="anchored" data-anchor-id="使用例縦長への変形">使用例：縦長への変形</h4>
+<p>さて、ここまでに説明した内容を活用して、以下のテーブルを使いやすい形に成形してみましょう。</p>
+<p>このテーブルは特約ごとに列が分かれてしまっており、主契約と特約を合算した数値を集計したりする場合にやや使いづらい構造になってしまっています。</p>
+<p>これを「縦長」に変形することで使いやすくしてみます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a>dt_is</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>   配当方式 商品種類コード  件数 特約1件数 特約2件数 主契約保険金額
+     &lt;char&gt;          &lt;int&gt; &lt;num&gt;     &lt;num&gt;     &lt;num&gt;          &lt;num&gt;
+1:     有配              1    10        10         0            100
+2:     有配              2    16         0         0             60
+3:   準有配              3    48        24         0            240
+4:     無配              4   176       110         0             69
+5:     無配              5   190        30        14           1931
+6:     無配              6    15        12         0            300
+   特約1保険金額 特約2保険金額
+           &lt;num&gt;         &lt;num&gt;
+1:           100             0
+2:             0             0
+3:            24             0
+4:            59             0
+5:          3140           156
+6:           240             0</code></pre>
+</div>
+</div>
+<p>「縦長」に変形するには、例えば件数、特約1件数、特約2件数を「縦」に並べる必要があります。</p>
+<p>すなわち以下のような操作をすることになります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb144"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(dt_is<span class="sc">$</span>件数, dt_is<span class="sc">$</span>特約1件数, dt_is<span class="sc">$</span>特約2件数)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code> [1]  10  16  48 176 190  15  10   0  24 110  30  12   0   0   0   0  14   0</code></pre>
+</div>
+</div>
+<p>このベクトルを「件数」という列に格納して返却する式はこのようになります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a>dt_is[, .(件数 <span class="ot">=</span> <span class="fu">c</span>(件数, 特約1件数, 特約2件数))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     件数
+    &lt;num&gt;
+ 1:    10
+ 2:    16
+ 3:    48
+ 4:   176
+ 5:   190
+ 6:    15
+ 7:    10
+ 8:     0
+ 9:    24
+10:   110
+11:    30
+12:    12
+13:     0
+14:     0
+15:     0
+16:     0
+17:    14
+18:     0</code></pre>
+</div>
+</div>
+<p>主契約や特約を区別できるように、新たに特約種類なる列を追加します。</p>
+<p>もとのレコードの数と同じ長さのベクトルを3本用意する必要がありますが、ここで特殊記号<code>.N</code>が活躍します。</p>
+<p>ついでに保険金額の列も追加しておきます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb148"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a>dt_is[, .(特約種類 <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">0</span>, .N), <span class="fu">rep</span>(<span class="dv">1</span>, .N), <span class="fu">rep</span>(<span class="dv">2</span>, .N)), </span>
+<span id="cb148-2"><a href="#cb148-2" aria-hidden="true" tabindex="-1"></a>          件数 <span class="ot">=</span> <span class="fu">c</span>(件数, 特約1件数, 特約2件数),</span>
+<span id="cb148-3"><a href="#cb148-3" aria-hidden="true" tabindex="-1"></a>          保険金額 <span class="ot">=</span> <span class="fu">c</span>(主契約保険金額, 特約1保険金額, 特約2保険金額))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>    特約種類  件数 保険金額
+       &lt;num&gt; &lt;num&gt;    &lt;num&gt;
+ 1:        0    10      100
+ 2:        0    16       60
+ 3:        0    48      240
+ 4:        0   176       69
+ 5:        0   190     1931
+ 6:        0    15      300
+ 7:        1    10      100
+ 8:        1     0        0
+ 9:        1    24       24
+10:        1   110       59
+11:        1    30     3140
+12:        1    12      240
+13:        2     0        0
+14:        2     0        0
+15:        2     0        0
+16:        2     0        0
+17:        2    14      156
+18:        2     0        0</code></pre>
+</div>
+</div>
+<p>グループ化の単位となる引数<code>by</code>にキー列を指定することで、これらを自然に補完することができます。</p>
+<p>これで欲しい形式にテーブルを変換することができました。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb150"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a>dt_is[, .(特約種類 <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">0</span>, .N), <span class="fu">rep</span>(<span class="dv">1</span>, .N), <span class="fu">rep</span>(<span class="dv">2</span>, .N)), </span>
+<span id="cb150-2"><a href="#cb150-2" aria-hidden="true" tabindex="-1"></a>          件数 <span class="ot">=</span> <span class="fu">c</span>(件数, 特約1件数, 特約2件数),</span>
+<span id="cb150-3"><a href="#cb150-3" aria-hidden="true" tabindex="-1"></a>          保険金額 <span class="ot">=</span> <span class="fu">c</span>(主契約保険金額, 特約1保険金額, 特約2保険金額)),</span>
+<span id="cb150-4"><a href="#cb150-4" aria-hidden="true" tabindex="-1"></a>      by <span class="ot">=</span> .(配当方式, 商品種類コード)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>    配当方式 商品種類コード 特約種類  件数 保険金額
+      &lt;char&gt;          &lt;int&gt;    &lt;num&gt; &lt;num&gt;    &lt;num&gt;
+ 1:     有配              1        0    10      100
+ 2:     有配              1        1    10      100
+ 3:     有配              1        2     0        0
+ 4:     有配              2        0    16       60
+ 5:     有配              2        1     0        0
+ 6:     有配              2        2     0        0
+ 7:   準有配              3        0    48      240
+ 8:   準有配              3        1    24       24
+ 9:   準有配              3        2     0        0
+10:     無配              4        0   176       69
+11:     無配              4        1   110       59
+12:     無配              4        2     0        0
+13:     無配              5        0   190     1931
+14:     無配              5        1    30     3140
+15:     無配              5        2    14      156
+16:     無配              6        0    15      300
+17:     無配              6        1    12      240
+18:     無配              6        2     0        0</code></pre>
+</div>
+</div>
+<p>ちなみに、<code>[,]</code>は複数回つなげて記述することができます。 例えば主契約・特約を合算しつつ配当方式別に集計したテーブルはこのように作れます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb152"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a>dt_is[, .(特約種類 <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">0</span>, .N), <span class="fu">rep</span>(<span class="dv">1</span>, .N), <span class="fu">rep</span>(<span class="dv">2</span>, .N)), </span>
+<span id="cb152-2"><a href="#cb152-2" aria-hidden="true" tabindex="-1"></a>          件数 <span class="ot">=</span> <span class="fu">c</span>(件数, 特約1件数, 特約2件数),</span>
+<span id="cb152-3"><a href="#cb152-3" aria-hidden="true" tabindex="-1"></a>          保険金額 <span class="ot">=</span> <span class="fu">c</span>(主契約保険金額, 特約1保険金額, 特約2保険金額)),</span>
+<span id="cb152-4"><a href="#cb152-4" aria-hidden="true" tabindex="-1"></a>      by <span class="ot">=</span> .(配当方式, 商品種類コード)][</span>
+<span id="cb152-5"><a href="#cb152-5" aria-hidden="true" tabindex="-1"></a>        ,.(件数合計 <span class="ot">=</span> <span class="fu">sum</span>(件数), 保険金額合計 <span class="ot">=</span> <span class="fu">sum</span>(保険金額)), by <span class="ot">=</span> .(配当方式)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="output-jp"><code>   配当方式 件数合計 保険金額合計
+     &lt;char&gt;    &lt;num&gt;        &lt;num&gt;
+1:     有配       36          260
+2:   準有配       72          264
+3:     無配      547         5895</code></pre>
+</div>
+</div>
+<p>なお、<code>変数[行, 列]</code> 記法はSQL文との関連で次のように対応付けられることがあります。</p>
+<pre><code>SELECT aaa
+FROM bbb
+WHERE ccc
+GROUP BY ddd
+ORDER BY eee
+↓
+bbb[ccc/eee, aaa, by = ddd]
+※uPDATE文の場合は .(xxx := aaa) の形</code></pre>
+<p>今回の例からも、<code>変数[行, 列]</code> 記法は単なる添え字にとどまらず、SQLクエリと同等あるいはそれ以上の自在性を持つことがわかります。</p>
+<p>このような<code>data.table</code>独特の哲学については以下のvignettesにも解説があります。</p>
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html">Introduction to data.table</a></li>
+<li><a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-faq.html">Frequently Asked Questions about data.table</a></li>
+</ul>
+</section>
+</section>
+<section id="nseの問題" class="level3">
+<h3 class="anchored" data-anchor-id="nseの問題">NSEの問題</h3>
+<section id="について" class="level4">
+<h4 class="anchored" data-anchor-id="について"><code>..</code>について</h4>
+<p>前述のとおり<code>変数[行, 列]</code>記法は自在性が高い一方、その自在性を実現するために添え字の処理が通常とは異なっており、 例えば以下のように列名を変数に格納して列を抽出するようなコードがエラーとなってしまいます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb155"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb155-1"><a href="#cb155-1" aria-hidden="true" tabindex="-1"></a>colname <span class="ot">&lt;-</span> <span class="st">"Sepal.Length"</span></span>
+<span id="cb155-2"><a href="#cb155-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df[, colname]) <span class="co">#OK</span></span>
+<span id="cb155-3"><a href="#cb155-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[, colname]) <span class="co">#ERROR</span></span>
+<span id="cb155-4"><a href="#cb155-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Error in `[.data.table`(dt, , colname) :</span></span>
+<span id="cb155-5"><a href="#cb155-5" aria-hidden="true" tabindex="-1"></a><span class="co">#j (the 2nd argument inside [...]) is a single symbol but column name 'colname' is not found. Perhaps you intended DT[, #..colname]. This difference to data.frame is deliberate and explained in FAQ 1.1.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>これは「列」部分のシンボルが1つであると処理が特殊なためで、エラー文のとおり<code>..colname</code>とすれば解決できます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>colname <span class="ot">&lt;-</span> <span class="st">"Sepal.Length"</span></span>
+<span id="cb156-2"><a href="#cb156-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[, ..colname])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Sepal.Length
+          &lt;num&gt;
+1:          5.1
+2:          4.9
+3:          4.7
+4:          4.6
+5:          5.0
+6:          5.4</code></pre>
+</div>
+</div>
+<p>シンボルが2個以上であればいいのでは？とばかりに<code>colname</code>の後ろに空文字列を連結するという意味のない処理を加えると…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb158"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt[, <span class="fu">paste0</span>(colname, <span class="st">""</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Sepal.Length"</code></pre>
+</div>
+</div>
+<p>SQLでいえば<code>SELECT 'Sepal.Length'</code>を実行したかのような結果になってしまいます。</p>
+<p><code>dt[, "Sepal.Length"]</code>では期待通り<code>Sepal.Length</code>の列を抽出できていたわけですが、 これは文字列だけが「列」の箇所に記述されたときの特殊仕様。 前述の添え字の動作原理を把握しているならば、むしろ上記の実行結果のほうが整合的です。</p>
+<p>ともかく、添え字の自在性と引き換えに、 列名などを文字列で与えて処理を行うには工夫が必要になってしまっているということです。</p>
+</section>
+<section id="の利用" class="level4">
+<h4 class="anchored" data-anchor-id="の利用"><code>[[ ]]</code>の利用</h4>
+<p>より複雑な例として、以下のように既存の特徴量を2乗した特徴量を追加する操作について、 これを他の特徴量でも簡単に使いまわせるように関数化することを考えます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb160"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a>dt_tmp <span class="ot">&lt;-</span> <span class="fu">copy</span>(dt)</span>
+<span id="cb160-2"><a href="#cb160-2" aria-hidden="true" tabindex="-1"></a>dt_tmp[,Sepal.Length_Squared <span class="sc">:</span><span class="er">=</span> Sepal.Length <span class="sc">^</span> <span class="dv">2</span>][,Sepal.Width_Squared <span class="sc">:</span><span class="er">=</span> Sepal.Width <span class="sc">^</span> <span class="dv">2</span>]</span>
+<span id="cb160-3"><a href="#cb160-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dt_tmp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+          &lt;num&gt;       &lt;num&gt;        &lt;num&gt;       &lt;num&gt;  &lt;fctr&gt;
+1:          5.1         3.5          1.4         0.2  setosa
+2:          4.9         3.0          1.4         0.2  setosa
+3:          4.7         3.2          1.3         0.2  setosa
+4:          4.6         3.1          1.5         0.2  setosa
+5:          5.0         3.6          1.4         0.2  setosa
+6:          5.4         3.9          1.7         0.4  setosa
+   Sepal.Length_Squared Sepal.Width_Squared
+                  &lt;num&gt;               &lt;num&gt;
+1:                26.01               12.25
+2:                24.01                9.00
+3:                22.09               10.24
+4:                21.16                9.61
+5:                25.00               12.96
+6:                29.16               15.21</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb162"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb162-1"><a href="#cb162-1" aria-hidden="true" tabindex="-1"></a>dt_tmp[, .(<span class="fu">sum</span>(Sepal.Length_Squared), <span class="fu">sum</span>(Sepal.Width_Squared)), by <span class="ot">=</span> Species] <span class="co">#後で実行結果を検証するためのもの</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Species      V1     V2
+       &lt;fctr&gt;   &lt;num&gt;  &lt;num&gt;
+1:     setosa 1259.09 594.60
+2: versicolor 1774.86 388.47
+3:  virginica 2189.90 447.33</code></pre>
+</div>
+</div>
+<p>この操作を、例えば <code>add_square(dt_tmp, c("Sepal.Length","Sepal.Width"))</code> のように呼び出せるようにしたいとしましょう。</p>
+<p>これをシンプルに変数に置き換えた以下の形では残念ながらエラーとなってしまいます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb164"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb164-1"><a href="#cb164-1" aria-hidden="true" tabindex="-1"></a>add_square <span class="ot">&lt;-</span> <span class="cf">function</span>(dt_tmp, cols){</span>
+<span id="cb164-2"><a href="#cb164-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(col <span class="cf">in</span> cols)</span>
+<span id="cb164-3"><a href="#cb164-3" aria-hidden="true" tabindex="-1"></a>    dt_tmp[,<span class="fu">paste0</span>(col, <span class="st">"_Squared"</span>) <span class="sc">:</span><span class="er">=</span> col <span class="sc">^</span> <span class="dv">2</span>]</span>
+<span id="cb164-4"><a href="#cb164-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb164-5"><a href="#cb164-5" aria-hidden="true" tabindex="-1"></a>dt_tmp <span class="ot">&lt;-</span> <span class="fu">copy</span>(dt)</span>
+<span id="cb164-6"><a href="#cb164-6" aria-hidden="true" tabindex="-1"></a><span class="fu">add_square</span>(dt_tmp, <span class="fu">c</span>(<span class="st">"Sepal.Length"</span>,<span class="st">"Sepal.Width"</span>))<span class="co">#ERROR</span></span>
+<span id="cb164-7"><a href="#cb164-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Error in col^2 : non-numeric argument to binary operator</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>一番シンプルな解決策は<code>[[ ]]</code>を用いることです。<code>:=</code>を使用することにこだわらないのであれば<code>&lt;-</code>による代入でもよいでしょう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb165"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb165-1"><a href="#cb165-1" aria-hidden="true" tabindex="-1"></a>add_square <span class="ot">&lt;-</span> <span class="cf">function</span>(dt_tmp, cols){</span>
+<span id="cb165-2"><a href="#cb165-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(col <span class="cf">in</span> cols)</span>
+<span id="cb165-3"><a href="#cb165-3" aria-hidden="true" tabindex="-1"></a>    dt_tmp[, <span class="fu">paste0</span>(col, <span class="st">"_Squared"</span>) <span class="sc">:</span><span class="er">=</span> dt_tmp[[col]]<span class="sc">^</span><span class="dv">2</span> ] <span class="co"># := の左辺は文字列でもOK</span></span>
+<span id="cb165-4"><a href="#cb165-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb165-5"><a href="#cb165-5" aria-hidden="true" tabindex="-1"></a>dt_tmp <span class="ot">&lt;-</span> <span class="fu">copy</span>(dt)</span>
+<span id="cb165-6"><a href="#cb165-6" aria-hidden="true" tabindex="-1"></a><span class="fu">add_square</span>(dt_tmp, <span class="fu">c</span>(<span class="st">"Sepal.Length"</span>,<span class="st">"Sepal.Width"</span>))</span>
+<span id="cb165-7"><a href="#cb165-7" aria-hidden="true" tabindex="-1"></a>dt_tmp[, .(<span class="fu">sum</span>(Sepal.Length_Squared), <span class="fu">sum</span>(Sepal.Width_Squared)), by <span class="ot">=</span> Species]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Species      V1     V2
+       &lt;fctr&gt;   &lt;num&gt;  &lt;num&gt;
+1:     setosa 1259.09 594.60
+2: versicolor 1774.86 388.47
+3:  virginica 2189.90 447.33</code></pre>
+</div>
+</div>
+</section>
+<section id="sdの利用" class="level4">
+<h4 class="anchored" data-anchor-id="sdの利用"><code>.SD</code>の利用</h4>
+<p><code>data.table</code>特有の記法を用いた解決策もあります。 <code>.SD</code>は引数<code>.SDcol</code>で取り出す列を指定することができることを利用します。 簡潔な記述で複数列一度に処理できるためおすすめです。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb167"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb167-1"><a href="#cb167-1" aria-hidden="true" tabindex="-1"></a>add_square <span class="ot">&lt;-</span> <span class="cf">function</span>(dt_tmp, cols){</span>
+<span id="cb167-2"><a href="#cb167-2" aria-hidden="true" tabindex="-1"></a>  dt_tmp[, <span class="fu">paste0</span>(cols, <span class="st">"_Squared"</span>) <span class="sc">:</span><span class="er">=</span> (.SD <span class="sc">^</span> <span class="dv">2</span>), .SDcol <span class="ot">=</span> cols]</span>
+<span id="cb167-3"><a href="#cb167-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb167-4"><a href="#cb167-4" aria-hidden="true" tabindex="-1"></a>dt_tmp <span class="ot">&lt;-</span> <span class="fu">copy</span>(dt)</span>
+<span id="cb167-5"><a href="#cb167-5" aria-hidden="true" tabindex="-1"></a><span class="fu">add_square</span>(dt_tmp, <span class="fu">c</span>(<span class="st">"Sepal.Length"</span>,<span class="st">"Sepal.Width"</span>))</span>
+<span id="cb167-6"><a href="#cb167-6" aria-hidden="true" tabindex="-1"></a>dt_tmp[, .(<span class="fu">sum</span>(Sepal.Length_Squared), <span class="fu">sum</span>(Sepal.Width_Squared)), by <span class="ot">=</span> Species]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Species      V1     V2
+       &lt;fctr&gt;   &lt;num&gt;  &lt;num&gt;
+1:     setosa 1259.09 594.60
+2: versicolor 1774.86 388.47
+3:  virginica 2189.90 447.33</code></pre>
+</div>
+</div>
+<p>このような例については以下のvignetteにも解説があります。</p>
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-programming.html">Programming on data.table</a></li>
+</ul>
+</section>
+<section id="substituteの利用" class="level4">
+<h4 class="anchored" data-anchor-id="substituteの利用"><code>substitute</code>の利用</h4>
+<p>この<code>変数[行,列]</code>記法のように、通常の評価とは異なる評価が行われることをNSE(Non Standard Evaluation)といい、R言語でしばしば現れる概念です。</p>
+<p>R言語には遅延評価(lazy evaluation)という概念があり、 スクリプトに書かれた式はその値が必要になるタイミングまで評価(≒計算)されません。</p>
+<p>たとえば関数の引数に式が書かれた場合、関数の処理に入る前に評価するのではなく、 関数の処理の中で必要となったタイミングで評価を行いますが、 NSEとはこの評価方法が特殊なもののことをいいます。 身近な例では<code>lm</code>などの引数に現れる<code>y ~ .</code>の形の式や、<code>dplyr</code>の記法などがあります。</p>
+<p><code>data.table</code>以外にもNSEが行われる場合はしばしば上記のような問題を抱えるため、 他のケースでも用いられる解決策も参考までに提示します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb169"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb169-1"><a href="#cb169-1" aria-hidden="true" tabindex="-1"></a>add_square <span class="ot">&lt;-</span> <span class="cf">function</span>(dt_tmp, cols){</span>
+<span id="cb169-2"><a href="#cb169-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(col <span class="cf">in</span> cols){</span>
+<span id="cb169-3"><a href="#cb169-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">eval</span>(<span class="fu">substitute</span>(</span>
+<span id="cb169-4"><a href="#cb169-4" aria-hidden="true" tabindex="-1"></a>      dt_tmp[, <span class="at">var_col_Squared :=</span> var_col <span class="sc">^</span> <span class="dv">2</span>],</span>
+<span id="cb169-5"><a href="#cb169-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">env =</span> <span class="fu">list</span>(<span class="at">var_col =</span> <span class="fu">as.name</span>(col), <span class="at">var_col_Squared =</span> <span class="fu">paste0</span>(col, <span class="st">"_Squared"</span>))</span>
+<span id="cb169-6"><a href="#cb169-6" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb169-7"><a href="#cb169-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">#バージョン1.15以降では上記機能が[.data.tableの引数`env`に組み込まれました。</span></span>
+<span id="cb169-8"><a href="#cb169-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">#https://rdatatable.gitlab.io/data.table/news/index.html#datatable-v1150-30-jan-2024</span></span>
+<span id="cb169-9"><a href="#cb169-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb169-10"><a href="#cb169-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb169-11"><a href="#cb169-11" aria-hidden="true" tabindex="-1"></a>dt_tmp <span class="ot">&lt;-</span> <span class="fu">copy</span>(dt)</span>
+<span id="cb169-12"><a href="#cb169-12" aria-hidden="true" tabindex="-1"></a><span class="fu">add_square</span>(dt_tmp, <span class="fu">c</span>(<span class="st">"Sepal.Length"</span>,<span class="st">"Sepal.Width"</span>))</span>
+<span id="cb169-13"><a href="#cb169-13" aria-hidden="true" tabindex="-1"></a>dt_tmp[, .(<span class="fu">sum</span>(Sepal.Length_Squared), <span class="fu">sum</span>(Sepal.Width_Squared)), by <span class="ot">=</span> Species]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Species      V1     V2
+       &lt;fctr&gt;   &lt;num&gt;  &lt;num&gt;
+1:     setosa 1259.09 594.60
+2: versicolor 1774.86 388.47
+3:  virginica 2189.90 447.33</code></pre>
+</div>
+</div>
+</section>
+<section id="rlangパッケージの利用" class="level4">
+<h4 class="anchored" data-anchor-id="rlangパッケージの利用"><code>rlang</code>パッケージの利用</h4>
+<p>このような状況では<code>rlang</code>パッケージが使用されることも多いため、一例を示します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb171"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb171-1"><a href="#cb171-1" aria-hidden="true" tabindex="-1"></a>add_square <span class="ot">&lt;-</span> <span class="cf">function</span>(dt_tmp, cols){</span>
+<span id="cb171-2"><a href="#cb171-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(col <span class="cf">in</span> cols){</span>
+<span id="cb171-3"><a href="#cb171-3" aria-hidden="true" tabindex="-1"></a>    col_sym <span class="ot">&lt;-</span> rlang<span class="sc">::</span><span class="fu">sym</span>(col) <span class="co">#文字列をシンボルに変換</span></span>
+<span id="cb171-4"><a href="#cb171-4" aria-hidden="true" tabindex="-1"></a>    rlang<span class="sc">::</span><span class="fu">inject</span>(dt_tmp[, <span class="fu">paste0</span>(col, <span class="st">"_Squared"</span>) <span class="sc">:</span><span class="er">=</span> (<span class="sc">!!</span>col_sym) <span class="sc">^</span> <span class="dv">2</span>])</span>
+<span id="cb171-5"><a href="#cb171-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">#rlang::injectで囲むと、!!col_symの部分がSepal.Lengthなどのシンボルに置換される</span></span>
+<span id="cb171-6"><a href="#cb171-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb171-7"><a href="#cb171-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb171-8"><a href="#cb171-8" aria-hidden="true" tabindex="-1"></a>dt_tmp <span class="ot">&lt;-</span> <span class="fu">copy</span>(dt)</span>
+<span id="cb171-9"><a href="#cb171-9" aria-hidden="true" tabindex="-1"></a><span class="fu">add_square</span>(dt_tmp, <span class="fu">c</span>(<span class="st">"Sepal.Length"</span>,<span class="st">"Sepal.Width"</span>))</span>
+<span id="cb171-10"><a href="#cb171-10" aria-hidden="true" tabindex="-1"></a>dt_tmp[, .(<span class="fu">sum</span>(Sepal.Length_Squared), <span class="fu">sum</span>(Sepal.Width_Squared)), by <span class="ot">=</span> Species]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Species      V1     V2
+       &lt;fctr&gt;   &lt;num&gt;  &lt;num&gt;
+1:     setosa 1259.09 594.60
+2: versicolor 1774.86 388.47
+3:  virginica 2189.90 447.33</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../articles/DALEX.html" class="pagination-link" aria-label="DALEX">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">DALEX</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../articles/distr.html" class="pagination-link" aria-label="distr">
+        <span class="nav-page-text"><span class="chapter-title">distr</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
