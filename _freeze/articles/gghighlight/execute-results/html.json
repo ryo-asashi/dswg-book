@@ -1,0 +1,17 @@
+{
+  "hash": "5404d98f275859f5818ca7ec30b70b34",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"gghighlight\"\nauthor: \"データサイエンス関連基礎調査WG\"\ndate: \"2025-08-01\"\nformat:\n  html:\n    fig-width: 6\n    fig-height: 3\n---\n\n\n\n\n\n\n## パッケージの概要\n\n[**gghighlight**](https://CRAN.R-project.org/package=gghighlight) パッケージは、**ggplot2** で作成したプロットの中から、特定の部分だけを強調表示するための機能に特化したツールです。使い方は非常にシンプルで、\"ggplot\" オブジェクトの最後のレイヤーとして `gghighlight()` 関数を追加し、強調したいデータの条件を指定するだけ利用できます。\n\n## プロットの一部を強調する\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(gghighlight)\n```\n\n::: {.cell-output .cell-output-stderr}\n\n```\nWarning: package 'gghighlight' was built under R version 4.5.1\n```\n\n\n:::\n:::\n\n\n\n\n### 折れ線グラフの一部を強調する\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nggplot(ChickWeight, aes(x = Time, y = weight, group = Chick)) +\n  geom_line(color='gray20') +\n  gghighlight(max(weight) > 330)\n```\n\n::: {.cell-output-display}\n![](gghighlight_files/figure-html/gghighlight--gghighlight, geom_line-1.png){width=576}\n:::\n:::\n\n\n\n\n### 散布図の一部を強調する\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(tibble) # rownames_to_column() 関数を利用\nggplot(rownames_to_column(USArrests, 'State'), # 行の名前を列に変換\n       aes(x = Murder, y = Assault)) +\n  geom_point(col='darkcyan') + \n  gghighlight(grepl('New', State), label_key = State)\n```\n\n::: {.cell-output-display}\n![](gghighlight_files/figure-html/gghitglight--gghighlight, geom_point-1.png){width=576}\n:::\n:::\n\n\n\n\n### 棒グラフ、ヒストグラムの一部を強調する\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nggplot(iris, aes(x = Sepal.Width, fill = Species)) +\n  geom_histogram(bins = 10) +\n  gghighlight() +\n  facet_wrap(~Species)\n```\n\n::: {.cell-output-display}\n![](gghighlight_files/figure-html/gghitglight--gghighlight, geom_bar-1.png){width=576}\n:::\n:::\n\n\n\n\n## 参考資料\n\n\\[1\\] 湯谷啓明. \"gghighlight の作者です。すべてをお話しします。\". パッケージの作者による解説スライド. https://yutani.quarto.pub/tokyor-109-gghighlight/\n",
+    "supporting": [
+      "gghighlight_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

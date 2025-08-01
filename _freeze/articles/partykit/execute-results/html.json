@@ -1,0 +1,17 @@
+{
+  "hash": "e6c85e098a6c60978afb73f82d9e0cb5",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"partykit\"\nauthor: \"データサイエンス関連基礎調査WG\"\ndate: \"2025-08-01\"\nformat:\n  html:\n    toc: true\n    toc-depth: 3\n    fig-width: 6\n    fig-height: 3\n---\n\n\n\n\n\n\n## パッケージの概要\n\n木構造の回帰・分類モデルを表現・要約し可視化するためのパッケージです。\n\n## 使用例\n\nrpartパッケージにて決定木モデルを構築し、その可視化を行います。データはKyphosisデータ（脊椎矯正手術を受けた子供のデータ）を使用します。\n\nまずはKyphosisデータの各種構造を確認します。\n\n-   Kyphosis：absent(1)...手術後症状が消えた、present(2)...手術後症状が残った\n-   Age：手術をした子供の月齢\n-   Number:手術に関与する脊椎の数\n-   Start：手術を受けた最上部の頸椎の番号\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nstr(kyphosis)\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n'data.frame':\t81 obs. of  4 variables:\n $ Kyphosis: Factor w/ 2 levels \"absent\",\"present\": 1 1 2 1 1 1 1 1 1 2 ...\n $ Age     : int  71 158 128 2 1 1 61 37 113 59 ...\n $ Number  : int  3 3 4 5 4 2 2 3 2 6 ...\n $ Start   : int  5 14 5 1 15 16 17 16 16 12 ...\n```\n\n\n:::\n:::\n\n\n\n\nrpartで決定木のモデルを生成します。\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n(rp <- rpart(Kyphosis ~ Age + Number + Start, data = kyphosis))\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\nn= 81 \n\nnode), split, n, loss, yval, (yprob)\n      * denotes terminal node\n\n 1) root 81 17 absent (0.79012346 0.20987654)  \n   2) Start>=8.5 62  6 absent (0.90322581 0.09677419)  \n     4) Start>=14.5 29  0 absent (1.00000000 0.00000000) *\n     5) Start< 14.5 33  6 absent (0.81818182 0.18181818)  \n      10) Age< 55 12  0 absent (1.00000000 0.00000000) *\n      11) Age>=55 21  6 absent (0.71428571 0.28571429)  \n        22) Age>=111 14  2 absent (0.85714286 0.14285714) *\n        23) Age< 111 7  3 present (0.42857143 0.57142857) *\n   3) Start< 8.5 19  8 present (0.42105263 0.57894737) *\n```\n\n\n:::\n:::\n\n\n\n\npartykitを使用して、rpartの決定木のモデルをより見やすくすることが出来ます。\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nplot(as.party(rp))\n```\n\n::: {.cell-output-display}\n![](partykit_files/figure-html/unnamed-chunk-3-1.png){width=576}\n:::\n:::\n\n\n\n\n引数にてtype='simple'と入力すると、より簡便的なモデル表示となります。\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nplot(as.party(rp), type = 'simple')\n```\n\n::: {.cell-output-display}\n![](partykit_files/figure-html/unnamed-chunk-4-1.png){width=576}\n:::\n:::\n",
+    "supporting": [
+      "partykit_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

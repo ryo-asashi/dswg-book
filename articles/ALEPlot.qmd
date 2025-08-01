@@ -1,6 +1,5 @@
 ---
 title: "ALEPlot"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
 format:
   html:
@@ -9,28 +8,10 @@ format:
 ---
 
 ```{r, include=FALSE}
-
 # install packages
 pkgs <- c("ALEPlot", "parsnip", "xgboost",
           "dplyr", "MASS", "ggplot2", "DALEX")
-for (pkg in pkgs) {
-  if (!(pkg %in% installed.packages())) {
-    install.packages(pkg)
-  }
-}
-
-# detach packages
-default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
-             "package:stats", "package:graphics",
-             "package:grDevices", "package:utils",
-             "package:datasets", "package:methods",
-             "Autoloads", "package:base")
-for (pkg in setdiff(search(), default)) {
-  detach(pkg, character.only = TRUE)
-  }
-
-# clear objects
-remove(list=objects())
+install.packages(pkgs[!pkgs %in% list.files(.libPaths())])
 ```
 
 ## パッケージの概要

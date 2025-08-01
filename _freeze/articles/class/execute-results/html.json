@@ -1,0 +1,17 @@
+{
+  "hash": "2c325b3e95eccd226f219aa7e804b49b",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"class\"\nauthor: \"データサイエンス関連基礎調査WG\"\ndate: \"2025-08-01\"\nformat:\n  html:\n    toc: true\n    toc-depth: 3\n    fig-width: 6\n    fig-height: 3\n---\n\n\n\n\n\n\n## パッケージの概要\nclassパッケージは分類に関する様々な関数を提供します。本ドキュメントではknn関数を用いたk最近傍法の使用方法を確認します。\n\n## 使用例：irisデータの分類\n\nirisデータを用いて、がく弁・花弁の長さ・幅の情報からアヤメを分類するモデルをclassパッケージを用いて構築します。\n\n\n### irisデータセットを読み込む\n\nirisデータを読み込み、データの先頭を表示します。\n\n-   Sepal.Length：がく弁の長さ\n-   Sepal.Width：がく弁の幅\n-   Petal.Length：花弁の長さ\n-   Petal.Width：花弁の幅\n\nアヤメの種類はsetosa(1)、versicolor(2)、virginica(3)の3種類です。\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\ndata(iris)\nhead(iris)\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n  Sepal.Length Sepal.Width Petal.Length Petal.Width Species\n1          5.1         3.5          1.4         0.2  setosa\n2          4.9         3.0          1.4         0.2  setosa\n3          4.7         3.2          1.3         0.2  setosa\n4          4.6         3.1          1.5         0.2  setosa\n5          5.0         3.6          1.4         0.2  setosa\n6          5.4         3.9          1.7         0.4  setosa\n```\n\n\n:::\n:::\n\n\n\n### irisデータの構造\n\nirisデータの各種構造を確認します。\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nstr(iris)\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n'data.frame':\t150 obs. of  5 variables:\n $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...\n $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...\n $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...\n $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...\n $ Species     : Factor w/ 3 levels \"setosa\",\"versicolor\",..: 1 1 1 1 1 1 1 1 1 1 ...\n```\n\n\n:::\n:::\n\n\n\n\nまた、データを散布図にプロットして確認します。\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nplot(iris, col=c(2, 3, 4)[iris$Species])\n```\n\n::: {.cell-output-display}\n![](class_files/figure-html/unnamed-chunk-3-1.png){width=576}\n:::\n:::\n\n\n\n\n### モデル構築\n\nirisデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします。確認のため、データサイズを出力します。\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# 再現性のためにシードを設定\nset.seed(123)\n\n# データの分割\nsample_indices <- sample(1:nrow(iris), 0.7 * nrow(iris))  \ntrain_data <- iris[sample_indices, ]\ntest_data <- iris[-sample_indices, ]\n\n# データサイズの確認\nc(nrow(iris), nrow(train_data), nrow(test_data))\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 150 105  45\n```\n\n\n:::\n:::\n\n\n\nknn関数を使用し、k最近傍法を実行します。\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nres <- knn(train_data[-5], test_data[-5], train_data$Species, k = 3)\n```\n:::\n\n\n\n\n分類結果とテストデータを比べてみます。概ね合っていることが分かります。\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n(table(res, test_data$Species))\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n            \nres          setosa versicolor virginica\n  setosa         14          0         0\n  versicolor      0         17         0\n  virginica       0          1        13\n```\n\n\n:::\n:::\n",
+    "supporting": [
+      "class_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

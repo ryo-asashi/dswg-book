@@ -1,6 +1,5 @@
 ---
 title: "readxl"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
 format:
   html:
@@ -77,22 +76,14 @@ if (!require(reshape2)) install.packages('reshape2')
 
 ## パッケージの概要
 
-`readxl`はExcelブックをRで読み込むためのパッケージです。
-列名やデータ型をある程度自動で判定し、テーブルの形で(`data.frame`型として)データを読み込むことが出来ます。
-読み取りたい領域をセル番地等で指定することも可能です。
+`readxl`はExcelブックをRで読み込むためのパッケージです。 列名やデータ型をある程度自動で判定し、テーブルの形で(`data.frame`型として)データを読み込むことが出来ます。 読み取りたい領域をセル番地等で指定することも可能です。
 
 ※Excelブックの編集・書き込みは本パッケージではできないため、`openxlsx`パッケージなどの他のパッケージを使用してください。
 
 ## 実行前の準備
 
 ```{r setup_package, output=FALSE}
-library(readxl) 
-```
-
-```{r setup_path}
-#ファイルパスの設定
-CONFIG_SEIMEIHYO_URL <- "https://www.actuaries.jp/lib/standard-life-table/xlsx/seimeihyo960718.xlsx"
-CONFIG_SEIMEIHYO_FNAME_DEST <- "__tmp.xlsx"
+library(readxl)
 ```
 
 ## データの準備
@@ -105,23 +96,18 @@ CONFIG_SEIMEIHYO_FNAME_DEST <- "__tmp.xlsx"
 readxl_example()
 ```
 
-引数にブック名を指定することでフルパスが得られます。
-ここではirisデータセットなどが含まれる`datasets.xlsx`を使用することにします。
+引数にブック名を指定することでフルパスが得られます。 ここではirisデータセットなどが含まれる`datasets.xlsx`を使用することにします。
 
 ```{r readdata_example2}
 path_datasets <- readxl_example("datasets.xlsx")
 ```
 
-
 また、日本アクチュアリー会のホームページで公開されている標準生命表のExcelファイルも例として使用します。
 
-`readxl`パッケージの関数ではインターネット上のファイルを直接読み込むことはできないので、
-`download.file`関数でローカルにあらかじめダウンロードしておきます。
-
 ```{r readdata_example3}
-path_seimeihyo <- CONFIG_SEIMEIHYO_FNAME_DEST
-download.file(CONFIG_SEIMEIHYO_URL, path_seimeihyo, method = "auto", mode = "wb")
+path_seimeihyo <- "../data/seimeihyo960718.xlsx"
 ```
+
 ## 基本的な使い方
 
 ### シート名の取得
@@ -132,7 +118,6 @@ download.file(CONFIG_SEIMEIHYO_URL, path_seimeihyo, method = "auto", mode = "wb"
 excel_sheets(path_datasets)
 excel_sheets(path_seimeihyo)
 ```
-
 
 ### シートの読み取り
 
@@ -146,9 +131,7 @@ str(df) #テーブルの構造を表示する
 
 デフォルトでは**データがある領域全体を一つのテーブル**とし、さらに**1行目に列名があるものとみなして**読み取られます。
 
-標準生命表のExcelファイルは列名が3行にわたっているため、1, 2行目のレコードにまで列名が入ってしまいました。
-また、副次的にすべての列が文字列型(`chr`)で読み込まれてしまっているため、このままでは数値データとして取り扱うことができません。
-
+標準生命表のExcelファイルは列名が3行にわたっているため、1, 2行目のレコードにまで列名が入ってしまいました。 また、副次的にすべての列が文字列型(`chr`)で読み込まれてしまっているため、このままでは数値データとして取り扱うことができません。
 
 最もシンプルな解決策は読み取り領域を指定することです。
 
@@ -165,7 +148,6 @@ if(tmp[[1,1]] != "生保標準生命表２００７（死亡保険用）"){
   print("注意：G3セルの値が「生保標準生命表２００７（死亡保険用）」ではないため、記事作成時点からレイアウトが変更されている可能性大")
 }
 ```
-
 
 ```{r basic_readdata2}
 df_qx <- read_excel(path_seimeihyo, sheet = "標準生命表", range = "G4:H135") #生保標準2007 死亡保険用
@@ -184,6 +166,7 @@ df_x <- read_excel(path_seimeihyo, sheet = "標準生命表", range = "B5:B135",
 #読み取り範囲をB4からではなくB5(データがある行)からとしていることに注意
 str(df_x)
 ```
+
 `cbind`関数で結合することにより、年齢と死亡率を1つのテーブルに格納することができました。
 
 ```{r basic_cbind}
@@ -223,40 +206,40 @@ ggplot(data = df_melt) + geom_line(mapping = aes(x = 年齢, y = 死亡率, colo
   scale_linetype_manual(values = c("dotted", "dashed"))
 ```
 
-Rによるデータ可視化方法についてはアクチュアリージャーナルにも記載があります。
-詳しくは @BIB_JOURNAL_IAJ を参照してください。
+Rによるデータ可視化方法についてはアクチュアリージャーナルにも記載があります。 詳しくは @BIB_JOURNAL_IAJ を参照してください。
 
 ### 読み取り範囲の指定方法
 
 セル番地での指定が最もわかりやすいですが、他の指定方法もあるため紹介します。
 
-- 引数`sheet`ではシート名だけでなくシート番号で指定することもできます。
-- 引数`range`の指定には、行全体を表す`cell_rows`や列全体を表す`cell_cols`を用いることができます。
+-   引数`sheet`ではシート名だけでなくシート番号で指定することもできます。
+-   引数`range`の指定には、行全体を表す`cell_rows`や列全体を表す`cell_cols`を用いることができます。
 
 ```{r appendix_range, class.output="output-jp", message=FALSE}
 df_ <- read_excel(path_seimeihyo, sheet = 1, range = cell_cols(c(2:4))) #2～4列目全体を取得
 str(df_)
 ```
 
-
 ```{r appendix_range2, message=FALSE}
 df_ <- read_excel(path_seimeihyo, sheet = 1, range = cell_rows(c(4, NA))) #4行目以降を取得
 str(df_)
 ```
 
-- シート名の指定を引数`range`に含めることもできます
+-   シート名の指定を引数`range`に含めることもできます
 
 ```{r appendix_range3, message=FALSE}
 df_ <- read_excel(path_seimeihyo, range = "標準生命表!B4:D135")
 str(df_)
 ```
-- 引数`range`では、`anchored(左上のセル番地, c(行数, 列数))` という指定が可能です
+
+-   引数`range`では、`anchored(左上のセル番地, c(行数, 列数))` という指定が可能です
 
 ```{r appendix_range4, message=FALSE}
 df_ <- read_excel(path_seimeihyo, sheet = "標準生命表", range = anchored("B4", c(121, 3)))
 str(df_)
 ```
-- 引数`range`を指定する代わりに、冒頭の読み飛ばし行数`skip`と読み取る行数`n_max`を指定することもできます。
+
+-   引数`range`を指定する代わりに、冒頭の読み飛ばし行数`skip`と読み取る行数`n_max`を指定することもできます。
 
 ```{r appendix_range5, message=FALSE}
 df_ <- read_excel(path_seimeihyo, sheet = "標準生命表", skip = 3, n_max = 30)
@@ -269,12 +252,9 @@ str(df_)
 
 Excelのデータでは今回の標準生命表のように、列名が複数行にわたって表示されることがよくあります。
 
-事前にExcelのデータを修正しておくことも考えられますが、読み込む側の工夫でもある程度対処は可能なため、
-参考までに一例を記載します。
+事前にExcelのデータを修正しておくことも考えられますが、読み込む側の工夫でもある程度対処は可能なため、 参考までに一例を記載します。
 
-`readxl`パッケージの関数で一発でうまく読み取れるわけではないため、
-まず列名がある箇所をいったんデータとして読み取り、Rで加工のうえ列名をリストに保持し、
-改めてデータのある箇所を読み取るという流れで対処することになります。
+`readxl`パッケージの関数で一発でうまく読み取れるわけではないため、 まず列名がある箇所をいったんデータとして読み取り、Rで加工のうえ列名をリストに保持し、 改めてデータのある箇所を読み取るという流れで対処することになります。
 
 まず、列名がある部分(Excelシート上の3～4行目)をデータとして読み取ります。
 
@@ -283,8 +263,8 @@ Excelのデータでは今回の標準生命表のように、列名が複数行
 df_colnames <- read_excel(path_seimeihyo, sheet = "標準生命表", range = cell_rows(c(3:4)), col_names = FALSE)
 str(df_colnames)
 ```
-今回のデータでは1行目の「生保標準生命表２０１８（死亡保険用）」などがそれぞれ一番左の列（各「男性」の列）にしか入れられていないため、
-残りの列（各「女性」の列）にもこれを補完します。
+
+今回のデータでは1行目の「生保標準生命表２０１８（死亡保険用）」などがそれぞれ一番左の列（各「男性」の列）にしか入れられていないため、 残りの列（各「女性」の列）にもこれを補完します。
 
 ```{r appendix_colname2, class.output="output-jp"}
 for(row in 1:(nrow(df_colnames))){
@@ -324,19 +304,18 @@ str(df_all)
 
 ### 欠損値への対処
 
-`read_excel`関数の引数`na`に文字列を指定することで、その文字列があるセルを欠損値`NA`とみなして読み込むことが出来ます。
-ベクトルを指定することで複数の文字列を指定することもできます。
+`read_excel`関数の引数`na`に文字列を指定することで、その文字列があるセルを欠損値`NA`とみなして読み込むことが出来ます。 ベクトルを指定することで複数の文字列を指定することもできます。
 
-例えばirisデータセットで文字列`"versicolor"`と`"virginica"`を`NA`とみなして読み込んでみましょう。
+例えばchichwtsデータセットで文字列`"horsebean"`と`"soybean"`を`NA`とみなして読み込んでみましょう。
 
 ```{r}
-df_iris <- read_excel(path_datasets, sheet = "iris")
-df_iris$Species
+df_chick <- read_excel(path_datasets, sheet = "chickwts")
+df_chick$feed
 ```
 
 ```{r}
-df_iris_na <- read_excel(path_datasets, sheet = "iris", na = c("versicolor", "virginica"))
-df_iris_na$Species
+df_chick_na <- read_excel(path_datasets, sheet = "chickwts", na = c("horsebean", "soybean"))
+df_chick_na$feed
 ```
 
 このように、一定の文字列を`NA`に変換するだけなら簡単に対処が可能です。

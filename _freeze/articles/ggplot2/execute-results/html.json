@@ -1,0 +1,17 @@
+{
+  "hash": "2262fdf0fd38732a8a1ad03d58a90ce6",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"ggplot2\"\nauthor: \"データサイエンス関連基礎調査WG\"\ndate: \"2025-08-01\"\nformat:\n  html:\n    toc: true\n    toc-depth: 3\n    fig-width: 6\n    fig-height: 3\n---\n\n\n\n\n\n\n### パッケージの概要\n\nggplot2は、一貫性のある文法を用いてグラフを作成することのできるパッケージであり、Rでモダンな分析環境を構築するためのパッケージ群である「tidyberse」に含まれます。 なお、ggplot2については、アクチュアリージャーナル第１１２号内の「Rを用いたデータの可視化技術解説書」の付録２でも紹介されています。\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nsuppressMessages(require(tidyverse))\nrequire(ggplot2)\n```\n:::\n\n\n\n\n### グラフの作成方法\n\nggplot2では、+演算子を利用してggplot関数に様々な関数を接続することでグラフを作成します。 以下では、geom_point関数を用いて、Rのデータセットiris（アヤメの花びらやがく片の長さなどに関するデータセット）を用いた散布図を作成しています。\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# 利用するdataと、グラフに表示する特徴量を指定（あとで指定する場合は省略可能）\n# これだけでは何も表示されない\nP1 <- ggplot(data = iris, mapping = aes(x=Sepal.Length, y=Sepal.Width))\nP1\n```\n\n::: {.cell-output-display}\n![](ggplot2_files/figure-html/ggplot2--ggplot-1.png){width=576}\n:::\n\n```{.r .cell-code}\n# geom_pointで散布図を表示。aes関数でcolourを指定すると色分けできる\nP2 <- P1 + geom_point(aes(colour = Species))\nP2\n```\n\n::: {.cell-output-display}\n![](ggplot2_files/figure-html/ggplot2--ggplot-2.png){width=576}\n:::\n:::\n\n\n\n\n+演算子で接続できる関数は１つだけではなく、作成したグラフに対して、様々な要素を付加できます。\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# facet_gridでcolsを指定すると、グラフを分解可能\nP3 <- P1 + geom_point() + facet_grid(cols = vars(Species))\nP3\n```\n\n::: {.cell-output-display}\n![](ggplot2_files/figure-html/ggplot2--ggplot_2-1.png){width=576}\n:::\n\n```{.r .cell-code}\n# グラフのタイトルをつけられる\nP4 <- P3 +labs(title=\"title\")\nP4\n```\n\n::: {.cell-output-display}\n![](ggplot2_files/figure-html/ggplot2--ggplot_2-2.png){width=576}\n:::\n:::\n\n\n\n\n### グラフの重ね合わせ\n\nggplot2では、グラフの重ね合わせも+演算子で実施することができ、先ほど作成した散布図に対して、再度geom_point関数を接続すれば重ね合わせたグラフが作成可能です。\n\n以下では、アヤメの種類別のがく片の長さと幅を計算したiris_meanを用いて、散布図を重ね合わせています（表示されたグラフの赤い点が平均値です）\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\niris_mean <- iris %>%\n  group_by(Species) %>%\n  summarise(across(c(Sepal.Length,Sepal.Width), ~mean(.x, na.rm = TRUE)))\niris_mean\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n# A tibble: 3 × 3\n  Species    Sepal.Length Sepal.Width\n  <fct>             <dbl>       <dbl>\n1 setosa             5.01        3.43\n2 versicolor         5.94        2.77\n3 virginica          6.59        2.97\n```\n\n\n:::\n\n```{.r .cell-code}\nP5 <- P4 + geom_point(\n  data = iris_mean,\n  colour = 'red',\n  size = 3\n)\nP5\n```\n\n::: {.cell-output-display}\n![](ggplot2_files/figure-html/plotly--ggplot_3-1.png){width=576}\n:::\n:::\n\n\n\n\n### 公式サイトについて\n\nどのようなグラフが作成することができるかについては、公式サイトから確認可能です。特に、レファレンスからは関数の一覧が確認でき、それぞれの関数の詳細にもアクセス可能です。\n\n#### 公式サイトなどのアドレス\n\n公式サイト <https://ggplot2.tidyverse.org/index.html>\n\nレファレンス <https://ggplot2.tidyverse.org/reference/index.html>\n",
+    "supporting": [
+      "ggplot2_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

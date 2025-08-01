@@ -5,7 +5,7 @@ execute:
 
 book:
   title: "Rパッケージ活用事例集"
-  author: "データサイエンス関連基礎調査WG"
+  author: "データサイエンス関連基礎調査部会"
   chapters:
     - index.qmd
     - articles/actuar.qmd
@@ -47,7 +47,7 @@ book:
     - articles/randomForest.qmd
     - articles/ranger.qmd
 #    - articles/readr.qmd
-#    - articles/readxl.qmd
+    - articles/readxl.qmd
 #    - articles/recipes.qmd
     - articles/rpart.qmd
     - articles/rsample.qmd
@@ -62,9 +62,8 @@ book:
 
 format:
   html:
-    theme:
-      light: flatly
-      dark: darkly
+    number-sections: false
+    theme: flatly
     html-math-method: katex
 
 editor: visual

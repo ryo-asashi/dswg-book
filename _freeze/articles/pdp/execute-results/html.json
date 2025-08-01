@@ -1,0 +1,17 @@
+{
+  "hash": "96fd28ba81aa2f5636f1a3db579eaed4",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"pdp\"\nauthor: \"データサイエンス関連基礎調査WG\"\ndate: \"2025-08-01\"\nformat:\n  html:\n    fig-width: 6\n    fig-height: 3\n---\n\n\n\n\n\n\n## パッケージの概要\n\npdpパッケージは、予測モデルとデータをもとに、PDP (Partial Dependence Plot、部分依存図) を作成する機能を実装したパッケージです。\n\nなお、PDPは、関心のある説明変数 $X$ について、その値を $x_1$ に固定したときの予測値の期待値を考え、これをデータセットの全レコードについて $X=x_1$ と置き換えたときの予測値の平均で推定することによって、変数 $X$ の影響を $X$ に関する1変数関数として表現する手法です。\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(randomForest) # 予測モデルの構築に利用\n```\n\n::: {.cell-output .cell-output-stderr}\n\n```\nWarning: package 'randomForest' was built under R version 4.5.1\n```\n\n\n:::\n\n::: {.cell-output .cell-output-stderr}\n\n```\nrandomForest 4.7-1.2\n```\n\n\n:::\n\n::: {.cell-output .cell-output-stderr}\n\n```\nType rfNews() to see new features/changes/bug fixes.\n```\n\n\n:::\n\n```{.r .cell-code}\nlibrary(pdp) # bostonデータセットを利用\n```\n\n::: {.cell-output .cell-output-stderr}\n\n```\nWarning: package 'pdp' was built under R version 4.5.1\n```\n\n\n:::\n\n```{.r .cell-code}\n# ランダムシードを固定する\nset.seed(42)\n\n# 予測モデルを構築する\nmodel.rf <- randomForest(cmedv~., data = boston)\n```\n:::\n\n\n\n\n## PD プロットを作成する\n\n予測モデルに partial() 関数を適用することで、PD プロットを作成することができます。ただし\n解釈しようとする予測モデルによっては、`pred.fun`（予測に使う関数）や `train`（学習用データ）などの引数を調整する必要があります。\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\npartial(model.rf, pred.var = \"lstat\", plot = TRUE, rug = TRUE)\n```\n\n::: {.cell-output-display}\n![](pdp_files/figure-html/pdp--partialPlot-1.png){width=576}\n:::\n:::\n\n\n\n\nなお、randomForest パッケージには、PDプロットを作成するための独自の関数 partialPlot() が用意されています。\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# randomForest パッケージの partialPlot() 関数でも作成可能\npartialPlot(model.rf, pred.data = boston, x.var = \"lstat\")\n```\n\n::: {.cell-output-display}\n![](pdp_files/figure-html/randomForest--partialPlot-1.png){width=576}\n:::\n:::\n\n\n\n\n## ICE プロットを作成する\n\npartial() 関数では、`ice = TRUE` と指定することで、ICE プロットを描画することも可能です。\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\npartial(model.rf, pred.var = c(\"lstat\"), ice = TRUE, plot = TRUE)\n```\n\n::: {.cell-output-display}\n![](pdp_files/figure-html/iceplot-1.png){width=576}\n:::\n:::\n\n\n\n\n# プロットをカスタマイズする\n\npartial() 関数の引数 `plot` をデフォルトの `FALSE` のままにしておくと、partial() 関数の出力はデータフレームになります。このデータフレームに対して、plotPartial() 関数を適用することで、PDプロットの見た目を柔軟にカスタマイズすることができるようになります。\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nice <- partial(model.rf, pred.var = c(\"rm\"), ice = TRUE)\nplotPartial(ice, rug = TRUE, alpha = .2, train = boston)\n```\n\n::: {.cell-output-display}\n![](pdp_files/figure-html/plotPartial-1.png){width=576}\n:::\n:::\n\n\n\n\nまた、autoplot() 関数を適用することで、ggplot2 パッケージを利用したプロットを作成することもできます。\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(ggplot2)\n```\n\n::: {.cell-output .cell-output-stderr}\n\n```\n\nAttaching package: 'ggplot2'\n```\n\n\n:::\n\n::: {.cell-output .cell-output-stderr}\n\n```\nThe following object is masked from 'package:randomForest':\n\n    margin\n```\n\n\n:::\n\n```{.r .cell-code}\nice <- partial(model.rf, pred.var = c(\"nox\"), ice = TRUE)\nautoplot(ice, rug = TRUE, alpha = .2, train = boston) + theme_light()\n```\n\n::: {.cell-output-display}\n![](pdp_files/figure-html/autoplot-1.png){width=576}\n:::\n:::",
+    "supporting": [
+      "pdp_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

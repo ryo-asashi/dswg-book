@@ -38,9 +38,21 @@ jobs:
         with:
           cache-version: 1
 
-      - name: Render and Publish
-        uses: quarto-dev/quarto-actions/publish@v2
+      - name: Render book
+        run: quarto render
+      
+      - name: Commit and Push _freeze updates
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          target: gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          commit_message: "Update _freeze directory [skip ci]"
+          file_pattern: "_freeze/**"
+          commit_user_name: "GitHub Actions [Bot]"
+          commit_user_email: "actions@github.com"
+ 
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          user_name: "GitHub Actions [Bot]"
+          user_email: "actions@github.com"

@@ -9,7 +9,6 @@
 renv/
 _book/
 _site/
-_freeze/
 _cache/
 
 # Other common files
@@ -21,3 +20,4 @@ _cache/
 
 # Windows
 Thumbs.db
+/.quarto/
