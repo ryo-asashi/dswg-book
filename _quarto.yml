@@ -38,7 +38,7 @@ book:
     - articles/parsnip.qmd
     - articles/partykit.qmd
     - articles/pdp.qmd
-#    - articles/plotly.qmd
+    - articles/plotly.qmd
     - articles/plyr.qmd
     - articles/pROC.qmd
     - articles/psych.qmd

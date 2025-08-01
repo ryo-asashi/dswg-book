@@ -1,6 +1,5 @@
 ---
 title: "plotly"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
 format:
   html:
@@ -11,7 +10,6 @@ format:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 if (!require(plotly)) install.packages('plotly')
 ```
 
@@ -20,8 +18,7 @@ if (!require(plotly)) install.packages('plotly')
 plotlyは、インタラクティブなグラフを作成することのできるパッケージです。 baseのplotや、ggplot2では出力したグラフは固定されますが、plotlyでは、 出力したグラフを動かすことができます。
 
 ```{r plotly}
-suppressMessages(require(tidyverse))
-require(plotly)
+library(plotly)
 ```
 
 ### plotの作成方法
@@ -62,7 +59,6 @@ plot_quakes_2 <- plot_ly(data = quakes,
          )
 
 plot_quakes_2
-
 ```
 
 ### 公式サイトについて
