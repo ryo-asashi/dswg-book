@@ -8,10 +8,11 @@ knitr::opts_chunk$set(
   echo=T,     # chunk表示の有無
   warning=F, # 警告表示の有無
   message=F,  # メッセージ表示の有無
-  highlight=T,
-  tidy=T,
-  cache = T
 )
+
+# install packages
+pkgs <- c("psych")
+install.packages(pkgs[!pkgs %in% list.files(.libPaths())])
 ```
 
 ## packageのインストール

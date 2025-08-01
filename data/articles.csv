@@ -35,6 +35,7 @@ psych,可視化/心理統計
 randomForest,予測モデリング/ランダムフォレスト
 ranger,予測モデリング/ランダムフォレスト/C++
 readr,データ処理/データの読み込み
+readxl,データ処理/データの読み込み/エクセル
 rpart,予測モデリング/決定木
 recipes,データ処理/前処理/Tidymodels
 rsample,データ処理/リサンプリング/交差検証/Tidymodels
@@ -45,3 +46,4 @@ survival,生存時間解析
 tibble,データ処理/データフレーム/Tidyverse
 tuneRanger,予測モデリング/チューニング
 yardstick,評価指標/Tidymodels
+YieldCurve,ファイナンス/金利モデル/イールドカーブ

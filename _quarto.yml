@@ -16,7 +16,7 @@ book:
     - articles/corrplot.qmd
     - articles/crosstable.qmd
     - articles/DALEX.qmd
-#    - articles/datatable.qmd
+    - articles/datatable.qmd
     - articles/distr.qmd
     - articles/distrEx.qmd
     - articles/dplyr.qmd
@@ -43,10 +43,10 @@ book:
     - articles/pROC.qmd
     - articles/psych.qmd
     - articles/purrr.qmd
-#    - articles/quantmod.qmd
+    - articles/quantmod.qmd
     - articles/randomForest.qmd
     - articles/ranger.qmd
-#    - articles/readr.qmd
+    - articles/readr.qmd
     - articles/readxl.qmd
 #    - articles/recipes.qmd
     - articles/rpart.qmd
@@ -58,7 +58,7 @@ book:
     - articles/tibble.qmd
     - articles/tuneRanger.qmd
     - articles/yardstick.qmd
-#    - articles/YieldCurve.qmd
+    - articles/YieldCurve.qmd
 
 format:
   html:

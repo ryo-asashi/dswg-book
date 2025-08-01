@@ -1,10 +1,8 @@
 ---
 title: "YieldCurve"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
 format:
-  #html:
-  docx:
+  html:
     toc: true
     toc-depth: 3
     fig-width: 6
@@ -51,6 +49,7 @@ for( i in c(1, 2, 3, 370, 371, 372) ){
 }
 
 ```
+
 ECBのデータセットも同様に取得可能です。こちらは満期が3ヶ月と6ヶ月、および1年から30年の日次データで、範囲は2006/12/28から2009/7/23です。
 
 ```{r ECBYieldCurve, warning=FALSE}
@@ -65,7 +64,6 @@ first(ECBYieldCurve,'3 day')
 last(ECBYieldCurve,'3 day')
 
 ```
-
 
 ## Nelson-Siegelモデルによるパラメータの推定
 
@@ -120,14 +118,12 @@ YieldCurve_NS(date="2012-11-30")
 
 ## Svenssonモデルによるパラメータの推定
 
-Svensson関数ではSvenssonモデルによるパラメータを推定できます。Svenssonモデルは、フォワードレートを次の算式で記述します。
-$$
+Svensson関数ではSvenssonモデルによるパラメータを推定できます。Svenssonモデルは、フォワードレートを次の算式で記述します。 $$
 y(m) = \beta_{0} 
           + \beta_{1}\exp\left(-\frac{m}{\tau_1}\right) 
           + \beta_{2}\frac{m}{\tau_1} \exp\left(-\frac{m}{\tau_1}\right) 
           + \beta_{3}\frac{m}{\tau_2} \exp\left(-\frac{m}{\tau_2}\right) 
-$$
-また、スポットレートはフォワードレートから導き出すことができ、次式で与えられます。
+$$ また、スポットレートはフォワードレートから導き出すことができ、次式で与えられます。
 
 $$
 \begin{equation}
@@ -194,16 +190,17 @@ YieldCurve_S(date="2012-11-30")
 
 # 日本国債金利の取得
 # 以下のURLにて当月の金利情報が取得可能
-jgb <- read.csv("https://www.mof.go.jp/jgbs/reference/interest_rate/jgbcm.csv",
-                header=FALSE, skip=2)
-rownames(jgb) <- jgb[, 1]
-jgb <- jgb[, -1]
+# PATH <- https://www.mof.go.jp/jgbs/reference/interest_rate/jgbcm.csv
+PATH <- "../data/jgbcm202507.csv"
+jgb <- read.csv(PATH, header=FALSE, skip=2)
 maturity.jgb <- c(1:10, 15, 20, 25, 30, 40)
 colnames(jgb) <- maturity.jgb
+rownames(jgb) <- jgb[, 1]
+jgb <- na.omit(jgb[, -1])
 
 # 和暦のままだと下記のxts関数がエラーとなる
-# 令和6年以外の金利を取得する場合は適宜コードを変更する
-rownames(jgb) <- gsub("R6", "2024", rownames(jgb))
+# 令和X年以外の金利を取得する場合は適宜コードを変更する
+rownames(jgb) <- gsub("R7", "2025", rownames(jgb))
 rownames(jgb) <- gsub("\\.", "-", rownames(jgb))
 
 # xtsパッケージにより時系列データに変換
@@ -220,18 +217,18 @@ date <- index(jgb)[nrow(jgb)]　# 最終行=直近営業日をdateとする
 y <- NSrates(Coeff=NSParameters.jgb[date,], 
              maturity=c(maturity.jgb,50,60,70)) # 50,60,70年を補外
 
-plot(maturity.jgb, jgb[date,], 
+plot(x=maturity.jgb,
+     y=jgb[date,], 
      main="JGB yield curve",
      sub=paste("at", date),
-     xlab="Maturity in years",  ylab="Interest rate",
-     xlim=c(0, 70), ylim=c(0.0, 2.5),
+     xlab="Maturity in years",
+     ylab="Interest rate",
+     xlim=c(0, 70),
+     ylim=range(y),
      type="o")
 lines(c(maturity.jgb,50,60,70), y, col=2)
-legend("bottomright", legend=c("observed yield curve", "fitted yield curve"),
+legend("bottomright",
+       legend=c("observed yield curve", "fitted yield curve"),
        col=c(1, 2), lty=1)
-
 grid()
-
 ```
-
-

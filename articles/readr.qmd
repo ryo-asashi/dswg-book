@@ -1,6 +1,5 @@
 ---
 title: "readr"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
 format:
   html:
@@ -17,12 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # install packages
 pkgs <- c("readr", "microbenchmark", "data.table")
-for (pkg in pkgs) {
-  if (!(pkg %in% installed.packages())) {
-    install.packages(pkg)
-  }
-}
-
+install.packages(pkgs[!pkgs %in% list.files(.libPaths())])
 ```
 
 ## パッケージの概要
@@ -38,68 +32,68 @@ library(data.table) #速度比較に利用
 データの読込にはR標準の関数が存在しています。例えば、read.csv関数を利用すると、カンマ区切り(,)のcsvファイルを読み込むことができます。
 
 ```{r utils::read_csv, warning=FALSE}
-data <- read.csv("sample.csv", fileEncoding = "SHIFT-JIS")
+data <- read.csv("../data/insurance.csv")
 data
 ```
 
 ## read_csv関数
 
-readrでカンマ区切り（,)のファイルを読み込む際は、read_csv関数を利用します。
-なお、タブ区切りのファイルを読み込む場合は、read_tsv関数を利用します。また、read_delim関数は区切り文字を任意で指定することができます。
+readrでカンマ区切り（,)のファイルを読み込む際は、read_csv関数を利用します。 なお、タブ区切りのファイルを読み込む場合は、read_tsv関数を利用します。また、read_delim関数は区切り文字を任意で指定することができます。
 
 ### read_csv関数とread.csv関数の違い
-read.csv関数とread.csv関数の違いは、例えば、読み込んだデータの項目の型が何であるかを明示的に説明してくれることが挙げられます。
-また、データはdata.frameではなく、tibbleで読み込まれます。
+
+read.csv関数とread.csv関数の違いは、例えば、読み込んだデータの項目の型が何であるかを明示的に説明してくれることが挙げられます。 また、データはdata.frameではなく、tibbleで読み込まれます。
 
 ```{r readr::read_csv}
-data_readr <- read_csv("sample.csv", locale = locale(encoding = "SHIFT-JIS"))
+data_readr <- read_csv("../data/insurance.csv")
 data_readr
 
 class(data)
 ```
 
-:::{.callout-note}  
+::: callout-note
 ## tibble
+
 tibbleは、従来のdata.frameを洗練させたデータ構造です。readrと同様、「tidyverse」に含まれるtibbleというパッケージで作成することができます。
 :::
 
 ### 型の指定
+
 read_csv関数で読み込んだデータの各項目の型は自動で推定されますが、明示的に指定することもできます。型を指定する際は、col_types引数に、項目名と型を指定する関数を記載します。
 
 以下のコードではuser_noの型をintegerに指定して、データを読み込みます。なお、指定しなかった項目の型は自動で推定されます。
 
 ```{r readr::read_csv_2}
-data_readr_2 <- read_csv("sample.csv", 
-                         col_types = cols( user_no = col_integer() ), 
-                         locale = locale(encoding = "SHIFT-JIS"))
+data_readr_2 <- read_csv("../data/insurance.csv", 
+                         col_types = cols( user_no = col_integer()))
 data_readr_2
 ```
 
 ### 速度比較
-read_csvがデータを読み込む速度は、read.csvよりも速いです。どの程度速くなるかはデータの構造、サイズによっても異なります。400MB程度の容量のcsvファイル（1,000万行×10列、数値型）を利用して、実際に速度比較を実施してみます。
+
+read_csvがデータを読み込む速度は、read.csvよりも速いです。どの程度速くなるかはデータの構造、サイズによっても異なります。40MB程度の容量のcsvファイルを利用して、実際に速度比較を実施してみます。
 
 ```{r readr::read_csv_3}
-data_readr_3 <- read_csv("big_file.csv")
-
-data_readr_3
+data_readr_3 <- read_csv("../data/lapse_study.csv")
+head(data_readr_3)
 ```
 
 read.csvに加えて、data.tableパッケージのfreadとも速度比較をします。microbenchmarkパッケージを利用して、各関数で5回ずつデータの読込を実施します。
 
 ```{r readr::read_csv_4}
-timing <- microbenchmark(
-  base_read = read.csv("big_file.csv"),
-  readr_read = read_csv("big_file.csv", show_col_types = FALSE), 
-  dt_fread = fread("big_file.csv"),
+microbenchmark(
+  base_read = read.csv("../data/lapse_study.csv"),
+  readr_read = read_csv("../data/lapse_study.csv",
+                        show_col_types = FALSE), 
+  dt_fread = fread("../data/lapse_study.csv"),
   times = 5
 )
-
-print(timing)
 ```
 
 read_csvの読込時間は平均2秒程度となり、read.csvの読込時間（平均13秒程度）よりも速く、freadの読込時間（平均1秒程度）よりも遅いという結果になりました。
 
-:::{.callout-note}  
+::: callout-note
 ## fread（data.tableパッケージ）との比較
+
 freadはデータの読込速度について、read_csvよりも速くなります。一方、tidyverseとの親和性は、読込結果がtibbleで出力されるread_csv（freadの出力はdata.table）のほうが高くなります。
 :::
