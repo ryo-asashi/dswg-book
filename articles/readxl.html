@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.33">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -90,14 +90,15 @@ div.csl-indent {
 <link href="../articles/readr.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5fec71090063759883e7e0e36cd2e998.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-4ff66e45b39d49436fe97d3fe27b9920.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -151,7 +152,9 @@ div.csl-indent {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Rパッケージ活用事例集</a> 
     </div>
@@ -492,7 +495,7 @@ div.csl-indent {
 <section id="実行前の準備" class="level2">
 <h2 class="anchored" data-anchor-id="実行前の準備">実行前の準備</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="データの準備" class="level2">
@@ -500,7 +503,7 @@ div.csl-indent {
 <p><code>readxl</code>パッケージには例となるExcelブックがいくつか用意されています。</p>
 <p><code>readxl_example</code>関数を引数無しで実行することでブックのリストが得られます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">readxl_example</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">readxl_example</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "clippy.xls"    "clippy.xlsx"   "datasets.xls"  "datasets.xlsx"
  [5] "deaths.xls"    "deaths.xlsx"   "geometry.xls"  "geometry.xlsx"
@@ -509,11 +512,11 @@ div.csl-indent {
 </div>
 <p>引数にブック名を指定することでフルパスが得られます。 ここではirisデータセットなどが含まれる<code>datasets.xlsx</code>を使用することにします。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>path_datasets <span class="ot">&lt;-</span> <span class="fu">readxl_example</span>(<span class="st">"datasets.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>path_datasets <span class="ot">&lt;-</span> <span class="fu">readxl_example</span>(<span class="st">"datasets.xlsx"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>また、日本アクチュアリー会のホームページで公開されている標準生命表のExcelファイルも例として使用します。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>path_seimeihyo <span class="ot">&lt;-</span> <span class="st">"../data/seimeihyo960718.xlsx"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>path_seimeihyo <span class="ot">&lt;-</span> <span class="st">"../data/seimeihyo960718.xlsx"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="基本的な使い方" class="level2">
@@ -522,11 +525,11 @@ div.csl-indent {
 <h3 class="anchored" data-anchor-id="シート名の取得">シート名の取得</h3>
 <p><code>excel_sheets</code>関数でブックに含まれるシートの一覧を取得することができます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">excel_sheets</span>(path_datasets)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">excel_sheets</span>(path_datasets)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "mtcars"   "chickwts" "quakes"  </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">excel_sheets</span>(path_seimeihyo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">excel_sheets</span>(path_seimeihyo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "標準生命表"</code></pre>
 </div>
@@ -536,8 +539,8 @@ div.csl-indent {
 <h3 class="anchored" data-anchor-id="シートの読み取り">シートの読み取り</h3>
 <p><code>read_excel</code>関数で、指定したシートのデータを<code>data.frame</code>(正確には<code>tibble</code>)として読み込むことが出来ます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="st">"標準生命表"</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df) <span class="co">#テーブルの構造を表示する</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="st">"標準生命表"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df) <span class="co">#テーブルの構造を表示する</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre class="output-jp"><code>tibble [133 × 15] (S3: tbl_df/tbl/data.frame)
  $ ...1                  : chr [1:133] "年齢" NA "0" "1" ...
@@ -556,15 +559,15 @@ div.csl-indent {
  $ ...14                 : chr [1:133] "生保標準生命表１９９６（年金開始後用）" "男性" NA NA ...
  $ ...15                 : chr [1:133] NA "女性" NA NA ...</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#$ 列名 : 型名 [1:行数] 最初の方のデータ…　という形式で表示</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#$ 列名 : 型名 [1:行数] 最初の方のデータ…　という形式で表示</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>デフォルトでは<strong>データがある領域全体を一つのテーブル</strong>とし、さらに<strong>1行目に列名があるものとみなして</strong>読み取られます。</p>
 <p>標準生命表のExcelファイルは列名が3行にわたっているため、1, 2行目のレコードにまで列名が入ってしまいました。 また、副次的にすべての列が文字列型(<code>chr</code>)で読み込まれてしまっているため、このままでは数値データとして取り扱うことができません。</p>
 <p>最もシンプルな解決策は読み取り領域を指定することです。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df_qx <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="st">"標準生命表"</span>, <span class="at">range =</span> <span class="st">"G4:H135"</span>) <span class="co">#生保標準2007 死亡保険用</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df_qx <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="st">"標準生命表"</span>, <span class="at">range =</span> <span class="st">"G4:H135"</span>) <span class="co">#生保標準2007 死亡保険用</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#読み取り範囲をG4(列名として「男性」「女性」がある行)からとしていることに注意</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_qx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_qx)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [131 × 2] (S3: tbl_df/tbl/data.frame)
  $ 男性: num [1:131] 0.00108 0.00075 0.00049 0.00031 0.00021 0.00017 0.00016 0.00016 0.00016 0.00015 ...
@@ -575,9 +578,9 @@ div.csl-indent {
 <p>このままでも使えなくはありませんが、年齢の列が失われているのは使いづらいため、これを別途読み込んで追加してみます。</p>
 <p>引数<code>col_names</code>に列名を与えることができます。この場合、1行目から列名ではなくレコードがあるものとして読み込みます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_x <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="st">"標準生命表"</span>, <span class="at">range =</span> <span class="st">"B5:B135"</span>, <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"年齢"</span>))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_x <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="st">"標準生命表"</span>, <span class="at">range =</span> <span class="st">"B5:B135"</span>, <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"年齢"</span>))</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#読み取り範囲をB4からではなくB5(データがある行)からとしていることに注意</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [131 × 1] (S3: tbl_df/tbl/data.frame)
  $ 年齢: num [1:131] 0 1 2 3 4 5 6 7 8 9 ...</code></pre>
@@ -585,8 +588,8 @@ div.csl-indent {
 </div>
 <p><code>cbind</code>関数で結合することにより、年齢と死亡率を1つのテーブルに格納することができました。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(df_x, df_qx)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(df_x, df_qx)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   131 obs. of  3 variables:
  $ 年齢: num  0 1 2 3 4 5 6 7 8 9 ...
@@ -602,7 +605,7 @@ div.csl-indent {
 <h3 class="anchored" data-anchor-id="グラフの確認">グラフの確認</h3>
 <p>本稿の主題からは逸れますが、折角生命表を読み込んだので折れ線グラフを描いて確認してみましょう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="at">type =</span> <span class="st">"n"</span>, <span class="at">main =</span> <span class="st">"標準生命表2007 (死亡保険用)"</span>, <span class="at">xlab =</span> <span class="st">"x"</span>, <span class="at">ylab =</span> <span class="st">"qx"</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">120</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="co">#plot関数で描画エリアを用意</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="at">type =</span> <span class="st">"n"</span>, <span class="at">main =</span> <span class="st">"標準生命表2007 (死亡保険用)"</span>, <span class="at">xlab =</span> <span class="st">"x"</span>, <span class="at">ylab =</span> <span class="st">"qx"</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">120</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="co">#plot関数で描画エリアを用意</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rgb</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">rgb</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>)) <span class="co">#色の指定を変数に格納 青, 赤の順で指定</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>ltys <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"dotted"</span>, <span class="st">"dashed"</span>) <span class="co">#線の種類を変数に格納 点線、破線の順で指定</span></span>
@@ -610,7 +613,7 @@ div.csl-indent {
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">x =</span> df<span class="sc">$</span>年齢, <span class="at">y =</span> df<span class="sc">$</span>男性, <span class="at">col =</span> cols[<span class="dv">1</span>], <span class="at">lty =</span> ltys[<span class="dv">1</span>]) <span class="co">#折れ線を1つずつ追加</span></span>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="at">x =</span> df<span class="sc">$</span>年齢, <span class="at">y =</span> df<span class="sc">$</span>女性, <span class="at">col =</span> cols[<span class="dv">2</span>], <span class="at">lty =</span> ltys[<span class="dv">2</span>])</span>
 <span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"left"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"男性"</span>, <span class="st">"女性"</span>), <span class="at">col =</span> cols, <span class="at">lty =</span> ltys) <span class="co">#凡例を左側に表示</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"left"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"男性"</span>, <span class="st">"女性"</span>), <span class="at">col =</span> cols, <span class="at">lty =</span> ltys) <span class="co">#凡例を左側に表示</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -621,21 +624,21 @@ div.csl-indent {
 </div>
 <p>記法が独特なものの、<code>ggplot2</code>パッケージを用いる方法もあります。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2) <span class="co">#テーブルを縦長に変形するために使用</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>df_melt <span class="ot">&lt;-</span> reshape2<span class="sc">::</span><span class="fu">melt</span>(df, <span class="at">id.vars =</span> <span class="st">"年齢"</span>, <span class="at">measure.vars =</span> <span class="fu">c</span>(<span class="st">"男性"</span>, <span class="st">"女性"</span>),</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">value.name =</span> <span class="st">"死亡率"</span>, <span class="at">variable.name =</span> <span class="st">"性別"</span>) <span class="co">#男性と女性のデータが縦に並ぶようにする</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_melt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_melt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   262 obs. of  3 variables:
  $ 年齢  : num  0 1 2 3 4 5 6 7 8 9 ...
  $ 性別  : Factor w/ 2 levels "男性","女性": 1 1 1 1 1 1 1 1 1 1 ...
  $ 死亡率: num  0.00108 0.00075 0.00049 0.00031 0.00021 0.00017 0.00016 0.00016 0.00016 0.00015 ...</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> df_melt) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> 年齢, <span class="at">y =</span> 死亡率, <span class="at">color =</span> 性別, <span class="at">linetype =</span> 性別)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> df_melt) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> 年齢, <span class="at">y =</span> 死亡率, <span class="at">color =</span> 性別, <span class="at">linetype =</span> 性別)) <span class="sc">+</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">120</span>)) <span class="sc">+</span> <span class="co">#表示範囲の調節</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="fu">rgb</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="fu">rgb</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>))) <span class="sc">+</span> <span class="co">#折れ線の見た目を1つ前のグラフと同様に設定</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"dotted"</span>, <span class="st">"dashed"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"dotted"</span>, <span class="st">"dashed"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -654,8 +657,8 @@ div.csl-indent {
 <li>引数<code>range</code>の指定には、行全体を表す<code>cell_rows</code>や列全体を表す<code>cell_cols</code>を用いることができます。</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>df_ <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">range =</span> <span class="fu">cell_cols</span>(<span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>))) <span class="co">#2～4列目全体を取得</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>df_ <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">range =</span> <span class="fu">cell_cols</span>(<span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>))) <span class="co">#2～4列目全体を取得</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre class="output-jp"><code>tibble [133 × 3] (S3: tbl_df/tbl/data.frame)
  $ ...1              : chr [1:133] "年齢" NA "0" "1" ...
@@ -664,8 +667,8 @@ div.csl-indent {
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df_ <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">range =</span> <span class="fu">cell_rows</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="cn">NA</span>))) <span class="co">#4行目以降を取得</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df_ <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">range =</span> <span class="fu">cell_rows</span>(<span class="fu">c</span>(<span class="dv">4</span>, <span class="cn">NA</span>))) <span class="co">#4行目以降を取得</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [131 × 15] (S3: tbl_df/tbl/data.frame)
  $ ...1     : num [1:131] 0 1 2 3 4 5 6 7 8 9 ...
@@ -689,8 +692,8 @@ div.csl-indent {
 <li>シート名の指定を引数<code>range</code>に含めることもできます</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>df_ <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">range =</span> <span class="st">"標準生命表!B4:D135"</span>)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>df_ <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">range =</span> <span class="st">"標準生命表!B4:D135"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [131 × 3] (S3: tbl_df/tbl/data.frame)
  $ ...1: num [1:131] 0 1 2 3 4 5 6 7 8 9 ...
@@ -702,8 +705,8 @@ div.csl-indent {
 <li>引数<code>range</code>では、<code>anchored(左上のセル番地, c(行数, 列数))</code> という指定が可能です</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df_ <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="st">"標準生命表"</span>, <span class="at">range =</span> <span class="fu">anchored</span>(<span class="st">"B4"</span>, <span class="fu">c</span>(<span class="dv">121</span>, <span class="dv">3</span>)))</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df_ <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="st">"標準生命表"</span>, <span class="at">range =</span> <span class="fu">anchored</span>(<span class="st">"B4"</span>, <span class="fu">c</span>(<span class="dv">121</span>, <span class="dv">3</span>)))</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [120 × 3] (S3: tbl_df/tbl/data.frame)
  $ ...1: num [1:120] 0 1 2 3 4 5 6 7 8 9 ...
@@ -715,8 +718,8 @@ div.csl-indent {
 <li>引数<code>range</code>を指定する代わりに、冒頭の読み飛ばし行数<code>skip</code>と読み取る行数<code>n_max</code>を指定することもできます。</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df_ <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="st">"標準生命表"</span>, <span class="at">skip =</span> <span class="dv">3</span>, <span class="at">n_max =</span> <span class="dv">30</span>)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df_ <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="st">"標準生命表"</span>, <span class="at">skip =</span> <span class="dv">3</span>, <span class="at">n_max =</span> <span class="dv">30</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [30 × 15] (S3: tbl_df/tbl/data.frame)
  $ ...1     : num [1:30] 0 1 2 3 4 5 6 7 8 9 ...
@@ -745,9 +748,9 @@ div.csl-indent {
 <p><code>readxl</code>パッケージの関数で一発でうまく読み取れるわけではないため、 まず列名がある箇所をいったんデータとして読み取り、Rで加工のうえ列名をリストに保持し、 改めてデータのある箇所を読み取るという流れで対処することになります。</p>
 <p>まず、列名がある部分(Excelシート上の3～4行目)をデータとして読み取ります。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#col_names = FALSEとすることにより、1行目を(テーブルdf_colnamesの)列名ではなくデータとして読み取る</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#col_names = FALSEとすることにより、1行目を(テーブルdf_colnamesの)列名ではなくデータとして読み取る</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>df_colnames <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="st">"標準生命表"</span>, <span class="at">range =</span> <span class="fu">cell_rows</span>(<span class="fu">c</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>)), <span class="at">col_names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_colnames)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_colnames)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [2 × 15] (S3: tbl_df/tbl/data.frame)
  $ ...1 : chr [1:2] "年齢" NA
@@ -769,7 +772,7 @@ div.csl-indent {
 </div>
 <p>今回のデータでは1行目の「生保標準生命表２０１８（死亡保険用）」などがそれぞれ一番左の列（各「男性」の列）にしか入れられていないため、 残りの列（各「女性」の列）にもこれを補完します。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(row <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(<span class="fu">nrow</span>(df_colnames))){</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(row <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(<span class="fu">nrow</span>(df_colnames))){</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  colname <span class="ot">&lt;-</span> <span class="cn">NA</span> <span class="co">#1つ左の列の列名を保持する変数</span></span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(col <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(<span class="fu">ncol</span>(df_colnames))){</span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(row <span class="sc">&gt;</span> <span class="dv">1</span> <span class="sc">&amp;</span> col <span class="sc">&gt;</span> <span class="dv">1</span>){</span>
@@ -784,7 +787,7 @@ div.csl-indent {
 <span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    colname <span class="ot">&lt;-</span> df_colnames[row, col]</span>
 <span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>df_colnames</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>df_colnames</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre class="output-jp"><code># A tibble: 2 × 15
   ...1  ...2   ...3  ...4  ...5  ...6  ...7  ...8  ...9  ...10 ...11 ...12 ...13
@@ -797,9 +800,9 @@ div.csl-indent {
 <p>そして、<code>NA</code>となっている箇所を読み飛ばしつつ、各列名を結合したリストを作成します。</p>
 <p>結合時の区切り文字は何でも指定可能ですが、今回は<code>"/"</code>にしてみます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>ls_colnames <span class="ot">&lt;-</span> <span class="fu">sapply</span>(df_colnames, <span class="cf">function</span>(x) <span class="fu">paste0</span>(x[<span class="sc">!</span><span class="fu">is.na</span>(x)], <span class="at">collapse =</span> <span class="st">"/"</span>))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>ls_colnames <span class="ot">&lt;-</span> <span class="fu">sapply</span>(df_colnames, <span class="cf">function</span>(x) <span class="fu">paste0</span>(x[<span class="sc">!</span><span class="fu">is.na</span>(x)], <span class="at">collapse =</span> <span class="st">"/"</span>))</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(ls_colnames) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>ls_colnames</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>ls_colnames</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre class="output-jp"><code> [1] "年齢"                                       
  [2] "生保標準生命表２０１８（死亡保険用）/男性"  
@@ -820,8 +823,8 @@ div.csl-indent {
 </div>
 <p>こうしてできた列名リストを引数<code>col_names</code>に与え、元のデータ(Excelシート上の5行目以降)を読み取ります。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>df_all <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="st">"標準生命表"</span>, <span class="at">range =</span> <span class="fu">cell_rows</span>(<span class="fu">c</span>(<span class="dv">5</span>, <span class="cn">NA</span>)), <span class="at">col_names =</span> ls_colnames)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_all)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>df_all <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_seimeihyo, <span class="at">sheet =</span> <span class="st">"標準生命表"</span>, <span class="at">range =</span> <span class="fu">cell_rows</span>(<span class="fu">c</span>(<span class="dv">5</span>, <span class="cn">NA</span>)), <span class="at">col_names =</span> ls_colnames)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df_all)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre class="output-jp"><code>tibble [131 × 15] (S3: tbl_df/tbl/data.frame)
  $ 年齢                                       : num [1:131] 0 1 2 3 4 5 6 7 8 9 ...
@@ -847,8 +850,8 @@ div.csl-indent {
 <p><code>read_excel</code>関数の引数<code>na</code>に文字列を指定することで、その文字列があるセルを欠損値<code>NA</code>とみなして読み込むことが出来ます。 ベクトルを指定することで複数の文字列を指定することもできます。</p>
 <p>例えばchichwtsデータセットで文字列<code>"horsebean"</code>と<code>"soybean"</code>を<code>NA</code>とみなして読み込んでみましょう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>df_chick <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_datasets, <span class="at">sheet =</span> <span class="st">"chickwts"</span>)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>df_chick<span class="sc">$</span>feed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>df_chick <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_datasets, <span class="at">sheet =</span> <span class="st">"chickwts"</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>df_chick<span class="sc">$</span>feed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "horsebean" "horsebean" "horsebean" "horsebean" "horsebean" "horsebean"
  [7] "horsebean" "horsebean" "horsebean" "horsebean" "linseed"   "linseed"  
@@ -865,8 +868,8 @@ div.csl-indent {
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>df_chick_na <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_datasets, <span class="at">sheet =</span> <span class="st">"chickwts"</span>, <span class="at">na =</span> <span class="fu">c</span>(<span class="st">"horsebean"</span>, <span class="st">"soybean"</span>))</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>df_chick_na<span class="sc">$</span>feed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>df_chick_na <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(path_datasets, <span class="at">sheet =</span> <span class="st">"chickwts"</span>, <span class="at">na =</span> <span class="fu">c</span>(<span class="st">"horsebean"</span>, <span class="st">"soybean"</span>))</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>df_chick_na<span class="sc">$</span>feed</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] NA          NA          NA          NA          NA          NA         
  [7] NA          NA          NA          NA          "linseed"   "linseed"  
@@ -957,13 +960,14 @@ readxl authors. 2023a. <span>“GitHub - Tidyverse/Readxl: Read Excel Files (.xl
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.33">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -91,14 +91,15 @@ div.csl-indent {
 <link href="../articles/rpart.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5fec71090063759883e7e0e36cd2e998.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-4ff66e45b39d49436fe97d3fe27b9920.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -152,7 +153,9 @@ div.csl-indent {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Rパッケージ活用事例集</a> 
     </div>
@@ -491,7 +494,7 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="パッケージの概要">パッケージの概要</h2>
 <p>rsampleはtidymodelsに含まれるパッケージのうちのひとつで、データ分割・リサンプリングに関する機能を提供します。 学習データと評価データの分割、k分割交差検証やブートストラップ法などが行えるほか、 層化抽出や時系列データの分割にも対応しています。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nycflights13) <span class="co">#今回使用するデータセット</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nycflights13) <span class="co">#今回使用するデータセット</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rsample)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#以下、tidyverse, tidymodelsから必要なパッケージを追加</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble) <span class="co">#data.frame拡張版</span></span>
@@ -499,7 +502,7 @@ div.csl-indent {
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parsnip) <span class="co">#モデル構築</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(yardstick) <span class="co">#精度評価</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(workflows) <span class="co">#学習過程のオブジェクト化</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co">#可視化</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co">#可視化</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="データセットの準備" class="level2">
@@ -509,7 +512,7 @@ div.csl-indent {
 <p>データセットの詳細は <span class="citation" data-cites="BIB_NYCFLIGHTS13">Hadley Wickham (<a href="fastshap.html#ref-BIB_NYCFLIGHTS13" role="doc-biblioref">2021</a>)</span> を参照してください。</p>
 <p>なお、以下ではmagrittrパッケージによるパイプ演算子<code>%&gt;%</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>と、 dplyrパッケージによるデータ操作関数を使用しています。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df_all_raw <span class="ot">&lt;-</span> flights <span class="co">#flightsのほかにいくつかデータセットがあるが、それらは今回使用しない</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df_all_raw <span class="ot">&lt;-</span> flights <span class="co">#flightsのほかにいくつかデータセットがあるが、それらは今回使用しない</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#文字列のfactor型への変換、目的変数がNAとなっているレコードの補完、予測に用いない説明変数の除去</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df_all <span class="ot">&lt;-</span> <span class="fu">mutate</span>(df_all_raw, <span class="fu">across</span>(<span class="fu">where</span>(is.character), as.factor)) <span class="sc">%&gt;%</span></span>
@@ -518,7 +521,7 @@ div.csl-indent {
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#time_hourはPOSIXct型で表した予定出発日時で、sched_dep_timeと意味合いは同じ。他のデータセットの結合に用いるもの。</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#tailnumは機体番号。カテゴリ数が多すぎて予測に利用するのが難しく、例として取り扱うには向かないため取り除く。</span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#arr_timeは実際の到着時刻。予定到着時刻と合わせると目的変数(遅延時間)が判明してしまうため取り除く。</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df_all)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df_all)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      year          month             day           dep_time    sched_dep_time
  Min.   :2013   Min.   : 1.000   Min.   : 1.00   Min.   :   1   Min.   : 106  
@@ -561,30 +564,30 @@ div.csl-indent {
 <p><code>initial_split</code>関数を用いることで、この学習データと評価データの切り分けを行うことができます。</p>
 <p>以下のようなコードで、データ全体のうち80%を学習データに、残りを評価データに切り分けることができます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>split_df_all <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(df_all, <span class="at">prop =</span> <span class="fl">0.8</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df_all_train <span class="ot">&lt;-</span> <span class="fu">training</span>(split_df_all) <span class="co">#学習データ</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>df_all_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(split_df_all) <span class="co">#評価データ</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>df_all_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(split_df_all) <span class="co">#評価データ</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>initial_split</code>関数で得られるオブジェクトに、 <code>training</code>関数や<code>testing</code>関数を用いることでそれぞれのデータを得ることが出来ます。</p>
 <p>実際に80%と20%に切り分けられていることを確認してみます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>split_df_all <span class="co">#これでそれぞれのデータの行数が確認できる</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>split_df_all <span class="co">#これでそれぞれのデータの行数が確認できる</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;Training/Testing/Total&gt;
 &lt;269420/67356/336776&gt;</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#実際に分割されたデータの行数がこれに一致することを確認する</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#実際に分割されたデータの行数がこれに一致することを確認する</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"全データの行数:"</span>, <span class="fu">nrow</span>(df_all),</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">", 学習データの行数:"</span>, <span class="fu">nrow</span>(df_all_train), <span class="st">", 評価データの行数:"</span>, <span class="fu">nrow</span>(df_all_test), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">", 学習データの行数:"</span>, <span class="fu">nrow</span>(df_all_train), <span class="st">", 評価データの行数:"</span>, <span class="fu">nrow</span>(df_all_test), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>全データの行数: 336776 , 学習データの行数: 269420 , 評価データの行数: 67356 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#行数だけでなく、データそのものについても確認してみる</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#行数だけでなく、データそのものについても確認してみる</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"全データのarr_delay合計:"</span>, <span class="fu">sum</span>(df_all<span class="sc">$</span>arr_delay),</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">\n</span><span class="st">学習データのarr_delay合計:"</span>, <span class="fu">sum</span>(df_all_train<span class="sc">$</span>arr_delay),</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">", 評価データのarr_delay合計:"</span>, <span class="fu">sum</span>(df_all_test<span class="sc">$</span>arr_delay),</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">\n</span><span class="st">上記の合計:"</span>, <span class="fu">sum</span>(df_all_train<span class="sc">$</span>arr_delay)<span class="sc">+</span><span class="fu">sum</span>(df_all_test<span class="sc">$</span>arr_delay), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">\n</span><span class="st">上記の合計:"</span>, <span class="fu">sum</span>(df_all_train<span class="sc">$</span>arr_delay)<span class="sc">+</span><span class="fu">sum</span>(df_all_test<span class="sc">$</span>arr_delay), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>全データのarr_delay合計: 2322197 
 学習データのarr_delay合計: 1876791 , 評価データのarr_delay合計: 445406.2 
@@ -594,7 +597,7 @@ div.csl-indent {
 <p>以下では実際にモデル構築を行っていきますが、 このままでは件数が多くモデル構築に時間がかかってしまいます。</p>
 <p>モデルの精度向上よりも使用例の実行時間短縮を優先するため、以下では件数を減らしておくこととします。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df_small <span class="ot">&lt;-</span> <span class="fu">testing</span>(<span class="fu">initial_split</span>(df_all, <span class="at">prop =</span> <span class="fl">0.98</span>)) <span class="co">#336776件から2%分の6736件を取り出す</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
@@ -602,7 +605,7 @@ div.csl-indent {
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>df_train <span class="ot">&lt;-</span> <span class="fu">training</span>(split_df_small)</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>df_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(split_df_small)</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>split_df_small</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>split_df_small</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;Training/Testing/Total&gt;
 &lt;6062/674/6736&gt;</code></pre>
@@ -618,8 +621,8 @@ div.csl-indent {
 <p>前述の学習データと評価データの分割をさらに発展させたものといえますが、 このk分割交差検証法は主に学習データの中でモデルの精度を検証するために用いられます。 （このことから、以下ではk分割交差検証法で学習に用いるデータを「分析セット」、検証に用いるデータを「検証セット」と呼び分けることとします。）</p>
 <p>rsampleパッケージの<code>vfold_cv</code><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>関数を用いることで、 k分割交差検証法のための分析セットや検証セットを簡単に用意することが出来ます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>splitscv_df_train <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(df_train, <span class="at">v =</span> <span class="dv">4</span>) <span class="co">#4分割</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>splitscv_df_train <span class="co">#k回の学習～検証それぞれに使うsplitが格納されたdata.frame</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>splitscv_df_train <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(df_train, <span class="at">v =</span> <span class="dv">4</span>) <span class="co">#4分割</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>splitscv_df_train <span class="co">#k回の学習～検証それぞれに使うsplitが格納されたdata.frame</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#  4-fold cross-validation 
 # A tibble: 4 × 2
@@ -633,13 +636,13 @@ div.csl-indent {
 </div>
 <p>得られるものがデータフレームである以外は<code>initial_split</code>関数とほぼ同様に使えますが、 <code>initial_split</code>で用いた関数は<code>training</code>と<code>testing</code>であった一方、 こちらでは<code>analysis</code>と<code>assessment</code>になっています。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(splitscv_df_train, <span class="dv">1</span>, <span class="cf">function</span>(row) {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(splitscv_df_train, <span class="dv">1</span>, <span class="cf">function</span>(row) {</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  id <span class="ot">&lt;-</span> row<span class="sc">$</span>id</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  split <span class="ot">&lt;-</span> row<span class="sc">$</span>splits</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  df_analysis <span class="ot">&lt;-</span> <span class="fu">analysis</span>(split)</span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  df_assessment <span class="ot">&lt;-</span> <span class="fu">assessment</span>(split)</span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">"id:"</span>, id, <span class="st">", df_analysisの行数:"</span>, <span class="fu">nrow</span>(df_analysis), <span class="st">", df_assessmentの行数:"</span>, <span class="fu">nrow</span>(df_assessment))</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "id:Fold1, df_analysisの行数:4546, df_assessmentの行数:1516"
 [2] "id:Fold2, df_analysisの行数:4546, df_assessmentの行数:1516"
@@ -654,7 +657,7 @@ div.csl-indent {
 <p><code>vfold_cv</code>関数による交差検証を行う実例<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>を紹介します。</p>
 <p>まずは前処理やモデルの定義を行います。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#前処理の手順を定義</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#前処理の手順を定義</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="do">##k分割交差検証ではk回同じ前処理を繰り返していわゆる「リーク」を防止することがある</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="do">##そこで前処理の手続き自体をオブジェクト化しておき、後で(for文の中で)実行するという方法をとる </span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>rec_init <span class="ot">&lt;-</span> <span class="fu">recipe</span>(df_small, <span class="at">formula =</span> arr_delay <span class="sc">~</span> .)</span>
@@ -672,12 +675,12 @@ div.csl-indent {
 <span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="co">#前処理とモデルの定義を1オブジェクトにまとめたもの</span></span>
 <span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>wf_xgboost <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rec_init <span class="sc">%&gt;%</span> <span class="fu">apply_poststeps</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(model_engine_xgboost)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(model_engine_xgboost)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>最初に最低限の前処理だけを行ったモデルを構築し、 その後は前処理やモデル構築の過程に改良を施すことにより精度改善を目指すこととします。</p>
 <p>ここで精度を測る指標として、5分割交差検証によるRMSE平均を採用することとします。 まずは最初のモデルに対して精度を測っておきます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#5分割で交差検証を行う</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#5分割で交差検証を行う</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>splitscv_df_train <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(df_train, <span class="at">v =</span> <span class="dv">5</span>)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -710,7 +713,7 @@ div.csl-indent {
 <span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>wf <span class="ot">&lt;-</span> wf_xgboost</span>
-<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>results_cv <span class="ot">&lt;-</span> <span class="fu">do_cv</span>(splitscv_df_train, wf) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>results_cv <span class="ot">&lt;-</span> <span class="fu">do_cv</span>(splitscv_df_train, wf) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Fold1 ... rmse: 16.06052 , 経過時間: 1.4 
 Fold2 ... rmse: 21.37279 , 経過時間: 1.15 
@@ -718,8 +721,8 @@ Fold3 ... rmse: 16.59439 , 経過時間: 1.14
 Fold4 ... rmse: 14.79878 , 経過時間: 1.14 
 Fold5 ... rmse: 15.17561 , 経過時間: 1.1 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>rmse1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(results_cv<span class="sc">$</span>rmse) <span class="co">#RMSEの平均値で精度を測ることにする</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"rmse平均値:"</span>, rmse1, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>rmse1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(results_cv<span class="sc">$</span>rmse) <span class="co">#RMSEの平均値で精度を測ることにする</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"rmse平均値:"</span>, rmse1, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>rmse平均値: 16.80042 </code></pre>
 </div>
@@ -727,7 +730,7 @@ Fold5 ... rmse: 15.17561 , 経過時間: 1.1 </code></pre>
 <p>その後データを分析してみたところ、<strong>出発した日付</strong>（特徴量名<code>year</code>, <code>month</code>, <code>day</code>）が重要な特徴量であることがわかりました。 遅延を発生させる事象が起きたかどうかを判断するのに日付が重要ということでしょう。 （ホリデーシーズンで乗客が多かった、特定の日付で天候が悪化した、等…）</p>
 <p>今回のデータは年月日が別々の変数に格納されているので、上記のような事象を想定するならば年月日は一つの特徴量にまとめたほうがよいかもしれません。 そこで、月と日をまとめた特徴量<code>monthday</code>を追加（2013年のデータしかないため年は無視）して精度が向上するか検証してみましょう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#1/1からの経過日数+1 (うるう年の日付で計算)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#1/1からの経過日数+1 (うるう年の日付で計算)</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>get_monthday <span class="ot">&lt;-</span> <span class="cf">function</span>(month, day) {</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.numeric</span>(<span class="fu">difftime</span>(<span class="fu">as.Date</span>(<span class="fu">paste</span>(<span class="dv">2020</span>, month, day, <span class="at">sep =</span> <span class="st">"-"</span>)),</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">as.Date</span>(<span class="fu">paste</span>(<span class="dv">2020</span>, <span class="st">"01-01"</span>, <span class="at">sep =</span> <span class="st">"-"</span>)), <span class="at">units =</span> <span class="st">"days"</span>))<span class="sc">+</span><span class="dv">1</span></span>
@@ -737,7 +740,7 @@ Fold5 ... rmse: 15.17561 , 経過時間: 1.1 </code></pre>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_recipe</span>(rec_init <span class="sc">%&gt;%</span> <span class="fu">step_mutate</span>(<span class="at">monthday =</span> <span class="fu">get_monthday</span>(month,day)) <span class="sc">%&gt;%</span> <span class="fu">apply_poststeps</span>())</span>
 <span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co">#先ほどと同じ交差検証を行う</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>results_cv <span class="ot">&lt;-</span> <span class="fu">do_cv</span>(splitscv_df_train, wf) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>results_cv <span class="ot">&lt;-</span> <span class="fu">do_cv</span>(splitscv_df_train, wf) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Fold1 ... rmse: 16.20968 , 経過時間: 1.29 
 Fold2 ... rmse: 21.4931 , 経過時間: 1.22 
@@ -745,8 +748,8 @@ Fold3 ... rmse: 16.56371 , 経過時間: 1.24
 Fold4 ... rmse: 14.42167 , 経過時間: 1.23 
 Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>rmse2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(results_cv<span class="sc">$</span>rmse)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"rmse平均値:"</span>, rmse2, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>rmse2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(results_cv<span class="sc">$</span>rmse)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"rmse平均値:"</span>, rmse2, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>rmse平均値: 16.86943 </code></pre>
 </div>
@@ -763,8 +766,8 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 <p><strong>ブートストラップ法</strong>も精度評価に用いられる手法のうちのひとつで、 こちらは単純にデータを分割するのではなく、元データと同じ回数の復元抽出を何度も繰り返すものです。</p>
 <p><code>rsample</code>パッケージの<code>bootstraps</code>関数を用いることで、 復元抽出されたデータを簡単に用意することが出来ます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>boots_train <span class="ot">&lt;-</span> <span class="fu">bootstraps</span>(df_train, <span class="at">times =</span> <span class="dv">4</span>) <span class="co">#4回</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>boots_train</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>boots_train <span class="ot">&lt;-</span> <span class="fu">bootstraps</span>(df_train, <span class="at">times =</span> <span class="dv">4</span>) <span class="co">#4回</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>boots_train</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Bootstrap sampling 
 # A tibble: 4 × 2
@@ -779,13 +782,13 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 <p>使用方法は<code>vfold_cv</code>関数と同様です。</p>
 <p><code>analysis</code>で得られるものはもとのデータと同じ件数になっています。 一方、<code>assessment</code>で得られるものは復元抽出で一度も選ばれなかったレコードを集めたもので、 件数はそれぞれの試行で異なります。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(boots_train, <span class="dv">1</span>, <span class="cf">function</span>(row) {</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(boots_train, <span class="dv">1</span>, <span class="cf">function</span>(row) {</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  id <span class="ot">&lt;-</span> row<span class="sc">$</span>id</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  split <span class="ot">&lt;-</span> row<span class="sc">$</span>splits</span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  df_analysis <span class="ot">&lt;-</span> <span class="fu">analysis</span>(split)</span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  df_assessment <span class="ot">&lt;-</span> <span class="fu">assessment</span>(split)</span>
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">"id:"</span>, id, <span class="st">", df_analysisの行数:"</span>, <span class="fu">nrow</span>(df_analysis), <span class="st">", df_assessmentの行数:"</span>, <span class="fu">nrow</span>(df_assessment))</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "id:Bootstrap1, df_analysisの行数:6062, df_assessmentの行数:2213"
 [2] "id:Bootstrap2, df_analysisの行数:6062, df_assessmentの行数:2223"
@@ -799,7 +802,7 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 <p>ブートストラップ法は機械学習におけるパラメータや予測値等について、 その分布を図るのに用いられることがあります。</p>
 <p>以下ではブートストラップ法により10組の学習データを用意してみて、 それぞれによって評価データにおける予測値がどう変化するかを確認してみることにします。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>boots_train <span class="ot">&lt;-</span> <span class="fu">bootstraps</span>(df_train, <span class="at">times =</span> <span class="dv">10</span>) <span class="co">#試行回数10回のブートストラップ法</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">tibble</span>() <span class="co">#各試行での結果を保存するための変数</span></span>
@@ -826,11 +829,11 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 <span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>  df_test_baked_tmp <span class="ot">&lt;-</span> recp <span class="sc">%&gt;%</span> <span class="fu">bake</span>(<span class="at">new_data =</span> df_test)</span>
 <span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>  <span class="co">#評価データで予測し、結果を格納</span></span>
 <span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>  df_test_predy_tmp[[id]] <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_fitted_xgboost_tmp, <span class="at">new_data =</span> df_test_baked_tmp)</span>
-<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>それぞれの予測値をプロットしてみると次のとおり。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df_test_predy_tmp_tidy <span class="ot">&lt;-</span> <span class="fu">tibble</span>()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df_test_predy_tmp_tidy <span class="ot">&lt;-</span> <span class="fu">tibble</span>()</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(id <span class="cf">in</span> <span class="fu">names</span>(df_test_predy_tmp))</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  df_test_predy_tmp_tidy <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(df_test_predy_tmp_tidy,</span>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>                                      <span class="fu">tibble</span>(<span class="at">id_split =</span> id, </span>
@@ -841,7 +844,7 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 <span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
 <span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> id_instance, <span class="at">y =</span> .pred, <span class="at">colour =</span> id_split),</span>
 <span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> df_test_predy_tmp_tidy <span class="sc">%&gt;%</span> <span class="fu">filter</span>(id_instance <span class="sc">&lt;=</span> <span class="dv">10</span>),</span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">seed =</span> <span class="dv">2024</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">seed =</span> <span class="dv">2024</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -854,7 +857,7 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 <p>また、ブートストラップ法によって構築したモデルの平均値等を使用することで過学習を防止する、 <strong>バギング</strong>という手法も存在しています。</p>
 <p>単体モデルと比較して精度が向上するかを確かめてみましょう。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">##まず単体モデルの場合</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">##まず単体モデルの場合</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co">#XGBoost向けの前処理</span></span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>recp <span class="ot">&lt;-</span> rec_init <span class="sc">%&gt;%</span> <span class="fu">apply_poststeps</span>() <span class="sc">%&gt;%</span> <span class="fu">prep</span>(<span class="at">training =</span> df_train, <span class="at">fresh =</span> <span class="cn">TRUE</span>)</span>
@@ -866,15 +869,15 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 <span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>df_test_predy <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_fitted_xgboost, <span class="at">new_data =</span> df_test_baked)</span>
 <span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>df_test_xypredy <span class="ot">&lt;-</span> df_test_predy <span class="sc">%&gt;%</span> <span class="fu">bind_cols</span>(df_test)</span>
 <span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> df_test_xypredy <span class="sc">%&gt;%</span> yardstick<span class="sc">::</span><span class="fu">rmse</span>(<span class="at">truth =</span> arr_delay, <span class="at">estimate =</span> .pred)</span>
-<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"単体モデルのRMSE:"</span>, res<span class="sc">$</span>.estimate[[<span class="dv">1</span>]],<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"単体モデルのRMSE:"</span>, res<span class="sc">$</span>.estimate[[<span class="dv">1</span>]],<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>単体モデルのRMSE: 17.72646 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">##ブートストラップ法の10個のモデルの予測平均値の場合</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">##ブートストラップ法の10個のモデルの予測平均値の場合</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>df_test_predy_b <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">.pred =</span> <span class="fu">rowMeans</span>(<span class="fu">do.call</span>(cbind, df_test_predy_tmp))) <span class="co">#予測値の平均値を計算</span></span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>df_test_xypredy_b <span class="ot">&lt;-</span> df_test_predy_b <span class="sc">%&gt;%</span> <span class="fu">bind_cols</span>(df_test)</span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> df_test_xypredy_b <span class="sc">%&gt;%</span> yardstick<span class="sc">::</span><span class="fu">rmse</span>(<span class="at">truth =</span> arr_delay, <span class="at">estimate =</span> .pred)</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"10モデル平均のRMSE:"</span>, res<span class="sc">$</span>.estimate[[<span class="dv">1</span>]],<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"10モデル平均のRMSE:"</span>, res<span class="sc">$</span>.estimate[[<span class="dv">1</span>]],<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>10モデル平均のRMSE: 17.30855 </code></pre>
 </div>
@@ -891,16 +894,16 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 <h3 class="anchored" data-anchor-id="initial_time_split関数の使い方"><code>initial_time_split</code>関数の使い方</h3>
 <p><code>initial_split</code>関数の代わりに<code>initial_time_split</code>関数を用いることで、このようなデータ分割を行うことができます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>time_split <span class="ot">&lt;-</span> <span class="fu">initial_time_split</span>(df_all, <span class="at">prop =</span> <span class="fl">0.8</span>)</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>time_split</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>time_split</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;Training/Testing/Total&gt;
 &lt;269420/67356/336776&gt;</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>time_split <span class="sc">%&gt;%</span> <span class="fu">training</span>() <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>time_split <span class="sc">%&gt;%</span> <span class="fu">training</span>() <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 16
    year month   day dep_time sched_dep_time dep_delay sched_arr_time arr_delay
@@ -914,7 +917,7 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 # ℹ 8 more variables: carrier &lt;fct&gt;, flight &lt;int&gt;, origin &lt;fct&gt;, dest &lt;fct&gt;,
 #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>time_split <span class="sc">%&gt;%</span> <span class="fu">testing</span>() <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>time_split <span class="sc">%&gt;%</span> <span class="fu">testing</span>() <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 16
    year month   day dep_time sched_dep_time dep_delay sched_arr_time arr_delay
@@ -936,7 +939,7 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 <p>時系列データ特有のリサンプリング手法としてスライディングウィンドウ法があります。 分析セット期間の長さ（例えば30日）と検証セット期間の長さ（例えば10日）を決めておいて、 長さを一定のままデータ抽出する範囲（ウィンドウ）をスライドしていくものです。</p>
 <p>rsampleパッケージの<code>sliding_period</code>関数等で実現することが出来ます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co">#sliding_period関数を使用する際は時刻のデータをDate型やPOSIXct型で用意しておく必要がある</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co">#sliding_period関数を使用する際は時刻のデータをDate型やPOSIXct型で用意しておく必要がある</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>df_small_date <span class="ot">&lt;-</span> df_small <span class="sc">%&gt;%</span></span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(<span class="fu">paste</span>(year, month, day, <span class="at">sep =</span> <span class="st">"-"</span>))) <span class="sc">%&gt;%</span></span>
 <span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(date) <span class="co">#時系列順にデータが並んでいる必要があるためソートしておく</span></span>
@@ -958,7 +961,7 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 <span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>      <span class="st">"～"</span>, <span class="fu">as.character</span>(<span class="fu">max</span>(<span class="fu">analysis</span>(sliding<span class="sc">$</span>splits[[i]])<span class="sc">$</span>date)),</span>
 <span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>      <span class="st">"検証セットの日付範囲:"</span>, <span class="fu">as.character</span>(<span class="fu">min</span>(<span class="fu">assessment</span>(sliding<span class="sc">$</span>splits[[i]])<span class="sc">$</span>date)), </span>
 <span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>      <span class="st">"～"</span>, <span class="fu">as.character</span>(<span class="fu">max</span>(<span class="fu">assessment</span>(sliding<span class="sc">$</span>splits[[i]])<span class="sc">$</span>date)), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Slice01 分析セットの日付範囲: 2013-01-01 ～ 2013-01-30 検証セットの日付範囲: 2013-03-02 ～ 2013-03-21 
 Slice02 分析セットの日付範囲: 2013-01-21 ～ 2013-02-19 検証セットの日付範囲: 2013-03-22 ～ 2013-04-10 
@@ -975,9 +978,9 @@ Slice05 分析セットの日付範囲: 2013-03-22 ～ 2013-04-20 検証セッ�
 <p>学習データと評価データの分割の際に無作為抽出した場合、 小さなカテゴリがある場合等の偏りのあるデータでは、両者でその分布が異なってしまうことがあります。</p>
 <p>例えばfactor型変数<code>carrier</code>を確認してみると、 学習データと評価データで若干ながら分布が異なることがわかります。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>tb_train <span class="ot">&lt;-</span> <span class="fu">table</span>(df_train<span class="sc">$</span>carrier)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>tb_train <span class="ot">&lt;-</span> <span class="fu">table</span>(df_train<span class="sc">$</span>carrier)</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>tb_test <span class="ot">&lt;-</span> <span class="fu">table</span>(df_test<span class="sc">$</span>carrier)</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">carrier :=</span> <span class="fu">names</span>(tb_train), <span class="at">dist_train :=</span> <span class="fu">as.double</span>(tb_train), <span class="at">dist_test :=</span> <span class="fu">as.double</span>(tb_test)) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">carrier :=</span> <span class="fu">names</span>(tb_train), <span class="at">dist_train :=</span> <span class="fu">as.double</span>(tb_train), <span class="at">dist_test :=</span> <span class="fu">as.double</span>(tb_test)) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
   carrier dist_train dist_test
@@ -992,14 +995,14 @@ Slice05 分析セットの日付範囲: 2013-03-22 ～ 2013-04-20 検証セッ�
 </div>
 <p>引数<code>strata</code>に列名を指定することで、その列ごとにデータを分けてから（指定した割合で）データ分割を行うようになります。 このような抽出方法を層化抽出といいます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>split_df_small_strata <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(df_small, <span class="at">prop =</span> <span class="fl">0.9</span>, <span class="at">strata =</span> carrier)</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>df_train_strata <span class="ot">&lt;-</span> <span class="fu">training</span>(split_df_small_strata)</span>
 <span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>df_test_strata <span class="ot">&lt;-</span> <span class="fu">testing</span>(split_df_small_strata)</span>
 <span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>tb_train_strata <span class="ot">&lt;-</span> <span class="fu">table</span>(df_train_strata<span class="sc">$</span>carrier)</span>
 <span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>tb_test_strata <span class="ot">&lt;-</span> <span class="fu">table</span>(df_test_strata<span class="sc">$</span>carrier)</span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">carrier :=</span> <span class="fu">names</span>(tb_train_strata), <span class="at">dist_train :=</span> <span class="fu">as.double</span>(tb_train_strata), <span class="at">dist_test :=</span> <span class="fu">as.double</span>(tb_test_strata)) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">carrier :=</span> <span class="fu">names</span>(tb_train_strata), <span class="at">dist_train :=</span> <span class="fu">as.double</span>(tb_train_strata), <span class="at">dist_test :=</span> <span class="fu">as.double</span>(tb_test_strata)) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
   carrier dist_train dist_test
@@ -1096,13 +1099,14 @@ Hannah Frick, Fanny Chow, Max Kuhn, Michael Mahoney, Julia Silge, and Hadley Wic
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

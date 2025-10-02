@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.33">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -91,14 +91,15 @@ div.csl-indent {
 <link href="../articles/rsample.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-5fec71090063759883e7e0e36cd2e998.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-4ff66e45b39d49436fe97d3fe27b9920.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -157,7 +158,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -197,7 +198,9 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Rパッケージ活用事例集</a> 
     </div>
@@ -558,7 +561,7 @@ window.Quarto = {
 <section id="パッケージの読み込み" class="level3">
 <h3 class="anchored" data-anchor-id="パッケージの読み込み">パッケージの読み込み</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER) <span class="co">#データセット</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AER) <span class="co">#データセット</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble) <span class="co">#data.frame拡張版</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co">#data.frameの操作</span></span>
@@ -571,7 +574,7 @@ window.Quarto = {
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co">#グラフの描画</span></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork) <span class="co">#複数のgpplotを組み合わせる</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shapviz) <span class="co">#SHAPの可視化</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shapviz) <span class="co">#SHAPの可視化</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="データセットの読み込み" class="level3">
@@ -580,10 +583,10 @@ window.Quarto = {
 <p>性別・年齢・学歴・家族構成・雇用状態（自営業か否か）健康保険の加入状況等に関する 約9,000個のサンプルが含まれています。 今回は、健康保険に加入しているかどうかを予測するモデルを作成することとします。</p>
 <p>データセットの詳細については <span class="citation" data-cites="BIB_AER_HEALTHINSURANCE">Achim Zeileis (<a href="fastshap.html#ref-BIB_AER_HEALTHINSURANCE" role="doc-biblioref">2024</a>)</span> を参照してください<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"HealthInsurance"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"HealthInsurance"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df_all <span class="ot">&lt;-</span> HealthInsurance</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df_all)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df_all)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> health          age        limit         gender     insurance  married   
  no : 629   Min.   :18.00   no :7571   female:4169   no :1750   no :3369  
@@ -608,7 +611,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="前処理">前処理</h3>
 <p>今回例として使用するモデルでは、説明変数が数値型である必要があるので、factor型変数を数値型に変換しておきます<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>rec_init <span class="ot">&lt;-</span> df_all <span class="sc">%&gt;%</span> <span class="fu">recipe</span>(insurance <span class="sc">~</span> .) <span class="sc">%&gt;%</span> <span class="co">#前処理手順の定義</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>rec_init <span class="ot">&lt;-</span> df_all <span class="sc">%&gt;%</span> <span class="fu">recipe</span>(insurance <span class="sc">~</span> .) <span class="sc">%&gt;%</span> <span class="co">#前処理手順の定義</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#ethinicityは最も多いカテゴリがcaucなので、これを基準カテゴリに変更</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_relevel</span>(ethnicity, <span class="at">ref_level =</span> <span class="st">"cauc"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#educationは学歴を表す説明変数で、大きいほど高学歴であるため、そのままダミー変数にするのではなく、数値に変換</span></span>
@@ -621,11 +624,11 @@ window.Quarto = {
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_relevel</span>(insurance, <span class="at">ref_level =</span> <span class="st">"yes"</span>)</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">#目的変数は健康保険に加入しているかを表すinsurance</span></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>df_baked <span class="ot">&lt;-</span> rec_init <span class="sc">%&gt;%</span> <span class="fu">prep</span>() <span class="sc">%&gt;%</span> <span class="fu">bake</span>(<span class="at">new_data =</span> <span class="cn">NULL</span>) <span class="co">#上記で定義した前処理手順を実際に実行</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>df_baked <span class="ot">&lt;-</span> rec_init <span class="sc">%&gt;%</span> <span class="fu">prep</span>() <span class="sc">%&gt;%</span> <span class="fu">bake</span>(<span class="at">new_data =</span> <span class="cn">NULL</span>) <span class="co">#上記で定義した前処理手順を実際に実行</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>上記前処理を施したうえで、学習データとテストデータに分割します。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>split_df <span class="ot">&lt;-</span> rsample<span class="sc">::</span><span class="fu">initial_split</span>(df_baked, <span class="at">prop =</span> <span class="fl">0.8</span>) <span class="co">#80%を学習データ、20%をテストデータとする</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df_train <span class="ot">&lt;-</span> rsample<span class="sc">::</span><span class="fu">training</span>(split_df)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>df_test <span class="ot">&lt;-</span> rsample<span class="sc">::</span><span class="fu">testing</span>(split_df)</span>
@@ -633,7 +636,7 @@ window.Quarto = {
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>df_train_x <span class="ot">&lt;-</span> df_train <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>insurance)</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>df_train_y <span class="ot">&lt;-</span> df_train<span class="sc">$</span>insurance</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>df_test_x <span class="ot">&lt;-</span> df_test <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>insurance)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>df_test_y <span class="ot">&lt;-</span> df_test<span class="sc">$</span>insurance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>df_test_y <span class="ot">&lt;-</span> df_test<span class="sc">$</span>insurance</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="モデル構築" class="level3">
@@ -641,16 +644,16 @@ window.Quarto = {
 <p>続いてXGBoostによる予測モデルを学習データをもとに構築します。<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
 <p>2値分類の問題ですが、予測モデルの出力としては加入しているか否かの2通りではなく、 加入している確率を出力するようにしています。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>model_xgboost <span class="ot">&lt;-</span> <span class="fu">xgboost</span>(<span class="at">data =</span> <span class="fu">as.matrix</span>(df_train_x), <span class="at">label =</span> <span class="fu">as.matrix</span>(<span class="dv">2</span> <span class="sc">-</span> <span class="fu">as.numeric</span>(df_train_y)), <span class="at">nrounds =</span> <span class="dv">100</span>,</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">params =</span> <span class="fu">list</span>(<span class="at">eta =</span> <span class="fl">0.3</span>, <span class="at">max_depth =</span> <span class="dv">2</span>, <span class="at">gamma =</span> <span class="dv">0</span>, <span class="at">min_child_weight =</span> <span class="dv">1</span>, </span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">subsample =</span> <span class="dv">1</span>, <span class="at">colsample_bytree =</span> <span class="dv">1</span>, <span class="at">colsample_bynode =</span> <span class="dv">2</span><span class="sc">/</span><span class="dv">14</span>, <span class="at">objective =</span> <span class="st">"binary:logistic"</span>),</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">verbose =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">verbose =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>構築した予測モデルの精度をテストデータを用いて確認しておきます。</p>
 <p>ここではAUC(ROC)を確認します。これは2値分類モデルで使用される評価指標で、高いほど精度が良いという評価になります。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>calc_score <span class="ot">&lt;-</span> <span class="cf">function</span>(object, predfun, df_test_x, df_test_y){</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>calc_score <span class="ot">&lt;-</span> <span class="cf">function</span>(object, predfun, df_test_x, df_test_y){</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  yhat <span class="ot">&lt;-</span> object <span class="sc">%&gt;%</span> <span class="fu">predfun</span>(df_test_x)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  pr <span class="ot">&lt;-</span> ROCR<span class="sc">::</span><span class="fu">prediction</span>(yhat, df_test_y)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  auc <span class="ot">&lt;-</span> pr <span class="sc">%&gt;%</span> ROCR<span class="sc">::</span><span class="fu">performance</span>(<span class="st">"auc"</span>)</span>
@@ -666,7 +669,7 @@ window.Quarto = {
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  object <span class="sc">%&gt;%</span> <span class="fu">predict</span>(<span class="at">newdata =</span> dt)</span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> <span class="fu">calc_score</span>(model_xgboost, predfun_xgboost, df_test_x, df_test_y)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>score<span class="sc">$</span>auc_plot <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>score<span class="sc">$</span>auc_plot <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -674,7 +677,7 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>score<span class="sc">$</span>auc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>score<span class="sc">$</span>auc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.7503933</code></pre>
 </div>
@@ -686,7 +689,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="基本的な使用方法">基本的な使用方法</h2>
 <p>まずは別のパッケージを用いてSHAPを計算します。 ここでは計算が高速なtreeshapを使用します。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>) <span class="co">#SHAPを計算したいサンプル</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>) <span class="co">#SHAPを計算したいサンプル</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>nrow_shap <span class="ot">&lt;-</span> <span class="fu">nrow</span>(df_train) <span class="co">#SHAPは計算コストが高いことが多いが、treeshapであれば全サンプルでも問題ない</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>df_shap <span class="ot">&lt;-</span> df_train[<span class="fu">sample</span>(<span class="fu">nrow</span>(df_train), nrow_shap), ]</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>df_shap_x <span class="ot">&lt;-</span> df_shap <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>insurance)</span>
@@ -700,18 +703,18 @@ window.Quarto = {
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">&lt;-</span> (t2<span class="sc">-</span>t1)[<span class="dv">3</span>]</span>
 <span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(t0) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
 <span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"処理時間:"</span>, t0, <span class="st">"秒"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"処理時間:"</span>, t0, <span class="st">"秒"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>処理時間: 0.44 秒</code></pre>
 </div>
 </div>
 <p>次に、<code>shapviz</code>関数でshapvizパッケージで可視化できるオブジェクトに変換します。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>sv <span class="ot">&lt;-</span> shapviz<span class="sc">::</span><span class="fu">shapviz</span>(shap_ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>sv <span class="ot">&lt;-</span> shapviz<span class="sc">::</span><span class="fu">shapviz</span>(shap_ts)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>最後に、このオブジェクトをshapvizパッケージの関数に入力することで可視化できます。 例えば、個別のサンプルに対する寄与の分解を表示するには次のようにします。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_waterfall</span>(sv, <span class="at">row_id =</span> <span class="dv">1</span>) <span class="co">#1つ目のサンプルの予測結果に対してプロット</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_waterfall</span>(sv, <span class="at">row_id =</span> <span class="dv">1</span>) <span class="co">#1つ目のサンプルの予測結果に対してプロット</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -729,7 +732,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="shap-summary-plot">SHAP Summary Plot</h3>
 <p>グローバルな手法として全サンプルの結果を一覧に表示し、 説明変数ごとに全般的にどの程度寄与しているかをプロットするには次のようにします。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_importance</span>(sv, <span class="at">kind =</span> <span class="st">"beeswarm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_importance</span>(sv, <span class="at">kind =</span> <span class="st">"beeswarm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -747,7 +750,7 @@ window.Quarto = {
 <p>寄与の絶対値の大きいサンプルが多い説明変数は重要であると考えられるので、 その平均値を棒グラフにして描画することで、どれが重要な説明変数なのかが一目でわかるようになります。</p>
 <p>このようなプロットをFeature Importance Plot（特徴量重要度プロット）といい、プロットするには次のようにします。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_importance</span>(sv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_importance</span>(sv)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -762,7 +765,7 @@ window.Quarto = {
 <p>ここまでは説明変数の寄与の大きさを比較することを主目的としていました。 各説明変数に着目して、それがどのように寄与しているかはSummary Plotでも確認可能ですが、 横軸に説明変数の値、縦軸に寄与としたグラフをプロットすることも考えられます。</p>
 <p>これをDependence Plotといい、プロットするには<code>sv_dependence</code>関数を使用します。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence</span>(sv, <span class="at">v =</span> <span class="fu">c</span>(<span class="st">"education_main"</span>, <span class="st">"age"</span>), <span class="at">color_var =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence</span>(sv, <span class="at">v =</span> <span class="fu">c</span>(<span class="st">"education_main"</span>, <span class="st">"age"</span>), <span class="at">color_var =</span> <span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -775,7 +778,7 @@ window.Quarto = {
 <p>このプロットでは横軸が同じでも、縦軸（寄与）が異なる点が多数描かれています。 これはサンプルによって寄与が異なるためで、交互作用がある場合にこのような現象が発生します。</p>
 <p>引数<code>color_var</code>を省略するか<code>"auto"</code>とすることで、交互作用の大きい説明変数を自動で選び、その値によってグラフが色分けされるようになります。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence</span>(sv, <span class="at">v =</span> <span class="fu">c</span>(<span class="st">"education_main"</span>, <span class="st">"age"</span>), <span class="at">color_var =</span> <span class="st">"auto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence</span>(sv, <span class="at">v =</span> <span class="fu">c</span>(<span class="st">"education_main"</span>, <span class="st">"age"</span>), <span class="at">color_var =</span> <span class="st">"auto"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -790,7 +793,7 @@ window.Quarto = {
 </ul>
 <p>引数<code>color_var</code>に説明変数名を指定することで、好きな特徴量で色分けをすることができます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence</span>(sv, <span class="at">v =</span> <span class="st">"age"</span>, <span class="at">color_var =</span> <span class="st">"married_yes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence</span>(sv, <span class="at">v =</span> <span class="st">"age"</span>, <span class="at">color_var =</span> <span class="st">"married_yes"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -805,7 +808,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="d-shap-dependence-plot">2D SHAP Dependence Plot</h3>
 <p>前述のSHAP Dependence Plotでは2つの説明変数の関係を色分けで示していましたが、 別の方法として縦軸と横軸に説明変数をとる方法もあります。使用する関数は<code>sv_dependence2D</code>関数です。 ここで<strong>色分けに使用されるSHAP値は2変数のSHAP値の合計</strong>になります。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence2D</span>(sv, <span class="at">x =</span> <span class="st">"education_main"</span>, <span class="at">y =</span> <span class="st">"married_yes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence2D</span>(sv, <span class="at">x =</span> <span class="st">"education_main"</span>, <span class="at">y =</span> <span class="st">"married_yes"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -821,7 +824,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="shap-waterfall-plot">SHAP Waterfall Plot</h3>
 <p>最初に例として挙げた、個別のサンプルに対する寄与の分解<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>をWaterfall Plotといいます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_waterfall</span>(sv, <span class="at">row_id =</span> <span class="dv">1</span>) <span class="co">#1つ目のサンプルの予測結果に対してプロット</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_waterfall</span>(sv, <span class="at">row_id =</span> <span class="dv">1</span>) <span class="co">#1つ目のサンプルの予測結果に対してプロット</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -835,7 +838,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="shap-force-plot">SHAP Force Plot</h3>
 <p>個別サンプルに対する寄与の分解についてはもう一つプロットが用意されており、 それが左側に正方向の寄与、右側に負方向の寄与を一次元的に並べるForce Plotです。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_force</span>(sv, <span class="at">row_id =</span> <span class="dv">1</span>) <span class="co">#1つ目のサンプルの予測結果に対してプロット</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_force</span>(sv, <span class="at">row_id =</span> <span class="dv">1</span>) <span class="co">#1つ目のサンプルの予測結果に対してプロット</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -915,11 +918,11 @@ window.Quarto = {
 <p>また、内部的にggplot2パッケージが使用されていることから、 ggplot2の関数を用いた見た目の調節も可能です。</p>
 <p>以下、例を示します<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_importance</span>(sv, <span class="at">kind =</span> <span class="st">"beeswarm"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_importance</span>(sv, <span class="at">kind =</span> <span class="st">"beeswarm"</span>,</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">max_display =</span> <span class="dv">6</span>, <span class="co">#6変数まで表示</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">show_numbers =</span> <span class="cn">TRUE</span>, <span class="co">#SHAP Feature Importanceを印字</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">viridis_args =</span> <span class="fu">list</span>(<span class="at">begin =</span> <span class="fl">0.1</span>, <span class="at">end =</span> <span class="fl">0.9</span>, <span class="at">option =</span> <span class="st">"plasma"</span>)) <span class="sc">+</span> <span class="co">#色の設定</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme_light</span>()<span class="co">#ggplotのテーマの設定</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme_light</span>()<span class="co">#ggplotのテーマの設定</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -929,13 +932,13 @@ window.Quarto = {
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_waterfall</span>(sv, <span class="at">row_id =</span> <span class="dv">1</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_waterfall</span>(sv, <span class="at">row_id =</span> <span class="dv">1</span>,</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">max_display =</span> <span class="dv">14</span>, <span class="co">#14変数まで表示</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">order_fun =</span> <span class="cf">function</span>(s) <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(s), <span class="co">#並べ方を決める関数…ここでは元の並びを維持</span></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">fill_colors =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"red"</span>),<span class="co">#正側、負側の色指定</span></span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">annotation_size =</span> <span class="dv">5</span>) <span class="sc">+</span> <span class="co">#下端のE[f(x)]と上端のf(x)の大きさ</span></span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"SHAP Waterfall Plot"</span>, <span class="at">subtitle =</span> <span class="st">"row_id = 1"</span>) <span class="sc">+</span> <span class="co">#タイトル指定</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>)) <span class="co">#タイトルの大きさ指定</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>)) <span class="co">#タイトルの大きさ指定</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -951,8 +954,8 @@ window.Quarto = {
 <p><code>shapviz::shapviz</code>関数で作られるオブジェクトはshapvizオブジェクトと呼ばれますが、 複数のshapvizオブジェクトを内包したmshapvizオブジェクトも存在し、 これもshapvizパッケージの関数でプロットすることが可能です。</p>
 <p>mshapvizオブジェクトを得る方法はいくつかありますが、 たとえば<code>split</code>関数でshapvizオブジェクトを分割する方法があります。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>svs <span class="ot">&lt;-</span> <span class="fu">split</span>(sv, <span class="at">f =</span> df_shap_x<span class="sc">$</span>education_main) <span class="co">#education_mainの値ごとに分割</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence</span>(svs, <span class="at">v =</span> <span class="st">"age"</span>, <span class="at">color_var =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>svs <span class="ot">&lt;-</span> <span class="fu">split</span>(sv, <span class="at">f =</span> df_shap_x<span class="sc">$</span>education_main) <span class="co">#education_mainの値ごとに分割</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence</span>(svs, <span class="at">v =</span> <span class="st">"age"</span>, <span class="at">color_var =</span> <span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -964,11 +967,11 @@ window.Quarto = {
 <p>他には、shapvizオブジェクトを<code>c</code>関数で結合する方法もあります。</p>
 <p>なお、shapvizオブジェクトの分割の際には、 データフレーム等と同じような<code>変数[行, 列]</code>記法を用いることが出来ます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>svs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">northeast =</span> sv[df_shap_x<span class="sc">$</span>region_midwest<span class="sc">+</span>df_shap_x<span class="sc">$</span>region_south<span class="sc">+</span>df_shap_x<span class="sc">$</span>region_west<span class="sc">==</span><span class="dv">0</span>, ],</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>svs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">northeast =</span> sv[df_shap_x<span class="sc">$</span>region_midwest<span class="sc">+</span>df_shap_x<span class="sc">$</span>region_south<span class="sc">+</span>df_shap_x<span class="sc">$</span>region_west<span class="sc">==</span><span class="dv">0</span>, ],</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">midwest =</span> sv[df_shap_x<span class="sc">$</span>region_midwest<span class="sc">==</span><span class="dv">1</span>, ],</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">south =</span> sv[df_shap_x<span class="sc">$</span>region_south<span class="sc">==</span><span class="dv">1</span>, ],</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">west =</span> sv[df_shap_x<span class="sc">$</span>region_west<span class="sc">==</span><span class="dv">1</span>, ])</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence</span>(svs, <span class="at">v =</span> <span class="st">"age"</span>, <span class="at">color_var =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence</span>(svs, <span class="at">v =</span> <span class="st">"age"</span>, <span class="at">color_var =</span> <span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -985,23 +988,23 @@ window.Quarto = {
 <p>SHAP値は予測値への寄与を各説明変数に割り振ったものでしたが、 これとは別に、（2次の）交互作用への寄与を各2つの説明変数の組に割り振った、<strong>SHAP交互作用値</strong>(SHAP Interaction Values)というものもあります<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>。</p>
 <p>SHAP交互作用値が計算できるパッケージは限られており、2024年8月時点ではtreeshapのみです。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#interactionsをTRUEにしておく</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>shap_ts <span class="ot">&lt;-</span> treeshap<span class="sc">::</span><span class="fu">treeshap</span>(obj_uni, <span class="at">x =</span> df_shap_x, <span class="at">interactions =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>t2 <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">&lt;-</span> (t2<span class="sc">-</span>t1)[<span class="dv">3</span>]</span>
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(t0) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
 <span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"処理時間:"</span>, t0, <span class="st">"秒"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"処理時間:"</span>, t0, <span class="st">"秒"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>処理時間: 3.44 秒</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>sv_i <span class="ot">&lt;-</span> shapviz<span class="sc">::</span><span class="fu">shapviz</span>(shap_ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>sv_i <span class="ot">&lt;-</span> shapviz<span class="sc">::</span><span class="fu">shapviz</span>(shap_ts)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Summary Plotと同じように、説明変数の組ごとにSHAP交互作用値をプロットするには次のようにします。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#重要なものから3つを選び、3x3のプロットを作成</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_interaction</span>(sv_i, <span class="at">max_display =</span> <span class="dv">3</span>, <span class="at">kind =</span> <span class="st">"beeswarm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#重要なものから3つを選び、3x3のプロットを作成</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_interaction</span>(sv_i, <span class="at">max_display =</span> <span class="dv">3</span>, <span class="at">kind =</span> <span class="st">"beeswarm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1015,8 +1018,8 @@ window.Quarto = {
 <p>また、対角線を挟んで右上側にある3つと左下側にある3つについて、対称な位置にあるもの同士のグラフの形は同じですが、色分けが異なります。 例えば1行目・2列目のグラフ（<code>education_main:married_yes</code>）では学歴（<code>education_main</code>）で色分けされており、 最も低い層と高い層で交互作用が大きくなっていることが読み取れます。</p>
 <p>なお、引数<code>kind</code>に<code>"no"</code>を与えた場合、Feature Importanceの類似物として、 SHAP交互作用値の絶対値の平均値を、行列の形で得ることが出来ます。 可視化には別の関数が必要です。ここでは<code>heatmap</code>関数を用いてみます。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>matrix_i <span class="ot">&lt;-</span> shapviz<span class="sc">::</span><span class="fu">sv_interaction</span>(sv_i, <span class="at">kind =</span> <span class="st">"no"</span>)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>matrix_i <span class="sc">%&gt;%</span> <span class="fu">heatmap</span>(<span class="at">Rowv =</span> <span class="cn">NA</span>, <span class="at">Colv =</span> <span class="cn">NA</span>, <span class="at">revC =</span> <span class="cn">TRUE</span>, <span class="at">symm =</span> <span class="cn">TRUE</span>, <span class="at">margins =</span> <span class="fu">c</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>matrix_i <span class="ot">&lt;-</span> shapviz<span class="sc">::</span><span class="fu">sv_interaction</span>(sv_i, <span class="at">kind =</span> <span class="st">"no"</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>matrix_i <span class="sc">%&gt;%</span> <span class="fu">heatmap</span>(<span class="at">Rowv =</span> <span class="cn">NA</span>, <span class="at">Colv =</span> <span class="cn">NA</span>, <span class="at">revC =</span> <span class="cn">TRUE</span>, <span class="at">symm =</span> <span class="cn">TRUE</span>, <span class="at">margins =</span> <span class="fu">c</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1027,9 +1030,9 @@ window.Quarto = {
 </div>
 <p>今回の例では交互作用があまり無い（XGBoostの予測値は、説明変数ごとに加法的に分解できるモデルとあまり変わらない）ということしか把握できませんでした。 敢えて対角線要素を除いてプロットするには次のようにします。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>matrix_i2 <span class="ot">&lt;-</span> matrix_i</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>matrix_i2 <span class="ot">&lt;-</span> matrix_i</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(matrix_i2) <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>matrix_i2 <span class="sc">%&gt;%</span> <span class="fu">heatmap</span>(<span class="at">Rowv =</span> <span class="cn">NA</span>, <span class="at">Colv =</span> <span class="cn">NA</span>, <span class="at">revC =</span> <span class="cn">TRUE</span>, <span class="at">symm =</span> <span class="cn">TRUE</span>, <span class="at">margins =</span> <span class="fu">c</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>matrix_i2 <span class="sc">%&gt;%</span> <span class="fu">heatmap</span>(<span class="at">Rowv =</span> <span class="cn">NA</span>, <span class="at">Colv =</span> <span class="cn">NA</span>, <span class="at">revC =</span> <span class="cn">TRUE</span>, <span class="at">symm =</span> <span class="cn">TRUE</span>, <span class="at">margins =</span> <span class="fu">c</span>(<span class="dv">8</span>,<span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1040,7 +1043,7 @@ window.Quarto = {
 </div>
 <p>特定の説明変数の組に着目した分析を行う場合は、 前述のSHAP Dependence Plotで引数<code>interactions</code>に<code>TRUE</code>を与えてSHAP交互作用値をプロットします。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence</span>(sv_i, <span class="at">v =</span> <span class="st">"age"</span>, <span class="at">color_var =</span> <span class="st">"region_west"</span>, <span class="at">interactions =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence</span>(sv_i, <span class="at">v =</span> <span class="st">"age"</span>, <span class="at">color_var =</span> <span class="st">"region_west"</span>, <span class="at">interactions =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1053,7 +1056,7 @@ window.Quarto = {
 <p>なお、今回のモデルは木の構造が比較的単純なため、2次の交互作用ともなるとグラフもかなり単純なものになっています。</p>
 <p><code>sv_dependence2D</code>関数版もあります。 縦軸、横軸に説明変数をとり、SHAP交互作用値で色分けをするというもので、 先ほどのグラフから単に縦軸と色分けを逆転させただけです。</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence2D</span>(sv_i, <span class="at">x =</span> <span class="st">"age"</span>, <span class="at">y =</span> <span class="st">"region_west"</span>, <span class="at">interactions =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>shapviz<span class="sc">::</span><span class="fu">sv_dependence2D</span>(sv_i, <span class="at">x =</span> <span class="st">"age"</span>, <span class="at">y =</span> <span class="st">"region_west"</span>, <span class="at">interactions =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1163,13 +1166,14 @@ Michael Mayer, and Adrian Stando. 2024a. <span>“Geographic Components.”</spa
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
