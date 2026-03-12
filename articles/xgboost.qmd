@@ -1,0 +1,218 @@
+---
+title: "xgboost"
+date: "`r Sys.Date()`"
+format:
+  html:
+    fig-width: 6
+    fig-height: 3
+---
+
+```{r setup_qmd, include=FALSE}
+
+# install packages
+pkgs <- c("xgboost", "mlbench", "knitr", "kableExtra")
+pkgs <- pkgs[!vapply(pkgs, requireNamespace, logical(1L), quietly = TRUE)]
+if (length(pkgs) > 0) install.packages(pkgs)
+remove(pkgs)
+```
+
+## パッケージの概要
+xgboostパッケージは、勾配ブースティング決定木（Gradient Boosting Decision Tree, GBDT）を高速に実装したパッケージとなります。分類問題、回帰問題のどちらの問題にも対応可です。
+
+## 使用例（分類問題）：PimaIndiansDiabetesデータの分類
+PimaIndiansDiabetesデータを用いて、種々の項目からその患者が糖尿病患者であるかを判定するGBDTモデルを構築します。
+
+### データの確認
+```{r, warning=FALSE}
+library(mlbench)
+data(PimaIndiansDiabetes)
+df <- PimaIndiansDiabetes
+tar.idx <- 9
+```
+
+データの中身の確認です。（head）
+```{r}
+head(df)
+```
+
+データの中身の確認です。（str）
+```{r}
+str(df)
+```
+
+各変数の意味は以下の通りです。
+
+| 変数名           | データ型 | 概要                            |
+|:-----------------|:---------|:--------------------------------|
+| pregnant 　　    | num      | 妊娠回数 　　　                 |
+| glucose          | num      | 血漿グルコース濃度（負荷試験）  |
+| pressure 　　　  | num      | 拡張期血圧 [mm Hg] 　   　      |
+| triceps 　　　　 | num      | 上腕三頭筋皮膚襞の厚さ  [mm ]   |
+| insulin 　　　　 | num      | 2時間血清インスリン  [mu U/ml]  |
+| mass             | num      | BMI　　　                       |
+| pedigree         | num      | 糖尿病血統機能                  |
+| age              | num      | 年齢                            |
+| diabetes         | Factor   | クラス変数（糖尿病の検査）      |
+
+summaryを表示します。
+```{r}
+summary(df)
+```
+
+その他のPimaIndiansDiabetesデータのEDA（探索的データ解析）については他のパッケージのコード活用例を参照ください。
+
+各種手法計算用の関数を定義します。
+```{r}
+create_df_res <- function(cmat){
+  TN <- cmat[1,1]
+  FP <- cmat[1,2]
+  FN <- cmat[2,1]
+  TP <- cmat[2,2]
+  
+  # 正解率：どれだけ正しく分類できたかの割合
+  acc <- round((TP + TN) / (TP + TN + FN + FP), 3)
+  
+  # 適合率：陽性と判定されたものがどれだけ正しく陽性であるかの割合
+  prec <- round(TP / (TP + FP), 3)
+  
+  # 再現率（真陽性率）：実際に陽性のものをどれだけ正しく陽性と判定できたかの割合
+  rec <- round(TP / (TP + FN), 3)
+  
+  # F値：適合率と再現率の調和平均（両者はトレードオフの関係）
+  Fval <- round(2 * rec * prec / (rec + prec), 3)
+  
+  # 真陰性率：実際に陰性のものをどれだけ正しく陰性と判定できたかの割合
+  TNRat <- round(TN / (TN + FP), 3)
+  
+  df_rat <- data.frame(
+    Item = c("正解率", "適合率", "再現率（真陽性率）", "F値", "真陰性率"), 
+    Rate = c(acc, prec, rec, Fval, TNRat)
+  )
+  
+  df_rat
+}
+```
+
+data.frameの出力整形用の関数を定義します。
+```{r, warning=FALSE}
+library(knitr)
+library(kableExtra)
+
+show_df <- function(df, cap=""){
+  if(is_html_output()){
+    kable(df, format = "html", caption = cap) %>%
+      kable_styling(bootstrap_options = "striped", full_width = FALSE, position = "left")
+  }else{
+    kable(df, format = "pipe", caption = cap) 
+  }
+}
+```
+
+PimaIndiansDiabetesデータを、モデル生成のための訓練データとモデル評価のためのテストデータに分割します。データ割合は、訓練データ7割・テストデータ3割とします。確認のためにデータサイズを出力します。
+```{r}
+# 再現性のためにシードを設定
+set.seed(123)  
+
+# データの分割
+sample_indices <- sample(1:nrow(df), 0.7 * nrow(df))  
+train_data <- df[sample_indices, ]
+test_data <- df[-sample_indices, ]
+
+# データサイズの確認
+c(nrow(df), nrow(train_data), nrow(test_data))
+```
+### モデルの構築
+訓練データを用いてGBDTモデルを構築します。
+```{r, warning=FALSE}
+library(xgboost)
+```
+データを準備します。データはxgboostで使用されるxgb.DMatrix型とします。全てのデータは数値でなくてはならない点にご注意ください。因子型（Factor）もNGとなります。目的変数は1:陰性・2:陽性ですが、扱いやすくするため-1して0:陰性・1:陽性として扱うことにします。
+```{r}
+train_X <- as.matrix(train_data[-tar.idx])
+train_y <- as.numeric(train_data[[tar.idx]]) - 1
+dtrain <- xgb.DMatrix(data = train_X, label = train_y)
+```
+
+モデルを設定します。目的関数はparamsのobjectiveとして設定します。今回は二値の分類問題であるので"binary:logistic"を使用します。
+```{r}
+model <- xgb.train(
+  data = dtrain,
+  nrounds = 100,
+  params = list(objective = "binary:logistic", eval_metric = "logloss")
+)
+```
+
+テストデータでの結果を確認します。こちらもまずはデータを準備します。
+```{r}
+test_X <- as.matrix(test_data[-tar.idx])
+res_act <- as.numeric(test_data[[tar.idx]]) - 1
+```
+
+予測結果を変数に格納します。結果は数値（小数）になっているため、分類（0 or 1）に変更します。
+```{r}
+res_pred <- predict(model, as.matrix(test_X))
+res_pred <- ifelse(res_pred > 0.5, 1, 0)
+```
+
+実際の結果と予測結果を比較できる混同行列を出力します。
+```{r}
+(conf_mat <- table(res_act, res_pred))
+```
+
+評価指標を確認します。他のコード活用例との比較として、tuneRangerを用いてチューニングしたmlrの分類木において正解率0.719・F値0.545でしたので、高いモデル性能であることが分かります。
+```{r, warning=FALSE}
+df_res <- create_df_res (conf_mat)
+show_df(df_res)
+```
+
+### ハイパーパラメータのチューニング
+xgboostにおいてGBDT構築に使用される主なハイパーパラメータは以下の通りです。
+
+| パラメータ名     |  概要                           |
+|:-----------------|:--------------------------------|
+| eta 　　         | 学習率（η）　　                 |
+| nrounds          | 作成する木の本数                |
+| min_child_weight | 葉に必要な最小重み 　   　      |
+| max_depth        | 木の高さ           　   　      |
+| gamma            | 木の分割時に必要な最小改善量    |
+
+このうち、max_depthの違いによるモデルの差を見てゆきます。まずはmax_depthを引数として訓練、性能検証を一度にやってくれる関数を作成します。
+```{r}
+train_test.max_depth <- function(max_depth_){
+  model <- xgb.train(
+    data = dtrain,
+    nrounds = 100,
+    params = list(max_depth = max_depth_, objective = "binary:logistic", eval_metric = "logloss")
+  )
+
+  res_pred <- predict(model, as.matrix(test_X))
+  res_pred <- ifelse(res_pred > 0.5, 1, 0)
+  conf_mat <- table(res_act, res_pred)
+  df_res <- create_df_res (conf_mat)
+  
+  df_res
+}
+```
+
+max_depthを4, 6, 8, 10と変えたときのモデル性能を比較します。max_depthが8のときに正解率やF値が最も高くなっています。
+```{r}
+n_loop <- 4
+n_row  <- 5 
+
+df_list <- vector("list", n_loop)
+
+for (i in seq_len(n_loop)) {
+  depth <- 4 + 2 * (i - 1)
+  df_res <- train_test.max_depth(depth)
+  df_list[[i]] <- df_res
+  colnames(df_list[[i]])[2] <- paste0("depth = ", depth)
+}
+
+df_all <- Reduce(
+  function(x, y) merge(x, y, by = "Item", all = TRUE, sort = FALSE),
+  df_list
+)
+
+show_df(df_all)
+```
+
