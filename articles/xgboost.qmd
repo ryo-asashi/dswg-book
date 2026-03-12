@@ -1,13 +1,10 @@
 ---
 title: "xgboost"
-author: ""
 date: "`r Sys.Date()`"
-output:   
-  word_document:
-    toc: yes
-    toc_depth: '3'
-    fig_width: 6
-    fig_height: 3
+format:
+  html:
+    fig-width: 6
+    fig-height: 3
 ---
 
 ```{r setup_qmd, include=FALSE}
