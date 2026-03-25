@@ -8,57 +8,7 @@ book:
   author: "データサイエンス関連基礎調査部会"
   chapters:
     - index.qmd
-    - articles/actuar.qmd
-    - articles/aglm.qmd
-    - articles/ALEPlot.qmd
-    - articles/C50.qmd
-    - articles/class.qmd
-    - articles/corrplot.qmd
-    - articles/crosstable.qmd
-    - articles/DALEX.qmd
-    - articles/datatable.qmd
-    - articles/distr.qmd
-    - articles/distrEx.qmd
-    - articles/dplyr.qmd
-    - articles/e1071.qmd
-    - articles/evd.qmd
-    - articles/fastshap.qmd
-    - articles/forcats.qmd
-    - articles/genlasso.qmd
-    - articles/gghighlight.qmd
-    - articles/ggplot2.qmd
-    - articles/igraph.qmd
-    - articles/iml.qmd
-    - articles/ismev.qmd
-    - articles/lifecontingencies.qmd
-    - articles/makedummies.qmd
-    - articles/mlbench.qmd
-    - articles/modeldata.qmd
-    - articles/palmerpenguins.qmd
-    - articles/parsnip.qmd
-    - articles/partykit.qmd
-    - articles/pdp.qmd
-    - articles/plotly.qmd
-    - articles/plyr.qmd
-    - articles/pROC.qmd
-    - articles/psych.qmd
-    - articles/purrr.qmd
-    - articles/quantmod.qmd
-    - articles/randomForest.qmd
-    - articles/ranger.qmd
-    - articles/readr.qmd
-    - articles/readxl.qmd
-#    - articles/recipes.qmd
-    - articles/rpart.qmd
-    - articles/rsample.qmd
-    - articles/shapviz.qmd
-    - articles/skimr.qmd
-    - articles/stringr.qmd
-    - articles/survival.qmd
-    - articles/tibble.qmd
-    - articles/tuneRanger.qmd
-    - articles/yardstick.qmd
-    - articles/YieldCurve.qmd
+    - articles/*.qmd
 
 format:
   html:
