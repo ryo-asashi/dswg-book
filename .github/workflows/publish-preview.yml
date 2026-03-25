@@ -35,7 +35,11 @@ jobs:
             libfontconfig1-dev \
             libcairo2-dev \
             libharfbuzz-dev \
-            libfribidi-dev
+            libfribidi-dev \
+            libcurl4-openssl-dev \
+            libjpeg-dev \
+            libpng-dev \
+            unixodbc-dev
 
       - name: Install R Dependencies
         uses: r-lib/actions/setup-renv@v2
