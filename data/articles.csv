@@ -45,5 +45,6 @@ stringr,文字列
 survival,生存時間解析
 tibble,データ処理/データフレーム/Tidyverse
 tuneRanger,予測モデリング/チューニング
+xgboost,予測モデリング/GBM
 yardstick,評価指標/Tidymodels
 YieldCurve,ファイナンス/金利モデル/イールドカーブ
