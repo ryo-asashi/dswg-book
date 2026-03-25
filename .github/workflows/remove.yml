@@ -1,0 +1,26 @@
+name: Remove PR Preview
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Remove PR preview directory
+        run: |
+          rm -rf pr-${{ github.event.pull_request.number }}
+
+      - name: Commit removal
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Remove preview for PR #${{ github.event.pull_request.number }}"
