@@ -45,12 +45,21 @@ jobs:
           cache-version: 1
 
       - name: Render book
+        id: render
+        continue-on-error: true
         run: quarto render
 
       - name: Deploy to GitHub Pages (main)
+        if: steps.render.outcome == 'success'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: ./_book
           destination_dir: .
+
+      - name: Fail job if render failed
+        if: steps.render.outcome != 'success'
+        run: |
+          echo "'quarto render' failed. Please chcek the log."
+          exit 1

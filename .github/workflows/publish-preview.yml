@@ -46,9 +46,12 @@ jobs:
           cache-version: 1
 
       - name: Render book
+        id: render
+        continue-on-error: true
         run: quarto render
 
       - name: Deploy PR preview to GitHub Pages
+        if: steps.render.outcome == 'success'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -71,3 +74,9 @@ jobs:
               repo: context.repo.repo,
               body: `📘 **Preview available**\n\n👉 ${url}`
             });
+
+      - name: Fail job if render failed
+        if: steps.render.outcome != 'success'
+        run: |
+          echo "'quarto render' failed. Please chcek the log."
+          exit 1
