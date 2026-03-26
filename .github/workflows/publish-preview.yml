@@ -1,4 +1,4 @@
-name: Render and Publish (PR Preview)
+name: Render and Publish PR Preview
 
 on:
   pull_request:
@@ -7,7 +7,6 @@ on:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
       pull-requests: write
