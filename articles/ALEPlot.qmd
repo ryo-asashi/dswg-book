@@ -1,6 +1,7 @@
 ---
 title: "ALEPlot"
 date: "`r Sys.Date()`"
+description: 機械学習 / IML
 format:
   html:
     fig-width: 6
