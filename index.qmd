@@ -1,5 +1,6 @@
 ---
 title: "パッケージ一覧"
+author: "データサイエンス関連基礎調査部会"
 execute:
   freeze: false
 ---
@@ -50,3 +51,4 @@ reactable(
   )
 )
 ```
+

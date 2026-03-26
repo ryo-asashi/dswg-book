@@ -1,15 +1,18 @@
 project:
-  type: book
+  type: website
+
 execute:
   freeze: auto
   error: true
 
-book:
+website:
   title: "Rパッケージ活用事例集"
-  author: "データサイエンス関連基礎調査部会"
-  chapters:
-    - index.qmd
-    - articles/*.qmd
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - index.qmd
+      - auto: "articles/*.qmd"
 
 format:
   html:
@@ -18,4 +21,3 @@ format:
     html-math-method: katex
 
 editor: visual
-
