@@ -54,16 +54,17 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pr-preview-book-${{ github.event.pull_request.number }}
-          path: ./_book/
+          path: ./_site/
 
-      - name: Deploy to GitHub Pages (main)
+      - name: Deploy to GitHub Pages
         if: steps.render.outcome == 'success'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ./_book
+          publish_dir: ./_site
           destination_dir: .
+          keep_files: true
 
       - name: Fail job if render failed
         if: steps.render.outcome != 'success'
