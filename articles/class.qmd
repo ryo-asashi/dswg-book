@@ -1,6 +1,6 @@
 ---
 title: "class"
-author: "データサイエンス関連基礎調査WG"
+author: ""
 date: "`r Sys.Date()`"
 format:
   html:
@@ -16,62 +16,196 @@ if (!require(class)) install.packages('class')
 ```
 
 ## パッケージの概要
-classパッケージは分類に関する様々な関数を提供します。本ドキュメントではknn関数を用いたk最近傍法の使用方法を確認します。
+classパッケージでは、k近傍法(knn法)を用いたクラスタリングを行うことができます。k近傍法とは分類問題に対する教師あり学習のアルゴリズムの一種で、予測したいデータに対しそのデータに"近い"上位k個の学習データを取得し、その学習データの分類の多数決を予測したいデータの分類とするものです。データ間の"近さ"、すなわち距離は適宜定義できますが、classパッケージのknn関数で使用される距離は標準的なユークリッド距離となります。
 
-## 使用例：irisデータの分類
+## 使用例：Glassデータの分類
+mlbenchパッケージに含まれるGlassデータを用いて、ガラスの屈折率やガラスに含まれる各元素の含有割合からガラスの種類を分類する問題にk近傍法を適用します。
 
-irisデータを用いて、がく弁・花弁の長さ・幅の情報からアヤメを分類するモデルをclassパッケージを用いて構築します。
-
-
-### irisデータセットを読み込む
-
-irisデータを読み込み、データの先頭を表示します。
-
--   Sepal.Length：がく弁の長さ
--   Sepal.Width：がく弁の幅
--   Petal.Length：花弁の長さ
--   Petal.Width：花弁の幅
-
-アヤメの種類はsetosa(1)、versicolor(2)、virginica(3)の3種類です。
-```{r}
-data(iris)
-head(iris)
-```
-### irisデータの構造
-
-irisデータの各種構造を確認します。
-```{r}
-str(iris)
+### データの確認
+Glassデータを読み込みます。
+```{r, warning=FALSE}
+library(mlbench)
+data(Glass)
+df <- Glass
 ```
 
-また、データを散布図にプロットして確認します。
+データの中身の確認です。（head）
+```{r}
+head(df)
+```
+
+データの中身の確認です。（str）
 
 ```{r}
-plot(iris, col=c(2, 3, 4)[iris$Species])
+str(df)
+```
+
+各変数の意味は以下の通りです。
+
+| 変数名  | データ型 | 概要                       |
+|:--------|:---------|:---------------------------|
+| RI 　　 | num      | 屈折率 　　　              |
+| Na      | num      | ナトリウム含有量（%）      |
+| Mg      | num      | マグネシウム含有量（%）    |
+| Al      | num      | アルミニウム含有量（%）    |
+| Si      | num      | ケイ素含有量（%）          |
+| K       | num      | カリウム含有量（%）        |
+| Ca      | num      | カルシウム含有量（%）      |
+| Ba      | num      | バリウム含有量（%）        |
+| Fe      | num      | 鉄含有量（%）　　　　      |
+| Type    | Factor   | 目的変数（ガラスの種類）   |
+
+目的変数であるガラスの種類は以下となっています。 <https://archive.ics.uci.edu/dataset/42/glass%2Bidentification>
+
+| Type値 | ガラスの種類                                            |
+|:-------|:--------------------------------------------------------|
+| 1      | 建築用窓ガラス（フロート加工）                          |
+| 2      | 建築用窓ガラス（非フロート加工）                        |
+| 3      | 自動車用窓ガラス（フロート加工）                        |
+| 4      | 自動車用窓ガラス（非フロート加工）※データには含まれない |
+| 5      | 容器用ガラス                                            |
+| 6      | 食器用ガラス                                            |
+| 7      | 照明用ガラス（ヘッドランプ）                            |
+
+summaryを表示します。
+
+```{r}
+summary(df)
+```
+### データの可視化
+データの可視化として、ヒストグラムを確認してゆきます。
+```{r, warning=FALSE}
+library(ggplot2)
+```
+
+屈折率のヒストグラムをガラスの種類別に確認します。
+
+```{r}
+ggplot(df, aes(x = RI)) +
+  geom_histogram(bins = 30)+
+  facet_wrap(~Type)
+```
+
+各元素の構成割合のヒストグラムをガラスの種類別に確認します（コードはNa（ナトリウム）のみ表示）。
+
+```{r}
+ggplot(df, aes(x = Na)) +
+  geom_histogram(bins = 30)  + 
+  facet_wrap(~Type)+
+  labs(title = "Na")
+```
+
+```{r, echo = FALSE}
+ggplot(df, aes(x = Mg)) +
+  geom_histogram(bins = 30)  + 
+  facet_wrap(~Type)+
+  labs(title = "Mg")
+```
+
+```{r, echo = FALSE}
+ggplot(df, aes(x = Al)) +
+  geom_histogram(bins = 30)  + 
+  facet_wrap(~Type)+
+  labs(title = "Al")
+```
+
+```{r, echo = FALSE}
+ggplot(df, aes(x = Si)) +
+  geom_histogram(bins = 30)  + 
+  facet_wrap(~Type)+
+  labs(title = "Si")
+```
+
+```{r, echo = FALSE}
+ggplot(df, aes(x = K)) +
+  geom_histogram(bins = 30)  + 
+  facet_wrap(~Type)+
+  labs(title = "K")
+```
+
+```{r, echo = FALSE}
+ggplot(df, aes(x = Ca)) +
+  geom_histogram(bins = 30)  + 
+  facet_wrap(~Type)+
+  labs(title = "Ca")
+```
+
+```{r, echo = FALSE}
+ggplot(df, aes(x = Ba)) +
+  geom_histogram(bins = 30)  + 
+  facet_wrap(~Type)+
+  labs(title = "Ba")
+```
+
+```{r, echo = FALSE}
+ggplot(df, aes(x = Fe)) +
+  geom_histogram(bins = 30)  + 
+  facet_wrap(~Type)+
+  labs(title = "Fe")
 ```
 
 ### モデル構築
-
-irisデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします。確認のため、データサイズを出力します。
+k近傍法でのクラスタリングを試してみます。まずはデータを訓練用データとテストデータに分割します。
 ```{r}
-# 再現性のためにシードを設定
-set.seed(123)
+# シードを設定
+set.seed(123) 
 
 # データの分割
-sample_indices <- sample(1:nrow(iris), 0.7 * nrow(iris))  
-train_data <- iris[sample_indices, ]
-test_data <- iris[-sample_indices, ]
+sample_indices <- sample(1:nrow(df), 0.7 * nrow(df))  
+df.train <- df[sample_indices, ]
+df.test <- df[-sample_indices, ]
 
 # データサイズの確認
-c(nrow(iris), nrow(train_data), nrow(test_data))
+c(nrow(df), nrow(df.train), nrow(df.test))
 ```
-knn関数を使用し、k最近傍法を実行します。
-```{r}
-res <- knn(train_data[-5], test_data[-5], train_data$Species, k = 3)
-```
-
-分類結果とテストデータを比べてみます。概ね合っていることが分かります。
-```{r}
-(table(res, test_data$Species))
+RIとそれ以外とでデータの性質が異なるため、まずはRIのみでモデリングを行います。多数決をとるkを変えてモデルの変化を見てみます。モデル性能の確認にはcaretパッケージのconfusionMatrix（混同行列）を使用します。
+```{r, Warning=FALSE}
+library(class)
+library(caret)
 ```
 
+```{r}
+pred1 <- knn(df.train[1], df.test[1], df.train$Type, k = 2)
+cm1 <- confusionMatrix(pred1, df.test$Type)
+
+pred2 <- knn(df.train[1], df.test[1], df.train$Type, k = 4)
+cm2 <- confusionMatrix(pred2, df.test$Type)
+
+pred3 <- knn(df.train[1], df.test[1], df.train$Type, k = 6)
+cm3 <- confusionMatrix(pred3, df.test$Type)
+```
+
+混同行列と精度を確認します。
+```{r}
+print(cm1$table)
+print(cm2$table)
+print(cm3$table)
+```
+```{r}
+print(cm1$overall[1])
+print(cm2$overall[1])
+print(cm3$overall[1])
+```
+RI以外、すなわち各元素の構成割合によるモデリングも確認します。こちらの方が幾分精度がよいです。
+```{r}
+pred4 <- knn(df.train[-1], df.test[-1], df.train$Type, k = 2)
+cm4 <- confusionMatrix(pred4, df.test$Type)
+
+pred5 <- knn(df.train[-1], df.test[-1], df.train$Type, k = 4)
+cm5 <- confusionMatrix(pred5, df.test$Type)
+
+pred6 <- knn(df.train[-1], df.test[-1], df.train$Type, k = 6)
+cm6 <- confusionMatrix(pred6, df.test$Type)
+```
+
+```{r}
+print(cm4$table)
+print(cm5$table)
+print(cm6$table)
+```
+
+```{r}
+print(cm4$overall[1])
+print(cm5$overall[1])
+print(cm6$overall[1])
+```
