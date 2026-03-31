@@ -1,23 +1,14 @@
 ---
 title: "distrEx"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
-#format: docx
-format: html
-lang: ja
-output:
-  word_document:
-    toc: yes
-    toc_depth: '3'
-    fig_width: 6
-    fig_height: 3
+description: 確率分布/確率変数
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    fig-width: 6
+    fig-height: 3
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-if (!require(distr)) install.packages('distr')
-if (!require(distrEx)) install.packages('distrEx')
-```
 
 ## パッケージの概要
 

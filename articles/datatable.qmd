@@ -1,6 +1,7 @@
 ---
 title: "data.table"
 date: "`r Sys.Date()`"
+description: 確率分布/確率変数
 format:
   html:
     toc: true
@@ -8,41 +9,6 @@ format:
     fig-width: 6
     fig-height: 5
 ---
-
-```{r comment, include=FALSE, eval=FALSE}
-2024/6/25 kozuma v2での更新箇所
-※今のところきちんと履歴管理する方法が用意されていないので、ソース内に直接書き込むこととする。
-- 冒頭のパッケージインストール方法を浅芝さん式に変更
-- 「R組み込み」と「R標準」でぶれていた表現を「R標準」に統一
-　対応箇所は「パッケージの概要」に2か所、「行・列の取り出し」に1か所
-- 概要でdplyrがtidyverseに含まれることを記載
-- 列名に日本語が混じるテーブルを出力したときに、Consolasと日本語フォントの幅が異なるためにずれて表示される問題
-  - HTML出力の場合はcssでMSゴシック固定とすることで対処可能だったので、そのようにした
-  - Wordでは一旦対処しなかった。
-- dt_is について、特約件数＞主契約件数　となっていて違和感があったため修正
-- 「添え字の仕様」の以下コメント反映
-  - data.table型の紹介が目的なので、「data.frame型の場合は変数[行,列]で参照した結果がdata.frame型ではなくなることがありますが、data.table型ではそのような問題は起こらずdata.table型を保持できます。」のようなdata.table型の利点を強調する書きぶりにするのはいかがでしょうか？
-- 続く`変数[○]`表記における以下のコメント反映
-  - 両者が何を表すかパッとわからなかったため、「data.frame型とdata.table型で」とするのはいかがでしょうか？
--「行・列の取り出し」の以下コメント反映（results='hold'外し）
-  - いろいろな書き方を紹介しているのと結果が縦に長いので、（特に初心者向けには）コードと結果を1行ずつ並べた方が見やすくなる気がしました
-  - 同じ観点からチャンク「adv_melt_df2」もresults='hold'を外した
-```
-
-```{r setup_qmd, include=FALSE, output=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
-# install packages
-pkgs <- c("data.table", "dplyr", "tidyr", "nycflights13", "microbenchmark", "rlang")
-install.packages(pkgs[!pkgs %in% list.files(.libPaths())])
-```
-
-```{css, echo=FALSE}
-.output-jp > code {
-/*一部日本語出力があるチャンクで日本語と英字の幅が揃わずに表示がずれるため、CSSでフォントを変更することで表示を揃える*/
-  font-family: "ＭＳ ゴシック";
-}
-```
 
 ## パッケージの概要
 

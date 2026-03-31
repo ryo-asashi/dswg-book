@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - name: Check out repository
@@ -44,30 +45,24 @@ jobs:
         with:
           cache-version: 1
 
-      - name: Render book
-        id: render
-        continue-on-error: true
-        run: quarto render
-
-      - name: Upload PR preview as artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pr-preview-book-${{ github.event.pull_request.number }}
-          path: ./_site/
-
-      - name: Deploy to GitHub Pages
-        if: steps.render.outcome == 'success'
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ./_site
-          destination_dir: .
-          keep_files: true
-
-      - name: Fail job if render failed
-        if: steps.render.outcome != 'success'
+      - name: Auto-install Required Packages and Update renv.lock
         run: |
-          echo "'quarto render' failed. Please chcek the log."
-          exit 1
+          Rscript -e "renv::hydrate()"
+          Rscript -e "renv::snapshot(prompt = FALSE)"
+
+      - name: Render and Publish to GitHub Pages
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Pull Request with updates
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update _freeze cache and renv.lock"
+          title: "chore: auto-update dependencies and cache"
+          body: "This is a PR for Updating `renv.lock` and `_freeze` created using GitHub Actions"
+          branch: "auto-update-cache"
+          delete-branch: true

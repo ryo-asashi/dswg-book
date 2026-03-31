@@ -21,3 +21,8 @@ _cache/
 # Windows
 Thumbs.db
 /.quarto/
+
+**/*.quarto_ipynb
+
+# articles list
+articles.csv

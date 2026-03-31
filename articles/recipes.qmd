@@ -1,6 +1,7 @@
 ---
 title: "recipes"
 date: "`r Sys.Date()`"
+description: データ処理/前処理/Tidymodels
 format:
   html:
     toc: true
@@ -84,35 +85,6 @@ nocite: |
 
 ```{r setup_qmd, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
-# install packages
-pkgs <- c("nycflights13", "recipes", "tibble", "rsample", "parsnip", "yardstick", "workflows", "ggplot2", "patchwork", "corrplot", "embed")
-for (pkg in pkgs) {
-  if (!(pkg %in% installed.packages())) {
-    install.packages(pkg)
-  }
-}
-
-# detach packages
-default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
-             "package:stats", "package:graphics",
-             "package:grDevices", "package:utils",
-             "package:datasets", "package:methods",
-             "Autoloads", "package:base")
-for (pkg in setdiff(search(), default)) {
-  detach(pkg, character.only = TRUE)
-  }
-
-# clear objects
-remove(list=objects())
-
-```
-
-```{css, echo=FALSE}
-.test { /*実行結果にスクロールバーをつけるためのもの*/
-  font-size: 8px;
-}
-
 ```
 
 ## パッケージの概要
@@ -143,9 +115,9 @@ library(corrplot) #相関係数の可視化
 
 データセットの詳細は @BIB_NYCFLIGHTS13 を参照してください。
 
-なお、以下ではmagrittrパッケージによるパイプ演算子`%>%`[^recipes-1]と、 dplyrパッケージによるデータ操作関数を使用しています。 また、データの分割にはrsampleパッケージを使用しています。
+なお、以下ではmagrittrパッケージによるパイプ演算子`%>%`[^1]と、 dplyrパッケージによるデータ操作関数を使用しています。 また、データの分割にはrsampleパッケージを使用しています。
 
-[^recipes-1]: 右辺の関数の第1引数に左辺を渡すという演算子で、たとえば`a %>% f %>% g(b)`という記述は`g(f(a),b)`と同等です。
+[^1]: 右辺の関数の第1引数に左辺を渡すという演算子で、たとえば`a %>% f %>% g(b)`という記述は`g(f(a),b)`と同等です。
 
 ```{r dataset}
 df_all_raw <- flights #flightsのほかにいくつかデータセットがあるが、それらは今回使用しない
@@ -369,7 +341,7 @@ rec %>% prep() %>% bake(new_data = NULL) %>%
 全`step_*`関数で共通する引数について説明すると次のとおりです。
 
 | 引数 | 説明 |
-|---------------------|---------------------------------------------------|
+|------------------------------------|------------------------------------|
 | 第1引数 | recipeオブジェクトです。通常はパイプ演算子`%>%`で記述されるため、コードには現れません。 |
 | 第2引数以降（以下に記載がある引数以外） | 前処理を行う変数を指定します。 ここでは上の例のように変数名を単純に指定するだけでなく、 `all_numeric_predictors()`等のようなselectorを用いることで、変数の型やrole等に基づく条件指定も可能です。 |
 | `role` | 追加される変数のroleを指定するものです。 デフォルトで`"predictor"`、すなわち説明変数の扱いとなっているため通常は指定する必要はありませんが、 `"predictor"`以外のroleを使用している場合、目的変数を加工する場合は注意が必要です。 |
@@ -698,9 +670,9 @@ cat("Box-Cox変換のλ:", recp_tmp$steps[[2]]$lambdas)
 | `step_logit`      | logit変換（$\log (x) - \log (1-x)$） |
 | `step_invlogit`   | 逆logit変換（$\frac1{1+\exp(-x)}$）  |
 | `step_relu`       | ReLU関数（$\max (0,x-c)$）等         |
-| `step_YeoJohnson` | Yeo-Johnson変換[^recipes-2]          |
+| `step_YeoJohnson` | Yeo-Johnson変換[^2]                  |
 
-[^recipes-2]: 詳細は割愛しますが、こちらはBox-Cox変換と比べて負値を取ることが出来るという点が特徴です。
+[^2]: 詳細は割愛しますが、こちらはBox-Cox変換と比べて負値を取ることが出来るという点が特徴です。
 
 ### 日付・時刻型データの加工
 
@@ -945,9 +917,9 @@ print(row_pca)
 
 無理に本パッケージを使用する必要はないかもしれませんが、 自前の`step_*`関数を作成することも可能なため、簡単に紹介します。 これにより、前処理手順のオブジェクト化等のメリットを享受することができます。
 
-たとえば、指定したfactor型変数に対してカウントエンコーディング[^recipes-3]を行う`step_*`関数を追加してみましょう。
+たとえば、指定したfactor型変数に対してカウントエンコーディング[^3]を行う`step_*`関数を追加してみましょう。
 
-[^recipes-3]: カウントエンコーディングとは、あるカテゴリ変数に対してカテゴリごとの出現数を特徴量とするものです。
+[^3]: カウントエンコーディングとは、あるカテゴリ変数に対してカテゴリごとの出現数を特徴量とするものです。
 
 最初に、`step_*`関数本体を実装します。
 
@@ -1052,7 +1024,7 @@ rec_tmp %>% step_encode_count(all_factor_predictors()) %>%
 2024年7月時点で本パッケージに依存しているパッケージをリストアップすると次のとおり。
 
 | パッケージ名 | 説明 |
-|------------------------|-----------------------------------------------|
+|------------------------------------|------------------------------------|
 | embed | factor型変数のエンコーディング・次元削減に特化 |
 | scimo | オミックスデータ（生体分子についての網羅的なデータ）の分析を行う |
 | shinyrecipes | インタラクティブなUIでrecipeオブジェクトを扱う |
@@ -1135,9 +1107,9 @@ steps$enc_count_carrier <- function(recipe){
 
 次に予測モデルを準備します。今回の例ではXGBoostを使用してみます。
 
-なお、以下ではparsnipパッケージとworkflowsパッケージにより モデルの構築手順をもオブジェクト化して管理しています[^recipes-4]。
+なお、以下ではparsnipパッケージとworkflowsパッケージにより モデルの構築手順をもオブジェクト化して管理しています[^4]。
 
-[^recipes-4]: いずれもtidymodelsに含まれるパッケージであり、recipesパッケージとも親和性が非常に高いものの、 必ず用いなければならないものでもなく、コードを簡潔に書くために採用しているものです。 これらについても合わせて学習されることをお勧めしますが、本稿では詳しい解説は割愛します。
+[^4]: いずれもtidymodelsに含まれるパッケージであり、recipesパッケージとも親和性が非常に高いものの、 必ず用いなければならないものでもなく、コードを簡潔に書くために採用しているものです。 これらについても合わせて学習されることをお勧めしますが、本稿では詳しい解説は割愛します。
 
 ```{r cv_2}
 rec_init <- recipe(df_small, formula = arr_delay ~ .)
@@ -1160,9 +1132,9 @@ wf_xgboost <- workflow() %>%
   add_model(model_engine_xgboost)
 ```
 
-今回は貪欲にも、6つの前処理を適用するかどうかの組み合わせすべて（$2^6 = 64$通り）[^recipes-5]を試すことにします。
+今回は貪欲にも、6つの前処理を適用するかどうかの組み合わせすべて（$2^6 = 64$通り）[^5]を試すことにします。
 
-[^recipes-5]: これはかなり力業での検証であり、本来はドメイン知識等を駆使して人の手で前処理を吟味することも必要です。あくまで一例として捉えてください。
+[^5]: これはかなり力業での検証であり、本来はドメイン知識等を駆使して人の手で前処理を吟味することも必要です。あくまで一例として捉えてください。
 
 ```{r cv_3}
 cases <- unlist(lapply(0:length(steps), function(k) combn(steps, k, simplify = FALSE)), recursive = FALSE)

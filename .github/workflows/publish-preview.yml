@@ -86,5 +86,5 @@ jobs:
       - name: Fail job if render failed
         if: steps.render.outcome != 'success'
         run: |
-          echo "'quarto render' failed. Please chcek the log."
+          echo "'quarto render' failed. Please check the log."
           exit 1

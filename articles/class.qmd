@@ -1,7 +1,7 @@
 ---
 title: "class"
-author: ""
 date: "`r Sys.Date()`"
+description: 予測モデリング
 format:
   html:
     toc: true
@@ -9,11 +9,6 @@ format:
     fig-width: 6
     fig-height: 3
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-if (!require(class)) install.packages('class')
-```
 
 ## パッケージの概要
 classパッケージでは、k近傍法(knn法)を用いたクラスタリングを行うことができます。k近傍法とは分類問題に対する教師あり学習のアルゴリズムの一種で、予測したいデータに対しそのデータに"近い"上位k個の学習データを取得し、その学習データの分類の多数決を予測したいデータの分類とするものです。データ間の"近さ"、すなわち距離は適宜定義できますが、classパッケージのknn関数で使用される距離は標準的なユークリッド距離となります。
