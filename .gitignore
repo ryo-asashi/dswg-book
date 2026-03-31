@@ -6,7 +6,7 @@
 .Renviron
 
 .quarto/
-renv/
+
 _book/
 _site/
 _cache/
