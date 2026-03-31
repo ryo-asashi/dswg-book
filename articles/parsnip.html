@@ -399,6 +399,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/recipes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">recipes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/RODBC.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">RODBC</span></a>
   </div>
@@ -1172,7 +1178,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/ryo-asashi\.github\.io\/dswg-book\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

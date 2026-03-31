@@ -6,7 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2025-08-01">
+<meta name="dcterms.date" content="2026-03-31">
+<meta name="description" content="確率分布/保険数理/損害保険/損害額分布">
 
 <title>actuar – Rパッケージ活用事例集</title>
 <style>
@@ -441,6 +442,12 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/recipes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">recipes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/RODBC.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">RODBC</span></a>
   </div>
@@ -525,6 +532,11 @@ window.Quarto = {
 <h1 class="title">actuar</h1>
 </div>
 
+<div>
+  <div class="description">
+    確率分布/保険数理/損害保険/損害額分布
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
@@ -533,7 +545,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 1, 2025</p>
+      <p class="date">March 31, 2026</p>
     </div>
   </div>
   
@@ -561,7 +573,7 @@ window.Quarto = {
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(actuar)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'actuar' was built under R version 4.5.1</code></pre>
+<pre><code>Warning: package 'actuar' was built under R version 4.5.3</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>xlim <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ylim <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>)</span>
@@ -774,7 +786,7 @@ window.Quarto = {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/ryo-asashi\.github\.io\/dswg-book\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

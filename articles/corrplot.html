@@ -6,8 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2025-08-01">
+<meta name="dcterms.date" content="2026-03-31">
+<meta name="description" content="可視化">
 
 <title>corrplot – Rパッケージ活用事例集</title>
 <style>
@@ -399,6 +399,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/recipes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">recipes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/RODBC.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">RODBC</span></a>
   </div>
@@ -494,21 +500,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 class="title">corrplot</h1>
 </div>
 
+<div>
+  <div class="description">
+    可視化
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>データサイエンス関連基礎調査WG </p>
-          </div>
-  </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 1, 2025</p>
+      <p class="date">March 31, 2026</p>
     </div>
   </div>
   
@@ -572,58 +577,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>dt_mlb</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="do">##         playerID birthCountry birthState weight height   bats throws birthDate</span></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="do">##           &lt;fctr&gt;       &lt;fctr&gt;     &lt;fctr&gt;  &lt;int&gt;  &lt;int&gt; &lt;fctr&gt; &lt;fctr&gt;     &lt;num&gt;</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="do">##     1: barkele01          USA         KY    225     77      R      R     -5292</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="do">##     2: bedrost01          USA         MA    200     75      R      R     -4409</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="do">##     3: benedbr01          USA         AL    175     73      R      R     -5250</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="do">##     4:  campri01          USA         GA    195     73      R      R     -6049</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="do">##     5: ceronri01          USA         NJ    192     71      R      R     -5706</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="do">##     1: aardsda01          USA         CO    215     75      R      R      4378</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="do">##     2: aardsda01          USA         CO    215     75      R      R      4378</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="do">##     3: aardsda01          USA         CO    215     75      R      R      4378</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="do">##     4: aardsda01          USA         CO    215     75      R      R      4378</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="do">##     5: aardsda01          USA         CO    215     75      R      R      4378</span></span>
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="do">##    ---                                                                        </span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 26433: strasst01          USA         CA    239     77      R      R      6775</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 26434: taylomi02          USA         FL    215     76      R      R      7754</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 26435: treinbl01          USA         KS    225     77      R      R      6755</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 26436: werthja01          USA         IL    235     77      R      R      3426</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 26437: zimmery01          USA         NC    215     75      R      R      5384</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="do">## 26433: zupcibo01          USA         PA    220     76      R      R     -1232</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 26434: zupcibo01          USA         PA    220     76      R      R     -1232</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 26435: zupcibo01          USA         PA    220     76      R      R     -1232</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 26436: zuvelpa01          USA         CA    173     72      R      R     -4080</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 26437:  zychto01          USA         IL    190     75      R      R      7523</span></span>
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="do">##        yearID  stint teamID   lgID     G    AB     R     H   X2B   X3B    HR</span></span>
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="do">##         &lt;int&gt; &lt;fctr&gt; &lt;fctr&gt; &lt;fctr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="do">##     1:   1985      1    ATL     NL    20    17     0     0     0     0     0</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="do">##     2:   1985      1    ATL     NL    37    64     3     5     0     0     0</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="do">##     3:   1985      1    ATL     NL    70   208    12    42     6     0     0</span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="do">##     4:   1985      1    ATL     NL    66    13     1     3     0     0     1</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="do">##     5:   1985      1    ATL     NL    96   282    15    61     9     0     3</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="do">##     1:   2004      1    SFN     NL    11     0     0     0     0     0     0</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="do">##     2:   2007      1    CHA     AL    25     0     0     0     0     0     0</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="do">##     3:   2008      1    BOS     AL    47     1     0     0     0     0     0</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="do">##     4:   2009      1    SEA     AL    73     0     0     0     0     0     0</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="do">##     5:   2010      1    SEA     AL    53     0     0     0     0     0     0</span></span>
 <span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="do">##    ---                                                                      </span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="do">## 26433:   2016      1    WAS     NL    24    48     3    10     1     0     0</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="do">## 26434:   2016      1    WAS     NL    76   221    28    51    11     0     7</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="do">## 26435:   2016      1    WAS     NL    73     0     0     0     0     0     0</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="do">## 26436:   2016      1    WAS     NL   143   525    84   128    28     0    21</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="do">## 26437:   2016      1    WAS     NL   115   427    60    93    18     1    15</span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="do">##          RBI    SB    CS    BB    SO   IBB   HBP    SH    SF  GIDP   salary</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="do">##        &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="do">##     1:     0     0     1     0     7     0     0     0     0     0   870000</span></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="do">##     2:     1     0     0     1    22     0     0     6     0     0   550000</span></span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="do">##     3:    20     0     1    22    12     1     1     4     2     8   545000</span></span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="do">##     4:     2     0     0     1     5     0     0     1     0     0   633333</span></span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="do">##     5:    25     0     3    29    25     1     1     0     4    15   625000</span></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="do">##    ---                                                                     </span></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="do">## 26433:     2     0     0     2    11     0     0     7     0     2 10400000</span></span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="do">## 26434:    16    14     3    14    77     0     1     0     1     2   524000</span></span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="do">## 26435:     0     0     0     0     0     0     0     0     0     0   524900</span></span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="do">## 26436:    69     5     1    71   139     0     4     0     6    17 21733615</span></span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="do">## 26437:    46     4     1    29   104     1     5     0     6    12 14000000</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="do">## 26433:   1991      1    BOS     AL    18    25     3     4     0     0     1</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="do">## 26434:   1992      1    BOS     AL   124   392    46   108    19     1     3</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="do">## 26435:   1993      1    BOS     AL   141   286    40    69    24     2     2</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="do">## 26436:   1989   &lt;NA&gt;    ATL     NL    NA    NA    NA    NA    NA    NA    NA</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="do">## 26437:   2016      1    SEA     AL    12     0     0     0     0     0     0</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="do">##          RBI    SB    CS    BB    SO   IBB   HBP    SH    SF  GIDP  salary</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="do">##        &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt;</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="do">##     1:     0     0     0     0     0     0     0     0     0     0  300000</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="do">##     2:     0     0     0     0     0     0     0     0     0     0  387500</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="do">##     3:     0     0     0     0     1     0     0     0     0     0  403250</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="do">##     4:     0     0     0     0     0     0     0     0     0     0  419000</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="do">##     5:     0     0     0     0     0     0     0     0     0     0 2750000</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="do">##    ---                                                                    </span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="do">## 26433:     3     0     0     1     6     0     0     1     0     0  100000</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="do">## 26434:    43     2     2    25    60     1     4     7     4     6  109000</span></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="do">## 26435:    26     5     2    27    54     2     2     8     3     7  222000</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="do">## 26436:    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA  145000</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="do">## 26437:     0     0     0     0     0     0     0     0     0     0  511000</span></span>
 <span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co">#サマリを表示</span></span>
 <span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(dt_mlb)</span>
 <span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a><span class="do">##       playerID        birthCountry     birthState        weight     </span></span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="do">##  moyerja01:   25   USA      :20505   CA     : 4872   Min.   :140.0  </span></span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="do">##  vizquom01:   24   D.R.     : 2140   TX     : 1551   1st Qu.:185.0  </span></span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="do">##  glavito02:   23   Venezuela: 1107   FL     : 1490   Median :195.0  </span></span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="do">##  bondsba01:   22   P.R.     :  892   NY     :  984   Mean   :199.2  </span></span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a><span class="do">##  griffke02:   22   Mexico   :  333   IL     :  963   3rd Qu.:215.0  </span></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="do">##  rodrial01:   22   CAN      :  304   (Other):15534   Max.   :315.0  </span></span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="do">##  (Other)  :26299   (Other)  : 1156   NA's   : 1043                  </span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="do">##  moyerja01:   25   USA      :20496   CA     : 4874   Min.   :140.0  </span></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="do">##  vizquom01:   24   D.R.     : 2140   TX     : 1548   1st Qu.:185.0  </span></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="do">##  glavito02:   23   Venezuela: 1107   FL     : 1499   Median :195.0  </span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="do">##  bondsba01:   22   P.R.     :  892   NY     :  983   Mean   :199.2  </span></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a><span class="do">##  griffke02:   22   México  :  333   IL     :  944   3rd Qu.:215.0  </span></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="do">##  rodrial01:   22   CAN      :  304   (Other):15634   Max.   :315.0  </span></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="do">##  (Other)  :26299   (Other)  : 1165   NA's   :  955                  </span></span>
 <span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a><span class="do">##      height     bats      throws      birthDate            yearID    </span></span>
 <span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a><span class="do">##  Min.   :66.0   B: 2579   B:    0   Min.   :-16407.0   Min.   :1985  </span></span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="do">##  1st Qu.:72.0   L: 7488   L: 5660   1st Qu.: -1918.0   1st Qu.:1994  </span></span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="do">##  1st Qu.:72.0   L: 7488   L: 5660   1st Qu.: -1923.0   1st Qu.:1994  </span></span>
 <span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a><span class="do">##  Median :74.0   R:16370   R:20777   Median :   575.0   Median :2001  </span></span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a><span class="do">##  Mean   :73.5             S:    0   Mean   :   693.7   Mean   :2001  </span></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a><span class="do">##  Mean   :73.5             S:    0   Mean   :   693.6   Mean   :2001  </span></span>
 <span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a><span class="do">##  3rd Qu.:75.0                       3rd Qu.:  3426.0   3rd Qu.:2009  </span></span>
 <span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a><span class="do">##  Max.   :83.0                       Max.   :  9168.0   Max.   :2016  </span></span>
 <span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a><span class="do">##                                                                      </span></span>
@@ -660,10 +665,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a><span class="do">##  Max.   :232.00   Max.   :223.0   Max.   :120.000   Max.   :35.000  </span></span>
 <span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a><span class="do">##  NA's   :996      NA's   :996     NA's   :996       NA's   :996     </span></span>
 <span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a><span class="do">##        SH               SF              GIDP            salary        </span></span>
-<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a><span class="do">##  Min.   : 0.000   Min.   : 0.000   Min.   : 0.000   Min.   :       0  </span></span>
-<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a><span class="do">##  1st Qu.: 0.000   1st Qu.: 0.000   1st Qu.: 0.000   1st Qu.:  293750  </span></span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a><span class="do">##  Min.   : 0.000   Min.   : 0.000   Min.   : 0.000   Min.   :   10900  </span></span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a><span class="do">##  1st Qu.: 0.000   1st Qu.: 0.000   1st Qu.: 0.000   1st Qu.:  293808  </span></span>
 <span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a><span class="do">##  Median : 0.000   Median : 0.000   Median : 1.000   Median :  550000  </span></span>
-<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a><span class="do">##  Mean   : 1.637   Mean   : 1.463   Mean   : 3.915   Mean   : 2085160  </span></span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a><span class="do">##  Mean   : 1.637   Mean   : 1.463   Mean   : 3.915   Mean   : 2085181  </span></span>
 <span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a><span class="do">##  3rd Qu.: 2.000   3rd Qu.: 2.000   3rd Qu.: 7.000   3rd Qu.: 2350000  </span></span>
 <span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a><span class="do">##  Max.   :39.000   Max.   :17.000   Max.   :35.000   Max.   :33000000  </span></span>
 <span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a><span class="do">##  NA's   :996      NA's   :996      NA's   :996</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -925,7 +930,7 @@ FALSE, : col.lim interval too wide, please set a suitable value</code></pre>
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/ryo-asashi\.github\.io\/dswg-book\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

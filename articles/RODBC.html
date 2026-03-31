@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2026-03-26">
+<meta name="dcterms.date" content="2026-03-31">
 
 <title>RODBC – Rパッケージ活用事例集</title>
 <style>
@@ -5612,6 +5612,12 @@ window.onload = function() {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/recipes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">recipes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/RODBC.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">RODBC</span></a>
   </div>
@@ -5734,7 +5740,7 @@ window.onload = function() {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 26, 2026</p>
+      <p class="date">March 31, 2026</p>
     </div>
   </div>
   
@@ -6161,7 +6167,7 @@ Brian Ripley. 2023. <span>“ODBC Connectivity.”</span> Preprint. <a href="htt
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/ryo-asashi\.github\.io\/dswg-book\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }

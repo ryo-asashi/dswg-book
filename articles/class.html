@@ -6,8 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2025-08-01">
+<meta name="dcterms.date" content="2026-03-31">
+<meta name="description" content="予測モデリング">
 
 <title>class – Rパッケージ活用事例集</title>
 <style>
@@ -399,6 +399,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/recipes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">recipes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/RODBC.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">RODBC</span></a>
   </div>
@@ -497,21 +503,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 class="title">class</h1>
 </div>
 
+<div>
+  <div class="description">
+    予測モデリング
+  </div>
+</div>
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>データサイエンス関連基礎調査WG </p>
-          </div>
-  </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 1, 2025</p>
+      <p class="date">March 31, 2026</p>
     </div>
   </div>
   
@@ -601,16 +606,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>knn関数を使用し、k最近傍法を実行します。</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">knn</span>(train_data[<span class="sc">-</span><span class="dv">5</span>], test_data[<span class="sc">-</span><span class="dv">5</span>], train_data<span class="sc">$</span>Species, <span class="at">k =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `knn()`:
+! could not find function "knn"</code></pre>
+</div>
 </div>
 <p>分類結果とテストデータを比べてみます。概ね合っていることが分かります。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(<span class="fu">table</span>(res, test_data<span class="sc">$</span>Species))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>            
-res          setosa versicolor virginica
-  setosa         14          0         0
-  versicolor      0         17         0
-  virginica       0          1        13</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(<span class="fu">table</span>(res, test_data<span class="sc">$</span>Species))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error:
+! object 'res' not found</code></pre>
 </div>
 </div>
 
@@ -692,7 +698,7 @@ res          setosa versicolor virginica
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/ryo-asashi\.github\.io\/dswg-book\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
