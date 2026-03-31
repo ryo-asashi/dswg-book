@@ -56,8 +56,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Commit and Push Updates
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Create Pull Request with updates
+        uses: peter-evans/create-pull-request@v6
         with:
-          commit_message: "chore: update _freeze cache [skip ci]"
-          file_pattern: "_freeze/ renv.lock"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update _freeze cache and renv.lock"
+          title: "chore: auto-update dependencies and cache"
+          body: "This is a PR for Updating `renv.lock` and `_freeze` created using GitHub Actions"
+          branch: "auto-update-cache"
+          delete-branch: true
