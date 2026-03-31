@@ -1,32 +1,14 @@
 ---
 title: "crosstable"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
+description: データ処理/クロス集計表
 format:
   html:
-  #docx:
     toc: true
     toc-depth: 3
     fig-width: 6
     fig-height: 5
-editor: 
-  markdown: 
-    wrap: 72
 ---
-
-```{r setup, include=FALSE, output=FALSE}
-
-# コード例に使用するデフォルト以外のパッケージを列挙する
-pkgs <- c('crosstable', 'systemfonts')
-
-# install packages
-for (pkg in pkgs){
-  if (!(pkg %in% installed.packages())){
-    install.packages(pkg)
-  }
-}
-
-```
 
 ## パッケージの概要
 
@@ -83,33 +65,35 @@ crosstable(mtcars2, c(wt, cyl), by=vs) %>% as_flextable()
 
 出力された集計表から、wt（車の重量）について次のことがわかります。vshapedはstraightよりも重い車が多く、またばらつきが大きいようです。
 
--   Min / Max: 
-    *   straight:車の重さは1.5〜3.5千ポンド 
-    *   vshaped: 車の重さは2.1〜5.4千ポンド 
--   Med [IQR]（中央値と四分位範囲）: 
-    *   straight:中央値は2.6千ポンド、四分位範囲は\[2.0, 3.2\]千ポンド 
-    *   vshaped:中央値は3.6千ポンド、四分位範囲は\[3.2, 3.8\]千ポンド 
--   Mean(std)（平均値と標準偏差）: 
-    *   straight:平均値は2.6千ポンド、標準偏差は0.7千ポンド
-    *   vshaped:平均値は3.7千ポンド、標準偏差は0.9千ポンド 
--   N(NA)（データ数と欠損値数）: 
-    *   straight: データ数は14件、欠損値は0
-    *   vshaped: データ数は18件、欠損値は0
+-   Min / Max:
+    -   straight:車の重さは1.5〜3.5千ポンド
+    -   vshaped: 車の重さは2.1〜5.4千ポンド
+-   Med \[IQR\]（中央値と四分位範囲）:
+    -   straight:中央値は2.6千ポンド、四分位範囲は\[2.0, 3.2\]千ポンド
+    -   vshaped:中央値は3.6千ポンド、四分位範囲は\[3.2, 3.8\]千ポンド
+-   Mean(std)（平均値と標準偏差）:
+    -   straight:平均値は2.6千ポンド、標準偏差は0.7千ポンド
+    -   vshaped:平均値は3.7千ポンド、標準偏差は0.9千ポンド
+-   N(NA)（データ数と欠損値数）:
+    -   straight: データ数は14件、欠損値は0
+    -   vshaped: データ数は18件、欠損値は0
 
 また、cyl（シリンダー数）については次のことがわかります。straightでは4シリンダーの車が多い一方で、vshapedでは8シリンダーの車がほとんどです。
 
 -   4シリンダー車:
-    *   straight: 10台（90.91%）
-    *   vshaped: 1台（9.09%）
+    -   straight: 10台（90.91%）
+    -   vshaped: 1台（9.09%）
 -   6シリンダー車:
-    *   straight: 4台（57.14%）
-    *   vshaped: 3台（42.86%）
+    -   straight: 4台（57.14%）
+    -   vshaped: 3台（42.86%）
 -   8シリンダー車:
-    *   straight: 0台（0%）
-    *   vshaped: 14台（100%）
-    
-次に、vs（エンジンの種類）に加えてam（トランスミッション）により分割します。margin=c("row", "col")により行方向、列方向それぞれによる各頻度の占率を出力します。total = "both"により合計行、合計列の両方が追加されます。
-    
+    -   straight: 0台（0%）
+    -   vshaped: 14台（100%）
+
+次に、vs（エンジンの種類）に加えてam（トランスミッション）により分割します。margin=c("row",
+"col")により行方向、列方向それぞれによる各頻度の占率を出力します。total
+= "both"により合計行、合計列の両方が追加されます。
+
 ```{r crosstable_4, warning=FALSE}
 
 crosstable(mtcars2, c(wt, cyl), by=c(am, vs),

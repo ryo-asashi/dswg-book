@@ -11,7 +11,7 @@ execute:
 GitHub リポジトリ [dswg-book](https://github.com/ryo-asashi/dswg-book) は情報共有チーム内部で出力結果を事前に参照するために用意されたものであり、会員に直接参照されることを目的としたものではありません。
 :::
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
 library(reactable)
 library(htmltools)
 library(rmarkdown)
@@ -51,4 +51,3 @@ reactable(
   )
 )
 ```
-

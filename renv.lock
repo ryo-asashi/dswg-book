@@ -70,7 +70,7 @@
     "ALEPlot": {
       "Package": "ALEPlot",
       "Version": "1.1",
-      "Source": "Repository",
+      "Source": "GitHub",
       "Type": "Package",
       "Title": "Accumulated Local Effects (ALE) Plots and Partial Dependence (PD) Plots",
       "Date": "2018-05-22",
@@ -88,7 +88,13 @@
       ],
       "VignetteBuilder": "R.rsp",
       "RoxygenNote": "6.0.1",
-      "Repository": "CRAN"
+      "Repository": "CRAN",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "cran",
+      "RemoteRepo": "ALEPlot",
+      "RemoteRef": "master",
+      "RemoteSha": "d283def19a5d7f1840f18dfca82c073210df0d81"
     },
     "BBmisc": {
       "Package": "BBmisc",
@@ -10454,16 +10460,16 @@
     },
     "treeshap": {
       "Package": "treeshap",
-      "Version": "0.3.1",
-      "Source": "Repository",
+      "Version": "0.4.0",
+      "Source": "GitHub",
       "Title": "Compute SHAP Values for Your Tree-Based Models Using the 'TreeSHAP' Algorithm",
-      "Authors@R": "c( person(\"Konrad\", \"Komisarczyk\", email = \"komisarczykkonrad@gmail.com\", role = \"aut\"), person(\"Pawel\", \"Kozminski\", email = \"pkozminski99@gmail.com\", role = \"aut\"), person(\"Szymon\", \"Maksymiuk\", role = \"aut\", comment = c(ORCID = \"0000-0002-3120-1601\")), person(\"Lorenz A.\", \"Kapsner\", role = \"ctb\", comment = c(ORCID = \"0000-0003-1866-860X\")), person(\"Mikolaj\", \"Spytek\", role = \"ctb\", comment = c(ORCID = \"0000-0001-7111-2286\")), person(\"Mateusz\", \"Krzyzinski\", email = \"krzyzinskimateusz23@gmail.com\", role = c(\"ctb\", \"cre\"), comment = c(ORCID = \"0000-0001-6143-488X\")), person(\"Przemyslaw\", \"Biecek\", email = \"przemyslaw.biecek@gmail.com\", role = c(\"aut\", \"cph\"), comment = c(ORCID = \"0000-0001-8423-1823\")) )",
+      "Authors@R": "c( person(\"Michael\", \"Mayer\", , \"mayermichael79@gmail.com\", role = c(\"aut\", \"cre\")), person(\"Konrad\", \"Komisarczyk\", email = \"komisarczykkonrad@gmail.com\", role = \"aut\"), person(\"Pawel\", \"Kozminski\", email = \"pkozminski99@gmail.com\", role = \"aut\"), person(\"Szymon\", \"Maksymiuk\", role = \"aut\", comment = c(ORCID = \"0000-0002-3120-1601\")), person(\"Lorenz A.\", \"Kapsner\", role = \"ctb\", comment = c(ORCID = \"0000-0003-1866-860X\")), person(\"Mikolaj\", \"Spytek\", role = \"ctb\", comment = c(ORCID = \"0000-0001-7111-2286\")), person(\"Mateusz\", \"Krzyzinski\", email = \"krzyzinskimateusz23@gmail.com\", role = \"ctb\", comment = c(ORCID = \"0000-0001-6143-488X\")), person(\"Przemyslaw\", \"Biecek\", email = \"przemyslaw.biecek@gmail.com\", role = c(\"aut\", \"cph\"), comment = c(ORCID = \"0000-0001-8423-1823\")) )",
       "Description": "An efficient implementation of the 'TreeSHAP' algorithm introduced by Lundberg et al., (2020) <doi:10.1038/s42256-019-0138-9>. It is capable of calculating SHAP (SHapley Additive exPlanations) values  for tree-based models in polynomial time.  Currently supported models include  'gbm', 'randomForest', 'ranger', 'xgboost', 'lightgbm'.",
       "License": "GPL-3",
       "URL": "https://modeloriented.github.io/treeshap/, https://github.com/ModelOriented/treeshap",
       "BugReports": "https://github.com/ModelOriented/treeshap/issues",
       "Depends": [
-        "R (>= 2.10)"
+        "R (>= 4.1.0)"
       ],
       "Imports": [
         "data.table",
@@ -10474,6 +10480,7 @@
         "gbm",
         "jsonlite",
         "lightgbm",
+        "gpboost",
         "randomForest",
         "ranger",
         "scales",
@@ -10486,11 +10493,16 @@
       ],
       "Encoding": "UTF-8",
       "LazyData": "true",
-      "RoxygenNote": "7.2.3",
-      "NeedsCompilation": "yes",
-      "Author": "Konrad Komisarczyk [aut], Pawel Kozminski [aut], Szymon Maksymiuk [aut] (<https://orcid.org/0000-0002-3120-1601>), Lorenz A. Kapsner [ctb] (<https://orcid.org/0000-0003-1866-860X>), Mikolaj Spytek [ctb] (<https://orcid.org/0000-0001-7111-2286>), Mateusz Krzyzinski [ctb, cre] (<https://orcid.org/0000-0001-6143-488X>), Przemyslaw Biecek [aut, cph] (<https://orcid.org/0000-0001-8423-1823>)",
-      "Maintainer": "Mateusz Krzyzinski <krzyzinskimateusz23@gmail.com>",
-      "Repository": "CRAN"
+      "Roxygen": "list(markdown = TRUE)",
+      "RoxygenNote": "7.3.3",
+      "Author": "Michael Mayer [aut, cre], Konrad Komisarczyk [aut], Pawel Kozminski [aut], Szymon Maksymiuk [aut] (ORCID: <https://orcid.org/0000-0002-3120-1601>), Lorenz A. Kapsner [ctb] (ORCID: <https://orcid.org/0000-0003-1866-860X>), Mikolaj Spytek [ctb] (ORCID: <https://orcid.org/0000-0001-7111-2286>), Mateusz Krzyzinski [ctb] (ORCID: <https://orcid.org/0000-0001-6143-488X>), Przemyslaw Biecek [aut, cph] (ORCID: <https://orcid.org/0000-0001-8423-1823>)",
+      "Maintainer": "Michael Mayer <mayermichael79@gmail.com>",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "ModelOriented",
+      "RemoteRepo": "treeshap",
+      "RemoteRef": "master",
+      "RemoteSha": "e287dc305ff527296d632994a2390a18baceb981"
     },
     "tuneRanger": {
       "Package": "tuneRanger",

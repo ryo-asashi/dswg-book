@@ -1,37 +1,12 @@
 ---
 title: "DALEX"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
+description: モデル解釈/IML
 format:
   html:
     fig-width: 6
     fig-height: 3
 ---
-
-```{r setup, include=FALSE}
-
-# install packages
-pkgs <- c('ggplot2', 'DALEX', 'shapviz', 'ranger', "dplyr")
-for (pkg in pkgs) {
-  if (!require(pkg, character.only = TRUE)) {
-    install.packages(pkg)
-  }
-}
-
-# detach packages
-default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
-             "package:stats", "package:graphics",
-             "package:grDevices", "package:utils",
-             "package:datasets", "package:methods",
-             "Autoloads", "package:base")
-for (pkg in setdiff(search(), default)) {
-  detach(pkg, character.only = TRUE)
-  }
-
-# clear objects
-remove(list=objects())
-
-```
 
 ## パッケージの概要
 

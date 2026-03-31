@@ -1,19 +1,12 @@
 ---
 title: "ALEPlot"
 date: "`r Sys.Date()`"
-description: 機械学習 / IML
+description: モデル解釈/ALE
 format:
   html:
     fig-width: 6
     fig-height: 4
 ---
-
-```{r, include=FALSE}
-# install packages
-pkgs <- c("ALEPlot", "parsnip", "xgboost",
-          "dplyr", "MASS", "ggplot2", "DALEX")
-install.packages(pkgs[!pkgs %in% list.files(.libPaths())])
-```
 
 ## パッケージの概要
 

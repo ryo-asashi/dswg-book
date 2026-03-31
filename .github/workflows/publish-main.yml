@@ -44,6 +44,11 @@ jobs:
         with:
           cache-version: 1
 
+      - name: Auto-install Required Packages and Update renv.lock
+        run: |
+          Rscript -e "renv::hydrate()"
+          Rscript -e "renv::snapshot(prompt = FALSE)"
+
       - name: Render and Publish to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
@@ -51,8 +56,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Commit and push _freeze updates
+      - name: Commit and Push Updates
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: update _freeze cache [skip ci]"
-          file_pattern: "_freeze/"
+          file_pattern: "_freeze/ renv.lock"

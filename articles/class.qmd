@@ -1,7 +1,7 @@
 ---
 title: "class"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
+description: 予測モデリング
 format:
   html:
     toc: true
@@ -10,18 +10,13 @@ format:
     fig-height: 3
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-if (!require(class)) install.packages('class')
-```
-
 ## パッケージの概要
+
 classパッケージは分類に関する様々な関数を提供します。本ドキュメントではknn関数を用いたk最近傍法の使用方法を確認します。
 
 ## 使用例：irisデータの分類
 
 irisデータを用いて、がく弁・花弁の長さ・幅の情報からアヤメを分類するモデルをclassパッケージを用いて構築します。
-
 
 ### irisデータセットを読み込む
 
@@ -33,13 +28,16 @@ irisデータを読み込み、データの先頭を表示します。
 -   Petal.Width：花弁の幅
 
 アヤメの種類はsetosa(1)、versicolor(2)、virginica(3)の3種類です。
+
 ```{r}
 data(iris)
 head(iris)
 ```
+
 ### irisデータの構造
 
 irisデータの各種構造を確認します。
+
 ```{r}
 str(iris)
 ```
@@ -53,6 +51,7 @@ plot(iris, col=c(2, 3, 4)[iris$Species])
 ### モデル構築
 
 irisデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします。確認のため、データサイズを出力します。
+
 ```{r}
 # 再現性のためにシードを設定
 set.seed(123)
@@ -65,13 +64,15 @@ test_data <- iris[-sample_indices, ]
 # データサイズの確認
 c(nrow(iris), nrow(train_data), nrow(test_data))
 ```
+
 knn関数を使用し、k最近傍法を実行します。
+
 ```{r}
 res <- knn(train_data[-5], test_data[-5], train_data$Species, k = 3)
 ```
 
 分類結果とテストデータを比べてみます。概ね合っていることが分かります。
+
 ```{r}
 (table(res, test_data$Species))
 ```
-

@@ -1,18 +1,12 @@
 ---
 title: "aglm"
 date: "`r Sys.Date()`"
+description: 予測モデリング/AGLM
 format:
   html:
     fig-width: 6
     fig-height: 4
 ---
-
-```{r setup, include=FALSE}
-# install packages
-pkgs <- c("ggplot2", "MASS", "aglm", "patchwork", 
-        "rsample", "dplyr", "yardstick")
-install.packages(pkgs[!pkgs %in% list.files(.libPaths())])
-```
 
 ## パッケージの概要
 
