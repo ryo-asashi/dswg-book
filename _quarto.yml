@@ -19,5 +19,5 @@ format:
     number-sections: false
     theme: flatly
     html-math-method: katex
-
-editor: visual
+    toc: true
+    toc-depth: 3
