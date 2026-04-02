@@ -50,12 +50,6 @@ jobs:
           Rscript -e "renv::hydrate()"
           Rscript -e "renv::snapshot(prompt = FALSE)"
 
-      - name: Commit and push renv.lock updates
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: auto-update renv.lock for PR [skip ci]"
-          file_pattern: "renv.lock"
-
       - name: Render book
         id: render
         continue-on-error: true
