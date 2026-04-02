@@ -3,6 +3,7 @@ name: Render and Publish PR Preview
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    branches: [main]
 
 jobs:
   build-deploy:
