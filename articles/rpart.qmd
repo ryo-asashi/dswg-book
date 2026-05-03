@@ -3,7 +3,7 @@ title: "rpart"
 date: "`r Sys.Date()`"
 format:   
   html:
-    toc: yes
+    toc: true
     toc_depth: '3'
     fig_width: 6
     fig_height: 3
