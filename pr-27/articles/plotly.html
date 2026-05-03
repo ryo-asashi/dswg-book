@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-05-03">
+
+<title>plotly – Rパッケージ活用事例集</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-567dfa257c986dcfcffd738e14e681fb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="../site_libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+<script src="../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="../site_libs/plotly-binding-4.12.0/plotly.js"></script>
+<script src="../site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="../site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="../site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+<script src="../site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+<link href="../site_libs/plotly-htmlwidgets-css-2.25.2/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="../site_libs/plotly-main-2.25.2/plotly-latest.min.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/plotly.html">plotly</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Rパッケージ活用事例集</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">パッケージ一覧</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/actuar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">actuar</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/aglm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">aglm</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ALEPlot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ALEPlot</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/C50.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">C50</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/class.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">class</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/corrplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">corrplot</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/crosstable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">crosstable</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/DALEX.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">DALEX</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/datatable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">data.table</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/distr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">distr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/distrEx.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">distrEx</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">dplyr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/e1071.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">e1071</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/evd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">evd</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/fastshap.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">fastshap</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/forcats.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">forcats</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/genlasso.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">genlasso</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/gghighlight.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">gghighlight</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ggplot2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/igraph.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">igraph</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/iml.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">iml</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ismev.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ismev</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/lifecontingencies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">lifecontingencies</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/makedummies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">makedummies</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/mlbench.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">mlbench</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/modeldata.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">modeldata</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/NipponMap.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NipponMap</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/palmerpenguins.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">palmerpenguins</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/parsnip.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">parsnip</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/partykit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">partykit</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/pdp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">pdp</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/plotly.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">plotly</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/plyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">plyr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/pROC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">pROC</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/psych.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">psych</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/purrr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">purrr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/quantmod.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">quantmod</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/randomForest.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">randomForest</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/ranger.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ranger</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/readr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">readr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/readxl.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">readxl</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/recipes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">recipes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/RODBC.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">RODBC</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/rpart.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">rpart</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/rsample.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">rsample</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/shapviz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">shapviz</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/skimr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">skimr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/stringr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">stringr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/survival.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">survival</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/tibble.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tibble</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/tuneRanger.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tuneRanger</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/xgboost.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">xgboost</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/yardstick.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">yardstick</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/YieldCurve.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">YieldCurve</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要">パッケージの概要</a></li>
+  <li><a href="#plotの作成方法" id="toc-plotの作成方法" class="nav-link" data-scroll-target="#plotの作成方法">plotの作成方法</a></li>
+  <li><a href="#タイトルなどのつけ方" id="toc-タイトルなどのつけ方" class="nav-link" data-scroll-target="#タイトルなどのつけ方">タイトルなどのつけ方</a></li>
+  <li><a href="#ggplot2との連携" id="toc-ggplot2との連携" class="nav-link" data-scroll-target="#ggplot2との連携">ggplot2との連携</a></li>
+  <li><a href="#公式サイトについて" id="toc-公式サイトについて" class="nav-link" data-scroll-target="#公式サイトについて">公式サイトについて</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">plotly</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 3, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="パッケージの概要" class="level3">
+<h3 class="anchored" data-anchor-id="パッケージの概要">パッケージの概要</h3>
+<p>plotlyは、インタラクティブなグラフを作成することのできるパッケージです。 baseのplotや、ggplot2では出力したグラフは固定されますが、plotlyでは、 出力したグラフを動かすことができます。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="plotの作成方法" class="level3">
+<h3 class="anchored" data-anchor-id="plotの作成方法">plotの作成方法</h3>
+<p>plot_ly関数を利用することで、グラフを作成できます。 以下では、Rのデータセットquakes（Fijiにおけるマグニチュード4以上の地震に関するデータセット）を用いたグラフを作成しています。</p>
+<p>引数の意味は以下の通りです。</p>
+<p>data：利用するデータセットとして、quakesを指定 x：x軸にmag（マグニチュード）を指定 y：y軸にstations（地震を観測した観測所数）を指定 type：グラフの種類として、散布図を指定 mode：データセットの各要素のプロット方法として、マーカーを指定</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>plot_quakes <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(<span class="at">data =</span> quakes,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">x =</span> <span class="sc">~</span>mag,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">y =</span> <span class="sc">~</span>stations,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">type =</span> <span class="st">"scatter"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">mode =</span> <span class="st">"markers"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>plot_quakes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-92e22d7fb26d4771ca53" style="width:100%;height:325px;"></div>
+<script type="application/json" data-for="htmlwidget-92e22d7fb26d4771ca53">{"x":{"visdat":{"80b9714db9d1":["function () ","plotlyVisDat"]},"cur_data":"80b9714db9d1","attrs":{"80b9714db9d1":{"x":{},"y":{},"mode":"markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"mag"},"yaxis":{"domain":[0,1],"automargin":true,"title":"stations"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[4.7999999999999998,4.2000000000000002,5.4000000000000004,4.0999999999999996,4,4,4.7999999999999998,4.4000000000000004,4.7000000000000002,4.2999999999999998,4.4000000000000004,4.5999999999999996,4.4000000000000004,4.4000000000000004,6.0999999999999996,4.2999999999999998,6,4.5,4.4000000000000004,4.4000000000000004,4.5,4.2000000000000002,4.4000000000000004,4.7000000000000002,5.4000000000000004,4,4.5999999999999996,5.2000000000000002,4.5,4.4000000000000004,4.5999999999999996,4.7000000000000002,4.7999999999999998,4,4.5,4.2999999999999998,4.5,4.5999999999999996,4.0999999999999996,4.4000000000000004,4.7000000000000002,4.5999999999999996,4.4000000000000004,4.2999999999999998,4.5999999999999996,4.9000000000000004,4.5,4.4000000000000004,4.2999999999999998,5.0999999999999996,4.2000000000000002,4,4.5999999999999996,4.2999999999999998,4.2000000000000002,4.4000000000000004,4.5,4,4.4000000000000004,4.2999999999999998,4.7000000000000002,4.0999999999999996,5,4.5999999999999996,4.9000000000000004,4.7000000000000002,4.0999999999999996,5,4.5,5.5,4,4.5,4.2999999999999998,5.2000000000000002,4.4000000000000004,4.2999999999999998,4.0999999999999996,4.5,4.2000000000000002,5.2999999999999998,5.2000000000000002,4.5,4.5999999999999996,4.2999999999999998,4,4.2999999999999998,4.7000000000000002,4.5,4.2000000000000002,4.2999999999999998,5.0999999999999996,4.7000000000000002,5.2000000000000002,4.2000000000000002,4.2000000000000002,4,4.5,5.2000000000000002,5.0999999999999996,4.7000000000000002,4.0999999999999996,4.5999999999999996,4.7000000000000002,4.7000000000000002,4.5999999999999996,4.2000000000000002,4.4000000000000004,4.5999999999999996,5.7000000000000002,5,4.5,4.2000000000000002,4,4.7999999999999998,4.4000000000000004,4.2000000000000002,5.2999999999999998,4.7000000000000002,4.7999999999999998,4.2000000000000002,4.7999999999999998,4.2999999999999998,4.7000000000000002,4.5,4.4000000000000004,5.0999999999999996,4.2000000000000002,5,4.7999999999999998,4.2999999999999998,4.5,4.2000000000000002,4.5,4.5999999999999996,4.2999999999999998,4.7000000000000002,5.0999999999999996,4.5999999999999996,4.9000000000000004,4.2000000000000002,4.5999999999999996,4,5,4.4000000000000004,4.2000000000000002,4.2000000000000002,4.4000000000000004,4.9000000000000004,5.2999999999999998,4,5.7000000000000002,6.4000000000000004,4.2999999999999998,4.2000000000000002,4.7000000000000002,4.7000000000000002,4.2000000000000002,4.2999999999999998,4.9000000000000004,4.5999999999999996,4.0999999999999996,4.7999999999999998,4.5999999999999996,4.5999999999999996,4.7999999999999998,5,5.5999999999999996,5.2999999999999998,4.7000000000000002,4.5,4.2999999999999998,4.5999999999999996,4.0999999999999996,4.0999999999999996,4.0999999999999996,5.7000000000000002,5,4.5,4.0999999999999996,4.5999999999999996,4.5,4.2999999999999998,4.4000000000000004,4.2000000000000002,4.0999999999999996,4.9000000000000004,4.2999999999999998,4.9000000000000004,4.5999999999999996,4.5999999999999996,5.2999999999999998,4.7000000000000002,4.5999999999999996,4.0999999999999996,4.5999999999999996,4.2000000000000002,4.5999999999999996,4.5,4.2999999999999998,5.2000000000000002,4.2999999999999998,4,4.7000000000000002,4.5,4.5,4.2999999999999998,5.2000000000000002,4.5,4.7000000000000002,4.2000000000000002,4.7000000000000002,4.2999999999999998,4.0999999999999996,5.4000000000000004,4.2999999999999998,4.2999999999999998,4.2000000000000002,4.5999999999999996,4.4000000000000004,4.2000000000000002,4.7000000000000002,4.5999999999999996,4.9000000000000004,4.2000000000000002,4.5,4.9000000000000004,4.2000000000000002,4.5,5,5,4.7000000000000002,4.2999999999999998,4.4000000000000004,4.9000000000000004,4.5,4,4.4000000000000004,5,4.7000000000000002,4.7999999999999998,4.5,4.0999999999999996,5.2999999999999998,4.7999999999999998,5,4.5999999999999996,4.2999999999999998,4.7000000000000002,5.2999999999999998,4.2000000000000002,4.7000000000000002,4.5,5.0999999999999996,4.9000000000000004,4.4000000000000004,4.2000000000000002,4.5999999999999996,4.7000000000000002,4.2000000000000002,4.9000000000000004,5.0999999999999996,4.7000000000000002,4.4000000000000004,4.4000000000000004,4.2000000000000002,4.9000000000000004,4.5999999999999996,4.4000000000000004,4.5999999999999996,4.5,4.4000000000000004,4.9000000000000004,4.0999999999999996,4.2000000000000002,5.7000000000000002,4.5999999999999996,5,4.2999999999999998,4.5,5.2000000000000002,4.4000000000000004,4.2000000000000002,4.5999999999999996,4,4.4000000000000004,4.7000000000000002,4.2000000000000002,4.7000000000000002,4.5,5,5,4.7999999999999998,4.5999999999999996,4.5999999999999996,5,5,5.5999999999999996,4,4,4.5999999999999996,4.4000000000000004,4.7999999999999998,4.7000000000000002,4.5999999999999996,4.2999999999999998,4.7000000000000002,4.0999999999999996,4.9000000000000004,4.5999999999999996,4.7999999999999998,4.9000000000000004,5.0999999999999996,5.4000000000000004,4.5,4.9000000000000004,4.4000000000000004,4.0999999999999996,5.2999999999999998,4.5,4.9000000000000004,4.7999999999999998,5.2000000000000002,4.4000000000000004,4.4000000000000004,4.9000000000000004,4.4000000000000004,4.2000000000000002,4.5999999999999996,4.5999999999999996,5.2999999999999998,5.2999999999999998,4.5,4.4000000000000004,5,5.0999999999999996,4.5,4.5,5.4000000000000004,4.5,4.7000000000000002,4.2000000000000002,4.7999999999999998,4.5,4.2999999999999998,4.2999999999999998,4.2999999999999998,4.5999999999999996,4.5,5,4.5999999999999996,4.5999999999999996,4.9000000000000004,4.0999999999999996,5.5,4.7000000000000002,5,5.0999999999999996,5.5,4.5999999999999996,4.7000000000000002,4.2000000000000002,4,5.4000000000000004,4.2999999999999998,4.4000000000000004,4.5999999999999996,5.0999999999999996,4.5,4.2000000000000002,4.0999999999999996,5.0999999999999996,5.4000000000000004,5.0999999999999996,5.0999999999999996,4.4000000000000004,5.7000000000000002,4.4000000000000004,5.0999999999999996,4.5999999999999996,5.5,5.0999999999999996,4.4000000000000004,5,5,5.0999999999999996,5.0999999999999996,4.2000000000000002,4.5,4,4.9000000000000004,4.2999999999999998,4.7999999999999998,4.4000000000000004,4.2000000000000002,4.9000000000000004,4.2000000000000002,5.2999999999999998,5,5.7000000000000002,5.2999999999999998,4.7000000000000002,4.5999999999999996,4.2999999999999998,5.4000000000000004,4.4000000000000004,4.2999999999999998,4.2999999999999998,4.7000000000000002,4.4000000000000004,4.2000000000000002,4.5,4.7999999999999998,4.7999999999999998,4.2999999999999998,4.4000000000000004,5.0999999999999996,4.4000000000000004,4.4000000000000004,4.2999999999999998,4.7999999999999998,4.2999999999999998,4.5,4.0999999999999996,5.0999999999999996,4.7000000000000002,4.5999999999999996,4.7000000000000002,4.5999999999999996,4.4000000000000004,4.2000000000000002,4.0999999999999996,4.7000000000000002,4,4.7999999999999998,4.4000000000000004,4.2999999999999998,4.4000000000000004,4.5,4.5,4.7000000000000002,4.2999999999999998,4.7000000000000002,4.7999999999999998,4.5999999999999996,5.0999999999999996,4.7000000000000002,4.2999999999999998,5.0999999999999996,5.5,4.5,4.2999999999999998,4.2999999999999998,4.7000000000000002,4.2999999999999998,4.2999999999999998,4.5999999999999996,4.5,4.5,5.4000000000000004,4.5999999999999996,4.4000000000000004,5,5.2000000000000002,4.4000000000000004,5.0999999999999996,4.4000000000000004,4.4000000000000004,4.7999999999999998,4.4000000000000004,4.7000000000000002,4.7000000000000002,4.4000000000000004,4.2999999999999998,5,4.5,4.5999999999999996,5.4000000000000004,4.5999999999999996,4.5,4.4000000000000004,4.5,4.0999999999999996,4,4.9000000000000004,4.0999999999999996,5.2000000000000002,4.4000000000000004,4.0999999999999996,4.9000000000000004,4.5999999999999996,4.5,4.7999999999999998,4.2000000000000002,4.2000000000000002,4.0999999999999996,5.5,4.4000000000000004,4.7999999999999998,4.2000000000000002,4.7999999999999998,4.9000000000000004,4.5999999999999996,4.5,4.4000000000000004,4.5999999999999996,4.2000000000000002,4.7000000000000002,4.4000000000000004,4.5,4.9000000000000004,4.7000000000000002,5.5,4.7000000000000002,4.5999999999999996,4.0999999999999996,4.7000000000000002,4.5999999999999996,4.2999999999999998,4.4000000000000004,4.7000000000000002,4.2999999999999998,4.0999999999999996,4.7000000000000002,4.5,5.5,4.5,4.5999999999999996,5.0999999999999996,4.4000000000000004,4.7000000000000002,5.5,4.5999999999999996,4,4.5999999999999996,4.7999999999999998,4.7000000000000002,4.7000000000000002,4.2000000000000002,5.4000000000000004,4.5999999999999996,5.5,4.2000000000000002,4.5,4.5,4.7999999999999998,4.5999999999999996,5.4000000000000004,4.5999999999999996,5,4.2999999999999998,4.2999999999999998,4.7999999999999998,4.7000000000000002,4.7000000000000002,4.7999999999999998,4.2000000000000002,4.2000000000000002,5.9000000000000004,4.5999999999999996,4.5,4.9000000000000004,4.7000000000000002,4.9000000000000004,5.2999999999999998,4.2000000000000002,4.2000000000000002,4.5,5.2000000000000002,4.5,5.5999999999999996,5.2000000000000002,4.7999999999999998,4.5,5,4.4000000000000004,4.5,4.5999999999999996,4.5,5.2000000000000002,5.0999999999999996,4.7999999999999998,4.2999999999999998,5.0999999999999996,4.7000000000000002,4.5999999999999996,4.7999999999999998,4.5999999999999996,4.4000000000000004,4.5999999999999996,5.0999999999999996,4.2999999999999998,4.4000000000000004,4.7000000000000002,4.7999999999999998,4.0999999999999996,4.5999999999999996,4.9000000000000004,4,4.7000000000000002,4.7000000000000002,5.2000000000000002,4.5999999999999996,4.5999999999999996,4.9000000000000004,5.7000000000000002,4.7000000000000002,4.4000000000000004,4.9000000000000004,4.7999999999999998,4.5999999999999996,4.4000000000000004,4.7999999999999998,4.7000000000000002,4.2000000000000002,5.0999999999999996,4.7999999999999998,4.9000000000000004,5.0999999999999996,4.2999999999999998,4.4000000000000004,4.7000000000000002,4.7000000000000002,5.2999999999999998,5.0999999999999996,4.9000000000000004,4.5,4.7000000000000002,4.2000000000000002,5.0999999999999996,4.7999999999999998,4.2000000000000002,4.7999999999999998,4.4000000000000004,4.5,4.2999999999999998,5.5999999999999996,4,5,4.2000000000000002,4.5999999999999996,4.5999999999999996,4.5,5,4.7000000000000002,4.5999999999999996,4.7999999999999998,4.5999999999999996,4.4000000000000004,5.5999999999999996,4.2000000000000002,5.4000000000000004,4.7999999999999998,5.5999999999999996,4.4000000000000004,4.7000000000000002,4.5999999999999996,5.0999999999999996,4.5999999999999996,4.5,4.2000000000000002,4.7999999999999998,4.9000000000000004,5.5,5,4.2000000000000002,5.2000000000000002,4.7999999999999998,4.4000000000000004,4.7999999999999998,4.4000000000000004,4.0999999999999996,4.9000000000000004,4.5999999999999996,4.5,5.2999999999999998,4.7999999999999998,4.5999999999999996,4.7999999999999998,4.7000000000000002,4.9000000000000004,5.2999999999999998,4.4000000000000004,4.5999999999999996,4.2999999999999998,4.4000000000000004,4.2000000000000002,4.0999999999999996,4.2000000000000002,5,4.0999999999999996,4.2999999999999998,5.2000000000000002,4.2000000000000002,4.5,4.4000000000000004,4.4000000000000004,5,4,4.7999999999999998,5,4.2000000000000002,5.2000000000000002,5.2000000000000002,4.5,4.2999999999999998,4.5,4.5999999999999996,5.0999999999999996,4.4000000000000004,4.2999999999999998,4.7000000000000002,5.5999999999999996,4.9000000000000004,5.0999999999999996,4.5999999999999996,4.4000000000000004,4.7999999999999998,4.2000000000000002,4.7000000000000002,4.0999999999999996,4.7000000000000002,4,4.9000000000000004,5,4.5,4.4000000000000004,4,4.5,4.7000000000000002,4.4000000000000004,4.7000000000000002,4.7000000000000002,4,4.2000000000000002,4.5,4.7000000000000002,4.5,4.0999999999999996,4.5999999999999996,4.2999999999999998,4.5999999999999996,5.2000000000000002,4.5999999999999996,4.7000000000000002,5,5.2000000000000002,4.4000000000000004,4.5999999999999996,4.5,4,4.2000000000000002,5.2999999999999998,5.9000000000000004,4.9000000000000004,4.5,4.4000000000000004,5.4000000000000004,5.2999999999999998,5.0999999999999996,4.0999999999999996,4.2999999999999998,4.5,4.0999999999999996,5.0999999999999996,5.2999999999999998,4.5,4.0999999999999996,4.4000000000000004,4.7000000000000002,4,5.0999999999999996,4,4.2999999999999998,4.2999999999999998,4,4.0999999999999996,4.4000000000000004,4.2999999999999998,4.2000000000000002,4,4.5,4.7000000000000002,5,4.2999999999999998,5.0999999999999996,4.7000000000000002,5.2999999999999998,5,4.5,5,4.0999999999999996,4.9000000000000004,4.0999999999999996,4,4.4000000000000004,4.5,4.4000000000000004,4.5,4.2999999999999998,4.2999999999999998,5,4.5,4.5,4.4000000000000004,4.5,4.0999999999999996,4.9000000000000004,4.7000000000000002,4.2999999999999998,4.5999999999999996,4.5999999999999996,5.2000000000000002,4.5,4.2999999999999998,4.5999999999999996,4,4.5,4.7999999999999998,4.5999999999999996,4.0999999999999996,4.9000000000000004,4.7000000000000002,4.0999999999999996,4.2999999999999998,4.4000000000000004,4,4.7999999999999998,4.4000000000000004,4.4000000000000004,4.5999999999999996,4.2000000000000002,4.0999999999999996,4.2000000000000002,4,4.0999999999999996,4.0999999999999996,4.7000000000000002,4.7999999999999998,5.0999999999999996,5,4.7999999999999998,4.4000000000000004,5,5.2000000000000002,4.2000000000000002,4.0999999999999996,4.7999999999999998,4.5,5,5.0999999999999996,4.0999999999999996,4.7000000000000002,5.2000000000000002,4.7999999999999998,4.5,4,4.7000000000000002,4.0999999999999996,4.2999999999999998,4.2999999999999998,4,4.7000000000000002,4.0999999999999996,4.2000000000000002,4.7999999999999998,4.7999999999999998,4.2000000000000002,4.2000000000000002,5.7000000000000002,6,4.2000000000000002,4.5,4.9000000000000004,4.4000000000000004,4,4.2999999999999998,4.2000000000000002,4.5,4.7999999999999998,4.4000000000000004,4.2000000000000002,4.2000000000000002,5,4.2000000000000002,5.2000000000000002,4.5,4.5999999999999996,5,5,5.4000000000000004,4.7999999999999998,4.2000000000000002,5.5,4.2999999999999998,4.0999999999999996,4.4000000000000004,4.9000000000000004,4.5,4.9000000000000004,4,4.5,5,4.9000000000000004,4.5,4.2000000000000002,4.2000000000000002,4.2000000000000002,5.2000000000000002,4.2999999999999998,5.0999999999999996,4.5999999999999996,4.5999999999999996,4.4000000000000004,4.4000000000000004,4.9000000000000004,5.0999999999999996,4.2000000000000002,4.7000000000000002,4,5.5999999999999996,5.2999999999999998,5,4.2999999999999998,4.0999999999999996,5.0999999999999996,4.5,4.9000000000000004,5.4000000000000004,4.7000000000000002,4.7999999999999998,4.5,4.2000000000000002,4.5999999999999996,4.5999999999999996,5.5999999999999996,5.4000000000000004,4,5.2000000000000002,4.2000000000000002,4.7000000000000002,4.2999999999999998,4.7999999999999998,4.5999999999999996,5.4000000000000004,4.7999999999999998,4.5999999999999996,4.2000000000000002,5.5,4.7000000000000002,4.7000000000000002,4.5,5.5,4.5,4.0999999999999996,4,4.2999999999999998,4.7000000000000002,4.9000000000000004,4.5,4.7000000000000002,4.5,4.7999999999999998,4.2999999999999998,4.0999999999999996,5.4000000000000004,4.0999999999999996,4.7999999999999998,4.2000000000000002,4.7999999999999998,5.4000000000000004,4.4000000000000004,5.2000000000000002,4.7000000000000002,4.9000000000000004,4.9000000000000004,4.2000000000000002,4.4000000000000004,4.4000000000000004,4.2999999999999998,4.9000000000000004,5,4.7000000000000002,4.9000000000000004,4.2999999999999998,4.5,4.2000000000000002,5.2000000000000002,4.7999999999999998,4,4.7000000000000002,4.2999999999999998,4.2999999999999998,4.9000000000000004,4,4.2000000000000002,4.4000000000000004,4.7000000000000002,4.5,4.5,6],"y":[41,15,43,19,11,12,43,15,35,19,13,16,19,10,94,11,83,21,13,18,17,12,18,22,57,15,18,79,25,17,21,30,42,10,10,13,17,17,17,11,34,32,23,26,27,34,24,18,21,73,13,15,26,13,16,31,17,11,23,12,35,12,61,32,40,25,13,45,27,91,11,30,14,75,35,15,11,23,15,60,65,27,38,15,11,15,32,26,16,42,61,22,64,14,21,18,21,54,45,33,12,25,30,22,29,15,25,22,76,35,28,14,16,39,21,25,67,14,52,13,28,11,27,23,18,43,21,69,59,19,22,24,21,30,14,12,68,14,31,17,43,14,46,34,23,10,22,42,63,19,106,122,24,20,16,39,14,19,31,30,19,34,30,32,35,37,98,73,41,27,24,41,11,14,10,90,50,22,20,27,47,25,17,15,14,62,11,54,24,29,71,35,12,21,41,23,27,14,31,74,23,12,35,36,19,13,66,14,32,11,42,13,19,85,22,21,17,41,29,14,30,39,48,22,26,52,18,22,55,43,34,24,16,31,15,12,20,63,27,41,33,16,16,52,52,28,26,18,61,12,26,26,47,38,19,22,34,35,23,43,72,32,10,27,16,37,16,14,37,23,15,35,12,11,104,25,59,16,19,56,22,12,17,10,21,29,16,36,26,50,49,18,31,35,57,47,80,16,16,23,22,40,30,15,21,29,19,20,36,26,68,57,82,21,54,14,13,53,25,26,28,69,23,14,55,11,10,20,15,55,42,11,11,28,58,14,26,68,16,17,14,13,13,12,14,11,11,12,29,10,15,27,17,68,21,49,49,82,21,19,14,22,67,19,16,22,48,14,21,20,49,105,61,54,21,123,14,57,31,95,68,26,25,49,49,63,14,39,14,36,21,27,21,14,45,21,89,30,112,93,24,36,17,65,30,16,23,28,26,21,35,57,37,15,15,51,17,40,23,19,27,29,22,58,44,28,44,12,15,23,10,22,17,33,19,14,21,10,29,30,18,29,33,14,68,19,21,91,104,25,11,21,23,18,20,20,23,15,87,39,11,100,72,15,51,17,21,25,22,39,31,29,12,40,19,27,65,23,13,13,18,10,13,39,13,79,41,11,43,20,17,30,19,23,15,71,19,20,23,36,46,19,34,24,28,19,28,51,51,48,34,92,30,32,14,28,21,25,20,44,25,22,30,16,81,17,44,70,28,35,73,39,16,24,34,36,33,20,87,34,86,15,22,21,20,18,80,34,30,17,24,38,23,36,27,17,16,118,28,25,49,17,25,78,21,23,18,67,23,79,87,35,29,28,26,18,42,24,74,54,42,18,55,19,20,51,23,25,27,49,20,19,30,47,15,33,35,17,32,32,89,18,34,23,99,26,18,38,43,27,18,35,28,18,54,56,47,49,28,30,33,24,86,71,38,23,41,23,50,57,18,56,20,26,18,129,16,36,28,31,18,28,32,42,36,50,44,17,87,13,88,43,94,27,29,27,79,22,29,23,43,48,105,41,21,69,36,30,40,31,12,45,24,32,18,40,41,37,17,50,60,27,33,17,17,27,14,15,64,10,20,67,10,36,29,16,65,11,25,51,21,91,68,10,15,19,11,71,36,16,37,109,46,22,13,18,49,17,57,11,33,17,43,50,16,23,14,30,23,20,43,32,14,14,18,44,17,15,13,25,30,65,22,36,65,49,20,18,18,12,20,69,119,42,34,14,75,86,47,20,17,18,10,70,71,29,16,26,24,10,61,16,21,21,22,10,17,10,12,12,25,32,48,22,54,34,69,63,29,77,16,27,16,16,27,19,33,37,19,36,36,37,13,30,35,22,78,27,18,32,43,49,19,11,52,14,39,30,30,11,50,40,23,20,17,12,15,25,34,21,28,15,18,12,15,17,29,44,44,41,38,39,36,56,19,16,60,27,54,81,16,41,59,48,33,11,49,15,17,17,14,51,27,13,36,31,15,29,78,132,20,32,36,22,15,20,23,30,31,28,18,12,31,15,64,30,35,22,52,71,28,21,70,25,16,22,74,45,56,33,27,40,47,31,16,37,34,30,21,43,50,14,36,32,64,40,28,30,14,115,81,82,27,11,67,36,22,61,40,29,28,23,50,28,121,110,20,72,12,57,15,27,30,88,27,22,22,67,16,35,32,78,34,21,23,32,27,50,31,55,22,42,20,23,61,26,40,20,25,45,14,74,23,35,27,32,47,17,11,20,67,21,49,22,17,16,51,27,12,33,18,27,65,17,10,22,35,34,14,119],"mode":"markers","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>出力されているグラフにカーソルを合わせると、グラフの左上にカメラのマークなど、複数のマークが表示されます。また、各マークにカーソルを合わせると説明文が表示されます。 例えば、「Zoom in」という説明文が表示される＋のマークをクリックすると、グラフを拡大することができます。他にも表示されている部分を画像として保存したり、ドラッグ＆ドロップでグラフを動かすことなども可能です。 上記のように、出力した後のグラフを動的に操作できることが、本パッケージの特徴です。</p>
+</section>
+<section id="タイトルなどのつけ方" class="level3">
+<h3 class="anchored" data-anchor-id="タイトルなどのつけ方">タイトルなどのつけ方</h3>
+<p>タイトルなどをつける場合はlayout関数を利用します。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>plot_quakes_2 <span class="ot">&lt;-</span> <span class="fu">plot_ly</span>(<span class="at">data =</span> quakes,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">x =</span> <span class="sc">~</span>mag,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">y =</span> <span class="sc">~</span>stations,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">type =</span> <span class="st">"scatter"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">mode =</span> <span class="st">"markers"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(<span class="at">title =</span> <span class="st">"マグニチュード別の観測所数"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">"マグニチュード"</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">yaxis =</span> <span class="fu">list</span>(</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">rangemode =</span> <span class="st">"tozero"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">title =</span> <span class="st">"観測所数"</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>           )</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>         )</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>plot_quakes_2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-73d2643408f8edf06414" style="width:100%;height:325px;"></div>
+<script type="application/json" data-for="htmlwidget-73d2643408f8edf06414">{"x":{"visdat":{"80b95443ce49":["function () ","plotlyVisDat"]},"cur_data":"80b95443ce49","attrs":{"80b95443ce49":{"x":{},"y":{},"mode":"markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"マグニチュード別の観測所数","xaxis":{"domain":[0,1],"automargin":true,"title":"マグニチュード"},"yaxis":{"domain":[0,1],"automargin":true,"rangemode":"tozero","title":"観測所数"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[4.7999999999999998,4.2000000000000002,5.4000000000000004,4.0999999999999996,4,4,4.7999999999999998,4.4000000000000004,4.7000000000000002,4.2999999999999998,4.4000000000000004,4.5999999999999996,4.4000000000000004,4.4000000000000004,6.0999999999999996,4.2999999999999998,6,4.5,4.4000000000000004,4.4000000000000004,4.5,4.2000000000000002,4.4000000000000004,4.7000000000000002,5.4000000000000004,4,4.5999999999999996,5.2000000000000002,4.5,4.4000000000000004,4.5999999999999996,4.7000000000000002,4.7999999999999998,4,4.5,4.2999999999999998,4.5,4.5999999999999996,4.0999999999999996,4.4000000000000004,4.7000000000000002,4.5999999999999996,4.4000000000000004,4.2999999999999998,4.5999999999999996,4.9000000000000004,4.5,4.4000000000000004,4.2999999999999998,5.0999999999999996,4.2000000000000002,4,4.5999999999999996,4.2999999999999998,4.2000000000000002,4.4000000000000004,4.5,4,4.4000000000000004,4.2999999999999998,4.7000000000000002,4.0999999999999996,5,4.5999999999999996,4.9000000000000004,4.7000000000000002,4.0999999999999996,5,4.5,5.5,4,4.5,4.2999999999999998,5.2000000000000002,4.4000000000000004,4.2999999999999998,4.0999999999999996,4.5,4.2000000000000002,5.2999999999999998,5.2000000000000002,4.5,4.5999999999999996,4.2999999999999998,4,4.2999999999999998,4.7000000000000002,4.5,4.2000000000000002,4.2999999999999998,5.0999999999999996,4.7000000000000002,5.2000000000000002,4.2000000000000002,4.2000000000000002,4,4.5,5.2000000000000002,5.0999999999999996,4.7000000000000002,4.0999999999999996,4.5999999999999996,4.7000000000000002,4.7000000000000002,4.5999999999999996,4.2000000000000002,4.4000000000000004,4.5999999999999996,5.7000000000000002,5,4.5,4.2000000000000002,4,4.7999999999999998,4.4000000000000004,4.2000000000000002,5.2999999999999998,4.7000000000000002,4.7999999999999998,4.2000000000000002,4.7999999999999998,4.2999999999999998,4.7000000000000002,4.5,4.4000000000000004,5.0999999999999996,4.2000000000000002,5,4.7999999999999998,4.2999999999999998,4.5,4.2000000000000002,4.5,4.5999999999999996,4.2999999999999998,4.7000000000000002,5.0999999999999996,4.5999999999999996,4.9000000000000004,4.2000000000000002,4.5999999999999996,4,5,4.4000000000000004,4.2000000000000002,4.2000000000000002,4.4000000000000004,4.9000000000000004,5.2999999999999998,4,5.7000000000000002,6.4000000000000004,4.2999999999999998,4.2000000000000002,4.7000000000000002,4.7000000000000002,4.2000000000000002,4.2999999999999998,4.9000000000000004,4.5999999999999996,4.0999999999999996,4.7999999999999998,4.5999999999999996,4.5999999999999996,4.7999999999999998,5,5.5999999999999996,5.2999999999999998,4.7000000000000002,4.5,4.2999999999999998,4.5999999999999996,4.0999999999999996,4.0999999999999996,4.0999999999999996,5.7000000000000002,5,4.5,4.0999999999999996,4.5999999999999996,4.5,4.2999999999999998,4.4000000000000004,4.2000000000000002,4.0999999999999996,4.9000000000000004,4.2999999999999998,4.9000000000000004,4.5999999999999996,4.5999999999999996,5.2999999999999998,4.7000000000000002,4.5999999999999996,4.0999999999999996,4.5999999999999996,4.2000000000000002,4.5999999999999996,4.5,4.2999999999999998,5.2000000000000002,4.2999999999999998,4,4.7000000000000002,4.5,4.5,4.2999999999999998,5.2000000000000002,4.5,4.7000000000000002,4.2000000000000002,4.7000000000000002,4.2999999999999998,4.0999999999999996,5.4000000000000004,4.2999999999999998,4.2999999999999998,4.2000000000000002,4.5999999999999996,4.4000000000000004,4.2000000000000002,4.7000000000000002,4.5999999999999996,4.9000000000000004,4.2000000000000002,4.5,4.9000000000000004,4.2000000000000002,4.5,5,5,4.7000000000000002,4.2999999999999998,4.4000000000000004,4.9000000000000004,4.5,4,4.4000000000000004,5,4.7000000000000002,4.7999999999999998,4.5,4.0999999999999996,5.2999999999999998,4.7999999999999998,5,4.5999999999999996,4.2999999999999998,4.7000000000000002,5.2999999999999998,4.2000000000000002,4.7000000000000002,4.5,5.0999999999999996,4.9000000000000004,4.4000000000000004,4.2000000000000002,4.5999999999999996,4.7000000000000002,4.2000000000000002,4.9000000000000004,5.0999999999999996,4.7000000000000002,4.4000000000000004,4.4000000000000004,4.2000000000000002,4.9000000000000004,4.5999999999999996,4.4000000000000004,4.5999999999999996,4.5,4.4000000000000004,4.9000000000000004,4.0999999999999996,4.2000000000000002,5.7000000000000002,4.5999999999999996,5,4.2999999999999998,4.5,5.2000000000000002,4.4000000000000004,4.2000000000000002,4.5999999999999996,4,4.4000000000000004,4.7000000000000002,4.2000000000000002,4.7000000000000002,4.5,5,5,4.7999999999999998,4.5999999999999996,4.5999999999999996,5,5,5.5999999999999996,4,4,4.5999999999999996,4.4000000000000004,4.7999999999999998,4.7000000000000002,4.5999999999999996,4.2999999999999998,4.7000000000000002,4.0999999999999996,4.9000000000000004,4.5999999999999996,4.7999999999999998,4.9000000000000004,5.0999999999999996,5.4000000000000004,4.5,4.9000000000000004,4.4000000000000004,4.0999999999999996,5.2999999999999998,4.5,4.9000000000000004,4.7999999999999998,5.2000000000000002,4.4000000000000004,4.4000000000000004,4.9000000000000004,4.4000000000000004,4.2000000000000002,4.5999999999999996,4.5999999999999996,5.2999999999999998,5.2999999999999998,4.5,4.4000000000000004,5,5.0999999999999996,4.5,4.5,5.4000000000000004,4.5,4.7000000000000002,4.2000000000000002,4.7999999999999998,4.5,4.2999999999999998,4.2999999999999998,4.2999999999999998,4.5999999999999996,4.5,5,4.5999999999999996,4.5999999999999996,4.9000000000000004,4.0999999999999996,5.5,4.7000000000000002,5,5.0999999999999996,5.5,4.5999999999999996,4.7000000000000002,4.2000000000000002,4,5.4000000000000004,4.2999999999999998,4.4000000000000004,4.5999999999999996,5.0999999999999996,4.5,4.2000000000000002,4.0999999999999996,5.0999999999999996,5.4000000000000004,5.0999999999999996,5.0999999999999996,4.4000000000000004,5.7000000000000002,4.4000000000000004,5.0999999999999996,4.5999999999999996,5.5,5.0999999999999996,4.4000000000000004,5,5,5.0999999999999996,5.0999999999999996,4.2000000000000002,4.5,4,4.9000000000000004,4.2999999999999998,4.7999999999999998,4.4000000000000004,4.2000000000000002,4.9000000000000004,4.2000000000000002,5.2999999999999998,5,5.7000000000000002,5.2999999999999998,4.7000000000000002,4.5999999999999996,4.2999999999999998,5.4000000000000004,4.4000000000000004,4.2999999999999998,4.2999999999999998,4.7000000000000002,4.4000000000000004,4.2000000000000002,4.5,4.7999999999999998,4.7999999999999998,4.2999999999999998,4.4000000000000004,5.0999999999999996,4.4000000000000004,4.4000000000000004,4.2999999999999998,4.7999999999999998,4.2999999999999998,4.5,4.0999999999999996,5.0999999999999996,4.7000000000000002,4.5999999999999996,4.7000000000000002,4.5999999999999996,4.4000000000000004,4.2000000000000002,4.0999999999999996,4.7000000000000002,4,4.7999999999999998,4.4000000000000004,4.2999999999999998,4.4000000000000004,4.5,4.5,4.7000000000000002,4.2999999999999998,4.7000000000000002,4.7999999999999998,4.5999999999999996,5.0999999999999996,4.7000000000000002,4.2999999999999998,5.0999999999999996,5.5,4.5,4.2999999999999998,4.2999999999999998,4.7000000000000002,4.2999999999999998,4.2999999999999998,4.5999999999999996,4.5,4.5,5.4000000000000004,4.5999999999999996,4.4000000000000004,5,5.2000000000000002,4.4000000000000004,5.0999999999999996,4.4000000000000004,4.4000000000000004,4.7999999999999998,4.4000000000000004,4.7000000000000002,4.7000000000000002,4.4000000000000004,4.2999999999999998,5,4.5,4.5999999999999996,5.4000000000000004,4.5999999999999996,4.5,4.4000000000000004,4.5,4.0999999999999996,4,4.9000000000000004,4.0999999999999996,5.2000000000000002,4.4000000000000004,4.0999999999999996,4.9000000000000004,4.5999999999999996,4.5,4.7999999999999998,4.2000000000000002,4.2000000000000002,4.0999999999999996,5.5,4.4000000000000004,4.7999999999999998,4.2000000000000002,4.7999999999999998,4.9000000000000004,4.5999999999999996,4.5,4.4000000000000004,4.5999999999999996,4.2000000000000002,4.7000000000000002,4.4000000000000004,4.5,4.9000000000000004,4.7000000000000002,5.5,4.7000000000000002,4.5999999999999996,4.0999999999999996,4.7000000000000002,4.5999999999999996,4.2999999999999998,4.4000000000000004,4.7000000000000002,4.2999999999999998,4.0999999999999996,4.7000000000000002,4.5,5.5,4.5,4.5999999999999996,5.0999999999999996,4.4000000000000004,4.7000000000000002,5.5,4.5999999999999996,4,4.5999999999999996,4.7999999999999998,4.7000000000000002,4.7000000000000002,4.2000000000000002,5.4000000000000004,4.5999999999999996,5.5,4.2000000000000002,4.5,4.5,4.7999999999999998,4.5999999999999996,5.4000000000000004,4.5999999999999996,5,4.2999999999999998,4.2999999999999998,4.7999999999999998,4.7000000000000002,4.7000000000000002,4.7999999999999998,4.2000000000000002,4.2000000000000002,5.9000000000000004,4.5999999999999996,4.5,4.9000000000000004,4.7000000000000002,4.9000000000000004,5.2999999999999998,4.2000000000000002,4.2000000000000002,4.5,5.2000000000000002,4.5,5.5999999999999996,5.2000000000000002,4.7999999999999998,4.5,5,4.4000000000000004,4.5,4.5999999999999996,4.5,5.2000000000000002,5.0999999999999996,4.7999999999999998,4.2999999999999998,5.0999999999999996,4.7000000000000002,4.5999999999999996,4.7999999999999998,4.5999999999999996,4.4000000000000004,4.5999999999999996,5.0999999999999996,4.2999999999999998,4.4000000000000004,4.7000000000000002,4.7999999999999998,4.0999999999999996,4.5999999999999996,4.9000000000000004,4,4.7000000000000002,4.7000000000000002,5.2000000000000002,4.5999999999999996,4.5999999999999996,4.9000000000000004,5.7000000000000002,4.7000000000000002,4.4000000000000004,4.9000000000000004,4.7999999999999998,4.5999999999999996,4.4000000000000004,4.7999999999999998,4.7000000000000002,4.2000000000000002,5.0999999999999996,4.7999999999999998,4.9000000000000004,5.0999999999999996,4.2999999999999998,4.4000000000000004,4.7000000000000002,4.7000000000000002,5.2999999999999998,5.0999999999999996,4.9000000000000004,4.5,4.7000000000000002,4.2000000000000002,5.0999999999999996,4.7999999999999998,4.2000000000000002,4.7999999999999998,4.4000000000000004,4.5,4.2999999999999998,5.5999999999999996,4,5,4.2000000000000002,4.5999999999999996,4.5999999999999996,4.5,5,4.7000000000000002,4.5999999999999996,4.7999999999999998,4.5999999999999996,4.4000000000000004,5.5999999999999996,4.2000000000000002,5.4000000000000004,4.7999999999999998,5.5999999999999996,4.4000000000000004,4.7000000000000002,4.5999999999999996,5.0999999999999996,4.5999999999999996,4.5,4.2000000000000002,4.7999999999999998,4.9000000000000004,5.5,5,4.2000000000000002,5.2000000000000002,4.7999999999999998,4.4000000000000004,4.7999999999999998,4.4000000000000004,4.0999999999999996,4.9000000000000004,4.5999999999999996,4.5,5.2999999999999998,4.7999999999999998,4.5999999999999996,4.7999999999999998,4.7000000000000002,4.9000000000000004,5.2999999999999998,4.4000000000000004,4.5999999999999996,4.2999999999999998,4.4000000000000004,4.2000000000000002,4.0999999999999996,4.2000000000000002,5,4.0999999999999996,4.2999999999999998,5.2000000000000002,4.2000000000000002,4.5,4.4000000000000004,4.4000000000000004,5,4,4.7999999999999998,5,4.2000000000000002,5.2000000000000002,5.2000000000000002,4.5,4.2999999999999998,4.5,4.5999999999999996,5.0999999999999996,4.4000000000000004,4.2999999999999998,4.7000000000000002,5.5999999999999996,4.9000000000000004,5.0999999999999996,4.5999999999999996,4.4000000000000004,4.7999999999999998,4.2000000000000002,4.7000000000000002,4.0999999999999996,4.7000000000000002,4,4.9000000000000004,5,4.5,4.4000000000000004,4,4.5,4.7000000000000002,4.4000000000000004,4.7000000000000002,4.7000000000000002,4,4.2000000000000002,4.5,4.7000000000000002,4.5,4.0999999999999996,4.5999999999999996,4.2999999999999998,4.5999999999999996,5.2000000000000002,4.5999999999999996,4.7000000000000002,5,5.2000000000000002,4.4000000000000004,4.5999999999999996,4.5,4,4.2000000000000002,5.2999999999999998,5.9000000000000004,4.9000000000000004,4.5,4.4000000000000004,5.4000000000000004,5.2999999999999998,5.0999999999999996,4.0999999999999996,4.2999999999999998,4.5,4.0999999999999996,5.0999999999999996,5.2999999999999998,4.5,4.0999999999999996,4.4000000000000004,4.7000000000000002,4,5.0999999999999996,4,4.2999999999999998,4.2999999999999998,4,4.0999999999999996,4.4000000000000004,4.2999999999999998,4.2000000000000002,4,4.5,4.7000000000000002,5,4.2999999999999998,5.0999999999999996,4.7000000000000002,5.2999999999999998,5,4.5,5,4.0999999999999996,4.9000000000000004,4.0999999999999996,4,4.4000000000000004,4.5,4.4000000000000004,4.5,4.2999999999999998,4.2999999999999998,5,4.5,4.5,4.4000000000000004,4.5,4.0999999999999996,4.9000000000000004,4.7000000000000002,4.2999999999999998,4.5999999999999996,4.5999999999999996,5.2000000000000002,4.5,4.2999999999999998,4.5999999999999996,4,4.5,4.7999999999999998,4.5999999999999996,4.0999999999999996,4.9000000000000004,4.7000000000000002,4.0999999999999996,4.2999999999999998,4.4000000000000004,4,4.7999999999999998,4.4000000000000004,4.4000000000000004,4.5999999999999996,4.2000000000000002,4.0999999999999996,4.2000000000000002,4,4.0999999999999996,4.0999999999999996,4.7000000000000002,4.7999999999999998,5.0999999999999996,5,4.7999999999999998,4.4000000000000004,5,5.2000000000000002,4.2000000000000002,4.0999999999999996,4.7999999999999998,4.5,5,5.0999999999999996,4.0999999999999996,4.7000000000000002,5.2000000000000002,4.7999999999999998,4.5,4,4.7000000000000002,4.0999999999999996,4.2999999999999998,4.2999999999999998,4,4.7000000000000002,4.0999999999999996,4.2000000000000002,4.7999999999999998,4.7999999999999998,4.2000000000000002,4.2000000000000002,5.7000000000000002,6,4.2000000000000002,4.5,4.9000000000000004,4.4000000000000004,4,4.2999999999999998,4.2000000000000002,4.5,4.7999999999999998,4.4000000000000004,4.2000000000000002,4.2000000000000002,5,4.2000000000000002,5.2000000000000002,4.5,4.5999999999999996,5,5,5.4000000000000004,4.7999999999999998,4.2000000000000002,5.5,4.2999999999999998,4.0999999999999996,4.4000000000000004,4.9000000000000004,4.5,4.9000000000000004,4,4.5,5,4.9000000000000004,4.5,4.2000000000000002,4.2000000000000002,4.2000000000000002,5.2000000000000002,4.2999999999999998,5.0999999999999996,4.5999999999999996,4.5999999999999996,4.4000000000000004,4.4000000000000004,4.9000000000000004,5.0999999999999996,4.2000000000000002,4.7000000000000002,4,5.5999999999999996,5.2999999999999998,5,4.2999999999999998,4.0999999999999996,5.0999999999999996,4.5,4.9000000000000004,5.4000000000000004,4.7000000000000002,4.7999999999999998,4.5,4.2000000000000002,4.5999999999999996,4.5999999999999996,5.5999999999999996,5.4000000000000004,4,5.2000000000000002,4.2000000000000002,4.7000000000000002,4.2999999999999998,4.7999999999999998,4.5999999999999996,5.4000000000000004,4.7999999999999998,4.5999999999999996,4.2000000000000002,5.5,4.7000000000000002,4.7000000000000002,4.5,5.5,4.5,4.0999999999999996,4,4.2999999999999998,4.7000000000000002,4.9000000000000004,4.5,4.7000000000000002,4.5,4.7999999999999998,4.2999999999999998,4.0999999999999996,5.4000000000000004,4.0999999999999996,4.7999999999999998,4.2000000000000002,4.7999999999999998,5.4000000000000004,4.4000000000000004,5.2000000000000002,4.7000000000000002,4.9000000000000004,4.9000000000000004,4.2000000000000002,4.4000000000000004,4.4000000000000004,4.2999999999999998,4.9000000000000004,5,4.7000000000000002,4.9000000000000004,4.2999999999999998,4.5,4.2000000000000002,5.2000000000000002,4.7999999999999998,4,4.7000000000000002,4.2999999999999998,4.2999999999999998,4.9000000000000004,4,4.2000000000000002,4.4000000000000004,4.7000000000000002,4.5,4.5,6],"y":[41,15,43,19,11,12,43,15,35,19,13,16,19,10,94,11,83,21,13,18,17,12,18,22,57,15,18,79,25,17,21,30,42,10,10,13,17,17,17,11,34,32,23,26,27,34,24,18,21,73,13,15,26,13,16,31,17,11,23,12,35,12,61,32,40,25,13,45,27,91,11,30,14,75,35,15,11,23,15,60,65,27,38,15,11,15,32,26,16,42,61,22,64,14,21,18,21,54,45,33,12,25,30,22,29,15,25,22,76,35,28,14,16,39,21,25,67,14,52,13,28,11,27,23,18,43,21,69,59,19,22,24,21,30,14,12,68,14,31,17,43,14,46,34,23,10,22,42,63,19,106,122,24,20,16,39,14,19,31,30,19,34,30,32,35,37,98,73,41,27,24,41,11,14,10,90,50,22,20,27,47,25,17,15,14,62,11,54,24,29,71,35,12,21,41,23,27,14,31,74,23,12,35,36,19,13,66,14,32,11,42,13,19,85,22,21,17,41,29,14,30,39,48,22,26,52,18,22,55,43,34,24,16,31,15,12,20,63,27,41,33,16,16,52,52,28,26,18,61,12,26,26,47,38,19,22,34,35,23,43,72,32,10,27,16,37,16,14,37,23,15,35,12,11,104,25,59,16,19,56,22,12,17,10,21,29,16,36,26,50,49,18,31,35,57,47,80,16,16,23,22,40,30,15,21,29,19,20,36,26,68,57,82,21,54,14,13,53,25,26,28,69,23,14,55,11,10,20,15,55,42,11,11,28,58,14,26,68,16,17,14,13,13,12,14,11,11,12,29,10,15,27,17,68,21,49,49,82,21,19,14,22,67,19,16,22,48,14,21,20,49,105,61,54,21,123,14,57,31,95,68,26,25,49,49,63,14,39,14,36,21,27,21,14,45,21,89,30,112,93,24,36,17,65,30,16,23,28,26,21,35,57,37,15,15,51,17,40,23,19,27,29,22,58,44,28,44,12,15,23,10,22,17,33,19,14,21,10,29,30,18,29,33,14,68,19,21,91,104,25,11,21,23,18,20,20,23,15,87,39,11,100,72,15,51,17,21,25,22,39,31,29,12,40,19,27,65,23,13,13,18,10,13,39,13,79,41,11,43,20,17,30,19,23,15,71,19,20,23,36,46,19,34,24,28,19,28,51,51,48,34,92,30,32,14,28,21,25,20,44,25,22,30,16,81,17,44,70,28,35,73,39,16,24,34,36,33,20,87,34,86,15,22,21,20,18,80,34,30,17,24,38,23,36,27,17,16,118,28,25,49,17,25,78,21,23,18,67,23,79,87,35,29,28,26,18,42,24,74,54,42,18,55,19,20,51,23,25,27,49,20,19,30,47,15,33,35,17,32,32,89,18,34,23,99,26,18,38,43,27,18,35,28,18,54,56,47,49,28,30,33,24,86,71,38,23,41,23,50,57,18,56,20,26,18,129,16,36,28,31,18,28,32,42,36,50,44,17,87,13,88,43,94,27,29,27,79,22,29,23,43,48,105,41,21,69,36,30,40,31,12,45,24,32,18,40,41,37,17,50,60,27,33,17,17,27,14,15,64,10,20,67,10,36,29,16,65,11,25,51,21,91,68,10,15,19,11,71,36,16,37,109,46,22,13,18,49,17,57,11,33,17,43,50,16,23,14,30,23,20,43,32,14,14,18,44,17,15,13,25,30,65,22,36,65,49,20,18,18,12,20,69,119,42,34,14,75,86,47,20,17,18,10,70,71,29,16,26,24,10,61,16,21,21,22,10,17,10,12,12,25,32,48,22,54,34,69,63,29,77,16,27,16,16,27,19,33,37,19,36,36,37,13,30,35,22,78,27,18,32,43,49,19,11,52,14,39,30,30,11,50,40,23,20,17,12,15,25,34,21,28,15,18,12,15,17,29,44,44,41,38,39,36,56,19,16,60,27,54,81,16,41,59,48,33,11,49,15,17,17,14,51,27,13,36,31,15,29,78,132,20,32,36,22,15,20,23,30,31,28,18,12,31,15,64,30,35,22,52,71,28,21,70,25,16,22,74,45,56,33,27,40,47,31,16,37,34,30,21,43,50,14,36,32,64,40,28,30,14,115,81,82,27,11,67,36,22,61,40,29,28,23,50,28,121,110,20,72,12,57,15,27,30,88,27,22,22,67,16,35,32,78,34,21,23,32,27,50,31,55,22,42,20,23,61,26,40,20,25,45,14,74,23,35,27,32,47,17,11,20,67,21,49,22,17,16,51,27,12,33,18,27,65,17,10,22,35,34,14,119],"mode":"markers","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="ggplot2との連携" class="level3">
+<h3 class="anchored" data-anchor-id="ggplot2との連携">ggplot2との連携</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg, <span class="at">color =</span> cyl)) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-cd5f0c9143921f891268" style="width:100%;height:325px;"></div>
+<script type="application/json" data-for="htmlwidget-cd5f0c9143921f891268">{"x":{"data":[{"x":[2.6200000000000001,2.875,2.3199999999999998,3.2149999999999999,3.4399999999999999,3.46,3.5699999999999998,3.1899999999999999,3.1499999999999999,3.4399999999999999,3.4399999999999999,4.0700000000000003,3.73,3.7799999999999998,5.25,5.4240000000000004,5.3449999999999998,2.2000000000000002,1.615,1.835,2.4649999999999999,3.52,3.4350000000000001,3.8399999999999999,3.8450000000000002,1.9350000000000001,2.1400000000000001,1.5129999999999999,3.1699999999999999,2.77,3.5699999999999998,2.7799999999999998],"y":[21,21,22.800000000000001,21.399999999999999,18.699999999999999,18.100000000000001,14.300000000000001,24.399999999999999,22.800000000000001,19.199999999999999,17.800000000000001,16.399999999999999,17.300000000000001,15.199999999999999,10.4,10.4,14.699999999999999,32.399999999999999,30.399999999999999,33.899999999999999,21.5,15.5,15.199999999999999,13.300000000000001,19.199999999999999,27.300000000000001,26,30.399999999999999,15.800000000000001,19.699999999999999,15,21.399999999999999],"text":["wt: 2.620<br />mpg: 21.0<br />cyl: 6","wt: 2.875<br />mpg: 21.0<br />cyl: 6","wt: 2.320<br />mpg: 22.8<br />cyl: 4","wt: 3.215<br />mpg: 21.4<br />cyl: 6","wt: 3.440<br />mpg: 18.7<br />cyl: 8","wt: 3.460<br />mpg: 18.1<br />cyl: 6","wt: 3.570<br />mpg: 14.3<br />cyl: 8","wt: 3.190<br />mpg: 24.4<br />cyl: 4","wt: 3.150<br />mpg: 22.8<br />cyl: 4","wt: 3.440<br />mpg: 19.2<br />cyl: 6","wt: 3.440<br />mpg: 17.8<br />cyl: 6","wt: 4.070<br />mpg: 16.4<br />cyl: 8","wt: 3.730<br />mpg: 17.3<br />cyl: 8","wt: 3.780<br />mpg: 15.2<br />cyl: 8","wt: 5.250<br />mpg: 10.4<br />cyl: 8","wt: 5.424<br />mpg: 10.4<br />cyl: 8","wt: 5.345<br />mpg: 14.7<br />cyl: 8","wt: 2.200<br />mpg: 32.4<br />cyl: 4","wt: 1.615<br />mpg: 30.4<br />cyl: 4","wt: 1.835<br />mpg: 33.9<br />cyl: 4","wt: 2.465<br />mpg: 21.5<br />cyl: 4","wt: 3.520<br />mpg: 15.5<br />cyl: 8","wt: 3.435<br />mpg: 15.2<br />cyl: 8","wt: 3.840<br />mpg: 13.3<br />cyl: 8","wt: 3.845<br />mpg: 19.2<br />cyl: 8","wt: 1.935<br />mpg: 27.3<br />cyl: 4","wt: 2.140<br />mpg: 26.0<br />cyl: 4","wt: 1.513<br />mpg: 30.4<br />cyl: 4","wt: 3.170<br />mpg: 15.8<br />cyl: 8","wt: 2.770<br />mpg: 19.7<br />cyl: 6","wt: 3.570<br />mpg: 15.0<br />cyl: 8","wt: 2.780<br />mpg: 21.4<br />cyl: 4"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":["rgba(51,106,152,1)","rgba(51,106,152,1)","rgba(19,43,67,1)","rgba(51,106,152,1)","rgba(86,177,247,1)","rgba(51,106,152,1)","rgba(86,177,247,1)","rgba(19,43,67,1)","rgba(19,43,67,1)","rgba(51,106,152,1)","rgba(51,106,152,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(19,43,67,1)","rgba(19,43,67,1)","rgba(19,43,67,1)","rgba(19,43,67,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(19,43,67,1)","rgba(19,43,67,1)","rgba(19,43,67,1)","rgba(86,177,247,1)","rgba(51,106,152,1)","rgba(86,177,247,1)","rgba(19,43,67,1)"],"opacity":1,"size":5.6692913385826778,"symbol":"circle","line":{"width":1.8897637795275593,"color":["rgba(51,106,152,1)","rgba(51,106,152,1)","rgba(19,43,67,1)","rgba(51,106,152,1)","rgba(86,177,247,1)","rgba(51,106,152,1)","rgba(86,177,247,1)","rgba(19,43,67,1)","rgba(19,43,67,1)","rgba(51,106,152,1)","rgba(51,106,152,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(19,43,67,1)","rgba(19,43,67,1)","rgba(19,43,67,1)","rgba(19,43,67,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(86,177,247,1)","rgba(19,43,67,1)","rgba(19,43,67,1)","rgba(19,43,67,1)","rgba(86,177,247,1)","rgba(51,106,152,1)","rgba(86,177,247,1)","rgba(19,43,67,1)"]}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[2],"y":[10],"name":"eca31dc4bd9e03bb9bedf19b3556f674","type":"scatter","mode":"markers","opacity":0,"hoverinfo":"skip","showlegend":false,"marker":{"color":[0,1],"colorscale":[[0,"#132B43"],[0.0033444816053511683,"#132B44"],[0.0066889632107023367,"#132C44"],[0.010033444816053505,"#142C45"],[0.013377926421404673,"#142D45"],[0.016722408026755842,"#142D46"],[0.02006688963210701,"#142D46"],[0.023411371237458178,"#142E47"],[0.026755852842809347,"#152E47"],[0.030100334448160515,"#152F48"],[0.033444816053511683,"#152F48"],[0.036789297658862852,"#152F49"],[0.04013377926421402,"#153049"],[0.043478260869565188,"#16304A"],[0.046822742474916357,"#16304A"],[0.050167224080267525,"#16314B"],[0.053511705685618693,"#16314B"],[0.056856187290969862,"#16324C"],[0.06020066889632103,"#17324D"],[0.063545150501672198,"#17324D"],[0.066889632107023367,"#17334E"],[0.070234113712374535,"#17334E"],[0.073578595317725703,"#17344F"],[0.076923076923076872,"#18344F"],[0.08026755852842804,"#183450"],[0.083612040133779209,"#183550"],[0.086956521739130377,"#183551"],[0.090301003344481545,"#183651"],[0.093645484949832714,"#193652"],[0.096989966555183882,"#193652"],[0.10033444816053505,"#193753"],[0.10367892976588622,"#193754"],[0.10702341137123739,"#193854"],[0.11036789297658856,"#1A3855"],[0.11371237458193972,"#1A3955"],[0.11705685618729089,"#1A3956"],[0.12040133779264206,"#1A3956"],[0.12374581939799323,"#1A3A57"],[0.1270903010033444,"#1B3A57"],[0.13043478260869557,"#1B3B58"],[0.13377926421404673,"#1B3B59"],[0.1371237458193979,"#1B3B59"],[0.14046822742474907,"#1C3C5A"],[0.14381270903010024,"#1C3C5A"],[0.14715719063545141,"#1C3D5B"],[0.1505016722408028,"#1C3D5B"],[0.15384615384615374,"#1C3D5C"],[0.15719063545150513,"#1D3E5C"],[0.16053511705685608,"#1D3E5D"],[0.16387959866220747,"#1D3F5D"],[0.16722408026755842,"#1D3F5E"],[0.17056856187290981,"#1D3F5F"],[0.17391304347826075,"#1E405F"],[0.17725752508361214,"#1E4060"],[0.18060200668896309,"#1E4160"],[0.18394648829431448,"#1E4161"],[0.18729096989966543,"#1E4261"],[0.19063545150501682,"#1F4262"],[0.19397993311036799,"#1F4263"],[0.19732441471571915,"#1F4363"],[0.20066889632107032,"#1F4364"],[0.20401337792642149,"#1F4464"],[0.20735785953177266,"#204465"],[0.21070234113712383,"#204465"],[0.214046822742475,"#204566"],[0.21739130434782616,"#204566"],[0.22073578595317733,"#214667"],[0.2240802675585285,"#214668"],[0.22742474916387967,"#214768"],[0.23076923076923084,"#214769"],[0.23411371237458201,"#214769"],[0.23745819397993317,"#22486A"],[0.24080267558528434,"#22486A"],[0.24414715719063551,"#22496B"],[0.24749163879598668,"#22496C"],[0.25083612040133785,"#224A6C"],[0.25418060200668902,"#234A6D"],[0.25752508361204018,"#234A6D"],[0.26086956521739135,"#234B6E"],[0.26421404682274252,"#234B6E"],[0.26755852842809369,"#244C6F"],[0.27090301003344486,"#244C70"],[0.27424749163879603,"#244C70"],[0.27759197324414719,"#244D71"],[0.28093645484949836,"#244D71"],[0.28428093645484953,"#254E72"],[0.2876254180602007,"#254E72"],[0.29096989966555187,"#254F73"],[0.29431438127090304,"#254F74"],[0.2976588628762542,"#254F74"],[0.30100334448160537,"#265075"],[0.30434782608695654,"#265075"],[0.30769230769230771,"#265176"],[0.31103678929765888,"#265176"],[0.31438127090301005,"#275277"],[0.31772575250836121,"#275278"],[0.32107023411371238,"#275278"],[0.32441471571906355,"#275379"],[0.32775919732441472,"#275379"],[0.33110367892976589,"#28547A"],[0.33444816053511706,"#28547B"],[0.33779264214046822,"#28557B"],[0.34113712374581939,"#28557C"],[0.34448160535117056,"#28567C"],[0.34782608695652173,"#29567D"],[0.3511705685618729,"#29567D"],[0.35451505016722407,"#29577E"],[0.35785953177257523,"#29577F"],[0.3612040133779264,"#2A587F"],[0.36454849498327757,"#2A5880"],[0.36789297658862874,"#2A5980"],[0.37123745819397991,"#2A5981"],[0.37458193979933108,"#2A5982"],[0.37792642140468224,"#2B5A82"],[0.38127090301003341,"#2B5A83"],[0.38461538461538458,"#2B5B83"],[0.38795986622073575,"#2B5B84"],[0.39130434782608692,"#2C5C85"],[0.39464882943143809,"#2C5C85"],[0.39799331103678925,"#2C5D86"],[0.40133779264214042,"#2C5D86"],[0.40468227424749159,"#2C5D87"],[0.40802675585284276,"#2D5E87"],[0.41137123745819393,"#2D5E88"],[0.4147157190635451,"#2D5F89"],[0.41806020066889626,"#2D5F89"],[0.42140468227424743,"#2E608A"],[0.4247491638795986,"#2E608A"],[0.42809364548494977,"#2E618B"],[0.43143812709030094,"#2E618C"],[0.43478260869565211,"#2E618C"],[0.43812709030100327,"#2F628D"],[0.44147157190635444,"#2F628D"],[0.44481605351170561,"#2F638E"],[0.44816053511705678,"#2F638F"],[0.45150501672240795,"#30648F"],[0.45484949832775912,"#306490"],[0.45819397993311028,"#306590"],[0.46153846153846145,"#306591"],[0.46488294314381262,"#306592"],[0.46822742474916379,"#316692"],[0.47157190635451496,"#316693"],[0.47491638795986635,"#316793"],[0.47826086956521729,"#316794"],[0.48160535117056869,"#326895"],[0.48494983277591963,"#326895"],[0.48829431438127102,"#326996"],[0.49163879598662197,"#326996"],[0.49498327759197336,"#326997"],[0.4983277591973243,"#336A98"],[0.5016722408026757,"#336A98"],[0.50501672240802664,"#336B99"],[0.50836120401337803,"#336B99"],[0.51170568561872898,"#346C9A"],[0.51505016722408037,"#346C9B"],[0.51839464882943131,"#346D9B"],[0.52173913043478271,"#346D9C"],[0.52508361204013365,"#346E9D"],[0.52842809364548504,"#356E9D"],[0.53177257525083599,"#356E9E"],[0.53511705685618738,"#356F9E"],[0.53846153846153832,"#356F9F"],[0.54180602006688972,"#3670A0"],[0.54515050167224066,"#3670A0"],[0.54849498327759205,"#3671A1"],[0.551839464882943,"#3671A1"],[0.55518394648829439,"#3772A2"],[0.55852842809364533,"#3772A3"],[0.56187290969899673,"#3773A3"],[0.56521739130434767,"#3773A4"],[0.56856187290969906,"#3773A4"],[0.57190635451505001,"#3874A5"],[0.5752508361204014,"#3874A6"],[0.57859531772575234,"#3875A6"],[0.58193979933110374,"#3875A7"],[0.58528428093645468,"#3976A8"],[0.58862876254180607,"#3976A8"],[0.59197324414715702,"#3977A9"],[0.59531772575250841,"#3977A9"],[0.59866220735785936,"#3978AA"],[0.60200668896321075,"#3A78AB"],[0.60535117056856191,"#3A79AB"],[0.60869565217391308,"#3A79AC"],[0.61204013377926425,"#3A79AC"],[0.61538461538461542,"#3B7AAD"],[0.61872909698996659,"#3B7AAE"],[0.62207357859531776,"#3B7BAE"],[0.62541806020066892,"#3B7BAF"],[0.62876254180602009,"#3C7CB0"],[0.63210702341137126,"#3C7CB0"],[0.63545150501672243,"#3C7DB1"],[0.6387959866220736,"#3C7DB1"],[0.64214046822742477,"#3C7EB2"],[0.64548494983277593,"#3D7EB3"],[0.6488294314381271,"#3D7FB3"],[0.65217391304347827,"#3D7FB4"],[0.65551839464882944,"#3D7FB5"],[0.65886287625418061,"#3E80B5"],[0.66220735785953178,"#3E80B6"],[0.66555183946488294,"#3E81B6"],[0.66889632107023411,"#3E81B7"],[0.67224080267558528,"#3F82B8"],[0.67558528428093645,"#3F82B8"],[0.67892976588628762,"#3F83B9"],[0.68227424749163879,"#3F83BA"],[0.68561872909698995,"#4084BA"],[0.68896321070234112,"#4084BB"],[0.69230769230769229,"#4085BB"],[0.69565217391304346,"#4085BC"],[0.69899665551839463,"#4086BD"],[0.7023411371237458,"#4186BD"],[0.70568561872909696,"#4186BE"],[0.70903010033444813,"#4187BF"],[0.7123745819397993,"#4187BF"],[0.71571906354515047,"#4288C0"],[0.71906354515050164,"#4288C1"],[0.72240802675585281,"#4289C1"],[0.72575250836120397,"#4289C2"],[0.72909698996655514,"#438AC2"],[0.73244147157190631,"#438AC3"],[0.73578595317725748,"#438BC4"],[0.73913043478260865,"#438BC4"],[0.74247491638795982,"#438CC5"],[0.74581939799331098,"#448CC6"],[0.74916387959866215,"#448DC6"],[0.75250836120401332,"#448DC7"],[0.75585284280936449,"#448EC8"],[0.75919732441471566,"#458EC8"],[0.76254180602006683,"#458FC9"],[0.76588628762541799,"#458FC9"],[0.76923076923076916,"#458FCA"],[0.77257525083612055,"#4690CB"],[0.7759197324414715,"#4690CB"],[0.77926421404682289,"#4691CC"],[0.78260869565217384,"#4691CD"],[0.78595317725752523,"#4792CD"],[0.78929765886287617,"#4792CE"],[0.79264214046822756,"#4793CF"],[0.79598662207357851,"#4793CF"],[0.7993311036789299,"#4894D0"],[0.80267558528428085,"#4894D0"],[0.80602006688963224,"#4895D1"],[0.80936454849498318,"#4895D2"],[0.81270903010033457,"#4896D2"],[0.81605351170568552,"#4996D3"],[0.81939799331103691,"#4997D4"],[0.82274247491638786,"#4997D4"],[0.82608695652173925,"#4998D5"],[0.82943143812709019,"#4A98D6"],[0.83277591973244158,"#4A99D6"],[0.83612040133779253,"#4A99D7"],[0.83946488294314392,"#4A9AD8"],[0.84280936454849487,"#4B9AD8"],[0.84615384615384626,"#4B9BD9"],[0.8494983277591972,"#4B9BDA"],[0.85284280936454859,"#4B9BDA"],[0.85618729096989954,"#4C9CDB"],[0.85953177257525093,"#4C9CDB"],[0.86287625418060188,"#4C9DDC"],[0.86622073578595327,"#4C9DDD"],[0.86956521739130421,"#4D9EDD"],[0.8729096989966556,"#4D9EDE"],[0.87625418060200655,"#4D9FDF"],[0.87959866220735794,"#4D9FDF"],[0.88294314381270889,"#4DA0E0"],[0.88628762541806028,"#4EA0E1"],[0.88963210702341122,"#4EA1E1"],[0.89297658862876261,"#4EA1E2"],[0.89632107023411356,"#4EA2E3"],[0.89966555183946495,"#4FA2E3"],[0.9030100334448159,"#4FA3E4"],[0.90635451505016729,"#4FA3E5"],[0.90969899665551823,"#4FA4E5"],[0.91304347826086962,"#50A4E6"],[0.91638795986622057,"#50A5E7"],[0.91973244147157196,"#50A5E7"],[0.92307692307692291,"#50A6E8"],[0.9264214046822743,"#51A6E8"],[0.92976588628762524,"#51A7E9"],[0.93311036789297663,"#51A7EA"],[0.93645484949832758,"#51A8EA"],[0.93979933110367897,"#52A8EB"],[0.94314381270903014,"#52A9EC"],[0.94648829431438131,"#52A9EC"],[0.94983277591973247,"#52AAED"],[0.95317725752508364,"#53AAEE"],[0.95652173913043481,"#53ABEE"],[0.95986622073578598,"#53ABEF"],[0.96321070234113715,"#53ACF0"],[0.96655518394648832,"#54ACF0"],[0.96989966555183948,"#54ADF1"],[0.97324414715719065,"#54ADF2"],[0.97658862876254182,"#54AEF2"],[0.97993311036789299,"#55AEF3"],[0.98327759197324416,"#55AFF4"],[0.98662207357859533,"#55AFF4"],[0.98996655518394649,"#55B0F5"],[0.99331103678929766,"#56B0F6"],[0.99665551839464883,"#56B1F6"],[1,"#56B1F7"]],"colorbar":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"thickness":23.039999999999996,"title":"cyl","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"tickmode":"array","ticktext":["4","5","6","7","8"],"tickvals":[0.0016666666666666668,0.2508333333333333,0.49999999999999994,0.74916666666666665,0.99833333333333329],"tickfont":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"ticklen":2,"len":0.5}},"xaxis":"x","yaxis":"y","frame":null}],"layout":{"margin":{"t":23.305936073059364,"r":7.3059360730593621,"b":37.260273972602747,"l":37.260273972602747},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[1.3174499999999998,5.6195500000000003],"tickmode":"array","ticktext":["2","3","4","5"],"tickvals":[2,3,4,5],"categoryorder":"array","categoryarray":["2","3","4","5"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"wt","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[9.2249999999999996,35.074999999999996],"tickmode":"array","ticktext":["10","15","20","25","30","35"],"tickvals":[10,15,20,25,30,35],"categoryorder":"array","categoryarray":["10","15","20","25","30","35"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"mpg","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"cyl","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"80b971b6af33":{"x":{},"y":{},"colour":{},"type":"scatter"}},"cur_data":"80b971b6af33","visdat":{"80b971b6af33":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="公式サイトについて" class="level3">
+<h3 class="anchored" data-anchor-id="公式サイトについて">公式サイトについて</h3>
+<p>これまで紹介してきた関数の詳細は公式サイトのドキュメントで確認可能です。例えば、上記で利用した散布図（typeの引数を”scatter”と指定）を表示する場合の詳細を確認する場合は、以下のアドレスにアクセスしてください。</p>
+<p><a href="https://plotly.com/javascript/reference/scatter/" class="uri">https://plotly.com/javascript/reference/scatter/</a></p>
+<section id="公式サイトなどのアドレス" class="level4">
+<h4 class="anchored" data-anchor-id="公式サイトなどのアドレス">公式サイトなどのアドレス</h4>
+<p>公式サイト（pythonなど、R以外も含めた）のTOP画面 <a href="https://plotly.com/graphing-libraries/" class="uri">https://plotly.com/graphing-libraries/</a></p>
+<p>公式サイト（R）のTOP画面 <a href="https://plotly.com/r/" class="uri">https://plotly.com/r/</a></p>
+<p>レファレンス用のアドレスがまとまっているページ <a href="https://plotly.com/r/reference/index/" class="uri">https://plotly.com/r/reference/index/</a></p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
