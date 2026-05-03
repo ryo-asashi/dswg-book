@@ -1,6 +1,5 @@
 ---
 title: "randomForest"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
 format:   
   html:
@@ -10,18 +9,9 @@ format:
     fig-height: 3
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-if (!require(randomForest)) install.packages('randomForest')
-```
-
 ## パッケージの概要
 
 機械学習におけるRandomForestモデルを構築できます。RandomForestモデルとは、多数の決定木を集めてそれらの予測値よりモデル全体の予測値を算出する、アンサンブルモデルの一種です。
-
-## 参考URL
-
-<https://momonoki2017.blogspot.com/2018/04/r007-riris.html>
 
 ## 使用例：irisデータの分類
 
@@ -62,12 +52,16 @@ plot(iris, col=c(2, 3, 4)[iris$Species])
 まずは全てのデータを使ってRandomForestモデルを構築してみます。
 
 ```{r}
+library(randomForest)
+
+# シードを設定
+set.seed(123) 
 (iris.rf <- randomForest(Species ~ ., data = iris))
 ```
 
 #### 重要度の確認
 
-データの各特徴量の重要度を確認することが出来ます。irisデータの分類には花弁の長さ・花弁の幅の情報が重要であることが分かります。
+データの各特徴量の重要度を確認することが出来ます。irisデータの分類には花弁の長さ（Petal.Length）・花弁の幅（Petal.Width）の情報が重要であることが分かります。
 
 ```{r}
 importance(iris.rf)
@@ -78,8 +72,8 @@ importance(iris.rf)
 irisデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします。確認のため、データサイズを出力します。
 
 ```{r}
-# 再現性のためにシードを設定
-set.seed(123)  
+# シードを設定
+set.seed(123) 
 
 # データの分割
 sample_indices <- sample(1:nrow(iris), 0.7 * nrow(iris))  
@@ -90,20 +84,56 @@ df.test <- iris[-sample_indices, ]
 c(nrow(iris), nrow(df.train), nrow(df.test))
 ```
 
-#### モデル生成
-訓練データを用いてRandomFOrestモデルを生成します。
+### モデル生成
+
+訓練データを用いてRandomForestモデルを生成します。
+
 ```{r}
+# シードを設定
+set.seed(123)
 (model.rf <- randomForest(Species ~ ., data = df.train))
 ```
 
 #### モデル評価
+
 テストデータを使ってモデル評価を行います。まずはテストデータを元に生成したモデルを用いて予測結果を算出します。
+
 ```{r}
 prediction <- predict(model.rf, df.test)
 ```
 
 予測結果とテストデータのもともとのアヤメの分類とを比較します。おおむね正しく分類できていることが分かります。
+
 ```{r}
 (result <- table(prediction, df.test$Species))
 (accuracy_prediction <- sum(diag(result)) / sum(result))
 ```
+
+### ハイパーパラメーターのチューニング
+
+RandomForestの主なハイパーパラメーターは以下の通りです。
+
+-   決定木を生成する際に使用するパラメータの数(mtry)
+-   生成する決定木の数(ntree)
+
+これらのハイパーパラメータの最適な設定を探す作業がハイパーパラメーターのチューニングとなります。
+まずはmtryの最適な設定を確認します。これはrandomForestパッケージのtuneRF関数で実行できます。
+```{r}
+set.seed(123)
+mtry.tune <- tuneRF(df.train[, -5], df.train[, 5], doBest = TRUE)
+```
+
+OOB Error（誤識別率）が最も低くなるmtryは2であることが分かりました。
+
+次に、ntreeのチューニングを行います。これは十分大きなntreeでモデルを作成した後に、
+木の数ごとのOOB Errorを出力させて確認します。
+```{r}
+set.seed(123)
+ntree.tune <- randomForest(Species ~ ., data = df.train, mtry = 2, ntree = 2000)
+plot(ntree.tune)
+```
+
+4つの誤識別率のグラフが現れていますが、黒：全体、赤：setosa、緑：versicolor、青：virginicaの誤識別率となります。
+ntreeが500程度で誤識別率がほぼ横ばいとなるため、ntreeは500程度の設定が良さそうであることが分かりました。
+
+なお、ここで得られたmtry = 2, ntree = 500の設定は、「モデル生成」の際に作成されたモデルの設定と同じです。
