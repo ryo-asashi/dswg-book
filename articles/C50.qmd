@@ -9,15 +9,12 @@ format:
 ---
 
 ## パッケージの概要
-
 C50パッケージではC5.0アルゴリズムを用いた決定木モデルを使用できます。C5.0アルゴリズムとは、J. Ross Quinlanによって開発された分類木の構築アルゴリズムで、ブースティング、カテゴリ変数での多肢分岐、事後プルーニング（枝刈り）、欠損値の自動処理などの特徴を備えています。
 
 ## 使用例：PimaIndiansDiabetesデータの分類
-
 PimaIndiansDiabetesデータを用いて、種々の項目からその患者が糖尿病患者であるかを判定する決定木モデルをC50パッケージを用いて構築します。
 
 ### データの確認
-
 ```{r, warning=FALSE}
 library(mlbench)
 data(PimaIndiansDiabetes)
@@ -26,39 +23,35 @@ tar.idx <- 9
 ```
 
 データの中身の確認です。（head）
-
 ```{r}
 head(df)
 ```
 
 データの中身の確認です。（str）
-
 ```{r}
 str(df)
 ```
 
 各変数の意味は以下の通りです。
 
-| 変数名           | データ型 | 概要                            |
-|:-----------------|:---------|:--------------------------------|
-| pregnant 　　    | num      | 妊娠回数 　　　                 |
-| glucose          | num      | 血漿グルコース濃度（負荷試験）  |
-| pressure 　　　  | num      | 拡張期血圧 \[mm Hg\] 　 　      |
-| triceps 　　　　 | num      | 上腕三頭筋皮膚襞の厚さ \[mm\]   |
-| insulin 　　　　 | num      | 2時間血清インスリン \[mu U/ml\] |
-| mass             | num      | BMI　　　                       |
-| pedigree         | num      | 糖尿病血統機能                  |
-| age              | num      | 年齢                            |
-| diabetes         | Factor   | クラス変数（糖尿病の検査）      |
+| 変数名            | データ型 | 概要                           |
+|:------------------|:---------|:-------------------------------|
+| pregnant      　　| num      | 妊娠回数                　　　 |
+| glucose           | num      | 血漿グルコース濃度（負荷試験） |
+| pressure    　　　| num      | 拡張期血圧     [mm Hg]   　 　 |
+| triceps   　　　　| num      | 上腕三頭筋皮膚襞の厚さ  [mm]   |
+| insulin  　　　　 | num      | 2時間血清インスリン  [mu U/ml] |
+| mass              | num      | BMI　　　                      |
+| pedigree          | num      | 糖尿病血統機能                 |
+| age               | num      | 年齢                           |
+| diabetes          | Factor   | クラス変数（糖尿病の検査）     |
 
 summaryを表示します。
-
 ```{r}
 summary(df)
 ```
 
 psychパッケージのpairs.panelsを用いて、散布図の一覧を表示します。
-
 ```{r, warning=FALSE}
 library(psych)
 ```
@@ -71,7 +64,6 @@ pairs.panels(df.x, bg=c("skyblue", "salmon")[df.y], pch=21)
 ```
 
 ggplot2パッケージを用いて、ヒストグラムを表示します。変数ごとにpos/negの分布の傾向を把握することができます。
-
 ```{r, warning=FALSE}
 library(ggplot2)
 library(tidyr)
@@ -96,9 +88,7 @@ ggplot(df_long, aes(x = value, fill = diabetes)) +
 ```
 
 ### モデル構築
-
 モデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします。
-
 ```{r}
 # 再現性のためにシードを設定
 set.seed(1234)
@@ -116,7 +106,6 @@ test.df <- df[test.set, ]
 ```
 
 モデルを生成します。
-
 ```{r}
 library(C50)
 ```
@@ -129,26 +118,22 @@ model <- C5.0(
 ```
 
 summaryを用いると、モデルのサマリが表示されます。
-
 ```{r}
 summary(model)
 ```
 
 plotを用いると、決定木の様子が可視化されます。(図がつぶれてしまうことがありますので、参考程度です)
-
 ```{r}
 plot(model)
 ```
 
 構築したモデルを使用して予測を行います。
-
 ```{r}
 res_pred <- predict(model, test.df[-tar.idx])
 ```
 
-予測結果から得られる混同行列を確認します。\
+予測結果から得られる混同行列を確認します。  
 (Summaryにて訓練データでの混同行列が確認できるので、以下テストデータでの混同行列の表示を省略します)
-
 ```{r}
 res_act <- test.df[[tar.idx]]
 conf_mat <- table(res_act, res_pred)
@@ -156,7 +141,6 @@ print(conf_mat)
 ```
 
 各種評価指標を確認します。計算用の関数の定義です。
-
 ```{r}
 create_df_res <- function(cmat){
   TN <- cmat[1,1]
@@ -190,7 +174,6 @@ create_df_res <- function(cmat){
 ```
 
 data.frameの出力整形用です。
-
 ```{r, warning=FALSE}
 library(knitr)
 library(kableExtra)
@@ -202,20 +185,16 @@ show_df <- function(df, cap){
 ```
 
 各種指標を確認します。
-
 ```{r, warning=FALSE}
 df_res <- create_df_res (conf_mat)
 show_df(df_res, "結果")
 ```
 
 ### ハイパーパラメーター
-
 以下、C5.0モデルのパラメータをいくつか変更し、モデル性能の差を簡易的に見てゆきます。
 
 #### trials
-
 trials:C5.0モデルはブースティングを実装しており、ブースティングの繰り返しの数を設定できます。
-
 ```{r}
 model_trials <- C5.0(
   x = train.df[-tar.idx], 
@@ -227,7 +206,6 @@ summary(model_trials)
 ```
 
 結果を確認します。各種数値が向上していることが分かります。
-
 ```{r, warning=FALSE}
 res_trials_pred <- predict(model_trials, test.df[-tar.idx])
 conf_mat_trials <- table(res_act, res_trials_pred)
@@ -236,9 +214,7 @@ show_df(df_res_trials, "結果（trials）")
 ```
 
 #### winnow
-
-winnow：デフォルトはFALSEです。TRUEにすると、重要でない特徴量を削減してくれます。
-
+winnow：デフォルトはFALSEです。TRUEにすると、重要でない特徴量を削減してくれます。  
 ```{r}
 model_winnow <- C5.0(
   x = train.df[-tar.idx], 
@@ -250,7 +226,6 @@ summary(model_winnow)
 ```
 
 結果の確認です。最初のモデルよりも正解率は高いですが、F値は下がりました。
-
 ```{r, warning=FALSE}
 res_winnow_pred <- predict(model_winnow, test.df[-tar.idx])
 conf_mat_winnow <- table(res_act, res_winnow_pred)
@@ -259,9 +234,7 @@ show_df(df_res_winnow, "結果（winnow）")
 ```
 
 #### CF
-
 CF：信頼係数です。デフォルトは0.25です。小さくすると過学習を防いでくれます。
-
 ```{r}
 model_CF <- C5.0(
   x = train.df[-tar.idx], 
@@ -273,7 +246,6 @@ summary(model_CF)
 ```
 
 結果の確認です。最初のモデルよりも性能が向上しています。
-
 ```{r, warning=FALSE}
 res_CF_pred <- predict(model_CF, test.df[-tar.idx])
 conf_mat_CF <- table(res_act, res_CF_pred)
@@ -282,9 +254,7 @@ show_df(df_res_CF, "結果（CF）")
 ```
 
 #### minCases
-
 minCases：葉ノードに含まれる必要サンプル数です。デフォルトは2です。大きくすると過学習を防いでくれます。
-
 ```{r}
 model_minCases <- C5.0(
   x = train.df[-tar.idx], 
@@ -296,7 +266,6 @@ summary(model_minCases)
 ```
 
 結果の確認です。最初のモデルよりも性能が向上しています。
-
 ```{r, warning=FALSE}
 res_minCases_pred <- predict(model_minCases, test.df[-tar.idx])
 conf_mat_minCases <- table(res_act, res_minCases_pred)
@@ -305,7 +274,6 @@ show_df(df_res_minCases, "結果（minCases）")
 ```
 
 各モデルの結果を一覧にします。
-
 ```{r, warning=FALSE}
 df_res_all <- data.frame(
   Item = df_res[,1],

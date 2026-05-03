@@ -1,219 +1,265 @@
 ---
 title: "rpart"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
-output:   
-  word_document:
-    toc: yes
+format:   
+  html:
+    toc: true
     toc_depth: '3'
     fig_width: 6
     fig_height: 3
 ---
 
-```{r setup, include=FALSE}
 
-# install packages
-pkgs <- c("rpart", "rpart.plot")
-for (pkg in pkgs) {
-  if (!(pkg %in% installed.packages())) {
-    install.packages(pkg)
-  }
-}
+# パッケージの概要
 
-# detach packages
-default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
-             "package:stats", "package:graphics",
-             "package:grDevices", "package:utils",
-             "package:datasets", "package:methods",
-             "Autoloads", "package:base")
-for (pkg in setdiff(search(), default)) {
-  detach(pkg, character.only = TRUE)
-  }
+rpart (Recursive Partitioning And Regression Trees)は、再帰的分割（データをグループに分けることを繰り返して木構造を作る手法）によって回帰木・分類木を構築するためのパッケージです。また、rpart.plot パッケージを用いることで、決定木をより見やすい形で可視化することができます。
 
-# clear objects
-remove(list=objects())
+## 使用例：Bostonデータ
+
+MASSパッケージに含まれるBostonデータを用いて、住宅価格の中央値を推定する回帰木の構築を試してみます。
+
+### データの確認
+
+Bostonデータを読み込みます。12列目(black)は使用しないこととします。
+
+```{r, warning=FALSE}
+library(MASS)
+df <- Boston[, -12]
+str(df)
 ```
 
-## パッケージの概要
+各変数の意味は以下の通りです。
 
-rpartは再帰的分割による回帰木・分類木の実装を与えます。また、rpart.plotで決定木の可視化が可能です。 
+| 変数名 | 概要 |
+|:-----------------------------------|:-----------------------------------|
+| crim | 町別の「犯罪率」　 |
+| zn | 25,000平方フィートを超える区画に分類される住宅地の割合 |
+| indus 　　 | 町別の「非小売業の割合」 　　　 |
+| chas 　　 | チャールズ川のダミー変数（区画が川に接している場合は1、そうでない場合は0） |
+| nox 　　 | 「NOx濃度（0.1ppm単位）」＝一酸化窒素濃度 　　　 |
+| rm 　　 | 1戸当たりの「平均部屋数」 　　　 |
+| age 　　 | 1940年より前に建てられた持ち家の割合 　　 |
+| dis 　　 | 5つあるボストン雇用センターまでの加重距離　　 　　 |
+| rad 　　 | 「主要高速道路へのアクセス性」の指数 　　 |
+| tax 　　 | 10,000ドル当たりの「固定資産税率」 　　　 |
+| ptratio 　 | 町別の「生徒と先生の比率」 　　 　 |
+| lstat 　 | 「低所得者人口の割合」 　　　 |
+| medv 　　 | 「住宅価格」（1000ドル単位）の中央値（目的変数） |
 
+数値変数について、medvとの散布図を確認します。
 
-## 使用例：irisデータの分類
-
-irisデータを用いて、がく弁・花弁の長さ・幅の情報からアヤメの種類を特定する分類モデルを作成します。
-
-### irisデータセットを読み込む
-
-irisデータを読み込み、データの先頭を表示します。
-
--   Sepal.Length：がく弁の長さ
--   Sepal.Width：がく弁の幅
--   Petal.Length：花弁の長さ
--   Petal.Width：花弁の幅
-
-アヤメの種類はsetosa(1)、versicolor(2)、virginica(3)の3種類です。
-
-```{r}
-data(iris)
-head(iris)
+```{r, warning=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
 ```
 
-### irisデータの構造
-
-irisデータの各種構造を確認します。
-
 ```{r}
-str(iris)
+# データ読み込み
+data("Boston")
+df <- Boston
+
+# 目的変数と説明変数（数値）
+target <- "medv"
+num_vars <- c("crim", "zn", "indus", "nox", "rm", "age", "dis", "tax", "ptratio", "lstat")
+
+# long形式に変換
+df_long_num <- df %>%
+  select(all_of(c(target, num_vars))) %>%
+  pivot_longer(cols = all_of(num_vars),
+               names_to = "variable", values_to = "value")
+
+# 散布図
+ggplot(df_long_num, aes(x = value, y = .data[[target]])) +
+  geom_point(alpha = 0.6) +
+  facet_wrap(~variable, scales = "free_x") +
+  theme_minimal()
 ```
 
-また、データを散布図にプロットして確認します。
+カテゴリ変数について、medvのヒストグラムを確認します。以下は、変数chas(チャールズ川に接しているかどうか)についてのヒストグラムです。
 
 ```{r}
-plot(iris, col=c(2, 3, 4)[iris$Species])
+# chas
+ggplot(df, aes(x = medv)) +
+  geom_histogram(bins = 30) +
+  facet_wrap(~chas) +
+  theme_minimal()
+```
+
+以下は、変数rad(「主要高速道路へのアクセス性」の指数)についてのヒストグラムです。
+
+```{r}
+# rad
+ggplot(df, aes(x = medv)) +
+  geom_histogram(bins = 30) +
+  facet_wrap(~rad) +
+  theme_minimal()
 ```
 
 ### モデル構築1（全体データ）
 
 まずは全てのデータを使って分類木モデルを構築してみます。
 
-```{r}
+```{r, warning = FALSE}
 library(rpart)
 library(rpart.plot)
+```
+
+```{r}
 # シードを設定
 set.seed(123) 
-(iris.rp <- rpart(Species ~ ., data = iris))
+(model <- rpart(medv ~ ., data = df))
 ```
 
-#### 可視化
+### モデルの可視化
 
-モデルを可視化します。plotで木の構造（分岐）を表示し、textで各ノードの分岐の基準や分類ラベルを表示します。デフォルトの設定だと図が見切れてしまうことがあります。
-```{r}
-plot(iris.rp)
-text(iris.rp)
+モデルを可視化します。plotで木の構造（分岐）を表示し、textで各ノードの分岐の基準や分類ラベルを表示します。
+
+```{r, fig.height=7, fig.width=7}
+plot(model)
+text(model)
 ```
+
 rpart.plotを用いると、分類木をより分かりやすく表示させることができます。
-```{r}
-rpart.plot(iris.rp)
-```
 
+```{r}
+rpart.plot(model)
+```
 
 ### モデル構築2（訓練データとテストデータに分割）
 
-irisデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします。確認のため、データサイズを出力します。
+Bostonデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします。確認のため、データサイズを出力します。
 
 ```{r}
 # シードを設定
 set.seed(123) 
 
 # データの分割
-sample_indices <- sample(1:nrow(iris), 0.7 * nrow(iris))  
-df.train <- iris[sample_indices, ]
-df.test <- iris[-sample_indices, ]
+sample_indices <- sample(1:nrow(df), 0.7 * nrow(df))  
+df.train <- df[sample_indices, ]
+df.test <- df[-sample_indices, ]
 
 # データサイズの確認
-c(nrow(iris), nrow(df.train), nrow(df.test))
+c(nrow(df), nrow(df.train), nrow(df.test))
 ```
 
 ### モデル生成
-
 訓練データを用いて分類木モデルを生成します。
-
 ```{r}
 # シードを設定
 set.seed(123)
-(model.rp <- rpart(Species ~ ., data = df.train))
+model2 <- rpart(medv ~ ., data = df.train)
 ```
 
-#### モデル評価
+rpart.plotでモデルを可視化します。
+```{R}
+rpart.plot(model2)
+```
 
+### モデル評価
 テストデータを使ってモデル評価を行います。まずはテストデータを元に生成したモデルを用いて予測結果を算出します。
 
 ```{r}
-prediction <- predict(model.rp, df.test, type = "class")
+res_act <- df.test$medv
+res_pred <- predict(model2, df.test, type = "vector")
 ```
 
-予測結果とテストデータのもともとのアヤメの分類とを比較します。おおむね正しく分類できていることが分かります。
+モデル性能の評価のために、二乗平均平方根誤差（RMSE: Root Mean Squared Error）と決定係数（R²: Coefficient of Determination）を算出します。
+
+```{r, warning=FALSE}
+library(MLmetrics)
+```
 
 ```{r}
-(result <- table(prediction, df.test$Species))
-(accuracy_prediction <- sum(diag(result)) / sum(result))
+sprintf("RMSE : %.3f", RMSE(res_act, res_pred))
+sprintf("決定係数 : %.3f", R2_Score(res_act, res_pred))
 ```
 
 ### ハイパーパラメーターのチューニング
 
 rpartの主なハイパーパラメーターは以下の通りです。
 
-- 木の複雑度に関するパラメータ(cp)
-- ノード分割の最小サンプル数(minsplit)
-- 木の最大の深さ(maxdepth)
+-   木の複雑度に関するパラメータ(cp)
+-   ノード分割の最小サンプル数(minsplit)
+-   木の最大の深さ(maxdepth)
 
 これらのハイパーパラメータの最適な設定を探す作業がハイパーパラメーターのチューニングとなります。
 
-まずはcpの最適な設定を確認します。これはprintcpを用いることができます。
-```{r}
-printcp(model.rp)
+各ハイパーパラメータは相互に影響を及ぼすため、ハイパーパラメータのチューニングは個別のパラメータごとに行うのではなく、対象のパラメータを同時に行う必要があります。ここではcpとminsplitのグリッドサーチにより、最適なパラメータを探す作業を行います。
+
+data.frameの出力整形用の関数を定義します。
+
+```{r, warning=FALSE}
+library(knitr)
+library(kableExtra)
+
+show_df <- function(df, cap=""){
+  if(is_html_output()){
+    kable(df, format = "html", caption = cap) %>%
+      kable_styling(bootstrap_options = "striped", full_width = FALSE, position = "left")
+  }else{
+    kable(df, format = "pipe", caption = cap) 
+  }
+}
 ```
 
-xerror（交差検証誤差）が最も低くなるcpは0.01でした。これはデフォルトの設定と一致します。
+チューニング候補値です。expand.gridを作って全ての組み合わせを列挙します。
 
+```{r}
+param_grid <- expand.grid(
+  cp = c(0.01, 0.03, 0.05),
+  minsplit = c(10, 20, 30, 40, 50)
+)
+```
 
-次に、minsplitのチューニングを行います。簡便的にテストデータでの設定の差を確認します。なお、デフォルトの設定は20です。
+各パラメータでモデル精度を検証してゆきます。
+
+```{r}
+
+#結果保存用
+results <- data.frame(
+  cp = numeric(),
+  minsplit = integer(),
+  RMSE = numeric(),
+  R2_Score = numeric()
+)
+
+set.seed(123)
+for (i in 1:nrow(param_grid)) {
+  params <- param_grid[i, ]
+  
+  model3 <- rpart(
+    medv ~ .,
+    data = df.train,
+    control = rpart.control(cp = params$cp, minsplit = params$minsplit),
+  )
+  
+  res_pred <- predict(model3, df.test, type = "vector")
+  
+  results <- rbind(results, data.frame(
+    cp = params$cp,
+    minsplit = params$minsplit,
+    RMSE = round(RMSE(res_act, res_pred), 3),
+    R2_Score = round(R2_Score(res_act, res_pred), 3)
+  ))
+}
+
+show_df(results)
+```
+
+RMSEが小さく決定係数が大きな組み合わせであるcp = 0.01、minsplit = 10の設定が良さそうであることが分かりました。より汎化性能を高めるためには、クロスバリデーションを行う必要があります。
+
+このモデルの分類木を可視化してみましょう。木の形も少し変わっています。
 
 ```{r}
 # シードを設定
 set.seed(123)
 
-# 候補となる minsplit の値
-minsplit_values <- c(5, 20, 40)
+model4 <- rpart(
+  medv ~ ., 
+  data = df.train,
+  control = rpart.control(cp = 0.01, minsplit = 10)
+)
 
-# minsplit ごとの精度を格納するデータフレーム
-results <- data.frame(minsplit = minsplit_values, Accuracy = NA)
-
-# 各 minsplit のモデルを作成し、精度を測定
-for (i in seq_along(minsplit_values)) {
-  control <- rpart.control(minsplit = minsplit_values[i])
-  model <- rpart(Species ~ ., data = df.train, method = "class", control = control)
-  
-  # 予測
-  predictions <- predict(model, df.test, type = "class")
-  accuracy <- mean(predictions == df.test$Species)
-  
-  # 結果を保存
-  results$Accuracy[i] <- accuracy
-}
-
-# 結果の確認
-print(results)
+rpart.plot(model4)
 ```
-irisデータだと特段変化がないようです。
-
-
-最後にmaxdepthについても同様に試してみます。デフォルトの設定は5です。
-```{r}
-# シードを設定
-set.seed(123)
-
-# 候補となる maxdepth の値
-maxdepth_values <- c(3, 5, 7)
-
-# maxdepth ごとの精度を格納するデータフレーム
-results <- data.frame(maxdepth = maxdepth_values, Accuracy = NA)
-
-# 各 minsplit のモデルを作成し、精度を測定
-for (i in seq_along(minsplit_values)) {
-  control <- rpart.control(maxdepth = maxdepth_values[i])
-  model <- rpart(Species ~ ., data = df.train, method = "class", control = control)
-  
-  # 予測
-  predictions <- predict(model, df.test, type = "class")
-  accuracy <- mean(predictions == df.test$Species)
-  
-  # 結果を保存
-  results$Accuracy[i] <- accuracy
-}
-
-# 結果の確認
-print(results)
-```
-こちらもirisデータだとと特段変化がないようです。

@@ -1,6 +1,5 @@
 ---
 title: "tuneRanger"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
 format:
   html:
@@ -10,95 +9,225 @@ format:
     fig-height: 3
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-if (!require(tuneRanger)) install.packages('tuneRanger')
-if (!require(mlr)) install.packages('mlr')
-```
-
 ## パッケージの概要
+機械学習におけるランダムフォレストモデルの構築を行えます。また、tuneRangerではハイパーパラメータのチューニングを行う機能も提供されます。
 
-機械学習におけるRandomForestモデルの構築を行えます。また、tuneRangerではハイパーパラメータのチューニングを行う機能も提供されます。
+## 使用例：PimaIndiansDiabetesデータの分類
+### データの確認
+PimaIndiansDiabetesデータを用いて、種々の項目からその患者が糖尿病患者であるかを判定するランダムフォレストモデルをtuneRangerパッケージを用いて構築します。
 
-## 参考URL
-
-公式ドキュメント <https://cran.r-project.org/web/packages/tuneRanger/tuneRanger.pdf>
-
-Rの機械学習パッケージmlrのチュートリアル（タスクの作成から予測まで） <https://qiita.com/nozma/items/bedcb35cba925764247a>
-
-## 使用例：irisデータの分類
-
-irisデータを用いて、がく弁・花弁の長さ・幅の情報からアヤメの種類を特定するRandomForestモデルをtuneRangerパッケージを用いて構築します。
-
-### irisデータセットを読み込む
-irisデータを読み込み、データの先頭を表示します。
-
--   Sepal.Length：がく弁の長さ
--   Sepal.Width：がく弁の幅
--   Petal.Length：花弁の長さ
--   Petal.Width：花弁の幅
-
-アヤメの種類はsetosa(1)、versicolor(2)、virginica(3)の3種類です
-```{r}
-data(iris)
-head(iris)
-```
-### irisデータの構造
-
-irisデータの各種構造を確認します。
-```{r}
-str(iris)
+```{r, warning=FALSE}
+library(mlbench)
+data(PimaIndiansDiabetes)
+df <- PimaIndiansDiabetes
+tar.idx <- 9
 ```
 
-また、データを散布図にプロットして確認します。
+データの中身の確認です。（head）
 
 ```{r}
-plot(iris, col=c(2, 3, 4)[iris$Species])
+head(df)
 ```
+
+データの中身の確認です。（str）
+
+```{r}
+str(df)
+```
+
+各変数の意味は以下の通りです。
+
+| 変数名           | データ型 | 概要                            |
+|:-----------------|:---------|:--------------------------------|
+| pregnant 　　    | num      | 妊娠回数 　　　                 |
+| glucose          | num      | 血漿グルコース濃度（負荷試験）  |
+| pressure 　　　  | num      | 拡張期血圧 [mm Hg] 　   　      |
+| triceps 　　　　 | num      | 上腕三頭筋皮膚襞の厚さ  [mm ]   |
+| insulin 　　　　 | num      | 2時間血清インスリン  [mu U/ml]  |
+| mass             | num      | BMI　　　                       |
+| pedigree         | num      | 糖尿病血統機能                  |
+| age              | num      | 年齢                            |
+| diabetes         | Factor   | クラス変数（糖尿病の検査）      |
+
+summaryを表示します。
+
+```{r}
+summary(df)
+```
+
+psychパッケージのpairs.panelsを用いて、散布図の一覧を表示します。
+
+```{r, warning=FALSE}
+library(psych)
+```
+
+```{r}
+df.x <- df[-tar.idx]
+df.y <- df[tar.idx]
+df.y <- ifelse(df.y == "pos", 1, 2)
+pairs.panels(df.x, bg=c("skyblue", "salmon")[df.y], pch=21)
+```
+
+ggplot2パッケージを用いて、ヒストグラムを表示します。変数ごとにpos/negの分布の傾向を把握することができます。
+
+```{r, warning=FALSE}
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+```
+
+```{r}
+# 数値変数だけを抽出（diabetes以外）
+num_vars <- names(df)[sapply(df, is.numeric)]
+
+# 長い形式に変換
+df_long <- df %>%
+  pivot_longer(cols = all_of(num_vars), names_to = "variable", values_to = "value")
+
+# ヒストグラムを1つの図にまとめて作成
+ggplot(df_long, aes(x = value, fill = diabetes)) +
+  geom_histogram(position = "identity", alpha = 0.5, bins = 30) +
+  facet_wrap(~variable, scales = "free") +
+  labs(title = "Histograms of Variables by Diabetes",
+       x = "Value", y = "Count") +
+  theme_minimal()
+```
+
 
 ### データセットの準備
+PimaIndiansDiabetesデータを、モデル生成のための訓練データとモデル評価のためのテストデータに分割します。データ割合は、訓練データ7割・テストデータ3割とします。確認のためにデータサイズを出力します。
 
-irisデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします
 ```{r}
 # 再現性のためにシードを設定
-set.seed(100)
+set.seed(123)  
 
 # データの分割
-n <- nrow(iris)
-train.rate <- 0.7
+sample_indices <- sample(1:nrow(df), 0.7 * nrow(df))  
+train_data <- df[sample_indices, ]
+test_data <- df[-sample_indices, ]
 
-# データそのものではなく、データ番号を吐き出している
-(train.set <- sample(n, n * train.rate))
-(test.set <- setdiff(1:n, train.set))
+# データサイズの確認
+c(nrow(df), nrow(train_data), nrow(test_data))
 ```
+
 
 ### モデル生成
-makeClassifTaskにてタスクの定義を行い、makeLeanerにて適用するアルゴリズムの選択を行います。
-```{r}
-(task <- makeClassifTask(data = iris, target = "Species"))
-lrn <- makeLearner("classif.lda")
+makeClassifTaskにてタスクの定義を行い、makeLearnerにて適用するアルゴリズムの選択を行います。
+```{r, warning=FALSE}
+library(mlr)
+task <- makeClassifTask(data = train_data, target = "diabetes")
+lrn <- makeLearner("classif.rpart")
 ```
-分割したデータセットを基にモデルの訓練を行います。また、訓練時の誤分類率(mmce)や精度(ace)を把握することが出来ます。
+
+分割したデータセットを基にモデルの訓練を行います。
 ```{r}
-(model <- train(lrn, task, subset = train.set))
+model <- train(lrn, task)
 ```
+
+予測結果を変数に格納します。
+```{r}
+res_pred <- predict(model, newdata = test_data)$data$response
+```
+
+実際の結果と予測結果を比較できる混同行列を出力します。
+```{r}
+res_act <- test_data[[tar.idx]]
+(conf_mat <- table(res_act, res_pred))
+```
+各種評価指標を確認します。まずは計算用の関数を定義します。
+
+```{r}
+create_df_res <- function(cmat){
+  TN <- cmat[1,1]
+  FP <- cmat[1,2]
+  FN <- cmat[2,1]
+  TP <- cmat[2,2]
+  
+  # 正解率：どれだけ正しく分類できたかの割合
+  acc <- round((TP + TN) / (TP + TN + FN + FP), 3)
+  
+  # 適合率：陽性と判定されたものがどれだけ正しく陽性であるかの割合
+  prec <- round(TP / (TP + FP), 3)
+  
+  # 再現率（真陽性率）：実際に陽性のものをどれだけ正しく陽性と判定できたかの割合
+  rec <- round(TP / (TP + FN), 3)
+  
+  # F値：適合率と再現率の調和平均（両者はトレードオフの関係）
+  Fval <- round(2 * rec * prec / (rec + prec), 3)
+  
+  # 真陰性率：実際に陰性のものをどれだけ正しく陰性と判定できたかの割合
+  TNRat <- round(TN / (TN + FP), 3)
+  
+  df_rat <- data.frame(
+    Item = c("正解率", "適合率", "再現率（真陽性率）", "F値", "真陰性率"), 
+    Rate = c(acc, prec, rec, Fval, TNRat)
+  )
+  
+  df_rat
+}
+```
+
+data.frameの出力整形用の関数を定義します。
+```{r, warning=FALSE}
+library(knitr)
+library(kableExtra)
+
+show_df <- function(df, cap=""){
+  if(is_html_output()){
+    kable(df, format = "html", caption = cap) %>%
+      kable_styling(bootstrap_options = "striped", full_width = FALSE, position = "left")
+  }else{
+    kable(df, format = "pipe", caption = cap) 
+  }
+}
+```
+
+評価指標を確認します。
+
+```{r, warning=FALSE}
+df_res <- create_df_res (conf_mat)
+show_df(df_res)
+```
+
 
 ### パラメータチューニング
+tuneRangerパッケージを使用して、パラメータチューニングを行ってゆきます。
 
 パラメータチューニングのための実行時間を事前に知ることが出来ます。
-```{r}
+```{r, warning=FALSE}
+library(tuneRanger)
 estimateTimeTuneRanger(task, num.trees = 500, num.threads = 3, iters = 30)
 ```
 
 tuneRangerを使用して、実際にパラメータチューニングをやってみます。
-```{r, echo=FALSE}
+```{r, warning=FALSE}
+# 再現性のためにシードを設定
+set.seed(123)  
+
 res <- tuneRanger(task, measure = list(multiclass.brier), num.trees = 500, 
                  num.threads = 3, iters = 30, save.file.path = NULL, show.info = FALSE)
 ```
 
-チューニング後のモデルの精度を確認してみます。精度が向上していることが分かります。
-
+チューニングされたパラメータです。
 ```{r}
-pred.res <- predict(res$model, task = task, subset = test.set)
-performance(pred.res, measures = list(mmce, acc))
+show_df(as.data.frame(t(res$recommended.pars)), "パラメータ")
+```
+
+チューニング後のモデルの混同行列です。
+```{r}
+res_pred_tuned <- predict(res$model, newdata = test_data)$data$response
+
+(conf_mat_tuned <- table(res_act, res_pred_tuned))
+```
+評価指標を確認します。モデル性能がおおむね向上していることが確認できます。
+
+```{r, warning=FALSE}
+df_res_tuned <- create_df_res (conf_mat_tuned)
+
+df_res_all <- cbind(
+  df_res, 
+  df_res_tuned[, 2])
+colnames(df_res_all) <- c("Item", "df_res", "df_res_tuned")
+
+show_df(df_res_all)
 ```

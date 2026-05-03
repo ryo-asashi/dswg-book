@@ -9,15 +9,14 @@ format:
     fig-height: 3
 ---
 
-```{r setup, include=FALSE}
-if (!require(plotly)) install.packages('plotly')
-```
-
 ### パッケージの概要
 
 plotlyは、インタラクティブなグラフを作成することのできるパッケージです。 baseのplotや、ggplot2では出力したグラフは固定されますが、plotlyでは、 出力したグラフを動かすことができます。
 
 ```{r plotly}
+#| message: false
+#| warning: false
+library(ggplot2)
 library(plotly)
 ```
 
@@ -59,11 +58,24 @@ plot_quakes_2 <- plot_ly(data = quakes,
          )
 
 plot_quakes_2
+
+```
+
+### ggplot2との連携
+```{r ggplotly}
+library(ggplot2)
+library(plotly)
+
+p <- ggplot(mtcars, aes(x = wt, y = mpg, color = cyl)) +
+  geom_point()
+ggplotly(p)
+
+
 ```
 
 ### 公式サイトについて
 
-これまで紹介してきたplot_ly関数や、layout関数の詳細は公式サイトのドキュメントで確認可能です。 例えば、上記で利用した散布図（typeの引数を"scatter"と指定）を表示する場合の詳細を確認する場合は、以下のアドレスにアクセスしてください。
+これまで紹介してきた関数の詳細は公式サイトのドキュメントで確認可能です。例えば、上記で利用した散布図（typeの引数を"scatter"と指定）を表示する場合の詳細を確認する場合は、以下のアドレスにアクセスしてください。
 
 <https://plotly.com/javascript/reference/scatter/>
 
@@ -74,3 +86,4 @@ plot_quakes_2
 公式サイト（R）のTOP画面 <https://plotly.com/r/>
 
 レファレンス用のアドレスがまとまっているページ <https://plotly.com/r/reference/index/>
+
