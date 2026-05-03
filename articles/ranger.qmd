@@ -1,6 +1,5 @@
 ---
 title: "ranger"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
 format:   
   html:
@@ -10,141 +9,297 @@ format:
     fig-height: 3
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-if (!require(ranger)) install.packages('ranger')
-```
-
 ## パッケージの概要
 
-機械学習におけるRandomForestモデルを構築できます。高速実装であり、特に高次元データに適しています。 分類木、回帰木、生存木、確率予測木のアンサンブルをサポートしています。
+機械学習におけるランダムフォレストモデルを構築できます。ランダムフォレストは、分類木、回帰木のアンサンブル学習による予測モデルであり、分類木のアンサンブルでは確率予測の出力もサポートしています。また、生存時間解析にランダムフォレストを応用するランダムサバイバルフォレストモデルも構築可能です。
 
-## 使用例：irisデータの分類
-
-irisデータを用いて、がく弁・花弁の長さ・幅の情報からアヤメの種類を特定するRandomForestモデルをrangerパッケージを用いて構築します。
-
-### irisデータセットを読み込む
-
-irisデータを読み込み、データの先頭を表示します。
-
--   Sepal.Length：がく弁の長さ
--   Sepal.Width：がく弁の幅
--   Petal.Length：花弁の長さ
--   Petal.Width：花弁の幅
-
-アヤメの種類はsetosa(1)、versicolor(2)、virginica(3)の3種類です。
+## 使用例：PimaIndiansDiabetesデータの分類
+### データの確認
+PimaIndiansDiabetesデータを用いて、種々の項目からその患者が糖尿病患者であるかを判定するランダムフォレストモデルをrangerパッケージを用いて構築します。
 
 ```{r}
-data(iris)
-head(iris)
+library(mlbench)
+data(PimaIndiansDiabetes)
+df <- PimaIndiansDiabetes
+tar.idx <- 9
 ```
 
-### irisデータの構造
-
-irisデータの各種構造を確認します。
+データの中身の確認です。（head）
 
 ```{r}
-str(iris)
+head(df)
 ```
 
-また、データを散布図にプロットして確認します。
+データの中身の確認です。（str）
 
 ```{r}
-plot(iris, col=c(2, 3, 4)[iris$Species])
+str(df)
 ```
 
-## モデル構築１（全体データ）
+各変数の意味は以下の通りです。
 
-まずは全てのデータを使ってRandomForestモデルを構築してみます。
+| 変数名           | データ型 | 概要                            |
+|:-----------------|:---------|:--------------------------------|
+| pregnant 　　    | num      | 妊娠回数 　　　                 |
+| glucose          | num      | 血漿グルコース濃度（負荷試験）  |
+| pressure 　　　  | num      | 拡張期血圧 [mm Hg] 　   　      |
+| triceps 　　　　 | num      | 上腕三頭筋皮膚襞の厚さ  [mm ]   |
+| insulin 　　　　 | num      | 2時間血清インスリン  [mu U/ml]  |
+| mass             | num      | BMI　　　                       |
+| pedigree         | num      | 糖尿病血統機能                  |
+| age              | num      | 年齢                            |
+| diabetes         | Factor   | クラス変数（糖尿病の検査）      |
+
+summaryを表示します。
+
+```{r}
+summary(df)
+```
+
+psychパッケージのpairs.panelsを用いて、散布図の一覧を表示します。
+
+```{r, warning=FALSE}
+library(psych)
+```
+
+```{r}
+df.x <- df[-tar.idx]
+df.y <- df[tar.idx]
+df.y <- ifelse(df.y == "pos", 1, 2)
+pairs.panels(df.x, bg=c("skyblue", "salmon")[df.y], pch=21)
+```
+
+ggplot2パッケージを用いて、ヒストグラムを表示します。変数ごとにpos/negの分布の傾向を把握することができます。
+
+```{r, warning=FALSE}
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+```
+
+```{r}
+# 数値変数だけを抽出（diabetes以外）
+num_vars <- names(df)[sapply(df, is.numeric)]
+
+# 長い形式に変換
+df_long <- df %>%
+  pivot_longer(cols = all_of(num_vars), names_to = "variable", values_to = "value")
+
+# ヒストグラムを1つの図にまとめて作成
+ggplot(df_long, aes(x = value, fill = diabetes)) +
+  geom_histogram(position = "identity", alpha = 0.5, bins = 30) +
+  facet_wrap(~variable, scales = "free") +
+  labs(title = "Histograms of Variables by Diabetes",
+       x = "Value", y = "Count") +
+  theme_minimal()
+```
+
+### 変数の重要度
+
+まずは全てのデータを使ってランダムフォレストモデルを構築してみます。
 
 ```{r}
 library(ranger)
 
 # シードを設定
 set.seed(123)
-(model.all <- ranger(Species ~ ., data = iris, importance = "impurity"))
+(model.all <- ranger(diabetes ~ ., data = df, importance = "impurity"))
 
 ```
 
-分類木の構築においては、importance = "impurity"と設定することにより、結果にvariable.importanceを保持してくれます。この中身を確認することにより各変数の重要度を確認することが出来ます。irisデータの分類には花弁の長さ（Petal.Length）・花弁の幅（Petal.Width）の情報が重要であることが分かります。
+importance = "impurity"と設定することにより、結果にvariable.importanceを保持してくれます。この中身を確認することにより各変数の重要度を確認することが出来ます。
 
+data.frameの出力整形用の関数を定義します。
+```{r, warning=FALSE}
+library(knitr)
+library(kableExtra)
+
+show_df <- function(df, cap=""){
+  if(is_html_output()){
+    kable(df, format = "html", caption = cap) %>%
+      kable_styling(bootstrap_options = "striped", full_width = FALSE, position = "left")
+  }else{
+    kable(df, format = "pipe", caption = cap) 
+  }
+}
+```
+
+各変数の重要度を確認します。PimaIndiansDiabetesデータの分類には特にglucose（血漿グルコース濃度）・mass（BMI）の情報が重要であることが分かります。
 ```{r}
-model.all$variable.importance
+show_df(model.all$variable.importance, "重要度")
 ```
 
 ### データセットの準備
-
-irisデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします。確認のため、データサイズを出力します。
+PimaIndiansDiabetesデータを、モデル生成のための訓練データとモデル評価のためのテストデータに分割します。データ割合は、訓練データ7割・テストデータ3割とします。確認のためにデータサイズを出力します。
 
 ```{r}
 # 再現性のためにシードを設定
 set.seed(123)  
 
 # データの分割
-sample_indices <- sample(1:nrow(iris), 0.7 * nrow(iris))  
-train_data <- iris[sample_indices, ]
-test_data <- iris[-sample_indices, ]
+sample_indices <- sample(1:nrow(df), 0.7 * nrow(df))  
+train_data <- df[sample_indices, ]
+test_data <- df[-sample_indices, ]
 
 # データサイズの確認
-c(nrow(iris), nrow(train_data), nrow(test_data))
+c(nrow(df), nrow(train_data), nrow(test_data))
 ```
 
 ### モデルの生成・予測の実行
 
-訓練データを用いて分類木のモデルを生成します。モデルの生成結果は以下の通りです。
+訓練データを用いてランダムフォレストモデルを生成します。モデルの生成結果は以下の通りです。
 
 ```{r}
 set.seed(123)  
-(model <- ranger(Species ~ ., data = train_data))
+(model <- ranger(diabetes ~ ., data = train_data))
 ```
 
-テストデータを用いてモデルの評価をします。まずは、テストデータを先ほど構築した分類木モデルに適用させ、その予測結果をpredictionsに格納します。
+テストデータを用いてモデルの評価をします。まずは、テストデータを先ほど構築したランダムフォレストモデルに適用させ、その予測結果をpredictionsに格納します。
 
 ```{r}
-predictions <- predict(model, data = test_data)$predictions
+res_pred <- predict(model, data = test_data)$predictions
 ```
 
-予測結果とテストデータのもともとのアヤメの分類とを比較します。おおむね正しく分類できていることが分かります。
+実際の結果と予測結果を比較できる混同行列を出力します。
 
 ```{r}
-(confusion_matrix <- table(predictions, test_data$Species))
+res_act <- test_data[[tar.idx]]
+(conf_mat <- table(res_act, res_pred))
 ```
 
-## ハイパーパラメーターのチューニング
+各種評価指標を確認します。まずは計算用の関数を定義します。
 
-rangerのRandomForestモデルにおける主なハイパーパラメーターは以下の通りです。
+```{r}
+create_df_res <- function(cmat){
+  TN <- cmat[1,1]
+  FP <- cmat[1,2]
+  FN <- cmat[2,1]
+  TP <- cmat[2,2]
+  
+  # 正解率：どれだけ正しく分類できたかの割合
+  acc <- round((TP + TN) / (TP + TN + FN + FP), 3)
+  
+  # 適合率：陽性と判定されたものがどれだけ正しく陽性であるかの割合
+  prec <- round(TP / (TP + FP), 3)
+  
+  # 再現率（真陽性率）：実際に陽性のものをどれだけ正しく陽性と判定できたかの割合
+  rec <- round(TP / (TP + FN), 3)
+  
+  # F値：適合率と再現率の調和平均（両者はトレードオフの関係）
+  Fval <- round(2 * rec * prec / (rec + prec), 3)
+  
+  # 真陰性率：実際に陰性のものをどれだけ正しく陰性と判定できたかの割合
+  TNRat <- round(TN / (TN + FP), 3)
+  
+  df_rat <- data.frame(
+    Item = c("正解率", "適合率", "再現率（真陽性率）", "F値", "真陰性率"), 
+    Rate = c(acc, prec, rec, Fval, TNRat)
+  )
+  
+  df_rat
+}
+```
+
+
+評価指標を確認します。
+
+```{r, warning=FALSE}
+df_res <- create_df_res (conf_mat)
+show_df(df_res)
+```
+
+### ハイパーパラメーターのチューニング
+
+rangerのランダムフォレストモデルにおける主なハイパーパラメーターは以下の通りです。
 
 -   決定木を生成する際に使用するパラメータの数(mtry)
+-   1ノードあたりの最小データ数(min.node.size)
 -   生成する決定木の数(num.trees)
 
-これらのハイパーパラメーターの最適な設定を探す作業がハイパーパラメーターのチューニングとなります。rangerのハイパーパラメーターのチューニング用にはtuneRanger等のパッケージがありますが、ここではnum.treesについて直接パラメータ設定を変更して精度比較を実施します。
+これらのハイパーパラメーターの最適な設定を探す作業がハイパーパラメーターのチューニングとなります。rangerのハイパーパラメーターのチューニング用にはtuneRanger等のパッケージがありますが、ここではmtryとmin.node.sizeをそれぞれ動かして精度比較をしてみます（グリッドサーチ）。
 
-なお、rangerのRandomForestモデルではOOBError(Out-Of-bag Error)が算出されます。これはモデル構築時に一部データを学習に使用しない代わりにモデル検証に使用して誤差率を求めています。そのため、クロスバリデーションをしなくても、ある程度の汎化性能を測ることができます。
+なお、rangerのランダムフォレストモデルではOOBError(Out-Of-bag Error)が算出されます。これはモデル構築時に一部データを学習に使用しない代わりにモデル検証に使用して誤差率を求めています。そのため、クロスバリデーションをしなくても、ある程度の汎化性能を測ることができます。
 
-num.trees = 300としてモデル構築します。OOBErrorは5.71%です。
+先に、重要度の高い変数に絞ったモデルを試してみます。OOBErrorはわずかに増加していますので、変数を全て使ったモデルが良さそうです。
+```{r}
+set.seed(123)  
+(model4 <- ranger(diabetes ~ glucose + mass + pedigree + age, data = train_data))
+```
+
+チューニング候補値です。expand.gridを作って全ての組み合わせを列挙します。
+```{r}
+param_grid <- expand.grid(
+  mtry = c(1, 2, 3, 4),
+  min.node.size = c(1, 3, 5, 10)
+)
+
+show_df(param_grid)
+```
+
+各パラメータでモデル精度を検証してゆきます。
+```{r}
+
+#結果保存用
+results <- data.frame(
+  mtry = integer(),
+  min.node.size = integer(),
+  oob.error = numeric()
+)
+
+for (i in 1:nrow(param_grid)) {
+  params <- param_grid[i, ]
+  
+  model <- ranger(
+    formula = diabetes ~ .,
+    data = train_data,
+    mtry = params$mtry,
+    min.node.size = params$min.node.size,
+    seed = 123,
+    oob.error = TRUE
+  )
+  
+  results <- rbind(results, data.frame(
+    mtry = params$mtry,
+    min.node.size = params$min.node.size,
+    oob.error = model$prediction.error
+  ))
+}
+
+show_df(results)
+```
+
+OOBErrorがもっとも小さいパラメータを確認します。
+```{r}
+best <- results[which.min(results$oob.error), ]
+show_df(best, "最良のパラメータ")
+```
+
+
+チューニングされたパラメータを使用してモデル構築します。訓練時よりもOOBErrorが上昇しています。過学習している可能性があるため、クロスバリデーションを実装する必要があるかもしれません。
 
 ```{r}
 set.seed(123)  
-(model.num.trees.300 <- ranger(Species ~ ., data = train_data, num.trees = 300))
+(model.tuned <- ranger(
+  diabetes ~ .,
+  data = train_data,
+  mtry = best$mtry,
+  min.node.size = best$min.node.size))
 ```
 
-num.trees = 500としてモデル構築します。OOBErrorは5.71%です。
-
+混同行列と評価指標を計算します。
 ```{r}
-set.seed(123)  
-(model.num.trees.500 <- ranger(Species ~ ., data = train_data, num.trees = 500))
+res_pred.tuned <- predict(model.tuned, data = test_data)$predictions
+(conf_mat.tuned <- table(res_act, res_pred.tuned))
 ```
 
-num.trees = 700としてモデル構築します。OOBErrorは4.76%です。
-
+最初に作ったモデルと比較しますが、過学習の影響か少し性能が落ちてしまっているようです。
 ```{r}
-set.seed(123)  
-(model.num.trees.700 <- ranger(Species ~ ., data = train_data, num.trees = 700))
-```
+df_res.tuned <- create_df_res (conf_mat.tuned)
 
-num.trees = 700のときにOOBErrorが最も小さくなったので、そのモデルにてテストデータで精度を測ってみます。もともと精度が高いため、結果は変わりませんでした。
+df_res.all <- cbind(
+  df_res, 
+  df_res.tuned[, 2])
+colnames(df_res.all) <- c("Item", "df_res", "df_res.tuned")
 
-```{r}
-predictions.num.trees <- predict(model.num.trees.700, data = test_data)$predictions
-(confusion_matrix <- table(predictions.num.trees, test_data$Species))
+show_df(df_res.all)
 ```
