@@ -1,6 +1,5 @@
 ---
 title: "ggplot2"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
 format:
   html:
@@ -10,24 +9,18 @@ format:
     fig-height: 3
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-if (!require(ggplot2)) install.packages('ggplot2')
-if (!require(dplyr)) install.packages('dplyr')
-```
-
 ### パッケージの概要
 
 ggplot2は、一貫性のある文法を用いてグラフを作成することのできるパッケージであり、Rでモダンな分析環境を構築するためのパッケージ群である「tidyberse」に含まれます。 なお、ggplot2については、アクチュアリージャーナル第１１２号内の「Rを用いたデータの可視化技術解説書」の付録２でも紹介されています。
 
-```{r plotly}
-suppressMessages(require(tidyverse))
-require(ggplot2)
+```{r ggplot2}
+library(ggplot2)
+library(dplyr) # パイプ演算子（%>%）を使うために必要
 ```
 
 ### グラフの作成方法
 
-ggplot2では、+演算子を利用してggplot関数に様々な関数を接続することでグラフを作成します。 以下では、geom_point関数を用いて、Rのデータセットiris（アヤメの花びらやがく片の長さなどに関するデータセット）を用いた散布図を作成しています。
+ggplot2では、+演算子を利用してggplot関数に様々な関数を接続することでグラフを作成します。 以下は、geom_point関数を用いて、Rのデータセットiris（アヤメの花びらやがく片の長さなどに関するデータセット）を用いた散布図を作成しています。
 
 ```{r ggplot2::ggplot}
 # 利用するdataと、グラフに表示する特徴量を指定（あとで指定する場合は省略可能）
@@ -54,9 +47,9 @@ P4
 
 ### グラフの重ね合わせ
 
-ggplot2では、グラフの重ね合わせも+演算子で実施することができ、先ほど作成した散布図に対して、再度geom_point関数を接続すれば重ね合わせたグラフが作成可能です。
+ggplot2では、グラフの重ね合わせも+演算子で実施できます。先ほど作成した散布図に対して、再度geom_point関数を接続すれば重ね合わせたグラフが作成可能です。
 
-以下では、アヤメの種類別のがく片の長さと幅を計算したiris_meanを用いて、散布図を重ね合わせています（表示されたグラフの赤い点が平均値です）
+以下は、アヤメの種類別のがく片の長さと幅を計算したiris_meanを用いて、散布図を重ね合わせています（表示されたグラフの赤い点が平均値です）
 
 ```{r plotly::ggplot_3}
 iris_mean <- iris %>%
