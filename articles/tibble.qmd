@@ -1,6 +1,5 @@
 ---
 title: "tibble"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
 format:
   html:
@@ -10,19 +9,13 @@ format:
     fig-height: 3
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-if (!require(tibble)) install.packages('tibble')
-```
-
 ### パッケージの概要
 
 tibbleは、従来のdata.frameを洗練させたデータ構造tibbleを作成することのできるパッケージです。また、このパッケージは、Rでモダンな分析環境を構築するためのパッケージ群である「tidyberse」に含まれています。
 
 ```{r tibble}
-suppressMessages(require(tidyverse))
-require(tibble)
-require(microbenchmark)
+library(tibble)
+library(microbenchmark)
 ```
 
 ### tibbleの作成方法
@@ -91,6 +84,3 @@ microbenchmark(
   as.data.frame(X)
 )
 ```
-
-
-
