@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-05-24">
+<meta name="dcterms.date" content="2026-06-02">
 
 <title>purrr – Rパッケージ活用事例集</title>
 <style>
@@ -75,10 +75,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-b263ad0a93230b7912c70cd3cc233063.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-284bc4a776d7dd5b0cf684ba650635ca.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -513,7 +513,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 24, 2026</p>
+      <p class="date">June 2, 2026</p>
     </div>
   </div>
   
@@ -566,13 +566,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(y, rnorm, <span class="at">n=</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
-[1]  1.1308517  1.8322024  0.6803208  0.1143307 -0.4138768
+[1]  0.2687802  2.5839085  2.4929365  1.4761567 -0.6777475
 
 [[2]]
-[1] 2.455762 2.794306 1.953107 1.969957 1.741551
+[1] 1.437219 1.016464 1.325712 4.555557 3.254008
 
 [[3]]
-[1] 3.876129 2.668199 2.265000 4.080493 3.814679</code></pre>
+[1] 3.140733 3.425695 3.578012 3.498897 3.451881</code></pre>
 </div>
 </div>
 </section>
@@ -597,13 +597,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(z, rnorm, <span class="at">n=</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
-[1]  2.7721309 -0.5082762  1.0231268  0.2055082 -1.6630344
+[1] -1.0956026  0.6381431 -1.4696337  0.7731115  0.1228978
 
 [[2]]
-[1] 2.631951 3.072202 3.024098 2.124830 2.497474
+[1]  2.822200944  0.008761682 -0.312371421  2.351429078  2.761858675
 
 [[3]]
-[1] 1.496574 3.595510 1.561467 2.720004 2.700944</code></pre>
+[1] 2.957690 4.501594 4.080237 5.478232 3.449839</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_dbl</span>(z, rnorm, <span class="at">n=</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
@@ -619,7 +619,7 @@ Caused by error:
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(rnorm, <span class="at">n=</span><span class="dv">5</span>) <span class="sc">|&gt;</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dbl</span>(mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.529662 1.420801 3.403865</code></pre>
+<pre><code>[1] 1.973384 2.206295 3.208099</code></pre>
 </div>
 </div>
 </section>
