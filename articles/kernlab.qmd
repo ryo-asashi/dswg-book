@@ -1,0 +1,249 @@
+---
+title: "kernlab"
+date: "`r Sys.Date()`"
+description: 機械学習
+format:
+  html:
+    fig-width: 6
+    fig-height: 4
+---
+
+## パッケージの概要
+
+kernlabは、カーネル法による機械学習を実装可能なパッケージです。様々なカーネル関数が利用可能で、サポートベクターマシン（SVM）、カーネル主成分分析（KPCA）などを実装できます。
+
+```{r kernlab}
+library(kernlab)
+```
+
+## カーネル関数
+
+kernlabには、複数のカーネル関数が実装されています。例えば、以下のRBFカーネル、多項式カーネル、線形カーネルが利用可能です。一覧は、ksvm関数のヘルプなどから確認できます。
+
+RBF（ガウス）カーネル
+
+$$
+k(x, x') \;=\; \exp\!\big(-\sigma \, \|x - x'\|^2\big)
+$$
+多項式カーネル
+
+$$
+K(x, x') = (\gamma \, x^\top x' + c_0)^d
+$$ 
+
+線形カーネル
+
+$$
+K(x, x') = x^\top x'
+$$ 
+
+## SVMの実装例
+kernlabパッケージに収録されているデータspamと利用して、ksvm関数によるSVMの実装例を確認します。 spamは、メールに含まれる特定の単語（makeなど）の頻度や、メールがスパムメールかどうかを判定したフラグ（type）などが入ったデータです。
+
+メールの内容（spamデータのtype以外の項目）から、そのメールがスパムメールかどうかを予測するモデルを作成します。
+
+```{r spam}
+# サンプルデータの読み込み
+data(spam)
+
+# データの確認
+str(spam)
+```
+### モデルの作成
+データを学習用データとモデルを評価するためのデータに分割し、学習用データを利用して、SVMモデルを作成します。カーネル関数には、RBFカーネルを利用します。
+
+```{r svm}
+set.seed(123)
+
+# 分割用のインデックス作成（70%を学習用とする）
+# train_index には、学習データとして選ばれた行番号（インデックス）のベクトルが入っている
+train_index <- sample(1:nrow(spam), 0.7 * nrow(spam))
+
+train_data <- spam[train_index, ]
+test_data  <- spam[-train_index, ]
+
+# SVMモデルの学習
+svm_model <- ksvm(
+  type ~ ., 
+  data = train_data,
+  type = "C-svc",
+  kernel = "rbfdot",         # RBFカーネル（ガウシアン）
+  kpar = list(sigma = 0.01), # RBFカーネルのパラメータ
+  C = 1,                     # 正則化パラメータ
+  scaled = TRUE              # 標準化
+)
+
+```
+
+
+引数について、簡単に確認します。typeは、SVMの種類を指定する引数です。今回は標準的な分類モデルであるC-svcを利用します。kernelは、カーネル関数を指定する引数で、RBFカーネルを指定しています。
+
+$$
+k(x, x') = \exp(-\sigma \|x - x'\|^2)
+$$
+
+kparとCではパラメータを設定しており、前者はRBFカーネル、CはSVMの分類による誤りに対する罰則を規定しています。
+
+
+#### モデルの確認
+
+作成したモデルの中身を確認してみます。なお、Training errorは今回利用した学習データでの誤分類率です。
+
+また、test_dataを利用してモデルの正答率を確認すると、正答率は93％となりました。
+
+```{r svm_model_chk}
+svm_model
+
+#training errorを自分で確認
+pred_chk <- predict(svm_model, train_data)
+1 - mean(pred_chk == train_data$type)
+
+# モデルの評価
+pred <- predict(svm_model, test_data)
+table(Predicted = pred, Actual = test_data$type)
+accuracy <- mean(pred == test_data$type)
+accuracy
+```
+
+### パラメータのチューニング（その１）
+
+先ほどは、モデルのパラメータを固定値で設定しました。
+
+次は、パラメータを調整する方法について確認していきます。まず、引数kparをautomaticにすると、カーネル関数のパラメータであるsigmaを自動で調整できます。
+
+先ほどと同じ学習データを利用してモデルを作成すると、sigmaは0.03程度になりました。
+
+```{r svm_tuned}
+# sigmaのパラメータを自動でチューニング
+set.seed(123)
+
+svm_tuned <- ksvm(
+  type ~ ., 
+  data = train_data,
+  kernel = "rbfdot",
+  kpar = "automatic",  # カーネルパラメータ自動調整
+  C = 1
+)
+svm_tuned
+```
+
+#### モデルの確認
+最初に作成したモデルと比較すると、学習データ（train_data）のTraining errorは少しだけ小さい数値となりましたが、正答率は全く同じ数値になりました。
+
+```{r svm_tuned_chk}
+# 予測
+pred_tuned <- predict(svm_tuned, test_data)
+
+# 混同行列
+table(Predicted = pred_tuned, Actual = test_data$type)
+
+# 正解率
+accuracy_tuned <- mean(pred_tuned == test_data$type)
+accuracy_tuned
+```
+
+### パラメータのチューニング（その２）
+先ほどの例では、カーネル関数のパラメータsigmaだけをチューニングし、モデルのパラメータCは固定値でした。次は、sigmaとCの両方を一緒にチューニングする方法も確認します。
+
+C_listにパラメータCの候補、sigma_listにパラメータsigmaの候補を複数パターン準備し、両パラメータの全ての組み合わせでモデルを作成し、最も正答率が高いパラメータを確認します。結果は、Cが190程度、sigmaが0.00268程度となりました。
+
+正答率は、これまでのモデルよりも高くなりましたが、正答率を評価するために使用したデータは全てtest_dataであったため、たまたまtest_dataにだけ性能がいいパラメータを選択しているリスクがあります。
+
+```{r grid}
+set.seed(123)
+
+# 候補パラメータ
+C_list <- 10^seq(-2, 3, length = 8)
+sigma_list <- 10^seq(-4, 1, length = 8)
+
+# 結果格納用の変数
+results <- data.frame()
+
+# C_listとsigma_listのパラメータを総当たりでモデル作成し、パラメータと正答率を格納
+for (C_val in C_list) {
+  for (sigma_val in sigma_list) {
+    
+    model <- ksvm(
+      type ~ ., 
+      data = train_data,
+      kernel = "rbfdot",
+      kpar = list(sigma = sigma_val),
+      scaled = TRUE,
+      C = C_val
+    )
+    
+    pred <- predict(model, test_data)
+    acc <- mean(pred == test_data$type)
+    
+    results <- rbind(results, data.frame(
+      C = C_val,
+      sigma = sigma_val,
+      accuracy = acc
+    ))
+  }
+}
+
+# 正答率（accuracy）が最大のパラメータを確認
+results[which.max(results$accuracy), ]
+```
+
+### クロスバリデーション
+先ほどの例では、正答率を評価するために使用したデータは全てtest_dataでしたが、クロスバリデーションを利用すれば、学習用のtrain_dataを使って、パラメータの調整が可能です。（crossという引数を使います）
+
+```{r cross}
+set.seed(123)
+
+#グリッド作成（対数スケール）
+C_list <- 10^seq(-2, 3, length = 8)
+sigma_list <- 10^seq(-4, 1, length = 8)
+
+grid <- expand.grid(C = C_list, sigma = sigma_list)
+
+# 結果格納用
+results <- data.frame()
+
+# グリッドサーチ＋クロスバリデーション（CV）
+for (i in 1:nrow(grid)) {
+  
+  model <- ksvm(
+    type ~ ., 
+    data = train_data,
+    kernel = "rbfdot",
+    kpar = list(sigma = grid$sigma[i]),
+    C = grid$C[i],
+    scaled = TRUE,
+    cross = 5
+  )
+  
+  results <- rbind(results, data.frame(
+    C = grid$C[i],
+    sigma = grid$sigma[i],
+    cv_accuracy = model@cross
+  ))
+}
+
+# 最適パラメータ選択
+best <- results[which.min(results$cv_accuracy), ]
+print(best)
+
+# 最終モデル構築
+final_model <- ksvm(
+  type ~ ., 
+  data = train_data,
+  kernel = "rbfdot",
+  kpar = list(sigma = best$sigma),
+  C = best$C,
+  scaled = TRUE
+)
+
+# テストデータ評価
+pred_final <- predict(final_model, test_data)
+
+# 混同行列
+table(Predicted = pred_final, Actual = test_data$type)
+
+# 正答率
+accuracy_final <- mean(pred_final == test_data$type)
+accuracy_final
+final_model
+```
