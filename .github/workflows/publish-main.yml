@@ -21,11 +21,13 @@ jobs:
         uses: r-lib/actions/setup-r@v2
         with:
           r-version: 'renv'
+          use-public-rspm: true
 
       - name: Install System Dependencies for R Packages
         run: |
           sudo apt-get update
           sudo apt-get install -y \
+            build-essential \
             libudunits2-dev \
             libgdal-dev \
             libproj-dev \
@@ -46,8 +48,11 @@ jobs:
 
       - name: Auto-install Required Packages and Update renv.lock
         run: |
-          Rscript -e "renv::hydrate()"
-          Rscript -e "renv::snapshot(prompt = FALSE)"
+          Rscript -e '
+            options(repos = c(RSPM = "https://packagemanager.posit.co/cran/__linux__/noble/latest", CRAN = "https://cloud.r-project.org"))
+            renv::hydrate()
+            renv::snapshot(prompt = FALSE)
+          '
 
       - name: Render and Publish to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
