@@ -1,0 +1,166 @@
+---
+title: "ISLR2"
+author: ""
+date: "`r Sys.Date()`"
+format:
+  html:
+    fig_width: 6
+    fig_height: 4
+---
+
+```{r setup, include=FALSE}
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+knitr::opts_chunk$set(echo = TRUE)
+
+# install packages
+pkgs <- c("ggplot2","GGally","ISLR2","dplyr","tibble","knitr")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+```
+
+## パッケージの概要
+ISLR2パッケージは、『[An Introduction to Statistical Learning](https://www.statlearning.com/)』という書籍で学習するためのデータなどが提供されているパッケージです。また、学習用にデータが整備されているため、自身でRを学習する際にも利用できます。
+
+なお、ISLR2パッケージが対応しているのは、上記の書籍の第２版であり、ISLRパッケージは初版と対応しています。
+
+
+```{r GGally, warning=FALSE}
+library(ISLR2) 
+library(ggplot2)
+library(GGally)
+library(tibble)
+library(knitr)
+library(dplyr) # filterなどがマスクされる
+```
+
+## データ例
+data(package = "ISLR2")と実行すれば、本パッケージで提供されているデータ名の一覧を確認できます。
+
+複数のデータが提供されていますが、自動車の燃費や、シリンダー数などが格納されているAutoを使ってみましょう。まずは、str関数、head関数、summary関数を実行して、データの概要を確認します。
+
+```{r autobi, echo = FALSE}
+auto_vars <- tibble(
+  変数名 = c(
+    "mpg",
+    "cylinders",
+    "displacement",
+    "horsepower",
+    "weight",
+    "acceleration",
+    "year",
+    "origin",
+    "name"
+  ),
+
+  説明 = c(
+    "燃費（1ガロンあたりの走行距離）",
+    "シリンダー数",
+    "エンジン排気量（立方インチ）",
+    "エンジン出力（馬力）",
+    "車両重量（ポンド）",
+    "0～60mphまで加速する時間（秒）",
+    "モデル年（西暦の下2桁）",
+    "製造地域（1=アメリカ, 2=ヨーロッパ, 3=日本）",
+    "車名"
+  )
+)
+
+kable(
+  auto_vars,
+  align = c("l", "l"),
+  caption = "Autoデータセットの各変数説明"
+)
+```
+
+
+```{r ggpairs}
+str(Auto)
+```
+
+```{r ggpairs_2, warning=FALSE,message=FALSE}
+head(Auto)
+```
+
+```{r ggpairs_3, warning=FALSE,message=FALSE}
+summary(Auto)
+```
+
+続いて、GGallyパッケージのggduo関数や、ggpairs関数を利用して、mpgと各項目の関係を確認してみます。
+ただし、nameはstr関数などで確認した結果、パターン数が多く、分析に利用することが難しいことがわかりますので除外します。
+
+ggduo関数では、mpg（燃費）と各項目の関係を可視化しています。また、ggpairs関数では、mpg（燃費）とdisplacement（排気量）の関係をorigin（製造地域）ごとに確認しています。（箱ひげ図を表示するため、originとcylindersをカテゴリ変数に変換しています）
+
+```{r ggpairs_seting, warning=FALSE}
+df <- Auto |>
+  mutate(
+    origin = factor(
+      origin,
+      labels = c("USA", "Europe", "Japan")
+    ),
+    cylinders = factor(cylinders)
+  )
+
+
+ggduo(
+  df,
+  columnsX = c("origin","cylinders"),
+  columnsY = c("mpg"),
+  types = list(
+    combo = "box_no_facet" 
+  ) # comboはカテゴリ変数と数値変数の設定。箱ひげ図を指定
+)
+
+ggduo(
+  Auto,
+  columnsX = c("displacement","horsepower", "weight"),
+  columnsY = "mpg",
+  types = list(
+    continuous = "points" 
+  ) # continuousは数値変数同士の設定。散布図を指定
+)
+ggduo(
+  Auto,
+  columnsX = c("acceleration", "year"),
+  columnsY = "mpg",
+  types = list(
+    continuous = "points"
+  )
+)
+```
+
+```{r GGally_4,warning=FALSE}
+ggpairs(
+  df[, c("origin", "mpg", "displacement")],
+
+  aes(color = origin, alpha=0.5), 
+
+  upper = list(
+    continuous = wrap("cor"), # 数値変数同士の場合、相関係数を表示 
+    combo = wrap("box_no_facet") # カテゴリ変数と数値変数の場合、箱ひげ図を表示
+  ),
+
+  lower = list(
+    continuous = wrap( 
+      "points",
+      size = 1.5,
+      alpha = 0.5
+    ), # 数値変数同士の場合、散布図を表示
+    combo = wrap("blank") 
+  ), # カテゴリ変数と数値変数の場合、何も表示しない
+
+  diag = list(
+    continuous = wrap( 
+      "densityDiag",
+      alpha = 0.5
+    ), # 数値変数同士の場合、密度曲線を表示
+    discrete = wrap("barDiag") # カテゴリ変数同士の場合、度数分布を表示
+  )
+) +
+  theme_bw() # 背景を白に
+```
+
