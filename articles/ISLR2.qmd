@@ -1,27 +1,12 @@
 ---
 title: "ISLR2"
-author: ""
 date: "`r Sys.Date()`"
+description: データセット
 format:
   html:
     fig_width: 6
     fig_height: 4
 ---
-
-```{r setup, include=FALSE}
-options(repos = c(CRAN = "https://cloud.r-project.org"))
-
-knitr::opts_chunk$set(echo = TRUE)
-
-# install packages
-pkgs <- c("ggplot2","GGally","ISLR2","dplyr","tibble","knitr")
-for (pkg in pkgs) {
-  if (!(pkg %in% installed.packages())) {
-    install.packages(pkg)
-  }
-}
-
-```
 
 ## パッケージの概要
 ISLR2パッケージは、『[An Introduction to Statistical Learning](https://www.statlearning.com/)』という書籍で学習するためのデータなどが提供されているパッケージです。また、学習用にデータが整備されているため、自身でRを学習する際にも利用できます。
