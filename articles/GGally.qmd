@@ -1,27 +1,12 @@
 ---
 title: "GGally"
-author: "データサイエンス関連基礎調査WG"
 date: "`r Sys.Date()`"
+description: 可視化
 format:
   html:
     fig_width: 6
     fig_height: 4
 ---
-
-```{r setup, include=FALSE}
-options(repos = c(CRAN = "https://cloud.r-project.org"))
-
-knitr::opts_chunk$set(echo = TRUE)
-
-# install packages
-pkgs <- c("ggplot2","GGally","insuranceData","dplyr","tibble","tidyr","knitr")
-for (pkg in pkgs) {
-  if (!(pkg %in% installed.packages())) {
-    install.packages(pkg)
-  }
-}
-
-```
 
 ## パッケージの概要
 GGallyは、Rの可視化パッケージggplot2を拡張するパッケージです。ggpairs関数やggduo関数で変数同士の箱ひげ図や散布図などを一度に確認したり、ggcorr関数で変数間の相関を確認できます。
