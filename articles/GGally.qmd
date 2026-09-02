@@ -1,0 +1,331 @@
+---
+title: "GGally"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format:
+  html:
+    fig_width: 6
+    fig_height: 4
+---
+
+```{r setup, include=FALSE}
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+knitr::opts_chunk$set(echo = TRUE)
+
+# install packages
+pkgs <- c("ggplot2","GGally","insuranceData","dplyr","tibble","tidyr","knitr")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+```
+
+## パッケージの概要
+GGallyは、Rの可視化パッケージggplot2を拡張するパッケージです。ggpairs関数やggduo関数で変数同士の箱ひげ図や散布図などを一度に確認したり、ggcorr関数で変数間の相関を確認できます。
+
+
+```{r GGally}
+library(ggplot2)
+library(GGally)
+library(insuranceData)
+library(tibble)
+library(tidyr)
+library(knitr)
+library(dplyr) # stats,baseの関数がマスクされる
+```
+
+## ggpairs関数を利用した可視化
+
+insuranceDataパッケージのAutoBiを題材に、ggpairs関数の利用方法を確認します。
+
+```{r autobi, echo = FALSE}
+autobi_vars <- tibble(
+  変数名 = c(
+    "CASENUM",
+    "ATTORNEY",
+    "CLMSEX",
+    "MARITAL",
+    "CLMINSUR",
+    "SEATBELT",
+    "CLMAGE",
+    "LOSS"
+  ),
+
+  説明 = c(
+    "請求案件を識別するケース番号",
+    "弁護士利用の有無（1=あり, 2=なし）",
+    "請求者の性別（1=男性, 2=女性）",
+    "婚姻状況（1=既婚, 2=独身, 3=配偶者と死別, 4=離婚・別居）",
+    "保険加入状況（1=加入, 2=未加入）",
+    "シートベルト着用状況（1=着用, 2=未着用）",
+    "請求者の年齢",
+    "損失額（千ドル単位）"
+  )
+)
+
+kable(
+  autobi_vars,
+  align = c("l", "l"),
+  caption = "AutoBiデータの各変数説明"
+)
+```
+
+```{r autobi_summary}
+data(AutoBi)
+df <- as_tibble(AutoBi)
+df
+summary(df)
+```
+### デフォルト設定で実行
+ATTORNEYなどをカテゴリ変数に変更したうえで、何も引数を指定せずにggpairs関数を実行（ワーニングなどは非表示にしています。）します。
+結果は出力できますが、ggpairs関数では全ての変数同士の組み合わせで結果を表示することから、数が多くなりすぎてしまい、目盛りなども読み取ることができません。
+
+```{r ggpairs, warning = FALSE,message=FALSE}
+# カテゴリ変数をfactorに変換
+df <- df %>%
+  mutate(
+    ATTORNEY = factor(ATTORNEY, labels = c("Yes", "No")),
+    CLMSEX   = factor(CLMSEX, labels = c("Male", "Female")),
+    MARITAL  = factor(MARITAL,
+                      labels = c("Married", "Single", "Widowed", "Divorced")),
+    CLMINSUR = factor(CLMINSUR,
+                      labels = c("Yes", "No")),
+    SEATBELT = factor(SEATBELT,
+                      labels = c("Yes", "No"))
+  )
+
+ggpairs(df)
+```
+### 変数を絞って実行
+表示される数を減らすため、変数を２つのグループに分けます。ただし、CASENUMはデータ番号となり、特に意味はないため除外します。また、LOSSは重要な項目であるため、どちらの変数グループにも含めます。
+
+```{r ggpairs_2, warning=FALSE,message=FALSE}
+ggpairs(df[, c("ATTORNEY", "CLMSEX", "MARITAL","LOSS")])
+ggpairs(df[, c("CLMINSUR", "SEATBELT", "CLMAGE", "LOSS")])
+```
+
+表示される数が少なく、前よりも見やすくなりました。ただ、LOSSは一部の数字だけが極端に大きく、傾向を把握しにくくなっているため、対数変換を行います。
+
+```{r ggpairs_3, warning=FALSE,message=FALSE}
+df$logLOSS <- log(df$LOSS)
+
+ggpairs(df[, c("ATTORNEY", "CLMSEX", "MARITAL","logLOSS")])
+ggpairs(df[, c("CLMINSUR", "SEATBELT", "CLMAGE", "logLOSS")])
+```
+
+LOSSの傾向が確認しやすくなりました。
+
+### 表示する情報の指定
+ggpairsの出力結果は、変数の組み合わせなどに応じて選択されますが、自分で指定することもできます。
+指定する際は「情報が表示される領域」と「変数の種類（カテゴリ変数、数値変数など）の組み合わせ」ごとに指定します。「情報が表示される領域」は、対角線の部分（左上から右下まで）と、対角線の上側の部分、下側の部分の３つに区分でき、各区分ごとに出力する内容を指定できます。
+
+```{r ggpairs_seting, echo = FALSE}
+# AutoBiデータの各変数説明
+ggpairs_vars <- data.frame(
+  "出力位置" = c(
+    "対角線",
+    "上半分",
+    "下半分"
+  ),
+
+  "指定方法" = c(
+    "diag",
+    "upper",
+    "lower"
+  )
+)
+
+ggpairs_vars_2 <- data.frame(
+  "組み合わせの種類" = c(
+    "数値変数同士",
+    "カテゴリ変数と数値変数",
+    "カテゴリ変数同士"
+  ),
+
+  "指定方法" = c(
+    "continuous",
+    "combo",
+    "discrete"
+  )
+)
+
+
+# 表示
+ggpairs_vars
+ggpairs_vars_2
+```
+
+各区分ごとに表示する情報を指定します。どのような情報を指定しているかは、コメントに記載しています。
+また、見栄えも順次調整していきます。
+
+```{r GGally_4,warning=FALSE}
+ggpairs(
+  df[, c("ATTORNEY", "CLMSEX", "MARITAL", "logLOSS")],
+
+  upper = list(
+    discrete = wrap("count"), # countは件数
+    combo = wrap("facetdensity") # facetdensityはカテゴリごとの分布
+  ),
+  lower = list(
+    discrete = wrap("facetbar"), # facetbarはカテゴリごとの棒グラフ
+    combo = wrap("box_no_facet") # box_no_facetは箱ひげ図
+  ),
+  diag = list( 
+    continuous = wrap("densityDiag"), # densityDiagは密度曲線
+    discrete = wrap("barDiag") # barDiagは棒グラフ
+  )
+)
+```
+背景をホワイトベースに変更
+
+```{r GGally_5, warning=FALSE,message=FALSE}
+ggpairs(
+  df[, c("ATTORNEY", "CLMSEX", "MARITAL", "logLOSS")],
+
+  upper = list(
+    discrete = wrap("count"), # countは件数
+    combo = wrap("facetdensity") # facetdensityはカテゴリごとの分布
+  ),
+  lower = list(
+    discrete = wrap("facetbar"), # facetbarはカテゴリごとの棒グラフ
+    combo = wrap("box_no_facet") # box_no_facetは箱ひげ図
+  ),
+  diag = list( 
+    continuous = wrap("densityDiag"), # densityDiagは密度曲線
+    discrete = wrap("barDiag") # barDiagは棒グラフ
+  )
+) +
+  theme_bw() # 背景を白に
+```
+
+
+
+```{r GGally_6,warning=FALSE}
+ggpairs(
+  df[, c("ATTORNEY", "CLMSEX", "MARITAL", "logLOSS")],
+
+  upper = list(
+    discrete = wrap("count"), # countは件数
+    combo = wrap("facetdensity") # facetdensityはカテゴリごとの分布
+  ),
+  lower = list(
+    discrete = wrap("facetbar"), # facetbarはカテゴリごとの棒グラフ
+    combo = wrap("box_no_facet") # box_no_facetは箱ひげ図
+  ),
+  diag = list( 
+    continuous = wrap("densityDiag"), # densityDiagは密度曲線
+    discrete = wrap("barDiag") # barDiagは棒グラフ
+  )
+) +
+  theme_bw() + # 背景を白に
+  theme(
+  axis.text = element_text(size = 7), # 軸メモリのサイズ指定
+  strip.text = element_text(size = 7), # パネルタイトルのサイズ指定
+)
+```
+
+X軸のメモリを微調整
+
+```{r GGally_7,warning=FALSE}
+ggpairs(
+  df[, c("ATTORNEY", "CLMSEX", "MARITAL", "logLOSS")],
+
+  upper = list(
+    discrete = wrap("count"), # countは件数
+    combo = wrap("facetdensity") # facetdensityはカテゴリごとの分布
+  ),
+  lower = list(
+    discrete = wrap("facetbar"), # facetbarはカテゴリごとの棒グラフ
+    combo = wrap("box_no_facet") # box_no_facetは箱ひげ図
+  ),
+  diag = list( 
+    continuous = wrap("densityDiag"), # densityDiagは密度曲線
+    discrete = wrap("barDiag") # barDiagは棒グラフ
+  )
+) +
+  theme_bw() + # 背景を白に
+  theme(
+  axis.text = element_text(size = 8), # 軸メモリのサイズ指定
+  strip.text = element_text(size = 7), # パネルタイトルのサイズ指定
+) +
+  theme(
+  axis.text.x = element_text(
+    angle = 45,
+    hjust = 1
+  )
+) # X軸のメモリを斜めにして、hjustで位置調整
+```
+
+最初に比べると見やすくなってきました。現状でも「各項目（または各項目の組み合わせ）の実現値の件数」や、「ATTORNEY（弁護士利用の有無）で損失額の平均・分布が異なっていること」などが、確認できます。
+
+上半分にある「logLOSSとMARITALの組み合わせ」など、カテゴリが多い項目の結果を見やすくすることには限界があるため、詳細を確認したい場合は変数の組み合わせを絞る（例えば、CLMSEXとlogLOSSだけを確認する）、重要でなさそうなカテゴリを統合（または詳細を確認したい値だけに絞る）することが考えられます。
+
+最後に、損失への影響が大きそうなATTORNEYとlogLOSSだけでggpairs関数を実行した場合の結果や、ATTORNEYの値別に色分けをして、CLMSEXとlogLOSSの関係を確認してみます。
+
+```{r GGally_8}
+# ATTORNEYとlogLOSSの関係を確認
+ggpairs(
+  df[, c("ATTORNEY", "logLOSS")],
+
+  upper = list(
+    discrete = wrap("count"), # countは件数
+    combo = wrap("facetdensity") # facetdensityはカテゴリごとの分布
+  ),
+  lower = list(
+    discrete = wrap("facetbar"), # facetbarはカテゴリごとの棒グラフ
+    combo = wrap("box_no_facet") # box_no_facetは箱ひげ図
+  ),
+  diag = list( 
+    continuous = wrap("densityDiag"), # densityDiagは密度曲線
+    discrete = wrap("barDiag") # barDiagは棒グラフ
+  )
+) +
+  theme_bw() + # 背景を白に
+  theme(
+  axis.text = element_text(size = 8), # 軸メモリのサイズ指定
+  strip.text = element_text(size = 7), # パネルタイトルのサイズ指定
+) +
+  theme(
+  axis.text.x = element_text(
+    angle = 45,
+    hjust = 1
+  )
+) # X軸のメモリを斜めにして、hjustで位置調整
+
+# NAを除いたうえで、ATTORNEYの値で色分けを実施
+df_drop_na <- df %>%
+  drop_na(ATTORNEY, CLMSEX, logLOSS)
+
+ggpairs(
+  df_drop_na[, c("ATTORNEY","CLMSEX", "logLOSS")],
+  
+  aes(color = ATTORNEY, alpha = 0.5), # ATTORENEYの値で色分け
+
+  upper = list(
+    discrete = wrap("count"), # countは件数
+    combo = wrap("facetdensity") # facetdensityはカテゴリごとの分布
+  ),
+  lower = list(
+    discrete = wrap("facetbar"), # facetbarはカテゴリごとの棒グラフ
+    combo = wrap("box_no_facet") # box_no_facetは箱ひげ図
+  ),
+  diag = list( 
+    continuous = wrap("densityDiag"), # densityDiagは密度曲線
+    discrete = wrap("barDiag") # barDiagは棒グラフ
+  )
+) +
+  theme_bw() + # 背景を白に
+  theme(
+  axis.text = element_text(size = 8), # 軸メモリのサイズ指定
+  strip.text = element_text(size = 6), # パネルタイトルのサイズ指定
+) +
+  theme(
+  axis.text.x = element_text(
+    angle = 45,
+    hjust = 1
+  )
+) # X軸のメモリを斜めにして、hjustで位置調整
+```
