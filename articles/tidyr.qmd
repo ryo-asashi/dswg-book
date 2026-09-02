@@ -1,0 +1,140 @@
+---
+title: "tidyr"
+author: "データサイエンス関連基礎調査WG"
+date: "`r Sys.Date()`"
+format: docx
+output:
+  word_document:
+    toc: yes
+    toc_depth: '3'
+    fig_width: 6
+    fig_height: 3
+---
+
+```{r setup, include=FALSE}
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+knitr::opts_chunk$set(echo = TRUE)
+
+# install packages
+pkgs <- c("tidyr","tibble","dplyr","ggplot2")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+```
+
+## パッケージの概要
+
+tidyrは、解析や可視化をしやすい形にデータを変換するために、データを整える関数を提供するパッケージです。また、このパッケージは、Rでモダンな分析環境を構築するためのパッケージ群である「tidyverse」に含まれています。
+
+```{r tidyr}
+library(tidyr)
+library(tibble)
+library(dplyr)
+library(ggplot2)
+```
+
+## ワイド形式・ロング形式
+
+tidyrでは、データをワイド形式からロング形式に変換することができます。また、ロング形式からワイド形式に変換することも可能です。
+
+まずは、ワイド形式のデータの例を確認します。WorldPhonesは、世界各地域の電話回線数の推移データで、各行が年、列が地域となっています。
+
+
+```{r tidyr_wide}
+WorldPhones
+
+```
+WorldPhonesをロング形式に変換してみます。WorldPhonesはmatrixのため、まずはtibbleに変換し、行名（年）をYear列として追加します。また、最終的にWorldPhonesをグラフで可視化するため、あらかじめ1951年のデータを削除しておきます。
+
+
+```{r tidyr_long_1}
+tb <- WorldPhones %>%
+  as_tibble(rownames = "Year") %>%
+  filter(Year != "1951")
+
+```
+
+
+pivot_longer関数を利用して、ワイド形式のデータをロング形式に変換します。colsにYear以外の列を指定し、Year以外の列を縦にまとめます。
+names_toには、ロング形式に変換して、元の列名をまとめて入れる列の名称を記載します。values_toには、元の値をまとめて入れる列の名称を記載します。
+
+```{r tidyr_long_2}
+tb_longer <- tb %>%
+  pivot_longer(cols = -Year, names_to = "Region", values_to = "Phones")
+tb_longer
+
+```
+
+### 可視化
+ggplot2パッケージのggplot関数を利用して、tb_longerを可視化してみます。
+
+```{r ggplot2_1}
+ggplot(tb_longer,aes(x = as.numeric(Year), y = Phones, color = Region)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  labs(
+    title = "World Telephone Ownership by Region (1956–1961)",
+    x = "Year",
+    y = "Number of Telephones (in thousands)",
+    color = "Region"
+  )
+
+```
+
+
+ワイド形式のまま、同じように可視化してみます。ワイド形式でも可視化は可能ですが、geom_lineなどの指定を列ごとに実施する必要があるため、冗長になってしまいます。
+
+```{r ggplot2_2}
+tb_selected <- tb %>%
+  select(Year,N.Amer,Europe)
+
+ggplot(tb_selected,aes(x = as.numeric(Year))) +
+  geom_line(aes(y = N.Amer, color = "N.Amer"), linewidth = 1.2) +
+  geom_line(aes(y = Europe, color = "Europe"), linewidth = 1.2) +
+  geom_point(aes(y = N.Amer, color = "N.Amer"), size = 2) +
+  geom_point(aes(y = Europe, color = "Europe"), size = 2) +
+    labs(
+      title = "World Telephone Ownership by Region (1956–1961)",
+      x = "Year",
+      y = "Number of Telephones (in thousands)",
+      color = "Region"
+    )
+```
+
+## データの整形
+tidyrは、データの整形などに利用する関数が揃っており、特定の区切り文字で列を分割（結合）したり、欠損値の処理などが可能です。
+
+```{r tidyr_clean}
+# サンプルデータ作成
+df <- tibble(
+  ID = 1:6,
+  Name = c("佐藤", "鈴木", "高橋", "田中", "伊藤", "渡辺"),
+  Date = c("2025-01-10", "2025-02-15", "2025-02-28", "2025-03-20", "2025-04-25", "2025-05-30"),
+  Score = c(85, 90, NA, 75, 88, NA),
+)
+
+df
+
+# 特定の区切り文字で分割
+# removeは指定しない場合はTRUEとなり、結合前のデータは削除されますが、FALSEにすると残ります
+df_separate <- df %>%
+  separate(col = Date, into = c("Year","Month","Day"), sep = "-", remove = TRUE)
+df_separate
+
+# 複数の列を1つに結合
+# removeは指定しない場合はTRUEとなり、結合前のデータは削除されますが、FALSEにすると残ります
+df_union <- df_separate %>%
+  unite("Date_unite", Year, Month, Day, sep = "-", remove = FALSE)
+df_union
+
+# 欠損のある行を削除
+df
+drop_na(df)
+
+# 欠損のある値を指定した値に置換
+replace_na(df, list(Score=0))
+```
