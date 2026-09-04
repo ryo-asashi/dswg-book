@@ -1,0 +1,297 @@
+---
+title: "nnet"
+author: ""
+date: "`r Sys.Date()`"
+format:
+  html:
+    fig_width: 6
+    fig_height: 4
+---
+
+```{r setup, include=FALSE}
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+knitr::opts_chunk$set(echo = TRUE)
+
+# install packages
+pkgs <- c("nnet","knitr","mlbench","ggplot2")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+```
+
+## パッケージの概要
+nnetパッケージは、multinom関数による多項ロジスティックモデルの実装や、nnet関数による1つの隠れ層を持つニューラルネットワークの実装などができるパッケージです。
+
+## 実装例
+mlbenchパッケージのspirals関数を利用して作成したデータに対して、multinom関数とnnet関数を利用したモデルを実装します。このデータの項目はx1,x2,classの3つの項目となっており、classごとにプロットすると、２つの渦巻き状の分布になります。
+
+```{r nnet, warning=FALSE}
+library(nnet)
+library(knitr)
+library(mlbench)
+library(ggplot2)
+```
+
+```{r nnet_2, echo = FALSE}
+set.seed(123)
+
+spiral <- mlbench.spirals(
+  5000,
+  cycles = 2,
+  sd = 0.05
+)
+
+df <- data.frame(
+  x1 = spiral$x[,1],
+  x2 = spiral$x[,2],
+  class = factor(spiral$classes)
+)
+
+head(df)
+
+ggplot(
+  df,
+  aes(x1, x2, color = class)
+) +
+  geom_point(alpha = 0.6)
+```
+作成したデータを訓練用と学習用に分割します。
+
+```{r nnet_3}
+idx <- sample(
+  seq_len(nrow(df)),
+  size = floor(0.7 * nrow(df))
+)
+
+train <- df[idx, ]
+test  <- df[-idx, ]
+
+ggplot(
+  train,
+  aes(x1, x2, color = class)
+) +
+  geom_point(alpha = 0.6)
+ggplot(
+  test,
+  aes(x1, x2, color = class)
+) +
+  geom_point(alpha = 0.6)
+```
+
+### 多項ロジスティック回帰モデルの実装
+multinom関数を使って、多項ロジスティック回帰モデルを実装します。学習用データにtrain、評価用データにtestを利用して正答率を確認すると50％程度と、低い数値となりました。
+
+```{r nnet_4, warning=FALSE,message=FALSE}
+fit_multinom <- multinom(
+  class ~ x1 + x2,
+  data = train,
+  trace = FALSE # 学習結果を非表示にする
+)
+
+pred_multinom <- predict(fit_multinom,test)
+train_acc_multinom <- mean(pred_multinom == test$class)
+
+train_acc_multinom
+```
+
+testデータをプロットした結果とモデルで予測した結果を比較すると、今回作成したモデルでは、渦状のデータを上手く表現できていないことがわかります。
+
+```{r nnet_5,warning=FALSE}
+grid_train <- expand.grid(
+  x1 = seq(
+    min(train$x1),
+    max(train$x1),
+    length.out = 300
+  ),
+  x2 = seq(
+    min(train$x2),
+    max(train$x2),
+    length.out = 300
+  )
+)
+grid_train$pred <- predict(
+  fit_multinom,
+  grid_train
+)
+ggplot() +
+  geom_tile(
+    data = grid_train,
+    aes(x1, x2, fill = pred),
+    alpha = 0.3
+  ) +
+  geom_point(
+    data = test,
+    aes(x1, x2, color = class)
+  )
+```
+
+### ニューラルネットワークの実装
+nnet関数を利用し、ニューラルネットワークを実装します。ニューラルネットワークは、基本的には、ユニット数（nnet関数の場合は、sizeで指定）が大きいほど、モデルの表現力が高くなりますが、ユニット数が増加するほど計算負荷が増加するほか、過学習のリスクもあるため、適切なユニット数を設定する必要があります。
+
+まずは、sizeを5に設定します。
+
+```{r nnet_6,warning=FALSE}
+fit_nnet_1 <- nnet(
+  class ~ x1 + x2,
+  data = train,
+  size = 5,  # ユニット数の指定
+  maxit = 2000,  # 学習の最大回数
+  trace = FALSE # 学習の途中経過の表示有無
+)
+pred_train <- predict(
+  fit_nnet_1,
+  train,
+  type = "class"
+)
+
+pred_nnet <- predict(
+  fit_nnet_1,
+  test,
+  type = "class"
+)
+
+train_acc_fit_nnet_1 <- mean(pred_train == train$class)
+test_acc_fit_nnet_1 <- mean(pred_nnet == test$class)
+
+accuracy_1 <- data.frame(
+  データ = c("訓練用データ", "評価用データ"),
+  正答率 = c(train_acc_fit_nnet_1, test_acc_fit_nnet_1)
+)
+
+accuracy_1
+```
+```{r nnet_7,warning=FALSE}
+grid_train$pred <- predict(
+  fit_nnet_1,
+  grid_train,
+  type = "class"
+)
+ggplot() +
+  geom_tile(
+    data = grid_train,
+    aes(x1, x2, fill = pred),
+    alpha = 0.3
+  ) +
+  geom_point(
+    data = test,
+    aes(x1, x2, color = class),
+    size = 1
+  )
+
+```
+
+ユニット数を5と設定した程度では、今回のデータを上手く表現することはできず、正答率も65%前後となりました。次は、ユニット数を20まで増やします。
+
+```{r nnet_8,warning=FALSE}
+# サイズを変更
+fit_nnet_2 <- nnet(
+  class ~ x1 + x2,
+  data = train,
+  size = 20,
+  maxit = 2000,
+  trace = FALSE
+)
+pred_train <- predict(
+  fit_nnet_2,
+  train,
+  type = "class"
+)
+
+pred_nnet <- predict(
+  fit_nnet_2,
+  test,
+  type = "class"
+)
+
+train_acc_fit_nnet_2 <- mean(pred_train == train$class)
+test_acc_fit_nnet_2 <- mean(pred_nnet == test$class)
+
+accuracy_2 <- data.frame(
+  データ = c("訓練用データ", "評価用データ"),
+  正答率 = c(train_acc_fit_nnet_2, test_acc_fit_nnet_2)
+)
+
+accuracy_2
+```
+
+
+
+
+```{r nnet_9,warning=FALSE}
+grid_train$pred <- predict(
+  fit_nnet_2,
+  grid_train,
+  type = "class"
+)
+ggplot() +
+  geom_tile(
+    data = grid_train,
+    aes(x1, x2, fill = pred),
+    alpha = 0.3
+  ) +
+  geom_point(
+    data = test,
+    aes(x1, x2, color = class),
+    size = 1
+  )
+
+```
+
+ユニット数を20まで増やすと、正答率は100%に近い水準まで上昇しました。
+
+最後にユニット数のパターンを増やして、正答率の変化を確認します。結果としては、ユニット数が15の時点で正答率が100%に近い水準になることが確認できました。
+
+
+```{r nnet_10,warning=FALSE}
+# ユニット数
+sizes <- c(1, 3, 5, 10, 15, 20, 40, 80, 120)
+
+# 結果を保存するデータフレーム
+result <- data.frame(
+  size = sizes,
+  train_accuracy = NA,
+  test_accuracy = NA
+)
+
+# ユニット数ごとに学習〜正答率の確認までを繰り返し
+for(i in seq_along(sizes)){
+
+  set.seed(123)
+  
+  # モデル学習
+  fit <- nnet(
+    class ~ x1 + x2,
+    data = train,
+    size = sizes[i],
+    maxit = 5000,
+    decay = 0,
+    trace = FALSE
+  )
+
+  # 訓練データで予測
+  pred_train <- predict(
+    fit,
+    train,
+    type = "class"
+  )
+
+  # テストデータで予測
+  pred_test <- predict(
+    fit,
+    test,
+    type = "class"
+  )
+
+  # 正答率を保存
+  result$train_accuracy[i] <- mean(pred_train == train$class)
+  result$test_accuracy[i]  <- mean(pred_test == test$class)
+}
+
+# 結果表示
+result
+
+```
