@@ -1,27 +1,12 @@
 ---
 title: "nnet"
-author: ""
 date: "`r Sys.Date()`"
+description: 機械学習
 format:
   html:
     fig_width: 6
     fig_height: 4
 ---
-
-```{r setup, include=FALSE}
-options(repos = c(CRAN = "https://cloud.r-project.org"))
-
-knitr::opts_chunk$set(echo = TRUE)
-
-# install packages
-pkgs <- c("nnet","knitr","mlbench","ggplot2")
-for (pkg in pkgs) {
-  if (!(pkg %in% installed.packages())) {
-    install.packages(pkg)
-  }
-}
-
-```
 
 ## パッケージの概要
 nnetパッケージは、multinom関数による多項ロジスティックモデルの実装や、nnet関数による1つの隠れ層を持つニューラルネットワークの実装などができるパッケージです。
