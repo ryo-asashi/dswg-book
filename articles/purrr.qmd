@@ -48,6 +48,8 @@ typeof(zclass)
 map_dbl関数を利用する場合、関数を適用した結果は、それぞれが1つの数値である必要があります。 例えば、map関数をrnorm関数に適用し、nを5とした場合、各リストに格納される結果は要素数が5のベクトルになるため、map_dbl関数ではエラーになります。
 
 ```{r purrr::map_dbl2, error=TRUE}
+set.seed(123)
+
 z <- 1:3
 map(z, rnorm, n=5)
 map_dbl(z, rnorm, n=5)
@@ -56,6 +58,8 @@ map_dbl(z, rnorm, n=5)
 なお、map関数とmap_dbl関数を組み合わせることで、rnorm関数で生成した結果の平均値を1つの数値ベクトルに格納することができます
 
 ```{r purrr::map_dbl3}
+set.seed(123)
+
 z |>
   map(rnorm, n=5) |>
   map_dbl(mean)
