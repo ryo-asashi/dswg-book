@@ -2,22 +2,24 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.36">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2025-08-01">
+<meta name="dcterms.date" content="2026-09-30">
 
 <title>tuneRanger – Rパッケージ活用事例集</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -76,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-79c920b4234fabadc33fa4796eee2c7c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-225166397d83c1be35cff883c8125d17.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -107,6 +109,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
 
 </head>
@@ -255,6 +259,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/GGally.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">GGally</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/gghighlight.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">gghighlight</span></a>
   </div>
@@ -279,8 +289,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/ISLR2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ISLR2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/ismev.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ismev</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/kernlab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">kernlab</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -311,6 +333,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../articles/NipponMap.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">NipponMap</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/nnet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">nnet</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -453,6 +481,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/tidyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tidyr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/tuneRanger.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">tuneRanger</span></a>
   </div>
@@ -486,11 +520,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要">パッケージの概要</a></li>
-  <li><a href="#参考url" id="toc-参考url" class="nav-link" data-scroll-target="#参考url">参考URL</a></li>
-  <li><a href="#使用例irisデータの分類" id="toc-使用例irisデータの分類" class="nav-link" data-scroll-target="#使用例irisデータの分類">使用例：irisデータの分類</a>
+  <li><a href="#使用例pimaindiansdiabetesデータの分類" id="toc-使用例pimaindiansdiabetesデータの分類" class="nav-link" data-scroll-target="#使用例pimaindiansdiabetesデータの分類">使用例：PimaIndiansDiabetesデータの分類</a>
   <ul class="collapse">
-  <li><a href="#irisデータセットを読み込む" id="toc-irisデータセットを読み込む" class="nav-link" data-scroll-target="#irisデータセットを読み込む">irisデータセットを読み込む</a></li>
-  <li><a href="#irisデータの構造" id="toc-irisデータの構造" class="nav-link" data-scroll-target="#irisデータの構造">irisデータの構造</a></li>
+  <li><a href="#データの確認" id="toc-データの確認" class="nav-link" data-scroll-target="#データの確認">データの確認</a></li>
   <li><a href="#データセットの準備" id="toc-データセットの準備" class="nav-link" data-scroll-target="#データセットの準備">データセットの準備</a></li>
   <li><a href="#モデル生成" id="toc-モデル生成" class="nav-link" data-scroll-target="#モデル生成">モデル生成</a></li>
   <li><a href="#パラメータチューニング" id="toc-パラメータチューニング" class="nav-link" data-scroll-target="#パラメータチューニング">パラメータチューニング</a></li>
@@ -510,17 +542,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>データサイエンス関連基礎調査WG </p>
-          </div>
-  </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 1, 2025</p>
+      <p class="date">September 30, 2026</p>
     </div>
   </div>
   
@@ -534,61 +560,190 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="パッケージの概要" class="level2">
 <h2 class="anchored" data-anchor-id="パッケージの概要">パッケージの概要</h2>
-<p>機械学習におけるRandomForestモデルの構築を行えます。また、tuneRangerではハイパーパラメータのチューニングを行う機能も提供されます。</p>
+<p>機械学習におけるランダムフォレストモデルの構築を行えます。また、tuneRangerではハイパーパラメータのチューニングを行う機能も提供されます。</p>
 </section>
-<section id="参考url" class="level2">
-<h2 class="anchored" data-anchor-id="参考url">参考URL</h2>
-<p>公式ドキュメント <a href="https://cran.r-project.org/web/packages/tuneRanger/tuneRanger.pdf" class="uri">https://cran.r-project.org/web/packages/tuneRanger/tuneRanger.pdf</a></p>
-<p>Rの機械学習パッケージmlrのチュートリアル（タスクの作成から予測まで） <a href="https://qiita.com/nozma/items/bedcb35cba925764247a" class="uri">https://qiita.com/nozma/items/bedcb35cba925764247a</a></p>
-</section>
-<section id="使用例irisデータの分類" class="level2">
-<h2 class="anchored" data-anchor-id="使用例irisデータの分類">使用例：irisデータの分類</h2>
-<p>irisデータを用いて、がく弁・花弁の長さ・幅の情報からアヤメの種類を特定するRandomForestモデルをtuneRangerパッケージを用いて構築します。</p>
-<section id="irisデータセットを読み込む" class="level3">
-<h3 class="anchored" data-anchor-id="irisデータセットを読み込む">irisデータセットを読み込む</h3>
-<p>irisデータを読み込み、データの先頭を表示します。</p>
-<ul>
-<li>Sepal.Length：がく弁の長さ</li>
-<li>Sepal.Width：がく弁の幅</li>
-<li>Petal.Length：花弁の長さ</li>
-<li>Petal.Width：花弁の幅</li>
-</ul>
-<p>アヤメの種類はsetosa(1)、versicolor(2)、virginica(3)の3種類です</p>
+<section id="使用例pimaindiansdiabetesデータの分類" class="level2">
+<h2 class="anchored" data-anchor-id="使用例pimaindiansdiabetesデータの分類">使用例：PimaIndiansDiabetesデータの分類</h2>
+<section id="データの確認" class="level3">
+<h3 class="anchored" data-anchor-id="データの確認">データの確認</h3>
+<p>PimaIndiansDiabetesデータを用いて、種々の項目からその患者が糖尿病患者であるかを判定するランダムフォレストモデルをtuneRangerパッケージを用いて構築します。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(iris)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(iris)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlbench)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(PimaIndiansDiabetes)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> PimaIndiansDiabetes</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>tar.idx <span class="ot">&lt;-</span> <span class="dv">9</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>データの中身の確認です。（head）</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-1          5.1         3.5          1.4         0.2  setosa
-2          4.9         3.0          1.4         0.2  setosa
-3          4.7         3.2          1.3         0.2  setosa
-4          4.6         3.1          1.5         0.2  setosa
-5          5.0         3.6          1.4         0.2  setosa
-6          5.4         3.9          1.7         0.4  setosa</code></pre>
+<pre><code>  pregnant glucose pressure triceps insulin mass pedigree age diabetes
+1        6     148       72      35       0 33.6    0.627  50      pos
+2        1      85       66      29       0 26.6    0.351  31      neg
+3        8     183       64       0       0 23.3    0.672  32      pos
+4        1      89       66      23      94 28.1    0.167  21      neg
+5        0     137       40      35     168 43.1    2.288  33      pos
+6        5     116       74       0       0 25.6    0.201  30      neg</code></pre>
 </div>
 </div>
-</section>
-<section id="irisデータの構造" class="level3">
-<h3 class="anchored" data-anchor-id="irisデータの構造">irisデータの構造</h3>
-<p>irisデータの各種構造を確認します。</p>
+<p>データの中身の確認です。（str）</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(iris)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>'data.frame':   150 obs. of  5 variables:
- $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
- $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
- $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
- $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
- $ Species     : Factor w/ 3 levels "setosa","versicolor",..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<pre><code>'data.frame':   768 obs. of  9 variables:
+ $ pregnant: num  6 1 8 1 0 5 3 10 2 8 ...
+ $ glucose : num  148 85 183 89 137 116 78 115 197 125 ...
+ $ pressure: num  72 66 64 66 40 74 50 0 70 96 ...
+ $ triceps : num  35 29 0 23 35 0 32 0 45 0 ...
+ $ insulin : num  0 0 0 94 168 0 88 0 543 0 ...
+ $ mass    : num  33.6 26.6 23.3 28.1 43.1 25.6 31 35.3 30.5 0 ...
+ $ pedigree: num  0.627 0.351 0.672 0.167 2.288 ...
+ $ age     : num  50 31 32 21 33 30 26 29 53 54 ...
+ $ diabetes: Factor w/ 2 levels "neg","pos": 2 1 2 1 2 1 2 1 2 2 ...</code></pre>
 </div>
 </div>
-<p>また、データを散布図にプロットして確認します。</p>
+<p>各変数の意味は以下の通りです。</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">変数名</th>
+<th style="text-align: left;">データ型</th>
+<th style="text-align: left;">概要</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">pregnant 　　</td>
+<td style="text-align: left;">num</td>
+<td style="text-align: left;">妊娠回数 　　　</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">glucose</td>
+<td style="text-align: left;">num</td>
+<td style="text-align: left;">血漿グルコース濃度（負荷試験）</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pressure 　　　</td>
+<td style="text-align: left;">num</td>
+<td style="text-align: left;">拡張期血圧 [mm Hg] 　 　</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">triceps 　　　　</td>
+<td style="text-align: left;">num</td>
+<td style="text-align: left;">上腕三頭筋皮膚襞の厚さ [mm ]</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">insulin 　　　　</td>
+<td style="text-align: left;">num</td>
+<td style="text-align: left;">2時間血清インスリン [mu U/ml]</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mass</td>
+<td style="text-align: left;">num</td>
+<td style="text-align: left;">BMI　　　</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">pedigree</td>
+<td style="text-align: left;">num</td>
+<td style="text-align: left;">糖尿病血統機能</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">age</td>
+<td style="text-align: left;">num</td>
+<td style="text-align: left;">年齢</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">diabetes</td>
+<td style="text-align: left;">Factor</td>
+<td style="text-align: left;">クラス変数（糖尿病の検査）</td>
+</tr>
+</tbody>
+</table>
+<p>summaryを表示します。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris, <span class="at">col=</span><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)[iris<span class="sc">$</span>Species])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    pregnant         glucose         pressure         triceps     
+ Min.   : 0.000   Min.   :  0.0   Min.   :  0.00   Min.   : 0.00  
+ 1st Qu.: 1.000   1st Qu.: 99.0   1st Qu.: 62.00   1st Qu.: 0.00  
+ Median : 3.000   Median :117.0   Median : 72.00   Median :23.00  
+ Mean   : 3.845   Mean   :120.9   Mean   : 69.11   Mean   :20.54  
+ 3rd Qu.: 6.000   3rd Qu.:140.2   3rd Qu.: 80.00   3rd Qu.:32.00  
+ Max.   :17.000   Max.   :199.0   Max.   :122.00   Max.   :99.00  
+    insulin           mass          pedigree           age        diabetes 
+ Min.   :  0.0   Min.   : 0.00   Min.   :0.0780   Min.   :21.00   neg:500  
+ 1st Qu.:  0.0   1st Qu.:27.30   1st Qu.:0.2437   1st Qu.:24.00   pos:268  
+ Median : 30.5   Median :32.00   Median :0.3725   Median :29.00            
+ Mean   : 79.8   Mean   :31.99   Mean   :0.4719   Mean   :33.24            
+ 3rd Qu.:127.2   3rd Qu.:36.60   3rd Qu.:0.6262   3rd Qu.:41.00            
+ Max.   :846.0   Max.   :67.10   Max.   :2.4200   Max.   :81.00            </code></pre>
+</div>
+</div>
+<p>psychパッケージのpairs.panelsを用いて、散布図の一覧を表示します。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df.x <span class="ot">&lt;-</span> df[<span class="sc">-</span>tar.idx]</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df.y <span class="ot">&lt;-</span> df[tar.idx]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>df.y <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df.y <span class="sc">==</span> <span class="st">"pos"</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs.panels</span>(df.x, <span class="at">bg=</span><span class="fu">c</span>(<span class="st">"skyblue"</span>, <span class="st">"salmon"</span>)[df.y], <span class="at">pch=</span><span class="dv">21</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tuneRanger_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="576"></p>
+<p><img src="tuneRanger_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>ggplot2パッケージを用いて、ヒストグラムを表示します。変数ごとにpos/negの分布の傾向を把握することができます。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'ggplot2'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:psych':
+
+    %+%, alpha</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 数値変数だけを抽出（diabetes以外）</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>num_vars <span class="ot">&lt;-</span> <span class="fu">names</span>(df)[<span class="fu">sapply</span>(df, is.numeric)]</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 長い形式に変換</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>df_long <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">all_of</span>(num_vars), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ヒストグラムを1つの図にまとめて作成</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_long, <span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> diabetes)) <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">"identity"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">bins =</span> <span class="dv">30</span>) <span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>variable, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histograms of Variables by Diabetes"</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Value"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tuneRanger_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -596,84 +751,277 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="データセットの準備" class="level3">
 <h3 class="anchored" data-anchor-id="データセットの準備">データセットの準備</h3>
-<p>irisデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします</p>
+<p>PimaIndiansDiabetesデータを、モデル生成のための訓練データとモデル評価のためのテストデータに分割します。データ割合は、訓練データ7割・テストデータ3割とします。確認のためにデータサイズを出力します。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 再現性のためにシードを設定</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># データの分割</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(iris)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>train.rate <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># データそのものではなく、データ番号を吐き出している</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>(train.set <span class="ot">&lt;-</span> <span class="fu">sample</span>(n, n <span class="sc">*</span> train.rate))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 再現性のためにシードを設定</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)  </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># データの分割</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>sample_indices <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(df), <span class="fl">0.7</span> <span class="sc">*</span> <span class="fu">nrow</span>(df))  </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> df[sample_indices, ]</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> df[<span class="sc">-</span>sample_indices, ]</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># データサイズの確認</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">nrow</span>(df), <span class="fu">nrow</span>(train_data), <span class="fu">nrow</span>(test_data))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  [1] 102 112   4  55  70  98 135   7  43 140  51  25   2  68 137  48  32  85
- [19]  91 121  16 116  66 146  93  45  30 124 126  87  95  97 120  29  92  31
- [37]  54  41 105 113  24 142 143  63  65   9 150  20  14  78  88   3  36  27
- [55]  46  59  96  69  47 147 129 136  12 141 130  56  22  82  53  99   5  44
- [73]  28  52 139  42  15  57  75  37  26 110 100 149 132 107  35  58 127 111
- [91] 144  86 114  71 123 119  18   8 128  83 138  19 115  23  89</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(test.set <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(<span class="dv">1</span><span class="sc">:</span>n, train.set))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1]   1   6  10  11  13  17  21  33  34  38  39  40  49  50  60  61  62  64  67
-[20]  72  73  74  76  77  79  80  81  84  90  94 101 103 104 106 108 109 117 118
-[39] 122 125 131 133 134 145 148</code></pre>
+<pre><code>[1] 768 537 231</code></pre>
 </div>
 </div>
 </section>
 <section id="モデル生成" class="level3">
 <h3 class="anchored" data-anchor-id="モデル生成">モデル生成</h3>
-<p>makeClassifTaskにてタスクの定義を行い、makeLeanerにて適用するアルゴリズムの選択を行います。</p>
+<p>makeClassifTaskにてタスクの定義を行い、makeLearnerにて適用するアルゴリズムの選択を行います。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(task <span class="ot">&lt;-</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> iris, <span class="at">target =</span> <span class="st">"Species"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Supervised task: iris
-Type: classif
-Target: Species
-Observations: 150
-Features:
-   numerics     factors     ordered functionals 
-          4           0           0           0 
-Missings: FALSE
-Has weights: FALSE
-Has blocking: FALSE
-Has coordinates: FALSE
-Classes: 3
-    setosa versicolor  virginica 
-        50         50         50 
-Positive class: NA</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: ParamHelpers</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">&lt;-</span> <span class="fu">makeLearner</span>(<span class="st">"classif.lda"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>task <span class="ot">&lt;-</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train_data, <span class="at">target =</span> <span class="st">"diabetes"</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">&lt;-</span> <span class="fu">makeLearner</span>(<span class="st">"classif.rpart"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>分割したデータセットを基にモデルの訓練を行います。また、訓練時の誤分類率(mmce)や精度(ace)を把握することが出来ます。</p>
+<p>分割したデータセットを基にモデルの訓練を行います。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(model <span class="ot">&lt;-</span> <span class="fu">train</span>(lrn, task, <span class="at">subset =</span> train.set))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">train</span>(lrn, task)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>予測結果を変数に格納します。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>res_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, <span class="at">newdata =</span> test_data)<span class="sc">$</span>data<span class="sc">$</span>response</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>実際の結果と予測結果を比較できる混同行列を出力します。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>res_act <span class="ot">&lt;-</span> test_data[[tar.idx]]</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>(conf_mat <span class="ot">&lt;-</span> <span class="fu">table</span>(res_act, res_pred))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Model for learner.id=classif.lda; learner.class=classif.lda
-Trained on: task.id = iris; obs = 105; features = 4
-Hyperparameters: </code></pre>
+<pre><code>       res_pred
+res_act neg pos
+    neg 129  21
+    pos  46  35</code></pre>
+</div>
+</div>
+<p>各種評価指標を確認します。まずは計算用の関数を定義します。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>create_df_res <span class="ot">&lt;-</span> <span class="cf">function</span>(cmat){</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  TN <span class="ot">&lt;-</span> cmat[<span class="dv">1</span>,<span class="dv">1</span>]</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  FP <span class="ot">&lt;-</span> cmat[<span class="dv">1</span>,<span class="dv">2</span>]</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  FN <span class="ot">&lt;-</span> cmat[<span class="dv">2</span>,<span class="dv">1</span>]</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  TP <span class="ot">&lt;-</span> cmat[<span class="dv">2</span>,<span class="dv">2</span>]</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 正解率：どれだけ正しく分類できたかの割合</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  acc <span class="ot">&lt;-</span> <span class="fu">round</span>((TP <span class="sc">+</span> TN) <span class="sc">/</span> (TP <span class="sc">+</span> TN <span class="sc">+</span> FN <span class="sc">+</span> FP), <span class="dv">3</span>)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 適合率：陽性と判定されたものがどれだけ正しく陽性であるかの割合</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  prec <span class="ot">&lt;-</span> <span class="fu">round</span>(TP <span class="sc">/</span> (TP <span class="sc">+</span> FP), <span class="dv">3</span>)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 再現率（真陽性率）：実際に陽性のものをどれだけ正しく陽性と判定できたかの割合</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  rec <span class="ot">&lt;-</span> <span class="fu">round</span>(TP <span class="sc">/</span> (TP <span class="sc">+</span> FN), <span class="dv">3</span>)</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># F値：適合率と再現率の調和平均（両者はトレードオフの関係）</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  Fval <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="dv">2</span> <span class="sc">*</span> rec <span class="sc">*</span> prec <span class="sc">/</span> (rec <span class="sc">+</span> prec), <span class="dv">3</span>)</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 真陰性率：実際に陰性のものをどれだけ正しく陰性と判定できたかの割合</span></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  TNRat <span class="ot">&lt;-</span> <span class="fu">round</span>(TN <span class="sc">/</span> (TN <span class="sc">+</span> FP), <span class="dv">3</span>)</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>  df_rat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">Item =</span> <span class="fu">c</span>(<span class="st">"正解率"</span>, <span class="st">"適合率"</span>, <span class="st">"再現率（真陽性率）"</span>, <span class="st">"F値"</span>, <span class="st">"真陰性率"</span>), </span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">Rate =</span> <span class="fu">c</span>(acc, prec, rec, Fval, TNRat)</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>  df_rat</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>data.frameの出力整形用の関数を定義します。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'kableExtra'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    group_rows</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>show_df <span class="ot">&lt;-</span> <span class="cf">function</span>(df, <span class="at">cap=</span><span class="st">""</span>){</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is_html_output</span>()){</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable</span>(df, <span class="at">format =</span> <span class="st">"html"</span>, <span class="at">caption =</span> cap) <span class="sc">%&gt;%</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="st">"striped"</span>, <span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">position =</span> <span class="st">"left"</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span>{</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">kable</span>(df, <span class="at">format =</span> <span class="st">"pipe"</span>, <span class="at">caption =</span> cap) </span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>評価指標を確認します。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df_res <span class="ot">&lt;-</span> <span class="fu">create_df_res</span> (conf_mat)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">show_df</span>(df_res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="table table-striped caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Item</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">正解率</td>
+<td style="text-align: right;">0.710</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">適合率</td>
+<td style="text-align: right;">0.625</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">再現率（真陽性率）</td>
+<td style="text-align: right;">0.432</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F値</td>
+<td style="text-align: right;">0.511</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">真陰性率</td>
+<td style="text-align: right;">0.860</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </section>
 <section id="パラメータチューニング" class="level3">
 <h3 class="anchored" data-anchor-id="パラメータチューニング">パラメータチューニング</h3>
+<p>tuneRangerパッケージを使用して、パラメータチューニングを行ってゆきます。</p>
 <p>パラメータチューニングのための実行時間を事前に知ることが出来ます。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">estimateTimeTuneRanger</span>(task, <span class="at">num.trees =</span> <span class="dv">500</span>, <span class="at">num.threads =</span> <span class="dv">3</span>, <span class="at">iters =</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tuneRanger)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: ranger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: mlrMBO</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: smoof</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: checkmate</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: parallel</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lhs</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">estimateTimeTuneRanger</span>(task, <span class="at">num.trees =</span> <span class="dv">500</span>, <span class="at">num.threads =</span> <span class="dv">3</span>, <span class="at">iters =</span> <span class="dv">30</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Approximated time for tuning: 50S</code></pre>
+<pre><code>Approximated time for tuning: 52S</code></pre>
 </div>
 </div>
 <p>tuneRangerを使用して、実際にパラメータチューニングをやってみます。</p>
-<p>チューニング後のモデルの精度を確認してみます。精度が向上していることが分かります。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>pred.res <span class="ot">&lt;-</span> <span class="fu">predict</span>(res<span class="sc">$</span>model, <span class="at">task =</span> task, <span class="at">subset =</span> test.set)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">performance</span>(pred.res, <span class="at">measures =</span> <span class="fu">list</span>(mmce, acc))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 再現性のためにシードを設定</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)  </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">tuneRanger</span>(task, <span class="at">measure =</span> <span class="fu">list</span>(multiclass.brier), <span class="at">num.trees =</span> <span class="dv">500</span>, </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">num.threads =</span> <span class="dv">3</span>, <span class="at">iters =</span> <span class="dv">30</span>, <span class="at">save.file.path =</span> <span class="cn">NULL</span>, <span class="at">show.info =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>チューニングされたパラメータです。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_df</span>(<span class="fu">as.data.frame</span>(<span class="fu">t</span>(res<span class="sc">$</span>recommended.pars)), <span class="st">"パラメータ"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="table table-striped caption-top table-sm small">
+<caption>パラメータ</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">V1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">mtry</td>
+<td style="text-align: right;">5.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">min.node.size</td>
+<td style="text-align: right;">42.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sample.fraction</td>
+<td style="text-align: right;">0.5282881</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">multiclass.brier</td>
+<td style="text-align: right;">0.3167057</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">exec.time</td>
+<td style="text-align: right;">0.1900000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>チューニング後のモデルの混同行列です。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>res_pred_tuned <span class="ot">&lt;-</span> <span class="fu">predict</span>(res<span class="sc">$</span>model, <span class="at">newdata =</span> test_data)<span class="sc">$</span>data<span class="sc">$</span>response</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>(conf_mat_tuned <span class="ot">&lt;-</span> <span class="fu">table</span>(res_act, res_pred_tuned))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      mmce        acc 
-0.02222222 0.97777778 </code></pre>
+<pre><code>       res_pred_tuned
+res_act neg pos
+    neg 127  23
+    pos  42  39</code></pre>
+</div>
+</div>
+<p>評価指標を確認します。モデル性能がおおむね向上していることが確認できます。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>df_res_tuned <span class="ot">&lt;-</span> <span class="fu">create_df_res</span> (conf_mat_tuned)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>df_res_all <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  df_res, </span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  df_res_tuned[, <span class="dv">2</span>])</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df_res_all) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Item"</span>, <span class="st">"df_res"</span>, <span class="st">"df_res_tuned"</span>)</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="fu">show_df</span>(df_res_all)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="table table-striped caption-top table-sm small">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Item</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df_res</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">df_res_tuned</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">正解率</td>
+<td style="text-align: right;">0.710</td>
+<td style="text-align: right;">0.719</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">適合率</td>
+<td style="text-align: right;">0.625</td>
+<td style="text-align: right;">0.629</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">再現率（真陽性率）</td>
+<td style="text-align: right;">0.432</td>
+<td style="text-align: right;">0.481</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F値</td>
+<td style="text-align: right;">0.511</td>
+<td style="text-align: right;">0.545</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">真陰性率</td>
+<td style="text-align: right;">0.860</td>
+<td style="text-align: right;">0.847</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 

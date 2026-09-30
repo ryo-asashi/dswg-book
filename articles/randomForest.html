@@ -2,22 +2,24 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.36">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2025-08-01">
+<meta name="dcterms.date" content="2026-09-30">
 
 <title>randomForest – Rパッケージ活用事例集</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -76,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-79c920b4234fabadc33fa4796eee2c7c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-225166397d83c1be35cff883c8125d17.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -255,6 +257,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/GGally.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">GGally</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/gghighlight.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">gghighlight</span></a>
   </div>
@@ -279,8 +287,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/ISLR2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ISLR2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/ismev.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">ismev</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/kernlab.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">kernlab</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -311,6 +331,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../articles/NipponMap.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">NipponMap</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/nnet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">nnet</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -453,6 +479,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/tidyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tidyr</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/tuneRanger.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">tuneRanger</span></a>
   </div>
@@ -486,13 +518,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#パッケージの概要" id="toc-パッケージの概要" class="nav-link active" data-scroll-target="#パッケージの概要">パッケージの概要</a></li>
-  <li><a href="#参考url" id="toc-参考url" class="nav-link" data-scroll-target="#参考url">参考URL</a></li>
   <li><a href="#使用例irisデータの分類" id="toc-使用例irisデータの分類" class="nav-link" data-scroll-target="#使用例irisデータの分類">使用例：irisデータの分類</a>
   <ul class="collapse">
   <li><a href="#irisデータセットを読み込む" id="toc-irisデータセットを読み込む" class="nav-link" data-scroll-target="#irisデータセットを読み込む">irisデータセットを読み込む</a></li>
   <li><a href="#irisデータの構造" id="toc-irisデータの構造" class="nav-link" data-scroll-target="#irisデータの構造">irisデータの構造</a></li>
   <li><a href="#モデル構築1全体データ" id="toc-モデル構築1全体データ" class="nav-link" data-scroll-target="#モデル構築1全体データ">モデル構築1（全体データ）</a></li>
   <li><a href="#モデル構築2訓練データとテストデータに分割" id="toc-モデル構築2訓練データとテストデータに分割" class="nav-link" data-scroll-target="#モデル構築2訓練データとテストデータに分割">モデル構築2（訓練データとテストデータに分割）</a></li>
+  <li><a href="#モデル生成" id="toc-モデル生成" class="nav-link" data-scroll-target="#モデル生成">モデル生成</a></li>
+  <li><a href="#ハイパーパラメーターのチューニング" id="toc-ハイパーパラメーターのチューニング" class="nav-link" data-scroll-target="#ハイパーパラメーターのチューニング">ハイパーパラメーターのチューニング</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -509,17 +542,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>データサイエンス関連基礎調査WG </p>
-          </div>
-  </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 1, 2025</p>
+      <p class="date">September 30, 2026</p>
     </div>
   </div>
   
@@ -534,10 +561,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="パッケージの概要" class="level2">
 <h2 class="anchored" data-anchor-id="パッケージの概要">パッケージの概要</h2>
 <p>機械学習におけるRandomForestモデルを構築できます。RandomForestモデルとは、多数の決定木を集めてそれらの予測値よりモデル全体の予測値を算出する、アンサンブルモデルの一種です。</p>
-</section>
-<section id="参考url" class="level2">
-<h2 class="anchored" data-anchor-id="参考url">参考URL</h2>
-<p><a href="https://momonoki2017.blogspot.com/2018/04/r007-riris.html" class="uri">https://momonoki2017.blogspot.com/2018/04/r007-riris.html</a></p>
 </section>
 <section id="使用例irisデータの分類" class="level2">
 <h2 class="anchored" data-anchor-id="使用例irisデータの分類">使用例：irisデータの分類</h2>
@@ -596,7 +619,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="モデル構築1全体データ">モデル構築1（全体データ）</h3>
 <p>まずは全てのデータを使ってRandomForestモデルを構築してみます。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(iris.rf <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(Species <span class="sc">~</span> ., <span class="at">data =</span> iris))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>randomForest 4.7-1.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Type rfNews() to see new features/changes/bug fixes.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># シードを設定</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>(iris.rf <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(Species <span class="sc">~</span> ., <span class="at">data =</span> iris))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -605,25 +637,25 @@ Call:
                      Number of trees: 500
 No. of variables tried at each split: 2
 
-        OOB estimate of  error rate: 4%
+        OOB estimate of  error rate: 4.67%
 Confusion matrix:
            setosa versicolor virginica class.error
 setosa         50          0         0        0.00
 versicolor      0         47         3        0.06
-virginica       0          3        47        0.06</code></pre>
+virginica       0          4        46        0.08</code></pre>
 </div>
 </div>
 <section id="重要度の確認" class="level4">
 <h4 class="anchored" data-anchor-id="重要度の確認">重要度の確認</h4>
-<p>データの各特徴量の重要度を確認することが出来ます。irisデータの分類には花弁の長さ・花弁の幅の情報が重要であることが分かります。</p>
+<p>データの各特徴量の重要度を確認することが出来ます。irisデータの分類には花弁の長さ（Petal.Length）・花弁の幅（Petal.Width）の情報が重要であることが分かります。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">importance</span>(iris.rf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">importance</span>(iris.rf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             MeanDecreaseGini
-Sepal.Length         9.937619
-Sepal.Width          2.440018
-Petal.Length        40.254780
-Petal.Width         46.644024</code></pre>
+Sepal.Length         9.659149
+Sepal.Width          2.204130
+Petal.Length        44.244822
+Petal.Width         43.081313</code></pre>
 </div>
 </div>
 </section>
@@ -632,25 +664,28 @@ Petal.Width         46.644024</code></pre>
 <h3 class="anchored" data-anchor-id="モデル構築2訓練データとテストデータに分割">モデル構築2（訓練データとテストデータに分割）</h3>
 <p>irisデータをモデル生成のための訓練データと、モデル評価のためのテストデータに分割します。データ割合は訓練データを7割、テストデータを3割とします。確認のため、データサイズを出力します。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 再現性のためにシードを設定</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)  </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># データの分割</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>sample_indices <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(iris), <span class="fl">0.7</span> <span class="sc">*</span> <span class="fu">nrow</span>(iris))  </span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>df.train <span class="ot">&lt;-</span> iris[sample_indices, ]</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>df.test <span class="ot">&lt;-</span> iris[<span class="sc">-</span>sample_indices, ]</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># データサイズの確認</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">nrow</span>(iris), <span class="fu">nrow</span>(df.train), <span class="fu">nrow</span>(df.test))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># シードを設定</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># データの分割</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>sample_indices <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(iris), <span class="fl">0.7</span> <span class="sc">*</span> <span class="fu">nrow</span>(iris))  </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>df.train <span class="ot">&lt;-</span> iris[sample_indices, ]</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>df.test <span class="ot">&lt;-</span> iris[<span class="sc">-</span>sample_indices, ]</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># データサイズの確認</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">nrow</span>(iris), <span class="fu">nrow</span>(df.train), <span class="fu">nrow</span>(df.test))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 150 105  45</code></pre>
 </div>
 </div>
-<section id="モデル生成" class="level4">
-<h4 class="anchored" data-anchor-id="モデル生成">モデル生成</h4>
-<p>訓練データを用いてRandomFOrestモデルを生成します。</p>
+</section>
+<section id="モデル生成" class="level3">
+<h3 class="anchored" data-anchor-id="モデル生成">モデル生成</h3>
+<p>訓練データを用いてRandomForestモデルを生成します。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(model.rf <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(Species <span class="sc">~</span> ., <span class="at">data =</span> df.train))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># シードを設定</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>(model.rf <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(Species <span class="sc">~</span> ., <span class="at">data =</span> df.train))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -667,16 +702,15 @@ versicolor      0         29         3  0.09375000
 virginica       0          3        34  0.08108108</code></pre>
 </div>
 </div>
-</section>
 <section id="モデル評価" class="level4">
 <h4 class="anchored" data-anchor-id="モデル評価">モデル評価</h4>
 <p>テストデータを使ってモデル評価を行います。まずはテストデータを元に生成したモデルを用いて予測結果を算出します。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>prediction <span class="ot">&lt;-</span> <span class="fu">predict</span>(model.rf, df.test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>prediction <span class="ot">&lt;-</span> <span class="fu">predict</span>(model.rf, df.test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>予測結果とテストデータのもともとのアヤメの分類とを比較します。おおむね正しく分類できていることが分かります。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(result <span class="ot">&lt;-</span> <span class="fu">table</span>(prediction, df.test<span class="sc">$</span>Species))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>(result <span class="ot">&lt;-</span> <span class="fu">table</span>(prediction, df.test<span class="sc">$</span>Species))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            
 prediction   setosa versicolor virginica
@@ -684,14 +718,59 @@ prediction   setosa versicolor virginica
   versicolor      0         17         0
   virginica       0          1        13</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(accuracy_prediction <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">diag</span>(result)) <span class="sc">/</span> <span class="fu">sum</span>(result))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>(accuracy_prediction <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">diag</span>(result)) <span class="sc">/</span> <span class="fu">sum</span>(result))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.9777778</code></pre>
 </div>
 </div>
-
-
 </section>
+</section>
+<section id="ハイパーパラメーターのチューニング" class="level3">
+<h3 class="anchored" data-anchor-id="ハイパーパラメーターのチューニング">ハイパーパラメーターのチューニング</h3>
+<p>RandomForestの主なハイパーパラメーターは以下の通りです。</p>
+<ul>
+<li>決定木を生成する際に使用するパラメータの数(mtry)</li>
+<li>生成する決定木の数(ntree)</li>
+</ul>
+<p>これらのハイパーパラメータの最適な設定を探す作業がハイパーパラメーターのチューニングとなります。 まずはmtryの最適な設定を確認します。これはrandomForestパッケージのtuneRF関数で実行できます。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>mtry.tune <span class="ot">&lt;-</span> <span class="fu">tuneRF</span>(df.train[, <span class="sc">-</span><span class="dv">5</span>], df.train[, <span class="dv">5</span>], <span class="at">doBest =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mtry = 2  OOB error = 3.81% 
+Searching left ...
+mtry = 1    OOB error = 4.76% 
+-0.25 0.05 
+Searching right ...
+mtry = 4    OOB error = 5.71% 
+-0.5 0.05 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="randomForest_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>OOB Error（誤識別率）が最も低くなるmtryは2であることが分かりました。</p>
+<p>次に、ntreeのチューニングを行います。これは十分大きなntreeでモデルを作成した後に、 木の数ごとのOOB Errorを出力させて確認します。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>ntree.tune <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(Species <span class="sc">~</span> ., <span class="at">data =</span> df.train, <span class="at">mtry =</span> <span class="dv">2</span>, <span class="at">ntree =</span> <span class="dv">2000</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ntree.tune)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="randomForest_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>4つの誤識別率のグラフが現れていますが、黒：全体、赤：setosa、緑：versicolor、青：virginicaの誤識別率となります。 ntreeが500程度で誤識別率がほぼ横ばいとなるため、ntreeは500程度の設定が良さそうであることが分かりました。</p>
+<p>なお、ここで得られたmtry = 2, ntree = 500の設定は、「モデル生成」の際に作成されたモデルの設定と同じです。</p>
+
+
 </section>
 </section>
 
