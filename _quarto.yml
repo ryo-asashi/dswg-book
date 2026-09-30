@@ -1,5 +1,9 @@
 project:
   type: website
+  render:
+    - "**/*.qmd"
+    - "!**/*.rmarkdown"
+    - "!**/*.md"
 
 execute:
   freeze: auto
