@@ -49,7 +49,7 @@ iris_mean_by_species |>
 
 データを可視化した際、結果をSepal.Widthが大きい順（つまり、setosa、versicolor、virginicaの順）に並べたいとします。
 
-まず、可視化するデータセットをSpela.Widthが大きい順に並べ替えた結果を表示してみます。結果は以下の通り、元の結果と変わりません。
+まず、可視化するデータセットをarrange関数を用いてSepal.Widthが大きい順に並べ替えた結果を表示してみます。結果のtibbleの並べ替えはできていますが、棒グラフには反映されていません。
 
 ```{r forcats::factor3}
 iris_mean_by_species$Species

@@ -1,6 +1,7 @@
 ---
 title: "readr"
 date: "`r Sys.Date()`"
+description: 前処理
 format:
   html:
     toc: true
@@ -8,16 +9,6 @@ format:
     fig_width: 6
     fig_height: 3
 ---
-
-```{r setup, include=FALSE}
-options(repos = c(CRAN = "https://cloud.r-project.org"))
-
-knitr::opts_chunk$set(echo = TRUE)
-
-# install packages
-pkgs <- c("readr", "microbenchmark", "data.table")
-install.packages(pkgs[!pkgs %in% list.files(.libPaths())])
-```
 
 ## パッケージの概要
 
@@ -33,7 +24,7 @@ library(data.table) #速度比較に利用
 
 ```{r utils::read_csv, warning=FALSE}
 data <- read.csv("../data/insurance.csv")
-data
+head(data)
 ```
 
 ## read_csv関数
@@ -42,7 +33,7 @@ readrでカンマ区切り（,)のファイルを読み込む際は、read_csv�
 
 ### read_csv関数とread.csv関数の違い
 
-read.csv関数とread.csv関数の違いは、例えば、読み込んだデータの項目の型が何であるかを明示的に説明してくれることが挙げられます。 また、データはdata.frameではなく、tibbleで読み込まれます。
+read_csv関数とread.csv関数の違いは、例えば、読み込んだデータの項目の型が何であるかを明示的に説明してくれることが挙げられます。 また、データはdata.frameではなく、tibbleで読み込まれます。
 
 ```{r readr::read_csv}
 data_readr <- read_csv("../data/insurance.csv")
@@ -61,11 +52,11 @@ tibbleは、従来のdata.frameを洗練させたデータ構造です。readr�
 
 read_csv関数で読み込んだデータの各項目の型は自動で推定されますが、明示的に指定することもできます。型を指定する際は、col_types引数に、項目名と型を指定する関数を記載します。
 
-以下のコードではuser_noの型をintegerに指定して、データを読み込みます。なお、指定しなかった項目の型は自動で推定されます。
+以下のコードではageの型をintegerに指定して、データを読み込みます。なお、指定しなかった項目の型は自動で推定されます。
 
 ```{r readr::read_csv_2}
 data_readr_2 <- read_csv("../data/insurance.csv", 
-                         col_types = cols( user_no = col_integer()))
+                         col_types = cols( age = col_integer()))
 data_readr_2
 ```
 
@@ -90,7 +81,7 @@ microbenchmark(
 )
 ```
 
-read_csvの読込時間は平均2秒程度となり、read.csvの読込時間（平均13秒程度）よりも速く、freadの読込時間（平均1秒程度）よりも遅いという結果になりました。
+read_csvの平均的な読込時間は、read.csvよりも速く、freadよりも遅くなりました。
 
 ::: callout-note
 ## fread（data.tableパッケージ）との比較
