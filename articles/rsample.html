@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2026-09-30">
+<meta name="dcterms.date" content="2026-10-01">
 
 <title>rsample – Rパッケージ活用事例集</title>
 <style>
@@ -582,7 +582,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 30, 2026</p>
+      <p class="date">October 1, 2026</p>
     </div>
   </div>
   
@@ -819,11 +819,11 @@ div.csl-indent {
 <span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>wf <span class="ot">&lt;-</span> wf_xgboost</span>
 <span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>results_cv <span class="ot">&lt;-</span> <span class="fu">do_cv</span>(splitscv_df_train, wf) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Fold1 ... rmse: 15.97209 , 経過時間: 1.07 
-Fold2 ... rmse: 20.80456 , 経過時間: 0.81 
-Fold3 ... rmse: 16.45557 , 経過時間: 0.75 
-Fold4 ... rmse: 14.71065 , 経過時間: 0.79 
-Fold5 ... rmse: 15.3622 , 経過時間: 0.75 </code></pre>
+<pre><code>Fold1 ... rmse: 15.97209 , 経過時間: 0.94 
+Fold2 ... rmse: 20.80456 , 経過時間: 0.7 
+Fold3 ... rmse: 16.45557 , 経過時間: 0.72 
+Fold4 ... rmse: 14.71065 , 経過時間: 0.75 
+Fold5 ... rmse: 15.3622 , 経過時間: 0.78 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>rmse1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(results_cv<span class="sc">$</span>rmse) <span class="co">#RMSEの平均値で精度を測ることにする</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"rmse平均値:"</span>, rmse1, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -846,11 +846,11 @@ Fold5 ... rmse: 15.3622 , 経過時間: 0.75 </code></pre>
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co">#先ほどと同じ交差検証を行う</span></span>
 <span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>results_cv <span class="ot">&lt;-</span> <span class="fu">do_cv</span>(splitscv_df_train, wf) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Fold1 ... rmse: 16.34054 , 経過時間: 0.96 
-Fold2 ... rmse: 21.02173 , 経過時間: 0.9 
-Fold3 ... rmse: 16.10341 , 経過時間: 0.89 
-Fold4 ... rmse: 14.42136 , 経過時間: 0.92 
-Fold5 ... rmse: 15.04707 , 経過時間: 0.88 </code></pre>
+<pre><code>Fold1 ... rmse: 16.34054 , 経過時間: 0.84 
+Fold2 ... rmse: 21.02173 , 経過時間: 0.8 
+Fold3 ... rmse: 16.10341 , 経過時間: 0.8 
+Fold4 ... rmse: 14.42136 , 経過時間: 0.81 
+Fold5 ... rmse: 15.04707 , 経過時間: 0.83 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>rmse2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(results_cv<span class="sc">$</span>rmse)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"rmse平均値:"</span>, rmse2, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>

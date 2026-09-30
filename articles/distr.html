@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-09-30">
+<meta name="dcterms.date" content="2026-10-01">
 <meta name="description" content="確率分布/確率変数">
 
 <title>distr – Rパッケージ活用事例集</title>
@@ -598,7 +598,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 30, 2026</p>
+      <p class="date">October 1, 2026</p>
     </div>
   </div>
   
@@ -653,7 +653,7 @@ Table&nbsp;1
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R標準の関数の例</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1]  3.43820116 -0.41042702 -1.06925067 -0.01173616  0.96724353</code></pre>
+<pre><code>[1] -0.0826240  1.5315913  0.5063761  0.1878919 -1.9917893</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="fl">1.64</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -839,7 +839,7 @@ Slot "name":
 {
     rpois(n, lambda = 1)
 }
-&lt;environment: 0x00000258de5973b8&gt;</code></pre>
+&lt;environment: 0x00000211b661de00&gt;</code></pre>
 </div>
 </div>
 </div>
@@ -944,32 +944,22 @@ Slot "name":
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fitdistrplus)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Installing package into 'C:/Users/daysb/AppData/Local/R/win-library/4.5'
-(as 'lib' is unspecified)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>package 'fitdistrplus' successfully unpacked and MD5 sums checked
-
-The downloaded binary packages are in
-    C:\Users\daysb\AppData\Local\Temp\Rtmpsz729E\downloaded_packages</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: MASS</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: survival</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"danishuni"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"danishuni"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>データを見ると火災の発生頻度は経時的に変化しており、特に11年間のうち前半年と後半年の差が大きいため、今回は1987年から1990年までのデータを使用します。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>fire <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">accident_ymd =</span> danishuni<span class="sc">$</span>Date,</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">accident_year =</span> <span class="fu">as.numeric</span>(<span class="fu">format</span>(danishuni<span class="sc">$</span>Date, <span class="st">"%Y"</span>)),</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">loss =</span> danishuni<span class="sc">$</span>Loss</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>fire <span class="ot">&lt;-</span> fire[fire<span class="sc">$</span>accident_year <span class="sc">&gt;=</span> <span class="dv">1987</span>,]</span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fire)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>fire <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">accident_ymd =</span> danishuni<span class="sc">$</span>Date,</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">accident_year =</span> <span class="fu">as.numeric</span>(<span class="fu">format</span>(danishuni<span class="sc">$</span>Date, <span class="st">"%Y"</span>)),</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">loss =</span> danishuni<span class="sc">$</span>Loss</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>fire <span class="ot">&lt;-</span> fire[fire<span class="sc">$</span>accident_year <span class="sc">&gt;=</span> <span class="dv">1987</span>,]</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fire)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     accident_ymd accident_year     loss
 1279   1987-01-01          1987 1.023191
@@ -979,7 +969,7 @@ The downloaded binary packages are in
 1283   1987-01-07          1987 3.246753
 1284   1987-01-08          1987 1.417440</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fire<span class="sc">$</span>loss)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fire<span class="sc">$</span>loss)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   1.003   1.270   1.732   3.526   3.038 152.413 </code></pre>
@@ -990,8 +980,8 @@ The downloaded binary packages are in
 <p>distrでは、正規分布やポアソン分布等のパッケージで既に用意されている確率分布だけではなく、自身で確率分布を作成することもできます。確率密度関数を数式で指定したり、取りうる値と発生確率のセットを指定する方法などがあります。</p>
 <p>次の例ではこの機能を利用して、支払金額の経験分布を作成しています。経験分布に対しては、データを指定するだけで簡単に分布が作成できる専用の関数が用意されています。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>X_emp <span class="ot">&lt;-</span> <span class="fu">EmpiricalDistribution</span>(fire<span class="sc">$</span>loss)</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(X_emp, <span class="at">cex.inner=</span><span class="fl">0.85</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>X_emp <span class="ot">&lt;-</span> <span class="fu">EmpiricalDistribution</span>(fire<span class="sc">$</span>loss)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(X_emp, <span class="at">cex.inner=</span><span class="fl">0.85</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1002,15 +992,15 @@ The downloaded binary packages are in
 </div>
 <p>経験分布に対しても、他の確率分布と同様に種々の関数を適用できます。以下ではr関数を利用して、ブートストラップによる平均値の分布を作成しています。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">3000</span>  <span class="co"># 1回あたりのサンプル数</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">5000</span>  <span class="co"># ブートストラップ数</span></span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">numeric</span>(B)</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  res[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">r</span>(X_emp)(N))</span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(res, <span class="at">main =</span> <span class="st">"Bootstrap of mean(X)"</span>, <span class="at">xlab =</span> <span class="st">"X"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">3000</span>  <span class="co"># 1回あたりのサンプル数</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">5000</span>  <span class="co"># ブートストラップ数</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">numeric</span>(B)</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>B) {</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  res[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">r</span>(X_emp)(N))</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(res, <span class="at">main =</span> <span class="st">"Bootstrap of mean(X)"</span>, <span class="at">xlab =</span> <span class="st">"X"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1018,7 +1008,7 @@ The downloaded binary packages are in
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   3.027   3.418   3.515   3.522   3.620   4.162 </code></pre>
@@ -1027,22 +1017,22 @@ The downloaded binary packages are in
 <p>この支払単価の分布に対するモデルのあてはめを考えます。<br>
 経験分布をみると、極めて高額の支払が数件存在することがわかります。高額ロスは別途評価のもとローディングするという想定で、q関数を使用して取得した特定のパーセント点で高額ロスのキャッピングを行い、以降はこの高額ロスをキャッピングしたデータを使用することとします。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>capping_line <span class="ot">&lt;-</span> <span class="fu">q.l</span>(X_emp)(<span class="fl">0.9975</span>)  <span class="co"># 99.75%点でキャッピングすることとする</span></span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>fire<span class="sc">$</span>loss_c <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(fire<span class="sc">$</span>loss <span class="sc">&gt;</span> capping_line, capping_line, fire<span class="sc">$</span>loss)</span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>X_emp_c <span class="ot">&lt;-</span> <span class="fu">EmpiricalDistribution</span>(fire<span class="sc">$</span>loss_c)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>capping_line <span class="ot">&lt;-</span> <span class="fu">q.l</span>(X_emp)(<span class="fl">0.9975</span>)  <span class="co"># 99.75%点でキャッピングすることとする</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>fire<span class="sc">$</span>loss_c <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(fire<span class="sc">$</span>loss <span class="sc">&gt;</span> capping_line, capping_line, fire<span class="sc">$</span>loss)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>X_emp_c <span class="ot">&lt;-</span> <span class="fu">EmpiricalDistribution</span>(fire<span class="sc">$</span>loss_c)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>支払額の実績に対して、まずは指数分布を当てはめてみます。<br>
 指数分布に従う確率変数を生成し、q関数を使ったQQプロット、d関数を使ったヒストグラムで、指数分布モデルと実績データとを比較しました。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>X_exp <span class="ot">&lt;-</span> <span class="fu">Exp</span>(<span class="at">rate =</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">mean</span>(fire<span class="sc">$</span>loss_c))</span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="co"># QQ-plot</span></span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(fire<span class="sc">$</span>loss_c)</span>
-<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">q.l</span>(X_emp_c)((<span class="dv">1</span><span class="sc">:</span>n)<span class="sc">/</span>(n<span class="sc">+</span><span class="dv">1</span>))</span>
-<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">q.l</span>(X_exp)((<span class="dv">1</span><span class="sc">:</span>n)<span class="sc">/</span>(n<span class="sc">+</span><span class="dv">1</span>))</span>
-<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">xlab =</span> <span class="st">"emprical value"</span>, <span class="at">ylab =</span> <span class="st">"theoretical value"</span>)</span>
-<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">new =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>X_exp <span class="ot">&lt;-</span> <span class="fu">Exp</span>(<span class="at">rate =</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">mean</span>(fire<span class="sc">$</span>loss_c))</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="co"># QQ-plot</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(fire<span class="sc">$</span>loss_c)</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">q.l</span>(X_emp_c)((<span class="dv">1</span><span class="sc">:</span>n)<span class="sc">/</span>(n<span class="sc">+</span><span class="dv">1</span>))</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">q.l</span>(X_exp)((<span class="dv">1</span><span class="sc">:</span>n)<span class="sc">/</span>(n<span class="sc">+</span><span class="dv">1</span>))</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y, <span class="at">xlab =</span> <span class="st">"emprical value"</span>, <span class="at">ylab =</span> <span class="st">"theoretical value"</span>)</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">new =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1050,16 +1040,16 @@ The downloaded binary packages are in
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># histogram</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(fire<span class="sc">$</span>loss_c, <span class="at">prob=</span><span class="cn">TRUE</span>, </span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Histogram of Danish fire loss</span><span class="sc">\n</span><span class="st">(1987-1990)"</span>, <span class="at">cex.main =</span> <span class="fl">0.8</span>,</span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"loss"</span>)</span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">d</span>(X_exp)(x), <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">col=</span><span class="st">"red"</span>)</span>
-<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a><span class="co"># tail part</span></span>
-<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(fire<span class="sc">$</span>loss_c, <span class="at">prob=</span><span class="cn">TRUE</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">50</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.01</span>),</span>
-<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"enlarged view on tail part"</span>,  <span class="at">cex.main =</span> <span class="fl">0.8</span>, <span class="at">xlab =</span> <span class="st">"loss"</span>)</span>
-<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">d</span>(X_exp)(x), <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">col=</span><span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># histogram</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(fire<span class="sc">$</span>loss_c, <span class="at">prob=</span><span class="cn">TRUE</span>, </span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Histogram of Danish fire loss</span><span class="sc">\n</span><span class="st">(1987-1990)"</span>, <span class="at">cex.main =</span> <span class="fl">0.8</span>,</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"loss"</span>)</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">d</span>(X_exp)(x), <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">col=</span><span class="st">"red"</span>)</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="co"># tail part</span></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(fire<span class="sc">$</span>loss_c, <span class="at">prob=</span><span class="cn">TRUE</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">50</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.01</span>),</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"enlarged view on tail part"</span>,  <span class="at">cex.main =</span> <span class="fl">0.8</span>, <span class="at">xlab =</span> <span class="st">"loss"</span>)</span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">d</span>(X_exp)(x), <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">col=</span><span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1071,20 +1061,20 @@ The downloaded binary packages are in
 <p>実績データはより裾が重く、指数分布によるモデルはうまく当てはまっていないと思われます。distrでは対数正規分布、ワイブル分布などの裾の重い分布が用意されています。現時点では、例えばパレート分布は用意されていないので、確率密度関数を指定して分布を作成してみることにします。<br>
 distrで用意されている確率分布よりも更に数値的な誤差に注意が必要ですが、以下では参考として、適当なパラメータでパレート分布を作成したうえで、指数分布によるモデルと比較しています。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>p_shape <span class="ot">&lt;-</span> <span class="fl">5.175117</span></span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>p_scale <span class="ot">&lt;-</span> <span class="fl">13.419728</span></span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>X_par <span class="ot">&lt;-</span> <span class="fu">AbscontDistribution</span>(</span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> <span class="cf">function</span>(x) p_shape <span class="sc">*</span> (p_scale<span class="sc">^</span>p_shape) <span class="sc">/</span> (x<span class="sc">+</span>p_scale)<span class="sc">^</span>(p_shape<span class="sc">+</span><span class="dv">1</span>), </span>
-<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">low1 =</span> <span class="dv">0</span>, <span class="at">withStand =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a><span class="co"># QQ-plot</span></span>
-<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>y2 <span class="ot">&lt;-</span> <span class="fu">q.l</span>(X_par)((<span class="dv">1</span><span class="sc">:</span>n)<span class="sc">/</span>(n<span class="sc">+</span><span class="dv">1</span>))</span>
-<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(x, <span class="fu">cbind</span>(y, y2), <span class="at">pch =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,</span>
-<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">40</span>),</span>
-<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"emprical value"</span>, <span class="at">ylab =</span> <span class="st">"theoretical value"</span>)</span>
-<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="dv">2</span>, <span class="dv">38</span>, <span class="fu">c</span>(<span class="st">"exp"</span>, <span class="st">"par"</span>), <span class="at">pch =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span>
-<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">new =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>p_shape <span class="ot">&lt;-</span> <span class="fl">5.175117</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>p_scale <span class="ot">&lt;-</span> <span class="fl">13.419728</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>X_par <span class="ot">&lt;-</span> <span class="fu">AbscontDistribution</span>(</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">d =</span> <span class="cf">function</span>(x) p_shape <span class="sc">*</span> (p_scale<span class="sc">^</span>p_shape) <span class="sc">/</span> (x<span class="sc">+</span>p_scale)<span class="sc">^</span>(p_shape<span class="sc">+</span><span class="dv">1</span>), </span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">low1 =</span> <span class="dv">0</span>, <span class="at">withStand =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="co"># QQ-plot</span></span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>y2 <span class="ot">&lt;-</span> <span class="fu">q.l</span>(X_par)((<span class="dv">1</span><span class="sc">:</span>n)<span class="sc">/</span>(n<span class="sc">+</span><span class="dv">1</span>))</span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(x, <span class="fu">cbind</span>(y, y2), <span class="at">pch =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,</span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">40</span>),</span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">"emprical value"</span>, <span class="at">ylab =</span> <span class="st">"theoretical value"</span>)</span>
+<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="dv">2</span>, <span class="dv">38</span>, <span class="fu">c</span>(<span class="st">"exp"</span>, <span class="st">"par"</span>), <span class="at">pch =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span>
+<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">new =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1099,23 +1089,23 @@ distrで用意されている確率分布よりも更に数値的な誤差に注
 <p>最後に、総支払額分布の作成を通して、distrの複合分布の機能を紹介します。<br>
 1日当たりの事故発生件数がポアソン分布に従うものと仮定し、指数分布による支払額のモデルとの、複合ポアソン分布を作成します。複合分布はCompoundDistributionクラスを使用します。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>N_pois <span class="ot">&lt;-</span> <span class="fu">Pois</span>(<span class="at">lambda =</span> </span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>               <span class="fu">nrow</span>(fire)<span class="sc">/</span><span class="fu">as.numeric</span>(<span class="fu">as.Date</span>(<span class="st">"1991-1-1"</span>)<span class="sc">-</span><span class="fu">as.Date</span>(<span class="st">"1987-1-1"</span>)))</span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">CompoundDistribution</span>(<span class="at">NumbOfSummandsDistr =</span> N_pois, <span class="at">SummandsDistr =</span> X_exp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>N_pois <span class="ot">&lt;-</span> <span class="fu">Pois</span>(<span class="at">lambda =</span> </span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>               <span class="fu">nrow</span>(fire)<span class="sc">/</span><span class="fu">as.numeric</span>(<span class="fu">as.Date</span>(<span class="st">"1991-1-1"</span>)<span class="sc">-</span><span class="fu">as.Date</span>(<span class="st">"1987-1-1"</span>)))</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>S <span class="ot">&lt;-</span> <span class="fu">CompoundDistribution</span>(<span class="at">NumbOfSummandsDistr =</span> N_pois, <span class="at">SummandsDistr =</span> X_exp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>複合分布に対してはr、p、q関数が使用できます。 また複合分布の機能として、もととなっている分布（今回の場合ポアソン分布と指数分布）を取り出すことも可能です。<br>
 これらの機能を使用して、複合分布Sの期待値について(1)累積分布関数の数値積分、(2)乱数シミュレーション、および(3)定義に従った複合ポアソン分布の期待値<span class="math inline">\lambda E[X]</span>の三つを比較してみました。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (1)数値積分</span></span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>E1 <span class="ot">&lt;-</span> <span class="fu">integrate</span>(<span class="cf">function</span>(x) <span class="dv">1</span><span class="sc">-</span><span class="fu">p</span>(S)(x), <span class="dv">0</span>, <span class="cn">Inf</span>)<span class="sc">$</span>value</span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="co"># (2)乱数シミュレーション</span></span>
-<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>E2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">r</span>(S)(<span class="dv">20000</span>))</span>
-<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (3)複合ポアソン分布の期待値（lambda * E[X]）</span></span>
-<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>E3 <span class="ot">&lt;-</span> <span class="fu">lambda</span>(<span class="fu">NumbOfSummandsDistr</span>(S)) <span class="sc">*</span> <span class="fu">scale</span>(<span class="fu">SummandsDistr</span>(S))</span>
-<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"(1):%.6f (2):%.6f (3):%.6f"</span>, E1, E2, E3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (1)数値積分</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>E1 <span class="ot">&lt;-</span> <span class="fu">integrate</span>(<span class="cf">function</span>(x) <span class="dv">1</span><span class="sc">-</span><span class="fu">p</span>(S)(x), <span class="dv">0</span>, <span class="cn">Inf</span>)<span class="sc">$</span>value</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="co"># (2)乱数シミュレーション</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>E2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">r</span>(S)(<span class="dv">20000</span>))</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (3)複合ポアソン分布の期待値（lambda * E[X]）</span></span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>E3 <span class="ot">&lt;-</span> <span class="fu">lambda</span>(<span class="fu">NumbOfSummandsDistr</span>(S)) <span class="sc">*</span> <span class="fu">scale</span>(<span class="fu">SummandsDistr</span>(S))</span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"(1):%.6f (2):%.6f (3):%.6f"</span>, E1, E2, E3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "(1):2.006595 (2):1.995217 (3):2.006593"</code></pre>
 </div>

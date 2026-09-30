@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-09-30">
+<meta name="dcterms.date" content="2026-10-01">
 <meta name="description" content="確率分布/確率変数">
 
 <title>data.table – Rパッケージ活用事例集</title>
@@ -581,7 +581,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 30, 2026</p>
+      <p class="date">October 1, 2026</p>
     </div>
   </div>
   
@@ -1610,10 +1610,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4044
 Unit: milliseconds
-                                 expr  min   lq mean median   uq  max neval cld
-     df_f[df_f$tailnum == "N449US", ] 1.69 1.73 1.95   1.80 1.98 4.67   100 a  
-          dt_f[tailnum == "N449US", ] 1.16 1.23 1.51   1.42 1.47 9.55   100  b 
- df_f %&gt;% filter(tailnum == "N449US") 2.87 2.94 3.42   3.03 3.39 7.55   100   c</code></pre>
+                                 expr  min   lq mean median   uq   max neval
+     df_f[df_f$tailnum == "N449US", ] 1.51 1.83 2.35   2.11 2.73 10.80   100
+          dt_f[tailnum == "N449US", ] 1.03 1.19 1.43   1.31 1.43  6.39   100
+ df_f %&gt;% filter(tailnum == "N449US") 2.69 3.31 3.99   3.57 4.09  8.75   100
+ cld
+ a  
+  b 
+   c</code></pre>
 </div>
 </div>
 <p>多めの行を抽出しつつ限られた列に対してなんらかの演算を行う場合、<code>dplyr</code> が最も低速な傾向です。</p>
@@ -1630,13 +1634,13 @@ Unit: milliseconds
 <div class="cell-output cell-output-stdout">
 <pre><code>Unit: milliseconds
                                                    expr   min    lq  mean
-                               df_f[df_f$month == 12, ] 2.179 2.299 3.022
-                           rows_tmp &lt;- df_f$month == 12 0.583 0.588 0.662
- df_f[rows_tmp, "hour"] * 60 + df_f[rows_tmp, "minute"] 0.922 0.951 1.126
- median    uq  max neval cld
-  2.474 3.361 7.23   100 a  
-  0.593 0.759 1.07   100  b 
-  0.975 1.039 6.51   100   c</code></pre>
+                               df_f[df_f$month == 12, ] 2.091 2.513 3.132
+                           rows_tmp &lt;- df_f$month == 12 0.470 0.474 0.541
+ df_f[rows_tmp, "hour"] * 60 + df_f[rows_tmp, "minute"] 0.761 0.784 0.919
+ median    uq   max neval cld
+  2.691 3.420 7.273   100 a  
+  0.484 0.636 0.947   100  b 
+  0.811 0.845 5.469   100   c</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -1646,9 +1650,9 @@ Unit: milliseconds
 <span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a>df_tmp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Unit: milliseconds
-                                  expr  min   lq mean median   uq  max neval
-                   dt_f[month == 12, ] 3.47 3.69 4.21   3.84 4.24 8.27   100
- dt_f[month == 12, hour * 60 + minute] 1.90 2.08 2.46   2.21 2.49 8.03   100
+                                  expr  min  lq mean median   uq   max neval
+                   dt_f[month == 12, ] 2.96 3.1 3.53   3.18 3.40 10.77   100
+ dt_f[month == 12, hour * 60 + minute] 1.63 1.7 1.95   1.80 1.99  6.02   100
  cld
   a 
    b</code></pre>
@@ -1665,13 +1669,13 @@ Unit: milliseconds
 <div class="cell-output cell-output-stdout">
 <pre><code>Unit: milliseconds
                                                               expr  min   lq
-                                      df_f %&gt;% filter(month == 12) 3.41 3.52
-   df_f %&gt;% filter(month == 12) %&gt;% mutate(m = hour * 60 + minute) 4.27 4.38
- df_f_l %&gt;% filter(month == 12) %&gt;% mutate(m = hour * 60 + minute) 3.06 3.14
- mean median   uq  max neval cld
- 4.19   3.64 4.18 8.60   100 a  
- 5.01   4.52 4.89 8.58   100  b 
- 3.62   3.25 3.81 7.89   100   c</code></pre>
+                                      df_f %&gt;% filter(month == 12) 2.95 3.20
+   df_f %&gt;% filter(month == 12) %&gt;% mutate(m = hour * 60 + minute) 3.69 3.97
+ df_f_l %&gt;% filter(month == 12) %&gt;% mutate(m = hour * 60 + minute) 2.59 2.71
+ mean median   uq   max neval cld
+ 3.72   3.33 3.76  7.95   100 a  
+ 4.81   4.31 4.93 11.24   100  b 
+ 3.27   2.96 3.60  7.01   100   c</code></pre>
 </div>
 </div>
 <p>なお、キーやインデックスの詳細については以下のvignettesを参照してください。</p>

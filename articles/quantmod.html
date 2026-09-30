@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-09-30">
+<meta name="dcterms.date" content="2026-10-01">
 
 <title>quantmod – Rパッケージ活用事例集</title>
 <style>
@@ -540,7 +540,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 30, 2026</p>
+      <p class="date">October 1, 2026</p>
     </div>
   </div>
   
@@ -627,7 +627,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>JRGDP <span class="ot">&lt;-</span> <span class="fu">getSymbols</span>(<span class="st">"JPNRGDPEXP"</span>, <span class="at">src =</span> <span class="st">"FRED"</span>, <span class="at">auto.assign =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in getSymbols.FRED(Symbols = "JPNRGDPEXP", env = &lt;environment&gt;, : Unable to import "JPNRGDPEXP".
-Failure when receiving data from the peer [fred.stlouisfed.org]: Recv failure: Connection was reset
+Timeout was reached [fred.stlouisfed.org]: Operation too slow. Less than 1 bytes/sec transferred the last 600 seconds
 getSymbols.FRED: requests without an API key are not guaranteed to succeed.
 Register for a free key at https://fredaccount.stlouisfed.org/apikeys and set it with
 setDefaults(getSymbols.FRED, api.key = "your key").</code></pre>
