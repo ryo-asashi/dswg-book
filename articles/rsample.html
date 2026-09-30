@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2025-08-01">
+<meta name="dcterms.date" content="2026-09-30">
 
 <title>rsample – Rパッケージ活用事例集</title>
 <style>
@@ -582,7 +582,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 1, 2025</p>
+      <p class="date">September 30, 2026</p>
     </div>
   </div>
   
@@ -819,16 +819,16 @@ div.csl-indent {
 <span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>wf <span class="ot">&lt;-</span> wf_xgboost</span>
 <span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>results_cv <span class="ot">&lt;-</span> <span class="fu">do_cv</span>(splitscv_df_train, wf) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Fold1 ... rmse: 16.06052 , 経過時間: 1.4 
-Fold2 ... rmse: 21.37279 , 経過時間: 1.15 
-Fold3 ... rmse: 16.59439 , 経過時間: 1.14 
-Fold4 ... rmse: 14.79878 , 経過時間: 1.14 
-Fold5 ... rmse: 15.17561 , 経過時間: 1.1 </code></pre>
+<pre><code>Fold1 ... rmse: 15.97209 , 経過時間: 1.07 
+Fold2 ... rmse: 20.80456 , 経過時間: 0.81 
+Fold3 ... rmse: 16.45557 , 経過時間: 0.75 
+Fold4 ... rmse: 14.71065 , 経過時間: 0.79 
+Fold5 ... rmse: 15.3622 , 経過時間: 0.75 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>rmse1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(results_cv<span class="sc">$</span>rmse) <span class="co">#RMSEの平均値で精度を測ることにする</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"rmse平均値:"</span>, rmse1, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>rmse平均値: 16.80042 </code></pre>
+<pre><code>rmse平均値: 16.66101 </code></pre>
 </div>
 </div>
 <p>その後データを分析してみたところ、<strong>出発した日付</strong>（特徴量名<code>year</code>, <code>month</code>, <code>day</code>）が重要な特徴量であることがわかりました。 遅延を発生させる事象が起きたかどうかを判断するのに日付が重要ということでしょう。 （ホリデーシーズンで乗客が多かった、特定の日付で天候が悪化した、等…）</p>
@@ -846,19 +846,19 @@ Fold5 ... rmse: 15.17561 , 経過時間: 1.1 </code></pre>
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co">#先ほどと同じ交差検証を行う</span></span>
 <span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>results_cv <span class="ot">&lt;-</span> <span class="fu">do_cv</span>(splitscv_df_train, wf) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Fold1 ... rmse: 16.20968 , 経過時間: 1.29 
-Fold2 ... rmse: 21.4931 , 経過時間: 1.22 
-Fold3 ... rmse: 16.56371 , 経過時間: 1.24 
-Fold4 ... rmse: 14.42167 , 経過時間: 1.23 
-Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
+<pre><code>Fold1 ... rmse: 16.34054 , 経過時間: 0.96 
+Fold2 ... rmse: 21.02173 , 経過時間: 0.9 
+Fold3 ... rmse: 16.10341 , 経過時間: 0.89 
+Fold4 ... rmse: 14.42136 , 経過時間: 0.92 
+Fold5 ... rmse: 15.04707 , 経過時間: 0.88 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>rmse2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(results_cv<span class="sc">$</span>rmse)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"rmse平均値:"</span>, rmse2, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>rmse平均値: 16.86943 </code></pre>
+<pre><code>rmse平均値: 16.58682 </code></pre>
 </div>
 </div>
-<p>特徴量追加前は16.8、追加後は16.87となりました。</p>
+<p>特徴量追加前は16.66、追加後は16.59となりました。</p>
 <p>RMSEは小さいほど「精度が良い」という評価になるため、数値のうえでは若干の改善ということになりますが、 大きく結果が変わったわけではなく、今回の分割数では偶然の可能性も否定できません。 分割数を増やしたときに差が生まれるかどうかを確認してみてもよいでしょう。</p>
 <p>ともかく、<code>vfold_cv</code>関数を用いることで交差検証のためのデータ分割が手軽に行えることがわかります。</p>
 </section>
@@ -877,10 +877,10 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 # A tibble: 4 × 2
   splits              id        
   &lt;list&gt;              &lt;chr&gt;     
-1 &lt;split [6062/2213]&gt; Bootstrap1
-2 &lt;split [6062/2223]&gt; Bootstrap2
-3 &lt;split [6062/2240]&gt; Bootstrap3
-4 &lt;split [6062/2243]&gt; Bootstrap4</code></pre>
+1 &lt;split [6062/2245]&gt; Bootstrap1
+2 &lt;split [6062/2189]&gt; Bootstrap2
+3 &lt;split [6062/2228]&gt; Bootstrap3
+4 &lt;split [6062/2214]&gt; Bootstrap4</code></pre>
 </div>
 </div>
 <p>使用方法は<code>vfold_cv</code>関数と同様です。</p>
@@ -894,10 +894,10 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">"id:"</span>, id, <span class="st">", df_analysisの行数:"</span>, <span class="fu">nrow</span>(df_analysis), <span class="st">", df_assessmentの行数:"</span>, <span class="fu">nrow</span>(df_assessment))</span>
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "id:Bootstrap1, df_analysisの行数:6062, df_assessmentの行数:2213"
-[2] "id:Bootstrap2, df_analysisの行数:6062, df_assessmentの行数:2223"
-[3] "id:Bootstrap3, df_analysisの行数:6062, df_assessmentの行数:2240"
-[4] "id:Bootstrap4, df_analysisの行数:6062, df_assessmentの行数:2243"</code></pre>
+<pre><code>[1] "id:Bootstrap1, df_analysisの行数:6062, df_assessmentの行数:2245"
+[2] "id:Bootstrap2, df_analysisの行数:6062, df_assessmentの行数:2189"
+[3] "id:Bootstrap3, df_analysisの行数:6062, df_assessmentの行数:2228"
+[4] "id:Bootstrap4, df_analysisの行数:6062, df_assessmentの行数:2214"</code></pre>
 </div>
 </div>
 </section>
@@ -975,7 +975,7 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 <span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> df_test_xypredy <span class="sc">%&gt;%</span> yardstick<span class="sc">::</span><span class="fu">rmse</span>(<span class="at">truth =</span> arr_delay, <span class="at">estimate =</span> .pred)</span>
 <span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"単体モデルのRMSE:"</span>, res<span class="sc">$</span>.estimate[[<span class="dv">1</span>]],<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>単体モデルのRMSE: 17.72646 </code></pre>
+<pre><code>単体モデルのRMSE: 17.63092 </code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">##ブートストラップ法の10個のモデルの予測平均値の場合</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>df_test_predy_b <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">.pred =</span> <span class="fu">rowMeans</span>(<span class="fu">do.call</span>(cbind, df_test_predy_tmp))) <span class="co">#予測値の平均値を計算</span></span>
@@ -983,7 +983,7 @@ Fold5 ... rmse: 15.65897 , 経過時間: 1.28 </code></pre>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> df_test_xypredy_b <span class="sc">%&gt;%</span> yardstick<span class="sc">::</span><span class="fu">rmse</span>(<span class="at">truth =</span> arr_delay, <span class="at">estimate =</span> .pred)</span>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"10モデル平均のRMSE:"</span>, res<span class="sc">$</span>.estimate[[<span class="dv">1</span>]],<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>10モデル平均のRMSE: 17.30855 </code></pre>
+<pre><code>10モデル平均のRMSE: 18.66347 </code></pre>
 </div>
 </div>
 <p>今回の例ではブートストラップ法の平均のほうが勝ったようです。</p>

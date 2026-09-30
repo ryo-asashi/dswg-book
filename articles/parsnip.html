@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2025-08-01">
+<meta name="dcterms.date" content="2026-09-30">
 
 <title>parsnip – Rパッケージ活用事例集</title>
 <style>
@@ -548,7 +548,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 1, 2025</p>
+      <p class="date">September 30, 2026</p>
     </div>
   </div>
   
@@ -938,36 +938,26 @@ parsnipを通してGBMによる分類モデルを構築します。 次の例で
 <pre><code>parsnip model object
 
 ##### xgb.Booster
-raw: 799.2 Kb 
 call:
   xgboost::xgb.train(params = list(eta = 0.05, max_depth = 5, gamma = 0, 
     colsample_bytree = 1, colsample_bynode = 0.8, min_child_weight = 1, 
-    subsample = 0.8), data = x$data, nrounds = 2000, watchlist = x$watchlist, 
-    verbose = 0, early_stopping_rounds = 300, eval_metric = "logloss", 
-    nthread = 1, objective = "binary:logistic")
-params (as set within xgb.train):
-  eta = "0.05", max_depth = "5", gamma = "0", colsample_bytree = "1", colsample_bynode = "0.8", min_child_weight = "1", subsample = "0.8", eval_metric = "logloss", nthread = "1", objective = "binary:logistic", validate_parameters = "TRUE"
-xgb.attributes:
-  best_iteration, best_msg, best_ntreelimit, best_score, niter
-callbacks:
-  cb.evaluation.log()
-  cb.early.stop(stopping_rounds = early_stopping_rounds, maximize = maximize, 
-    verbose = verbose)
+    subsample = 0.8, nthread = 1, eval_metric = "logloss", objective = "binary:logistic"), 
+    data = x$data, nrounds = 2000, evals = x$watchlist, verbose = 0, 
+    early_stopping_rounds = 300)
 # of features: 13 
-niter: 386
-best_iteration : 86 
-best_ntreelimit : 86 
-best_score : 0.4452538 
-best_msg : [86] validation-logloss:0.445254 
-nfeatures : 13 
+# of rounds:  373 
+xgb.attributes:
+   best_iteration, best_score 
+callbacks:
+   early_stop, evaluation_log 
 evaluation_log:
   iter validation_logloss
  &lt;num&gt;              &lt;num&gt;
-     1          0.6733157
-     2          0.6546558
+     1          0.5751134
+     2          0.5651645
    ---                ---
-   385          0.4888858
-   386          0.4891175</code></pre>
+   372          0.4846672
+   373          0.4850594</code></pre>
 </div>
 </div>
 <p>学習済のモデルをテストデータに適用し、テストデータに対する分類結果とその正解率を算出します。</p>
@@ -976,7 +966,7 @@ evaluation_log:
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>y_true <span class="ot">&lt;-</span> d_test<span class="sc">$</span>Status</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"accuracy : %.4f"</span>, <span class="fu">sum</span>(y_pred<span class="sc">==</span>y_true)<span class="sc">/</span><span class="fu">length</span>(y_true))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "accuracy : 0.7921"</code></pre>
+<pre><code>[1] "accuracy : 0.7901"</code></pre>
 </div>
 </div>
 <p><strong>(2) モデル情報の利用</strong><br>
@@ -988,21 +978,21 @@ parsnipを通して学習させたモデルからより多くの情報を取得�
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xgb.importance</span>(<span class="at">model =</span> .)</span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>importance_gbm</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      Feature        Gain      Cover  Frequency
-       &lt;char&gt;       &lt;num&gt;      &lt;num&gt;      &lt;num&gt;
- 1:    Income 0.162361809 0.15308392 0.15144738
- 2:     Price 0.152862530 0.19189145 0.18225867
- 3:    Amount 0.134619300 0.13369218 0.13318425
- 4: Seniority 0.118221478 0.10297003 0.08957634
- 5:       Age 0.081321036 0.08125753 0.11454839
- 6:   Records 0.077957485 0.05251855 0.02633868
- 7:    Assets 0.066155159 0.06963897 0.07764940
- 8:  Expenses 0.062748185 0.05693741 0.06994658
- 9:       Job 0.041249101 0.03177091 0.03093552
-10:      Time 0.036138501 0.03563342 0.04149584
-11:      Home 0.032315613 0.03410136 0.03640204
-12:      Debt 0.024199277 0.03237239 0.02932041
-13:   Marital 0.009850526 0.02413188 0.01689651</code></pre>
+<pre><code>      Feature       Gain      Cover  Frequency
+       &lt;char&gt;      &lt;num&gt;      &lt;num&gt;      &lt;num&gt;
+ 1:    Income 0.15990219 0.14360195 0.14893617
+ 2:     Price 0.14231048 0.19390934 0.17240490
+ 3:    Amount 0.13697952 0.13211573 0.13939394
+ 4: Seniority 0.12264696 0.09749137 0.09516441
+ 5:   Records 0.08168621 0.04963520 0.02488717
+ 6:       Age 0.07654378 0.08512919 0.10831721
+ 7:    Assets 0.07088809 0.06851065 0.07891683
+ 8:  Expenses 0.06259860 0.06357925 0.07182463
+ 9:       Job 0.04132296 0.02704415 0.02965828
+10:      Time 0.04108202 0.03998452 0.04719536
+11:      Home 0.03105204 0.03619537 0.03468730
+12:      Debt 0.02435892 0.03918718 0.03339781
+13:   Marital 0.00862824 0.02361609 0.01521599</code></pre>
 </div>
 </div>
 <p>この特徴量重要度の情報を利用して、重要度が上位の変数のみを使用した一般化線形モデル(ロジスティック回帰)によるモデルを構築することを考えます。 特徴量重要度(Gain)の数値が、ある一定の値を超えている変数のみを使用して、parsnipを通したロジスティック回帰モデルを作成します。 ロジスティック回帰はlogistic_reg関数を使用しますが、モデル構築から予測までの流れはやはり、ランダムフォレストやGBMと同じです。</p>
@@ -1025,10 +1015,10 @@ parsnipを通して学習させたモデルからより多くの情報を取得�
 Call:  stats::glm(formula = ..y ~ ., family = stats::binomial, data = data)
 
 Coefficients:
-(Intercept)       Income        Price       Amount    Seniority          Age  
-  1.094e+00    7.647e-03    1.310e-03   -2.288e-03    1.075e-01   -6.543e-03  
- Recordsyes       Assets     Expenses  
- -1.846e+00    2.478e-05   -1.219e-02  
+(Intercept)       Income        Price       Amount    Seniority   Recordsyes  
+  1.094e+00    7.647e-03    1.310e-03   -2.288e-03    1.075e-01   -1.846e+00  
+        Age       Assets     Expenses  
+ -6.543e-03    2.478e-05   -1.219e-02  
 
 Degrees of Freedom: 3028 Total (i.e. Null);  3020 Residual
 Null Deviance:      3410 
@@ -1060,8 +1050,8 @@ Income       7.647e-03  8.305e-04   9.207  &lt; 2e-16 ***
 Price        1.310e-03  1.634e-04   8.021 1.05e-15 ***
 Amount      -2.288e-03  1.966e-04 -11.641  &lt; 2e-16 ***
 Seniority    1.075e-01  9.039e-03  11.890  &lt; 2e-16 ***
-Age         -6.543e-03  5.264e-03  -1.243  0.21388    
 Recordsyes  -1.846e+00  1.287e-01 -14.340  &lt; 2e-16 ***
+Age         -6.543e-03  5.264e-03  -1.243  0.21388    
 Assets       2.478e-05  7.969e-06   3.109  0.00188 ** 
 Expenses    -1.219e-02  2.582e-03  -4.722 2.33e-06 ***
 ---
@@ -1083,14 +1073,15 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_engines</span>(<span class="st">"boost_tree"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5 × 2
-  engine  mode          
-  &lt;chr&gt;   &lt;chr&gt;         
-1 xgboost classification
-2 xgboost regression    
-3 C5.0    classification
-4 spark   classification
-5 spark   regression    </code></pre>
+<pre><code># A tibble: 6 × 2
+  engine  mode               
+  &lt;chr&gt;   &lt;chr&gt;              
+1 xgboost classification     
+2 xgboost regression         
+3 xgboost quantile regression
+4 C5.0    classification     
+5 spark   classification     
+6 spark   regression         </code></pre>
 </div>
 </div>
 <p>tidymodelsの公式サイトではparsnipが対応しているモデル、エンジン、モードの全ての組み合わせが一覧化されているので、そちらもご参照ください。</p>

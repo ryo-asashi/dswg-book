@@ -6059,8 +6059,7 @@ font-family: "ＭＳ ゴシック";
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">makedummies</span>(df_minimum) <span class="co">#res[cbind(seq.int(m), dat)] &lt;- 1L でエラー: 添え字が許される範囲外です</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
-<pre><code>Error in `res[cbind(seq.int(m), dat)] &lt;- 1L`:
-! subscript out of bounds</code></pre>
+<pre><code>Error in res[cbind(seq.int(m), dat)] &lt;- 1L: subscript out of bounds</code></pre>
 </div>
 </div>
 </section>
@@ -6237,16 +6236,13 @@ $gender
 </div>
 <p>tibbleを加工したものはtibbleになります。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package &#39;tibble&#39; was built under R version 4.5.3</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>df_all_tb <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(df_all)</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(df_all_tb)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>df_all_tb <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(df_all)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(df_all_tb)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="fu">makedummies</span>(df_all_tb))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(<span class="fu">makedummies</span>(df_all_tb))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
 </div>
@@ -6254,12 +6250,12 @@ $gender
 <p>なお、tibbleはtidyverseに含まれるもののうちの一つで、 例えば以下のような記法で列を選択した時にベクトルにならない(データフレームのままである)等の点で R標準のdata.frameとは違いがあります。</p>
 <p>tibbleを用いている場合、加工後にtibbleとしての機能が失われないことは利便性の観点で重要です。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_all[,<span class="st">&quot;poverty&quot;</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_all[,<span class="st">&quot;poverty&quot;</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] Too Little  About Right Too Little  Too Much    Too Little  About Right
 Levels: Too Little &lt; About Right &lt; Too Much</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_all_tb[,<span class="st">&quot;poverty&quot;</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df_all_tb[,<span class="st">&quot;poverty&quot;</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
@@ -6277,8 +6273,8 @@ Levels: Too Little &lt; About Right &lt; Too Much</code></pre>
 <p>こちらは予測モデルに入力する計画行列を生成するための関数で、交互作用項の追加等、ダミー変数化以外の機能もあります。</p>
 <p>出力は行列(matrix型)となるため注意してください。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co">#順序付きfactor型に対してはデフォルトでは多項式対比を使用</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">model.matrix</span>(<span class="sc">~</span> . , <span class="at">data =</span> df_all))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">#順序付きfactor型に対してはデフォルトでは多項式対比を使用</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">model.matrix</span>(<span class="sc">~</span> . , <span class="at">data =</span> df_all))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  (Intercept)     poverty.L  poverty.Q religionyes degreeyes countryNorway
 1           1 -7.071068e-01  0.4082483           1         0             0
@@ -6295,8 +6291,8 @@ Levels: Too Little &lt; About Right &lt; Too Much</code></pre>
 5             0          1  39          1
 6             0          1  80          0</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co">#povertyに対して多項式対比を使用しない設定をした場合</span></span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">model.matrix</span>(<span class="sc">~</span> . , <span class="at">data =</span> df_all, <span class="at">contrasts.arg =</span> <span class="fu">list</span>(<span class="at">poverty =</span> contr.treatment)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co">#povertyに対して多項式対比を使用しない設定をした場合</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">model.matrix</span>(<span class="sc">~</span> . , <span class="at">data =</span> df_all, <span class="at">contrasts.arg =</span> <span class="fu">list</span>(<span class="at">poverty =</span> contr.treatment)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  (Intercept) povertyAbout Right povertyToo Much religionyes degreeyes
 1           1                  0               0           1         0
@@ -6320,8 +6316,8 @@ Levels: Too Little &lt; About Right &lt; Too Much</code></pre>
 <p>本パッケージと非常に類似するパッケージとしてfastDummiesパッケージがあります。 名前のとおり、<code>model.matrix</code>関数よりも処理が高速だとされています。</p>
 <p><code>dummy_cols</code>関数によりダミー変数化が可能です。 ただし、<code>makedummies</code>関数とはデフォルトの処理が若干異なっています。 たとえば順序付きfactor型は処理対象としないほか、ダミー変数化前の変数が残る、 基準カテゴリに対応するダミー変数も作成する、といった点が異なります。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fastDummies)</span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">dummy_cols</span>(df_all))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fastDummies)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">dummy_cols</span>(df_all))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
@@ -6333,14 +6329,14 @@ Levels: Too Little &lt; About Right &lt; Too Much</code></pre>
 <p>引数により処理をカスタマイズすることができます。</p>
 <p>例えば引数<code>select_columns</code>により処理対象の列を指定することが出来ます。 ここでは順序付きfactor型だけでなく、数値型をも処理の対象とすることが出来ます。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">dummy_cols</span>(df_all,</span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>                <span class="co">#処理対象列の指定</span></span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">select_columns =</span> <span class="fu">c</span>(<span class="st">&quot;poverty&quot;</span>,<span class="st">&quot;religion&quot;</span>,<span class="st">&quot;degree&quot;</span>,<span class="st">&quot;country&quot;</span>),</span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>                <span class="co">#元の列を残さない</span></span>
-<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">remove_selected_columns =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>                <span class="co">#基準カテゴリに対応するダミー変数を作らない</span></span>
-<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">remove_first_dummy =</span> <span class="cn">TRUE</span> </span>
-<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>                ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">dummy_cols</span>(df_all,</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>                <span class="co">#処理対象列の指定</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">select_columns =</span> <span class="fu">c</span>(<span class="st">&quot;poverty&quot;</span>,<span class="st">&quot;religion&quot;</span>,<span class="st">&quot;degree&quot;</span>,<span class="st">&quot;country&quot;</span>),</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>                <span class="co">#元の列を残さない</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">remove_selected_columns =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>                <span class="co">#基準カテゴリに対応するダミー変数を作らない</span></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">remove_first_dummy =</span> <span class="cn">TRUE</span> </span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>                ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
@@ -6351,7 +6347,7 @@ Levels: Too Little &lt; About Right &lt; Too Much</code></pre>
 </div>
 <p>なお、NA値に対してはデフォルトで個別のダミー変数を作成する挙動となっていますが、 引数<code>ignore_na</code>でこれを制御することが出来ます。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">dummy_cols</span>(df_NA, <span class="at">remove_selected_columns =</span> <span class="cn">TRUE</span>, <span class="at">ignore_na =</span> <span class="cn">FALSE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">dummy_cols</span>(df_NA, <span class="at">remove_selected_columns =</span> <span class="cn">TRUE</span>, <span class="at">ignore_na =</span> <span class="cn">FALSE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
@@ -6359,7 +6355,7 @@ Levels: Too Little &lt; About Right &lt; Too Much</code></pre>
   </script>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">dummy_cols</span>(df_NA, <span class="at">remove_selected_columns =</span> <span class="cn">TRUE</span>, <span class="at">ignore_na =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">dummy_cols</span>(df_NA, <span class="at">remove_selected_columns =</span> <span class="cn">TRUE</span>, <span class="at">ignore_na =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">
@@ -6377,13 +6373,13 @@ Levels: Too Little &lt; About Right &lt; Too Much</code></pre>
 <p>まず<code>onehot</code>関数によりエンコーダーを生成し、<code>predict</code>関数により実際にデータを変換します。</p>
 <p>出力は行列(matrix型)となるため注意してください。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(onehot)</span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> df_all</span>
-<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="co">#順序付きfactor型があるとエラーとなるため普通のfactor型に変換</span></span>
-<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>df_tmp<span class="sc">$</span>poverty <span class="ot">&lt;-</span> <span class="fu">factor</span>(df_tmp<span class="sc">$</span>poverty, <span class="at">ordered =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="co">#ここでのdf_tmpはデータの形式を指定するためのもので、実際に変換したいデータと同一データである必要はない</span></span>
-<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>encoder <span class="ot">&lt;-</span> <span class="fu">onehot</span>(df_tmp) </span>
-<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">predict</span>(encoder, df_tmp))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(onehot)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>df_tmp <span class="ot">&lt;-</span> df_all</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="co">#順序付きfactor型があるとエラーとなるため普通のfactor型に変換</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>df_tmp<span class="sc">$</span>poverty <span class="ot">&lt;-</span> <span class="fu">factor</span>(df_tmp<span class="sc">$</span>poverty, <span class="at">ordered =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a><span class="co">#ここでのdf_tmpはデータの形式を指定するためのもので、実際に変換したいデータと同一データである必要はない</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>encoder <span class="ot">&lt;-</span> <span class="fu">onehot</span>(df_tmp) </span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">predict</span>(encoder, df_tmp))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     poverty=Too Little poverty=About Right poverty=Too Much religion=no
 [1,]                  1                   0                0           0
@@ -6415,10 +6411,10 @@ Levels: Too Little &lt; About Right &lt; Too Much</code></pre>
 <p>前処理手順のオブジェクト化などtidyな(整然とした)コーディングが可能になるほか、 他のtidymodelsのパッケージとの連携も特徴です。 本パッケージはダミー変数化のためだけに導入するようなものではありませんが、 そのようなコーディングを指向する場合にはこちらを用いるべきかもしれません。</p>
 <p>ダミー変数化を行う機能を提供するのは<code>step_dummy</code>関数で、例えば次のように使用します。 なお、順序付きfactor型変数に対しては多項式対比を用いた変換が行われます。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(recipes)</span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(df_all, <span class="at">formula =</span> ) <span class="sc">%&gt;%</span></span>
-<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_factor</span>(), <span class="fu">all_ordered</span>())</span>
-<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>rec <span class="sc">%&gt;%</span> <span class="fu">prep</span>() <span class="sc">%&gt;%</span> <span class="fu">bake</span>(<span class="at">new_data =</span> <span class="cn">NULL</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(recipes)</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>rec <span class="ot">&lt;-</span> <span class="fu">recipe</span>(df_all, <span class="at">formula =</span> ) <span class="sc">%&gt;%</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_factor</span>(), <span class="fu">all_ordered</span>())</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>rec <span class="sc">%&gt;%</span> <span class="fu">prep</span>() <span class="sc">%&gt;%</span> <span class="fu">bake</span>(<span class="at">new_data =</span> <span class="cn">NULL</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div data-pagedtable="false">
   <script data-pagedtable-source type="application/json">

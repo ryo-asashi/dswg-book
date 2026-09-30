@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2025-08-01">
+<meta name="dcterms.date" content="2026-09-30">
 
 <title>lifecontingencies – Rパッケージ活用事例集</title>
 <style>
@@ -593,7 +593,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 1, 2025</p>
+      <p class="date">September 30, 2026</p>
     </div>
   </div>
   
@@ -696,13 +696,13 @@ soaLt : Society of Actuaries life table : data.frame</code></pre>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 再び先頭行を出力。lifetable型のオブジェクトを作成したことで生存確率pxと平均余命exが取得できた。</span></span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(soaLt_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  x       lx        px       ex
-1 0 10000000 0.9949901 71.34692
-2 1  9949901 0.9949648 70.70616
-3 2  9899801 0.9949394 70.06398
-4 3  9849702 0.9949136 69.42035
-5 4  9799602 0.9948876 68.77526
-6 5  9749503 0.9990991 68.12867</code></pre>
+<pre><code>  x       lx        px      Lx        Tx       ex
+1 0 10000000 0.9949901 9974950 718469199 71.34692
+2 1  9949901 0.9949648 9924851 708494249 70.70616
+3 2  9899801 0.9949394 9874752 698569398 70.06398
+4 3  9849702 0.9949136 9824652 688694646 69.42035
+5 4  9799602 0.9948876 9774553 678869994 68.77526
+6 5  9749503 0.9990991 9745112 669095442 68.12867</code></pre>
 </div>
 </div>
 </section>
@@ -827,35 +827,37 @@ soaLt : Society of Actuaries life table : data.frame</code></pre>
 <span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(V)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    t     Reserve
-1   0 0.000000000
-2   1 0.002645617
-3   2 0.005257705
-4   3 0.007815974
-5   4 0.010297115
-6   5 0.012674419
-7   6 0.014917344
-8   7 0.016991027
-9   8 0.018855721
-10  9 0.020466160
-11 10 0.021770822
-12 11 0.022711085
-13 12 0.023220254
-14 13 0.023222423
-15 14 0.022631158
-16 15 0.021347950
-17 16 0.019260396
-18 17 0.016240051
-19 18 0.012139873
-20 19 0.006791181
-21 20 0.000000000</code></pre>
+<pre><code>    t       Reserve
+1   0 -6.938894e-18
+2   1  2.645617e-03
+3   2  5.257705e-03
+4   3  7.815974e-03
+5   4  1.029712e-02
+6   5  1.267442e-02
+7   6  1.491734e-02
+8   7  1.699103e-02
+9   8  1.885572e-02
+10  9  2.046616e-02
+11 10  2.177082e-02
+12 11  2.271109e-02
+13 12  2.322025e-02
+14 13  2.322242e-02
+15 14  2.263116e-02
+16 15  2.134795e-02
+17 16  1.926040e-02
+18 17  1.624005e-02
+19 18  1.213987e-02
+20 19  6.791181e-03
+21 20  0.000000e+00</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplotを使って責任準備金をプロット</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(V, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> Reserve)) <span class="sc">+</span></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"t"</span>, <span class="at">y =</span> <span class="st">"Reserve"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggplot2' was built under R version 4.5.3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(V, <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> Reserve)) <span class="sc">+</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"t"</span>, <span class="at">y =</span> <span class="st">"Reserve"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

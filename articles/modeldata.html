@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="データサイエンス関連基礎調査WG">
-<meta name="dcterms.date" content="2025-08-01">
+<meta name="dcterms.date" content="2026-09-30">
 
 <title>modeldata – Rパッケージ活用事例集</title>
 <style>
@@ -593,7 +593,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 1, 2025</p>
+      <p class="date">September 30, 2026</p>
     </div>
   </div>
   
@@ -615,18 +615,9 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="データセット">データセット</h3>
 <p>modeldataには様々なデータセットが用意されています。 データセットは以下のように、データセット名を指定してロードすることができます。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modeldata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'modeldata'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:datasets':
-
-    penguins</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Chicago"</span>, <span class="at">package =</span> <span class="st">"modeldata"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Chicago)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modeldata)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Chicago"</span>, <span class="at">package =</span> <span class="st">"modeldata"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Chicago)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Classes 'tbl_df', 'tbl' and 'data.frame':   5698 obs. of  50 variables:
  $ ridership       : num  15.7 15.8 15.9 15.9 15.4 ...
@@ -991,17 +982,17 @@ Attaching package: 'modeldata'</code></pre>
 <p>sim_classification関数は、二値分類用のシミュレーションデータを生成します。<br>
 以下はデータ生成の実行例です。 引数methodには生成方法を指定しますが、バージョン1.4.0時点では”caret”が唯一のオプションとなっており、caretパッケージ[3]のcaret::twoClassSim()関数と同じ生成方法が実装されています。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">sim_classification</span>(</span>
-<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_samples =</span> <span class="dv">100</span>,  <span class="co"># 生成するレコード数(デフォルトは100)</span></span>
-<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"caret"</span>,   <span class="co"># 生成方法(デフォルトは"caret")</span></span>
-<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">intercept =</span> <span class="sc">-</span><span class="dv">5</span>,     <span class="co"># クラスの偏りをコントロールする(デフォルトは-5)</span></span>
-<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_linear =</span> <span class="dv">2</span>,     <span class="co"># クラス分類に無相関の変数linear_nの数(デフォルトは10)</span></span>
-<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">keep_truth =</span> <span class="cn">TRUE</span>   <span class="co"># class_1のクラス確率の出力有無(デフォルトはFALSE)</span></span>
-<span id="cb96-9"><a href="#cb96-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb96-10"><a href="#cb96-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb96-11"><a href="#cb96-11" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(d1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">sim_classification</span>(</span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_samples =</span> <span class="dv">100</span>,  <span class="co"># 生成するレコード数(デフォルトは100)</span></span>
+<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"caret"</span>,   <span class="co"># 生成方法(デフォルトは"caret")</span></span>
+<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">intercept =</span> <span class="sc">-</span><span class="dv">5</span>,     <span class="co"># クラスの偏りをコントロールする(デフォルトは-5)</span></span>
+<span id="cb93-7"><a href="#cb93-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_linear =</span> <span class="dv">2</span>,     <span class="co"># クラス分類に無相関の変数linear_nの数(デフォルトは10)</span></span>
+<span id="cb93-8"><a href="#cb93-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">keep_truth =</span> <span class="cn">TRUE</span>   <span class="co"># class_1のクラス確率の出力有無(デフォルトはFALSE)</span></span>
+<span id="cb93-9"><a href="#cb93-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb93-10"><a href="#cb93-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-11"><a href="#cb93-11" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(d1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [100 × 9] (S3: tbl_df/tbl/data.frame)
  $ class       : Factor w/ 2 levels "class_1","class_2": 1 2 1 1 2 2 2 2 2 2 ...
@@ -1019,17 +1010,17 @@ Attaching package: 'modeldata'</code></pre>
 他の変数はclass_1とclass_2のうちどちらに属するかを予測するための説明変数(の候補)ですが、実際にクラス分類に使用できるのはtwo_factor_1とtwo_factor_2で、他はクラスと無相関という設定になっています。 具体的には、two_factor_1とtwo_factor_2の主効果と交互作用および引数に指定したinterceptによるバイアス(intercept - 4 * two_factor_1 + 4 * two_factor_2 + 2 * two_factor_1 * two_factor_2)を主な要素として計算した値を、ロジスティック関数でclass_1確率に変換し、当該確率をもとにランダムでクラスを割り当てています。</p>
 <p>以下では生成したデータの分析イメージの参考例として、two_factor_1とtwo_factor2を使用して2クラスを分離する線形識別関数を求めています。 <span class="math inline">w_0+w_1*two\_factor\_1 + w_2*two\_factor\_2\geq0</span>であればクラス1に、<span class="math inline">w_0+w_1*two\_factor\_1 + w_2*two\_factor\_2&lt;0</span>であればクラス2に分類するモデルを考えます。 教師データを、クラス1なら<span class="math inline">+1</span>、クラス2なら<span class="math inline">-1</span>として、最小二乗誤差基準により係数を推定しています。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 線形識別関数のパラメータ推定</span></span>
-<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">as.numeric</span>(d1<span class="sc">$</span>class) <span class="sc">&gt;</span> <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)  <span class="co"># 教師データをclass_1=1, class_2=-1に変換</span></span>
-<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, <span class="fu">as.matrix</span>(d1[, <span class="fu">c</span>(<span class="st">"two_factor_1"</span>, <span class="st">"two_factor_2"</span>)])) <span class="co"># パターン行列</span></span>
-<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>w_hat <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X) <span class="sc">%*%</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> y     <span class="co"># 正規方程式で最小二乗法の解を求める</span></span>
-<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 結果のplot</span></span>
-<span id="cb98-7"><a href="#cb98-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x=</span>d1<span class="sc">$</span>two_factor_1, <span class="at">y=</span>d1<span class="sc">$</span>two_factor_2, </span>
-<span id="cb98-8"><a href="#cb98-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch=</span><span class="fu">ifelse</span>(<span class="fu">as.numeric</span>(d1<span class="sc">$</span>class)<span class="sc">==</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">3</span>), </span>
-<span id="cb98-9"><a href="#cb98-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span>d1<span class="sc">$</span>class)</span>
-<span id="cb98-10"><a href="#cb98-10" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend=</span><span class="fu">levels</span>(d1<span class="sc">$</span>class), <span class="at">pch=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb98-11"><a href="#cb98-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a=</span>w_hat[<span class="dv">1</span>]<span class="sc">/</span>w_hat[<span class="dv">3</span>], <span class="at">b=</span><span class="sc">-</span>w_hat[<span class="dv">2</span>]<span class="sc">/</span>w_hat[<span class="dv">3</span>], <span class="at">lty=</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 線形識別関数のパラメータ推定</span></span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">as.numeric</span>(d1<span class="sc">$</span>class) <span class="sc">&gt;</span> <span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)  <span class="co"># 教師データをclass_1=1, class_2=-1に変換</span></span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, <span class="fu">as.matrix</span>(d1[, <span class="fu">c</span>(<span class="st">"two_factor_1"</span>, <span class="st">"two_factor_2"</span>)])) <span class="co"># パターン行列</span></span>
+<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a>w_hat <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X) <span class="sc">%*%</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> y     <span class="co"># 正規方程式で最小二乗法の解を求める</span></span>
+<span id="cb95-5"><a href="#cb95-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-6"><a href="#cb95-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 結果のplot</span></span>
+<span id="cb95-7"><a href="#cb95-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x=</span>d1<span class="sc">$</span>two_factor_1, <span class="at">y=</span>d1<span class="sc">$</span>two_factor_2, </span>
+<span id="cb95-8"><a href="#cb95-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch=</span><span class="fu">ifelse</span>(<span class="fu">as.numeric</span>(d1<span class="sc">$</span>class)<span class="sc">==</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">3</span>), </span>
+<span id="cb95-9"><a href="#cb95-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span>d1<span class="sc">$</span>class)</span>
+<span id="cb95-10"><a href="#cb95-10" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend=</span><span class="fu">levels</span>(d1<span class="sc">$</span>class), <span class="at">pch=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb95-11"><a href="#cb95-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a=</span>w_hat[<span class="dv">1</span>]<span class="sc">/</span>w_hat[<span class="dv">3</span>], <span class="at">b=</span><span class="sc">-</span>w_hat[<span class="dv">2</span>]<span class="sc">/</span>w_hat[<span class="dv">3</span>], <span class="at">lty=</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1043,15 +1034,15 @@ Attaching package: 'modeldata'</code></pre>
 <h4 class="anchored" data-anchor-id="sim_regression">sim_regression</h4>
 <p>sim_regression関数は、回帰用のシミュレーションデータを生成します。 以下の実行例の通り、目的変数outcomeとその数値の算出に使用した説明変数(predictor)が出力されます。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">sim_regression</span>(</span>
-<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_samples =</span> <span class="dv">100</span>,      <span class="co"># 生成するレコード数(デフォルトは100)</span></span>
-<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"sapp_2014_1"</span>, <span class="co"># 生成方法(デフォルトは"sapp_2014_1")</span></span>
-<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">std_dev =</span> <span class="cn">NULL</span>,         <span class="co"># 平均0の正規分布によるエラー項の標準偏差(デフォルトはNULLで、NULLの場合methodごとに決まった値が使用される)</span></span>
-<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">factors =</span> <span class="cn">FALSE</span>,        <span class="co"># predictorに二値変数が含まれる場合のfactor化有無(デフォルトはFALSE)</span></span>
-<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">keep_truth =</span> <span class="cn">TRUE</span>       <span class="co"># エラー項を含まない予測値の出力有無(デフォルトはFALSE)</span></span>
-<span id="cb99-7"><a href="#cb99-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb99-8"><a href="#cb99-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb99-9"><a href="#cb99-9" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(d2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">sim_regression</span>(</span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_samples =</span> <span class="dv">100</span>,      <span class="co"># 生成するレコード数(デフォルトは100)</span></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"sapp_2014_1"</span>, <span class="co"># 生成方法(デフォルトは"sapp_2014_1")</span></span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">std_dev =</span> <span class="cn">NULL</span>,         <span class="co"># 平均0の正規分布によるエラー項の標準偏差(デフォルトはNULLで、NULLの場合methodごとに決まった値が使用される)</span></span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">factors =</span> <span class="cn">FALSE</span>,        <span class="co"># predictorに二値変数が含まれる場合のfactor化有無(デフォルトはFALSE)</span></span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">keep_truth =</span> <span class="cn">TRUE</span>       <span class="co"># エラー項を含まない予測値の出力有無(デフォルトはFALSE)</span></span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-9"><a href="#cb96-9" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(d2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [100 × 22] (S3: tbl_df/tbl/data.frame)
  $ outcome     : num [1:100] 86.16 3.85 2.92 1.63 -29.98 ...
@@ -1081,22 +1072,22 @@ Attaching package: 'modeldata'</code></pre>
 <p>predictorの数や生成方法、およびそれらのpredictorから目的変数outcomeを計算する算式は、method引数の指定により異なります。<br>
 上の実行例で指定した”sapp_2014_1”では、平均0、分散9の正規乱数を独立に20個生成してpredictorとし、以下コードに示す計算式の算出結果に正規分布に従うエラー項を加算してoutcomeを作成しています。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">with</span>(d2,</span>
-<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>     <span class="co"># "sapp_2014_1"の算式</span></span>
-<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>       predictor_01 <span class="sc">+</span> <span class="fu">sin</span>(predictor_02) <span class="sc">+</span> <span class="fu">log</span>(<span class="fu">abs</span>(predictor_03)) <span class="sc">+</span></span>
-<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a>       predictor_04<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> predictor_05 <span class="sc">*</span> predictor_06 <span class="sc">+</span></span>
-<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ifelse</span>(predictor_07 <span class="sc">*</span> predictor_08 <span class="sc">*</span> predictor_09 <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">+</span></span>
-<span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ifelse</span>(predictor_10 <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">+</span> predictor_11 <span class="sc">*</span> <span class="fu">ifelse</span>(predictor_11 <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">+</span></span>
-<span id="cb101-7"><a href="#cb101-7" aria-hidden="true" tabindex="-1"></a>       <span class="fu">sqrt</span>(<span class="fu">abs</span>(predictor_12)) <span class="sc">+</span> <span class="fu">cos</span>(predictor_13) <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> predictor_14 <span class="sc">+</span> <span class="fu">abs</span>(predictor_15) <span class="sc">+</span></span>
-<span id="cb101-8"><a href="#cb101-8" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ifelse</span>(predictor_16 <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">+</span> predictor_17 <span class="sc">*</span> <span class="fu">ifelse</span>(predictor_17 <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">-</span></span>
-<span id="cb101-9"><a href="#cb101-9" aria-hidden="true" tabindex="-1"></a>       <span class="dv">2</span> <span class="sc">*</span> predictor_18 <span class="sc">-</span> predictor_19 <span class="sc">*</span> predictor_20</span>
-<span id="cb101-10"><a href="#cb101-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb101-11"><a href="#cb101-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb101-12"><a href="#cb101-12" aria-hidden="true" tabindex="-1"></a><span class="co"># パッケージの計算結果との比較</span></span>
-<span id="cb101-13"><a href="#cb101-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">data.frame</span>(<span class="fu">list</span>(</span>
-<span id="cb101-14"><a href="#cb101-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">.truth =</span> d2<span class="sc">$</span>.truth,</span>
-<span id="cb101-15"><a href="#cb101-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">check =</span> y</span>
-<span id="cb101-16"><a href="#cb101-16" aria-hidden="true" tabindex="-1"></a>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">with</span>(d2,</span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>     <span class="co"># "sapp_2014_1"の算式</span></span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>       predictor_01 <span class="sc">+</span> <span class="fu">sin</span>(predictor_02) <span class="sc">+</span> <span class="fu">log</span>(<span class="fu">abs</span>(predictor_03)) <span class="sc">+</span></span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>       predictor_04<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> predictor_05 <span class="sc">*</span> predictor_06 <span class="sc">+</span></span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ifelse</span>(predictor_07 <span class="sc">*</span> predictor_08 <span class="sc">*</span> predictor_09 <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ifelse</span>(predictor_10 <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">+</span> predictor_11 <span class="sc">*</span> <span class="fu">ifelse</span>(predictor_11 <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb98-7"><a href="#cb98-7" aria-hidden="true" tabindex="-1"></a>       <span class="fu">sqrt</span>(<span class="fu">abs</span>(predictor_12)) <span class="sc">+</span> <span class="fu">cos</span>(predictor_13) <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> predictor_14 <span class="sc">+</span> <span class="fu">abs</span>(predictor_15) <span class="sc">+</span></span>
+<span id="cb98-8"><a href="#cb98-8" aria-hidden="true" tabindex="-1"></a>       <span class="fu">ifelse</span>(predictor_16 <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">+</span> predictor_17 <span class="sc">*</span> <span class="fu">ifelse</span>(predictor_17 <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">-</span></span>
+<span id="cb98-9"><a href="#cb98-9" aria-hidden="true" tabindex="-1"></a>       <span class="dv">2</span> <span class="sc">*</span> predictor_18 <span class="sc">-</span> predictor_19 <span class="sc">*</span> predictor_20</span>
+<span id="cb98-10"><a href="#cb98-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb98-11"><a href="#cb98-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-12"><a href="#cb98-12" aria-hidden="true" tabindex="-1"></a><span class="co"># パッケージの計算結果との比較</span></span>
+<span id="cb98-13"><a href="#cb98-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">data.frame</span>(<span class="fu">list</span>(</span>
+<span id="cb98-14"><a href="#cb98-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">.truth =</span> d2<span class="sc">$</span>.truth,</span>
+<span id="cb98-15"><a href="#cb98-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">check =</span> y</span>
+<span id="cb98-16"><a href="#cb98-16" aria-hidden="true" tabindex="-1"></a>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       .truth       check
 1  80.2583408  80.2583408
@@ -1113,16 +1104,16 @@ Attaching package: 'modeldata'</code></pre>
 <h4 class="anchored" data-anchor-id="sim_noise">sim_noise</h4>
 <p>sim_noise関数は平均0、分散1の正規分布に従う乱数を生成します。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a>d3 <span class="ot">&lt;-</span> <span class="fu">sim_noise</span>(</span>
-<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_samples =</span> <span class="dv">10</span>,           <span class="co"># 生成するレコード数</span></span>
-<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_vars =</span> <span class="dv">3</span>,               <span class="co"># 生成するカラム(正規乱数)の数</span></span>
-<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cov_type =</span> <span class="st">"exchangeable"</span>,  <span class="co"># 分散共分散行列の設定(デフォルトは"exchangeable")</span></span>
-<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome =</span> <span class="st">"none"</span>,           <span class="co"># outcome変数の出力有無(デフォルトは"none")</span></span>
-<span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_classes =</span> <span class="dv">2</span>,            <span class="co"># outcome="classification"の場合のクラス数(デフォルトは2)</span></span>
-<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cov_param =</span> <span class="dv">0</span>               <span class="co"># 変数間の共分散に関するパラメータ(デフォルトは0)</span></span>
-<span id="cb103-8"><a href="#cb103-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb103-9"><a href="#cb103-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb103-10"><a href="#cb103-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(d3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>d3 <span class="ot">&lt;-</span> <span class="fu">sim_noise</span>(</span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_samples =</span> <span class="dv">10</span>,           <span class="co"># 生成するレコード数</span></span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_vars =</span> <span class="dv">3</span>,               <span class="co"># 生成するカラム(正規乱数)の数</span></span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cov_type =</span> <span class="st">"exchangeable"</span>,  <span class="co"># 分散共分散行列の設定(デフォルトは"exchangeable")</span></span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcome =</span> <span class="st">"none"</span>,           <span class="co"># outcome変数の出力有無(デフォルトは"none")</span></span>
+<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_classes =</span> <span class="dv">2</span>,            <span class="co"># outcome="classification"の場合のクラス数(デフォルトは2)</span></span>
+<span id="cb100-7"><a href="#cb100-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cov_param =</span> <span class="dv">0</span>               <span class="co"># 変数間の共分散に関するパラメータ(デフォルトは0)</span></span>
+<span id="cb100-8"><a href="#cb100-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb100-9"><a href="#cb100-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-10"><a href="#cb100-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(d3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [10 × 3] (S3: tbl_df/tbl/data.frame)
  $ noise_1: num [1:10] 0.6842 0.5628 -0.0469 -1.1456 0.1879 ...
@@ -1138,16 +1129,16 @@ Attaching package: 'modeldata'</code></pre>
 <p>sim_logistic関数及びsim_multinomial関数は、それぞれ2クラス分類および3クラス分類用のデータを生成します。 平均0、分散1、相関係数が引数correlationに従う正規乱数AおよびBの2変数を説明変数として使用しますが、クラス確率を計算するためのAとBの算式を、柔軟に設定できる点が特徴です。</p>
 <p>以下はsim_logistic関数による実行例です。 引数eqnには”~“から始まる2変数AとBの式、すなわち右辺のみのformulaオブジェクトを指定します。 eqnで指定した数式で計算した値をロジスティック関数によりクラス1確率に変換し、当該確率をもとにランダムにクラスを割り当てています。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>d4 <span class="ot">&lt;-</span> <span class="fu">sim_logistic</span>(</span>
-<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_samples =</span> <span class="dv">1000</span>,        <span class="co"># 生成するレコード数</span></span>
-<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">eqn =</span> <span class="sc">~</span> <span class="dv">2</span> <span class="sc">*</span> A <span class="sc">+</span> B<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">1.2</span>, <span class="co"># 2つの正規乱数AとBにより予測子を計算する算式</span></span>
-<span id="cb105-4"><a href="#cb105-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#eqn = rlang::expr(2 * A + B^2 + 1.2),           # 参考：expressionで指定することも可能</span></span>
-<span id="cb105-5"><a href="#cb105-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#eqn = base::expression(2 * A + B^2 + 1.2)[[1]], # 参考：expression listは指定できないため注意</span></span>
-<span id="cb105-6"><a href="#cb105-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">correlation =</span> <span class="dv">0</span>,           <span class="co"># 変数AとBの相関係数(デフォルトは0)</span></span>
-<span id="cb105-7"><a href="#cb105-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">keep_truth =</span> <span class="cn">TRUE</span>          <span class="co"># クラス1確率の出力有無(デフォルトはFALSE)</span></span>
-<span id="cb105-8"><a href="#cb105-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb105-9"><a href="#cb105-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb105-10"><a href="#cb105-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(d4)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>d4 <span class="ot">&lt;-</span> <span class="fu">sim_logistic</span>(</span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_samples =</span> <span class="dv">1000</span>,        <span class="co"># 生成するレコード数</span></span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">eqn =</span> <span class="sc">~</span> <span class="dv">2</span> <span class="sc">*</span> A <span class="sc">+</span> B<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">1.2</span>, <span class="co"># 2つの正規乱数AとBにより予測子を計算する算式</span></span>
+<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#eqn = rlang::expr(2 * A + B^2 + 1.2),           # 参考：expressionで指定することも可能</span></span>
+<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#eqn = base::expression(2 * A + B^2 + 1.2)[[1]], # 参考：expression listは指定できないため注意</span></span>
+<span id="cb102-6"><a href="#cb102-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">correlation =</span> <span class="dv">0</span>,           <span class="co"># 変数AとBの相関係数(デフォルトは0)</span></span>
+<span id="cb102-7"><a href="#cb102-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">keep_truth =</span> <span class="cn">TRUE</span>          <span class="co"># クラス1確率の出力有無(デフォルトはFALSE)</span></span>
+<span id="cb102-8"><a href="#cb102-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb102-9"><a href="#cb102-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-10"><a href="#cb102-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(d4)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [1,000 × 5] (S3: tbl_df/tbl/data.frame)
  $ A           : num [1:1000] 0.104 1.375 -2.597 0.526 -1.029 ...
@@ -1158,12 +1149,12 @@ Attaching package: 'modeldata'</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="co"># クラス確率が指定した式に従って算出されていることの確認</span></span>
-<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(<span class="dv">2</span><span class="sc">*</span>d4<span class="sc">$</span>A <span class="sc">+</span> d4<span class="sc">$</span>B<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">1.2</span>)))</span>
-<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">data.frame</span>(<span class="fu">list</span>(</span>
-<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">.truth =</span> d4<span class="sc">$</span>.truth,</span>
-<span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">check =</span> p</span>
-<span id="cb107-6"><a href="#cb107-6" aria-hidden="true" tabindex="-1"></a>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co"># クラス確率が指定した式に従って算出されていることの確認</span></span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> <span class="fu">exp</span>(<span class="sc">-</span>(<span class="dv">2</span><span class="sc">*</span>d4<span class="sc">$</span>A <span class="sc">+</span> d4<span class="sc">$</span>B<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fl">1.2</span>)))</span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">data.frame</span>(<span class="fu">list</span>(</span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">.truth =</span> d4<span class="sc">$</span>.truth,</span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">check =</span> p</span>
+<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     .truth     check
 1 0.8952554 0.8952554
@@ -1177,16 +1168,16 @@ Attaching package: 'modeldata'</code></pre>
 <p>sim_multinomial関数は、3クラス分類用のデータを生成します。<br>
 説明変数はsim_logistic関数と同様、正規分布に従う乱数AとBの二つですが、AとBの算式として、三つのクラスに対応する三つの式eqn_1～eqn_3を指定します。 これら三つの式の算出結果を入力とするソフトマックス関数<span class="math inline">P(class=k)=exp(eqn\_k)/\Sigma_{i}{exp(eqn\_i)}</span>により各クラスのクラス確率を計算し、当該確率をもとに、ランダムに3クラスのいずれかを割り当てています。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>d5 <span class="ot">&lt;-</span> <span class="fu">sim_multinomial</span>(</span>
-<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_samples =</span> <span class="dv">10</span>,      <span class="co"># 生成するレコード数</span></span>
-<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">eqn_1 =</span> <span class="sc">~</span> A <span class="sc">+</span> B,       <span class="co"># クラス1に対応する式</span></span>
-<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">eqn_2 =</span> <span class="sc">~</span> <span class="dv">2</span> <span class="sc">*</span> A <span class="sc">*</span> B,   <span class="co"># クラス2に対応する式</span></span>
-<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">eqn_3 =</span> <span class="sc">~</span> <span class="fu">log</span>(<span class="fu">abs</span>(B)), <span class="co"># クラス3に対応する式</span></span>
-<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">correlation =</span> <span class="dv">0</span>,       <span class="co"># 変数AとBの相関係数(デフォルトは0)</span></span>
-<span id="cb109-7"><a href="#cb109-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">keep_truth =</span> <span class="cn">TRUE</span>      <span class="co"># 各クラスのクラス確率の出力有無(デフォルトはFALSE)</span></span>
-<span id="cb109-8"><a href="#cb109-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb109-9"><a href="#cb109-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-10"><a href="#cb109-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(d5)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>d5 <span class="ot">&lt;-</span> <span class="fu">sim_multinomial</span>(</span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">num_samples =</span> <span class="dv">10</span>,      <span class="co"># 生成するレコード数</span></span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">eqn_1 =</span> <span class="sc">~</span> A <span class="sc">+</span> B,       <span class="co"># クラス1に対応する式</span></span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">eqn_2 =</span> <span class="sc">~</span> <span class="dv">2</span> <span class="sc">*</span> A <span class="sc">*</span> B,   <span class="co"># クラス2に対応する式</span></span>
+<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">eqn_3 =</span> <span class="sc">~</span> <span class="fu">log</span>(<span class="fu">abs</span>(B)), <span class="co"># クラス3に対応する式</span></span>
+<span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">correlation =</span> <span class="dv">0</span>,       <span class="co"># 変数AとBの相関係数(デフォルトは0)</span></span>
+<span id="cb106-7"><a href="#cb106-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">keep_truth =</span> <span class="cn">TRUE</span>      <span class="co"># 各クラスのクラス確率の出力有無(デフォルトはFALSE)</span></span>
+<span id="cb106-8"><a href="#cb106-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb106-9"><a href="#cb106-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-10"><a href="#cb106-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(d5)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tibble [10 × 6] (S3: tbl_df/tbl/data.frame)
  $ A           : num [1:10] -1.236 0.668 -1.119 0.173 0.375 ...
@@ -1198,27 +1189,27 @@ Attaching package: 'modeldata'</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="co"># クラス確率が指定した式に従って算出されていることの確認</span></span>
-<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 引数で指定した三つの算式</span></span>
-<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a>y1 <span class="ot">&lt;-</span> d5<span class="sc">$</span>A <span class="sc">+</span> d5<span class="sc">$</span>B</span>
-<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a>y2 <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> d5<span class="sc">$</span>A <span class="sc">*</span> d5<span class="sc">$</span>B</span>
-<span id="cb111-6"><a href="#cb111-6" aria-hidden="true" tabindex="-1"></a>y3 <span class="ot">&lt;-</span> <span class="fu">log</span>(<span class="fu">abs</span>(d5<span class="sc">$</span>B))</span>
-<span id="cb111-7"><a href="#cb111-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb111-8"><a href="#cb111-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ソフトマックス関数によるクラス確率</span></span>
-<span id="cb111-9"><a href="#cb111-9" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">exp</span>(y1) <span class="sc">/</span> (<span class="fu">exp</span>(y1) <span class="sc">+</span> <span class="fu">exp</span>(y2) <span class="sc">+</span> <span class="fu">exp</span>(y3))</span>
-<span id="cb111-10"><a href="#cb111-10" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">exp</span>(y2) <span class="sc">/</span> (<span class="fu">exp</span>(y1) <span class="sc">+</span> <span class="fu">exp</span>(y2) <span class="sc">+</span> <span class="fu">exp</span>(y3))</span>
-<span id="cb111-11"><a href="#cb111-11" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">exp</span>(y3) <span class="sc">/</span> (<span class="fu">exp</span>(y1) <span class="sc">+</span> <span class="fu">exp</span>(y2) <span class="sc">+</span> <span class="fu">exp</span>(y3))</span>
-<span id="cb111-12"><a href="#cb111-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb111-13"><a href="#cb111-13" aria-hidden="true" tabindex="-1"></a><span class="do">## パッケージによる計算結果と比較</span></span>
-<span id="cb111-14"><a href="#cb111-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">data.frame</span>(<span class="fu">list</span>(</span>
-<span id="cb111-15"><a href="#cb111-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">.truth_one =</span> d5<span class="sc">$</span>.truth_one,</span>
-<span id="cb111-16"><a href="#cb111-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">check_one =</span> p1,</span>
-<span id="cb111-17"><a href="#cb111-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">.truth_two =</span> d5<span class="sc">$</span>.truth_two,</span>
-<span id="cb111-18"><a href="#cb111-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">check_two =</span> p2,</span>
-<span id="cb111-19"><a href="#cb111-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">.truth_three =</span> d5<span class="sc">$</span>.truth_three,</span>
-<span id="cb111-20"><a href="#cb111-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">check_three =</span> p3</span>
-<span id="cb111-21"><a href="#cb111-21" aria-hidden="true" tabindex="-1"></a>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co"># クラス確率が指定した式に従って算出されていることの確認</span></span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 引数で指定した三つの算式</span></span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a>y1 <span class="ot">&lt;-</span> d5<span class="sc">$</span>A <span class="sc">+</span> d5<span class="sc">$</span>B</span>
+<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a>y2 <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> d5<span class="sc">$</span>A <span class="sc">*</span> d5<span class="sc">$</span>B</span>
+<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a>y3 <span class="ot">&lt;-</span> <span class="fu">log</span>(<span class="fu">abs</span>(d5<span class="sc">$</span>B))</span>
+<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-8"><a href="#cb108-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ソフトマックス関数によるクラス確率</span></span>
+<span id="cb108-9"><a href="#cb108-9" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">exp</span>(y1) <span class="sc">/</span> (<span class="fu">exp</span>(y1) <span class="sc">+</span> <span class="fu">exp</span>(y2) <span class="sc">+</span> <span class="fu">exp</span>(y3))</span>
+<span id="cb108-10"><a href="#cb108-10" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">exp</span>(y2) <span class="sc">/</span> (<span class="fu">exp</span>(y1) <span class="sc">+</span> <span class="fu">exp</span>(y2) <span class="sc">+</span> <span class="fu">exp</span>(y3))</span>
+<span id="cb108-11"><a href="#cb108-11" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">exp</span>(y3) <span class="sc">/</span> (<span class="fu">exp</span>(y1) <span class="sc">+</span> <span class="fu">exp</span>(y2) <span class="sc">+</span> <span class="fu">exp</span>(y3))</span>
+<span id="cb108-12"><a href="#cb108-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-13"><a href="#cb108-13" aria-hidden="true" tabindex="-1"></a><span class="do">## パッケージによる計算結果と比較</span></span>
+<span id="cb108-14"><a href="#cb108-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">data.frame</span>(<span class="fu">list</span>(</span>
+<span id="cb108-15"><a href="#cb108-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">.truth_one =</span> d5<span class="sc">$</span>.truth_one,</span>
+<span id="cb108-16"><a href="#cb108-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">check_one =</span> p1,</span>
+<span id="cb108-17"><a href="#cb108-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">.truth_two =</span> d5<span class="sc">$</span>.truth_two,</span>
+<span id="cb108-18"><a href="#cb108-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">check_two =</span> p2,</span>
+<span id="cb108-19"><a href="#cb108-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">.truth_three =</span> d5<span class="sc">$</span>.truth_three,</span>
+<span id="cb108-20"><a href="#cb108-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">check_three =</span> p3</span>
+<span id="cb108-21"><a href="#cb108-21" aria-hidden="true" tabindex="-1"></a>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  .truth_one check_one .truth_two check_two .truth_three check_three
 1  0.2991672 0.2991672  0.5428603 0.5428603   0.15797249  0.15797249
