@@ -1,0 +1,444 @@
+---
+title: "caret"
+date: "`r Sys.Date()`"
+description: 予測モデリング
+format:
+  html:
+    fig_width: 6
+    fig_height: 4
+---
+
+```{r setup_qmd, include=FALSE}
+
+# install packages
+pkgs <- c("caret", "mlbench", "earth")
+for (pkg in pkgs) {
+  if (!(pkg %in% installed.packages())) {
+    install.packages(pkg)
+  }
+}
+
+# detach packages
+default <- c(".GlobalEnv", "tools:rstudio", "tools:vscode",
+             "package:stats", "package:graphics",
+             "package:grDevices", "package:utils",
+             "package:datasets", "package:methods",
+             "Autoloads", "package:base")
+for (pkg in setdiff(search(), default)) {
+  detach(pkg, character.only = TRUE)
+  }
+
+# clear objects
+remove(list=objects())
+```
+
+## パッケージの概要
+
+caret（*C*lassification *A*nd *RE*gression
+*T*raining）パッケージは、機械学習におけるデータの前処理やモデル構築における各種処理に対して統一的なインターフェースを与え、効率的に機械学習なモデル開発を目指したパッケージです。以下の機能が含まれています。
+
+-   データの分割
+-   前処理
+-   特徴量選択
+-   リサンプリングを用いたモデル調整
+-   変数の重要度推定
+
+公式サイトは以下のURLより参照できます。本コード例も以下サイトの内容をかいつまんで説明したものとなります。
+https://topepo.github.io/caret/
+
+```{r}
+library(caret)
+```
+
+## データ分割 (Data Splitting)
+
+### 目的変数に基づく単純な分割
+
+createDataPartition関数は、目的変数のクラス比率を保ったまま層化抽出を行う関数です。以下はirisデータでの使用例です。
+
+```{r}
+set.seed(3456)
+trainIndex <- createDataPartition(iris$Species, p = 0.8, list = FALSE, times = 1)
+head(trainIndex)
+```
+
+引数pにて訓練データの割合を定めることができ、この例では0.8（80%）と指定しています。
+head(trainIndex)をみることにより、訓練データとして採用されているデータが飛び飛びになっていることが分かります。
+
+実際に均一な抽出ができているかを確認してみましょう。
+
+```{r}
+irisTrain <- iris[trainIndex, ]
+irisTest  <- iris[-trainIndex, ]
+table(irisTrain$Species)
+table(irisTest$Species)
+```
+
+irisデータは全部で150件あり、120件が訓練データ、30件がテストデータになっています。また、訓練データ・テストデータともに目的変数であるsetosa・versicolor・virginica（スミレの種類）の件数が等しくなっており、均一な抽出ができています。
+
+引数timesで複数の分割を一度に作成することもできます。また、単純なブートストラップサンプルにはcreateResample関数、交差検証用のグループ分けにはcreateFolds関数が使えます。
+
+### 目的変数の分布に基づく分割
+
+多様なサンプルを抽出したい場合、maxDissim法を用いたサンプリングが適用できます。
+
+mlbenchのBostonHousingデータを用いて使用例を示します。まずはデータをage（古い家の割合）とnox（窒素酸化物濃度）に絞り、さらに中心化します。
+
+```{r}
+library(mlbench)
+data(BostonHousing)
+testing <- scale(BostonHousing[, c("age", "nox")])
+```
+
+加工したデータを散布図にて確認します。
+
+```{r, fig.height=6.0}
+plot(testing, pch = 16, col = "grey70")
+```
+
+maxDissim法を適用してゆきます。まずは初期サンプルを5つランダムに選択します。
+
+```{r}
+set.seed(5)
+## A random sample of 5 data points
+startSet <- sample(1:dim(testing)[1], 5)
+samplePool <- testing[-startSet,]
+start <- testing[startSet,]
+```
+
+次に、maxDissim関数を用いて、初期サンプルに対しなるべく離れたサンプルを抽出します。
+
+```{r}
+newSamp <- maxDissim(start, samplePool, n = 20)
+head(newSamp)
+```
+
+最初の散布図に初期サンプルと抽出サンプルの色付けを追加します。サンプルがまばらに抽出されていることが分かります。
+
+```{r, fig.height=6.0}
+plot(testing, pch = 16, col = "grey70")
+
+# 初期サンプル（赤い大きな点）
+points(start, col = "red", pch = 19, cex = 1.5)
+
+# 抽出サンプル（青い点）
+points(samplePool[newSamp, ], col = "blue", pch = 19, cex = 1.2)
+
+# 凡例
+legend("topleft",
+       legend = c("全データ", "初期サンプル(5点)", "抽出サンプル(maxDissim)"),
+       col = c("grey70", "red", "blue"), pch = 19)
+```
+
+## 前処理 (Pre-Processing)
+
+### ダミー変数の作成
+
+因子型(factor)の変数からダミー変数を作るにはdummyVars関数を使います。公式サイトではearthパッケージのetitanic(タイタニック号の乗客)データが例に使われています。
+
+```{r}
+library(earth)
+data(etitanic)
+```
+
+etitanicのデータにはpclass（乗客の階級、1st・2nd・3rd）とsex(性別、female・male)の2つの因子型の変数が含まれています。
+
+```{r}
+head(etitanic)
+```
+
+R標準の関数としてmodel.matrixを用いると、次のような変数を生成します。
+
+```{r}
+head(model.matrix(survived ~ ., data = etitanic))
+```
+
+一方、dummyVarsを使用すると、次のような変数を生成します。
+
+```{r}
+dummies <- dummyVars(survived ~ ., data = etitanic)
+head(predict(dummies, newdata = etitanic))
+```
+
+それぞれの特徴として、dummyVarsは各ファクターの取りうる値（レベル）の数だけ変数化していますが、model.matrixはそれより1つ少なく変数化しています。補足として、dummyVarsは各レベルに対し条件を作りやすくなるため木ベースのモデルに適しており、一方変数を行列と考えたときには従属性をもってしまうため、線形回帰モデルへの適用はmodel.matrixの方が行いやすいようです。
+
+### ゼロ・ほぼゼロ分散の予測変数
+
+データによっては、値がほぼ1種類しかない予測変数(ゼロ分散予測変数)が生成されることがあります。これは多くのモデル(ツリー系モデルを除く)でクラッシュや不安定な当てはめの原因になります。
+
+また、ごく少数の水準がほとんどの頻度を占め、残りの水準が極端に少ない「ほぼゼロ分散」な予測変数も存在します。例として、mdrrDescr（薬剤耐性データ）におけるnR11は、値0が501件、1が4件、2が23件と極端に偏っています。
+
+```{r}
+data(mdrr)
+data.frame(table(mdrrDescr$nR11))
+```
+
+こうした予測変数は、交差検証やブートストラップでデータを分割した際に本当にゼロ分散になってしまったり、少数のサンプルがモデルに過度な影響を与えたりする恐れがあります。そのため、モデリング前に検出・除去するのが望ましい場合があります。
+
+nerZeroVar関数を使うと、そのような予測変数を特定することができます。
+
+```{r}
+nzv <- nearZeroVar(mdrrDescr, saveMetrics= TRUE)
+nzv[nzv$nzv,][1:10,]
+```
+
+freqRatioは最頻値の頻度を2番目に多い値の頻度で割ったもので、均衡なデータでは1に近づき、著しく偏ったデータでは非常に大きくなります。percentUniequeはユニークな値の数をサンプル総数で割って100を乗じたもので、データの細やかさが大きくなるほど0に近づきます。freqRatioがある閾値より大きくかつpercentUniqueがある閾値より小さい変数をnzvとして抽出します。
+
+抽出の結果、変数の個数は342個から297個に減少しました。
+
+```{r}
+dim(mdrrDescr)
+```
+
+```{r}
+nzv <- nearZeroVar(mdrrDescr)
+filteredDescr <- mdrrDescr[, -nzv]
+dim(filteredDescr)
+```
+
+## モデルの訓練とチューニング
+
+### モデルの訓練とパラメータチューニング
+
+caretパッケージはモデル構築とモデル評価のプロセスを一本化するためのいくつかの関数を準備しています。
+
+train関数は以下の目的で使用されます。
+
+-   リサンプリングを用いてモデルのチューニングパラメータが性能に与える影響を評価する
+-   それらのパラメータの中から「最適な」モデルを選択する
+-   訓練データからモデルの性能を推定する
+
+まずはどのモデルを使うかを決める必要があります。現時点でcaretは238のモデルに対応しており、詳細は「train
+Model List」や「train Models By
+Tag」のページで確認できます。これらのページには最適化可能なチューニングパラメータの一覧が掲載されています。また、ユーザーが定義したモデルを作ることもできます。
+
+モデルとチューニングパラメータ種類が決めた後に、リサンプリングの種類を決めます。train関数では現在、「k分割交差検証）」「leave-one-out交差検証」「ブートストラップ」が使用できます。
+
+リサンプリングの結果、性能指標のプロファイルが得られ、どのチューニングパラメータを選択するかの判断材料になります。デフォルトでは、最良の性能値に対応するチューニングパラメータが自動で選択されますが、別のアルゴリズムを使用することも可能です。
+
+mlbenchパッケージのSonarデータを用いて実際の例を見てゆきます。まずはデータをロードします。
+
+```{r}
+library(mlbench)
+data(Sonar)
+str(Sonar[, 1:10])
+```
+
+createDataPartition関数を用いると、データを訓練データとテストデータに層別で無作為に抽出することができます。
+
+```{r}
+library(caret)
+set.seed(998)
+inTraining <- createDataPartition(Sonar$Class, p = .75, list = FALSE)
+training <- Sonar[ inTraining,]
+testing  <- Sonar[-inTraining,]
+```
+
+trainControl関数でリサンプリングの種類を設定できます。ここでは10分割の交差検証法を5回繰り返します。（以降、デモの高速化のため、作業量を適宜公式サイトより減らしています）
+
+```{r}
+fitControl <- trainControl(## 10-fold CV
+                           method = "repeatedcv",
+                           number = 10,
+                           ## repeated five times
+                           repeats = 5)
+```
+
+train関数でモデルの情報を設定します。ここでは勾配ブースティング木モデル（GBM）を用います。なお、gbmパッケージのモデルを使用しますので、インストールされていない場合は実行時にインストール要否の確認がある場合があります。
+
+```{r}
+set.seed(825)
+gbmFit1 <- train(Class ~ ., data = training, 
+                 method = "gbm", 
+                 trControl = fitControl,
+                 ## This last option is actually one
+                 ## for gbm() that passes through
+                 verbose = FALSE)
+print(gbmFit1)
+```
+
+GBMの主要パラメータは以下の通りです。
+
+-   n.trees：反復回数（木の本数）
+-   interaction.depth：木の複雑さ
+-   shrinkage：学習率
+-   n.minobsinnode：分割を開始するために必要な最小サンプル数
+
+上記の交差検証ではinteraction.depthとn.treeに関してそれぞれ3通りの候補を全て試しています。最終的には正解率（Accuracy）やCohenのKappa（Kappa）の結果のよい(interaction.depth,
+n.trees) = (2, 100)のモデルが採用されています。
+
+### パラメータチューニングのカスタマイズ
+
+チューニングパラメータのグリッドはユーザーが自分で指定することもできます。tuneGrid引数にデータフレームを渡し、各列がチューニングパラメータに対応するようにします。GBMのモデルでは、例えば学習率を固定してより多くの木の本数を評価することができます。
+
+```{r}
+gbmGrid <-  expand.grid(interaction.depth = c(1, 5, 9), 
+                        n.trees = (1:3)*300, 
+                        shrinkage = 0.1,
+                        n.minobsinnode = 20)
+                        
+head(gbmGrid)
+```
+
+expand.grid関数を用いてチューニングパラメータを総当たりするデータフレームを作成します。デモの高速化ため、n.treeの候補数はサイトより減らしています。
+
+```{r}
+nrow(gbmGrid)
+```
+
+行数は、interaction.depthが3通り、n.treesが3通りで3×3=9通りとなっています。
+
+このグリッドを用いてチューニングパラメータのグリッドサーチを行うことができます。（少し重い処理ですので、コードの表示のみとしています）
+
+```{r, eval=FALSE}
+set.seed(825)
+gbmFit2 <- train(Class ~ ., data = training, 
+                 method = "gbm", 
+                 trControl = fitControl, 
+                 verbose = FALSE, 
+                 ## Now specify the exact models 
+                 ## to evaluate:
+                 tuneGrid = gbmGrid)
+gbmFit2
+```
+
+## 変数重要度
+
+caretパッケージの変数重要度の評価方法は、大きく2つのグループに分けられます。モデル情報を利用する方法とそうでない方法です。モデルベースの方法の利点は、モデルの性能に直結していること、また予測変数間の相関構造を重要度の計算に取り込める可能性があることです。
+
+いずれの計算方法でも共通する点として、以下が挙げられます。
+
+-   ほとんどの分類モデルでは、各予測変数はクラスごとに個別の重要度を持つ（分類木・バギング木・ブースティング木は例外）
+-   重要度は最大値100にスケーリングされる（varInp.trainのscale引数によって設定解除可）
+
+### 具体例
+
+具体例を見てゆきます。まずは例示で使用されるgbmFit3を定義します。デモの高速化のため、繰り返し回数を減らしています。
+
+```{r}
+fitControl <- trainControl(method = "repeatedcv",
+                           number = 10,
+                           repeats = 5,
+                           ## Estimate class probabilities
+                           classProbs = TRUE,
+                           ## Evaluate performance using 
+                           ## the following function
+                           summaryFunction = twoClassSummary)
+
+set.seed(825)
+gbmFit3 <- train(Class ~ ., data = training, 
+                 method = "gbm", 
+                 trControl = fitControl, 
+                 verbose = FALSE, 
+                 tuneGrid = gbmGrid,
+                 ## Specify which metric to optimize
+                 metric = "ROC")
+gbmFit3
+```
+
+各変数の重要度を確認します。gbmパッケージを読み込んでいないとエラーが発生する場合があるため、明示的に読み込みます。
+
+```{r}
+library(gbm)
+gbmImp <- varImp(gbmFit3, scale = FALSE)
+
+# 重要度の降順で並べ替え
+imp_sorted <- gbmImp$importance[order(gbmImp$importance$Overall, decreasing = TRUE), ,drop = FALSE]
+
+# 上位20件を表示
+head(imp_sorted, 20)
+```
+
+filterVarImp関数を用いて、ROC曲線下の面積を得ることができます。ROC曲線下の面積はクラスごとに計算されます。
+
+```{r}
+roc_imp <- filterVarImp(x = training[, -ncol(training)], y = training$Class)
+head(roc_imp)
+```
+
+SVMなど、当パッケージで組み込みの重要度がないモデルに関しても、varImpによって重要度を計算することができます。（コード例は割愛します）
+
+## モデル性能の評価
+
+### 回帰の評価指標
+
+postResample関数を用いると、RMSE（二乗平均平方根誤差）、R^2^（決定係数）、MAE（平均絶対誤差）を計算できます。BostonHousingデータを用いて以下に例示します。
+
+まずはモデルを構築します。
+```{r}
+library(mlbench)
+data(BostonHousing)
+
+set.seed(280)
+bh_index <- createDataPartition(BostonHousing$medv, p = .75, list = FALSE)
+bh_tr <- BostonHousing[ bh_index, ]
+bh_te <- BostonHousing[-bh_index, ]
+
+set.seed(7279)
+lm_fit <- train(medv ~ . + rm:lstat,
+                data = bh_tr, 
+                method = "lm")
+bh_pred <- predict(lm_fit, bh_te)
+
+lm_fit
+```
+postResample関数を用いて、テストデータの予測結果に関するRMSE、R^2^、MAEを出力します。
+```{r}
+postResample(pred = bh_pred, obs = bh_te$medv)
+```
+
+なお、lm_fitにも上記3指標の情報が記載されていますが、これは25回のブートストラップ法での各指標の平均となります。各回の指標はlm_fit$resampleにデータフレームとして格納されており、以下にてその25回分の平均を確認することができます。
+```{r}
+colMeans(lm_fit$resample[, c("RMSE", "Rsquared", "MAE")])
+```
+
+## 予測クラスの評価指標
+予測クラスの評価指標についても見てゆきます。まずは2値分類問題の予測としてモデルから出力された各クラスの生起確率を模したテストデータを作成します。
+
+まずは正解部分を作成します。Class1が2割、Class2が8割となるように設定します。
+```{r}
+set.seed(144)
+true_class <- factor(sample(paste0("Class", 1:2), 
+                            size = 1000,
+                            prob = c(.2, .8), replace = TRUE))
+true_class <- sort(true_class)
+```
+
+Class1、Class2ともに生起確率を割り当てます。確率の生成はベータ分布を用います。Class1は[0,1]の区間において1側に偏りがあり、Class2は0側に偏りがあるように生成されます。
+```{r}
+class1_probs <- rbeta(sum(true_class == "Class1"), 4, 1)
+class2_probs <- rbeta(sum(true_class == "Class2"), 1, 2.5)
+```
+
+上記のデータをデータフレームにまとめます。（test_set$predはまだ作成しないことにします）
+```{r}
+test_set <- data.frame(obs = true_class,
+                       Class1 = c(class1_probs, class2_probs))
+test_set$Class2 <- 1 - test_set$Class1
+```
+
+出来上がりのデータを確認します。データフレームはobs, Class1, Class2の3列から成ります。obsは正解となるクラスで、Class1は「モデルがそのデータに対し評価したClass1となる確率」が、Class2にはClass2となる確率が設定されます。
+```{r}
+head(test_set)
+```
+
+```{r}
+tail(test_set)
+```
+
+クラス(obs)ごとのClass1の値のヒストグラムを図示します。obsがClass1であるもの（左側のグラフ）はClass1の確率の値が高く、obsがClass2であるもの（右側のグラフ）はClass1の確率の値が低く出ており、比較的正しく分類できるモデルを模していることが分かります。
+```{r}
+ggplot(test_set, aes(x = Class1)) + 
+  geom_histogram(binwidth = .05) + 
+  facet_wrap(~obs) + 
+  xlab("Probability of Class #1")
+```
+
+クラスの予測を典型的な50%カットオフにて実施し、混同行列（confusion matrix）を計算することができます。
+```{r}
+test_set$pred <- factor(ifelse(test_set$Class1 >= .5, "Class1", "Class2"))
+
+confusionMatrix(data = test_set$pred, reference = test_set$obs)
+```
+各指標の定義はサイトにもありますので、適宜参照ください。
+
